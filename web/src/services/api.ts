@@ -1,3 +1,10 @@
+/*
+** EPITECH PROJECT, 2025
+** AREA
+** File description:
+** api
+*/
+
 export interface AboutAction {
   name: string;
   description: string;

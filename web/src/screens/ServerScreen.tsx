@@ -1,3 +1,10 @@
+/*
+** EPITECH PROJECT, 2025
+** AREA
+** File description:
+** ServerScreen
+*/
+
 import React from "react";
 
 const ServerScreen: React.FC = () => {
