@@ -1,1 +1,36 @@
-.
+services:
+  backend:
+    image: area-fastapi
+    env_file: ".env"
+    ports:
+      - "80:80"
+    depends_on:
+      - db
+    # volumes:
+    #   - ./user_images:/user_images
+    #   - ./event_images:/event_images
+    #   - ./news_images:/news_images
+    #   - ./startup_uploads:/startup_uploads
+
+  db:
+    image: postgres
+    env_file: ".env"
+    ports:
+      - "5432:5432"
+    volumes:
+      - ./pgdata:/var/lib/postgresql/data
+
+  adminer:
+    image: adminer
+    ports:
+      - "8080:8080"
+    restart: always
+    depends_on:
+      - db
+
+volumes:
+  pgdata:
+  # user_images:
+  # event_images:
+  # news_images:
+  # startup_uploads:
