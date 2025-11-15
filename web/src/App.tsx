@@ -6,14 +6,17 @@
 */
 
 import React from "react";
+import AboutScreen from "./screens/AboutScreen";
+import ServerScreen from "./screens/ServerScreen";
 
-function App() {
-  return (
-    <div style={{ fontFamily: "sans-serif", padding: "1rem" }}>
-      <h1>AREA Web Client</h1>
-      <p>React + Vite + TypeScript scaffold is ready.</p>
-    </div>
-  );
-}
+const App: React.FC = () => {
+  const path = window.location.pathname;
+
+  if (path === "/about") {
+    return <AboutScreen />;
+  }
+
+  return <ServerScreen />;
+};
 
 export default App;
