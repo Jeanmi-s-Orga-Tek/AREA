@@ -1,0 +1,19 @@
+{
+  "name": "area",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Jeami-s-Orga-Tek/AREA.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Jeami-s-Orga-Tek/AREA/issues"
+  },
+  "homepage": "https://github.com/Jeami-s-Orga-Tek/AREA#readme"
+}

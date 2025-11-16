@@ -1,0 +1,17 @@
+services:
+  server:
+    build: ./server
+    ports:
+      - "18080:8080"
+    networks:
+      - appnet
+
+  tester:
+    image: curlimages/curl:8.2.1
+    networks:
+      - appnet
+    entrypoint: ["sleep", "infinity"]
+
+networks:
+  appnet:
+    driver: bridge
