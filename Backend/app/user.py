@@ -24,7 +24,7 @@ class Token(BaseModel):
     token_type: str
 
 class EmailCheck(BaseModel):
-    email: stra
+    email: str
 
 class PasswordChange(BaseModel):
     email: str
