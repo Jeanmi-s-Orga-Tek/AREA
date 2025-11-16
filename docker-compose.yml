@@ -27,6 +27,13 @@ services:
     restart: always
     depends_on:
       - db
+  
+  client_web:
+    build: ./Front/AREAA
+    ports:
+      - "8081:80"
+    depends_on:
+      - db
 
 volumes:
   pgdata:
