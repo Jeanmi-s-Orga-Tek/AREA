@@ -1,0 +1,142 @@
+<!doctype html>
+<html lang="fr">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>AREA — Action REAction</title>
+    <meta
+      name="description"
+      content="AREA (Action REAction) — Connect services, automate actions. Academic automation platform inspired by IFTTT/Zapier."
+    />
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <header class="site-header">
+      <div class="container header-inner">
+        <a class="logo" href="#overview">AREA</a>
+        <nav class="nav">
+          <a href="#overview">Overview</a>
+          <a href="#architecture">Architecture</a>
+          <a href="#stack">Tech stack</a>
+          <a href="#docs">Documentation</a>
+        </nav>
+      </div>
+    </header>
+
+    <main>
+      <section id="overview" class="hero">
+        <div class="container hero-grid">
+          <div>
+            <p class="eyebrow">Action REAction • Academic automation</p>
+            <h1>AREA</h1>
+            <p class="lead">
+              Connect services, automate actions – an academic automation platform inspired by
+              IFTTT and Zapier.
+            </p>
+            <p>
+              Automations orchestrate triggers, FastAPI exposes the public API, and web/mobile clients
+              keep students in the loop with real-time workflows.
+            </p>
+            <div class="hero-actions">
+              <a class="btn btn-primary" href="docs/api/index.html">Voir la documentation Doxygen</a>
+              <a class="btn btn-ghost" href="#architecture">Explorer l'architecture</a>
+            </div>
+          </div>
+          <div class="hero-card">
+            <p class="card-title">Plateforme AREA</p>
+            <ul>
+              <li>Application server FastAPI</li>
+              <li>PostgreSQL + Docker orchestration</li>
+              <li>React/Vite web client</li>
+              <li>Mobile client (Android, WIP)</li>
+            </ul>
+          </div>
+        </div>
+      </section>
+
+      <section id="architecture" class="section">
+        <div class="container">
+          <p class="eyebrow">Architecture</p>
+          <h2>Composants principaux</h2>
+          <div class="card-grid">
+            <article class="card">
+              <h3>Application server</h3>
+              <p>
+                FastAPI expose les routes publiques (dont <code>/about.json</code>), gère les déclencheurs et orchestre
+                les actions sur plusieurs services.
+              </p>
+            </article>
+            <article class="card">
+              <h3>Web client</h3>
+              <p>
+                Interface React/Vite/TypeScript déployée via Docker, consommant <code>/about.json</code> pour afficher
+                l'état des services et déclencheurs AREA.
+              </p>
+            </article>
+            <article class="card">
+              <h3>Mobile client</h3>
+              <p>
+                Client mobile / Android (WIP) pour gérer les automatisations en mobilité et recevoir les notifications
+                critiques.
+              </p>
+            </article>
+          </div>
+        </div>
+      </section>
+
+      <section id="stack" class="section muted">
+        <div class="container">
+          <p class="eyebrow">Tech stack</p>
+          <h2>Technologies utilisées</h2>
+          <div class="stack-grid">
+            <div class="stack-card">
+              <h3>Backend</h3>
+              <ul>
+                <li>FastAPI (Python)</li>
+                <li>PostgreSQL</li>
+                <li>Docker &amp; Docker Compose</li>
+              </ul>
+            </div>
+            <div class="stack-card">
+              <h3>Web client</h3>
+              <ul>
+                <li>React 18</li>
+                <li>Vite + TypeScript</li>
+                <li>Custom Nginx deployment</li>
+              </ul>
+            </div>
+            <div class="stack-card">
+              <h3>Mobile</h3>
+              <ul>
+                <li>Android client (planned)</li>
+                <li>APK distribution via web</li>
+                <li>Shared API contracts</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section id="docs" class="section">
+        <div class="container docs">
+          <div>
+            <p class="eyebrow">Documentation</p>
+            <h2>Consultez l'API Doxygen</h2>
+            <p>
+              La référence complète des endpoints, modèles et schémas est générée avec Doxygen et disponible sous
+              <code>docs/api/</code>. Utilisez la documentation pour explorer chaque service ACTION/REACTION.
+            </p>
+          </div>
+          <a class="btn btn-primary" href="docs/api/index.html">Ouvrir la documentation API</a>
+        </div>
+      </section>
+    </main>
+
+    <footer class="site-footer">
+      <div class="container footer-grid">
+        <p>Academic project — Epitech</p>
+        <a href="#">GitHub repository</a>
+      </div>
+    </footer>
+  </body>
+</html>
