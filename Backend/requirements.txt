@@ -1,9 +1,11 @@
 fastapi[standard]>=0.113.0,<0.114.0
 pydantic>=2.7.0,<3.0.0
-sqlmodel
+pydantic-settings>=2.3.0
+sqlmodel>=0.0.14
 psycopg[binary]
-psycopg2
+psycopg2-binary
 passlib[bcrypt]
 pyjwt
 requests
 icalendar
+pyyaml

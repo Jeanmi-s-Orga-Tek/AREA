@@ -2,7 +2,7 @@ import os
 import random
 import string
 from typing import Iterable, List, Optional, Sequence, Union
-import icalendar
+# import icalendar
 
 from contextlib import asynccontextmanager
 from fastapi import APIRouter, Cookie, FastAPI, Query, Request, Depends, HTTPException, UploadFile, status, Form
@@ -13,14 +13,16 @@ from fastapi.templating import Jinja2Templates
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.middleware import Middleware
 from starlette.middleware.base import BaseHTTPMiddleware
+from fastapi import HTTPException
+from app.core.oauth_config import public_provider_info, providers_registry, reload_providers
 
 from sqlmodel import Field, Session, SQLModel, asc, create_engine, select, func, col, desc
 from typing import Annotated
 
-from db import create_db_tables, engine
+from app.db import create_db_tables, engine
 
-from user import BaseUser, User, RegisteringUser, Token, EmailCheck, PasswordChange, oauth2_scheme, ACCESS_TOKEN_EXPIRE_MINUTES, verify_password, verify_token, get_password_hash, create_access_token, get_user_from_token
-from send_email import send_email
+from app.user import BaseUser, User, RegisteringUser, Token, EmailCheck, PasswordChange, oauth2_scheme, ACCESS_TOKEN_EXPIRE_MINUTES, verify_password, verify_token, get_password_hash, create_access_token, get_user_from_token
+from app.send_email import send_email
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
@@ -101,6 +103,28 @@ app = FastAPI(lifespan=lifespan, openapi_tags=tags_metadata)
 
 router_login = APIRouter()
 router_user = APIRouter(dependencies=[Depends(oauth2_scheme)])
+
+@router_login.get("/health", tags=["health"])
+def health():
+    return {"status": "ok"}
+
+@router_login.get("/oauth/providers", tags=["oauth"])
+def oauth_list_providers():
+    reg = providers_registry()
+    return {k: {"web": bool(v.web), "mobile": bool(v.mobile)} for k, v in reg.items()}
+
+@router_login.get("/oauth/config/{provider}/{flow}", tags=["oauth"])
+def oauth_public_config(provider: str, flow: str):
+    try:
+        return public_provider_info(provider, flow)
+    except Exception as e:
+        raise HTTPException(status_code=400, detail=str(e))
+
+@router_login.post("/oauth/providers/reload", tags=["oauth"])
+def oauth_reload():
+    reload_providers()
+    return {"reloaded": True}
+
 
 app.add_middleware(
     CORSMiddleware,
