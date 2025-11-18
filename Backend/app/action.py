@@ -1,19 +1,22 @@
 from datetime import timedelta
 from typing import Annotated, Any, Dict, List, Optional, Union, cast
 import jwt
-from fastapi import APIRouter, Form, HTTPException, Query, status
+from fastapi import APIRouter, Depends, Form, HTTPException, Query, status
 from fastapi.security import OAuth2, OAuth2PasswordBearer, OAuth2PasswordRequestForm
 from fastapi.openapi.models import OAuthFlows as OAuthFlowsModel
 from pydantic import BaseModel
 from sqlmodel import Field, Session, SQLModel, create_engine, select
 from fastapi.responses import HTMLResponse, JSONResponse
+from sqlalchemy.dialects.postgresql import JSONB
 
 from app.main import SessionDep
+from app.oauth2 import oauth2_scheme
 
 class BaseAction(SQLModel):
     id: Optional[int] = Field(default=None, primary_key=True)
     name: str
     description: Optional[str] = Field(default=None)
+    parameters: Optional[dict] = Field(sa_type=JSONB)
 
 class Action(BaseAction, table=True):
     linked_reaction: Optional[int] = Field(default=None, foreign_key="reaction.id")
@@ -29,7 +32,8 @@ action_router = APIRouter(
 def read_actions(
     session: SessionDep,
     skip: int = 0,
-    limit: Annotated[int, Query(le=100)] = 100
+    limit: Annotated[int, Query(le=100)] = 100,
+    token: str = Depends(oauth2_scheme),
     ):
     action = session.exec(select(Action).offset(skip).limit(limit)).all()
     return action
@@ -37,7 +41,8 @@ def read_actions(
 @action_router.get("/{action_id}", response_model=BaseAction, tags=["actions"])
 def read_action(
     action_id: int,
-    session: SessionDep
+    session: SessionDep,
+    token: str = Depends(oauth2_scheme),
     ):
     action = session.get(Action, action_id)
     if not action:
@@ -47,7 +52,8 @@ def read_action(
 @action_router.delete("/{action_id}", tags=["actions"])
 def delete_action(
     action_id: int,
-    session: SessionDep
+    session: SessionDep,
+    token: str = Depends(oauth2_scheme),
     ):
     action = session.get(Action, action_id)
     if not action:
@@ -60,7 +66,8 @@ def delete_action(
 def update_action(
     action_id: int,
     event: BaseAction,
-    session: SessionDep
+    session: SessionDep,
+    token: str = Depends(oauth2_scheme),
     ):
     action_db = session.get(Action, action_id)
     if not action_db:
@@ -76,6 +83,7 @@ def update_action(
 def post_action(
     action: BaseAction,
     session: SessionDep,
+    token: str = Depends(oauth2_scheme),
     ):
     db_action = Action.model_validate(action)
     session.add(db_action)
