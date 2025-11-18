@@ -35,56 +35,24 @@ origins = [
 
 tags_metadata = [
     {
-        "name": "startups",
-        "description": "Operations with startups.",
-        "externalDocs": {
-            "description": "Items external docs",
-            "url": "https://fastapi.tiangolo.com/",
-        },
-    },
-    {
-        "name": "investors",
-        "description": "Operations with investors.",
-        "externalDocs": {
-            "description": "Items external docs",
-            "url": "https://fastapi.tiangolo.com/",
-        },
-    },
-    {
-        "name": "partners",
-        "description": "Operations with partners.",
-        "externalDocs": {
-            "description": "Items external docs",
-            "url": "https://fastapi.tiangolo.com/",
-        },
-    },
-    {
-        "name": "news",
-        "description": "Operations with news.",
-        "externalDocs": {
-            "description": "Items external docs",
-            "url": "https://fastapi.tiangolo.com/",
-        },
-    },
-    {
-        "name": "events",
-        "description": "Operations with events",
-        "externalDocs": {
-            "description": "Items external docs",
-            "url": "https://fastapi.tiangolo.com/",
-        },
-    },
-    {
-        "name": "projects",
-        "description": "Operations with projects",
-        "externalDocs": {
-            "description": "Items external docs",
-            "url": "https://fastapi.tiangolo.com/",
-        },
-    },
-    {
         "name": "users",
         "description": "Operations with users.",
+        "externalDocs": {
+            "description": "Items external docs",
+            "url": "https://fastapi.tiangolo.com/",
+        },
+    },
+    {
+        "name": "actions",
+        "description": "Operations with actions.",
+        "externalDocs": {
+            "description": "Items external docs",
+            "url": "https://fastapi.tiangolo.com/",
+        },
+    },
+    {
+        "name": "reactions",
+        "description": "Operations with reactions.",
         "externalDocs": {
             "description": "Items external docs",
             "url": "https://fastapi.tiangolo.com/",
@@ -99,7 +67,8 @@ def get_session():
 SessionDep = Annotated[Session, Depends(get_session)]
 
 from app.user import user_router
-
+from app.action import action_router
+from app.reaction import reaction_router
 
 app = FastAPI(lifespan=lifespan, openapi_tags=tags_metadata)
 
@@ -121,6 +90,8 @@ templates = Jinja2Templates(directory="templates")
 # app.include_router(router_login)
 # app.include_router(router_user)
 app.include_router(user_router)
+app.include_router(action_router)
+app.include_router(reaction_router)
 
 def get_client_ip(request: Request) -> str:
     forwarded = request.headers.get("X-Forwarded-For")
