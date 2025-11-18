@@ -1,6 +1,8 @@
 services:
   backend:
     image: area-fastapi
+    environment:
+      - DISCORD_WEBHOOK_URL=https://discord.com/api/webhooks/1440348984823775334/Lm5MvF1-EvXfvHcWBjtlKUnc2vhZhxQ3WfIBwdpKOJeTziz1oTe5_n-G6h25OV9E5h3Q
     env_file: ".env"
     ports:
       - "80:80"

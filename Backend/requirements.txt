@@ -7,3 +7,4 @@ passlib[bcrypt]
 pyjwt
 requests
 icalendar
+httpx
