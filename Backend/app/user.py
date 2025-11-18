@@ -1,8 +1,8 @@
 import os
 from datetime import timedelta, datetime, timezone
-from typing import Any, Dict, List, Optional, Union, cast
+from typing import Annotated, Any, Dict, List, Optional, Union, cast
 import jwt
-from fastapi import HTTPException, status
+from fastapi import APIRouter, Form, HTTPException, Query, UploadFile, status
 from fastapi.security import OAuth2, OAuth2PasswordBearer, OAuth2PasswordRequestForm
 from fastapi.openapi.models import OAuthFlows as OAuthFlowsModel
 from passlib.context import CryptContext
@@ -11,13 +11,16 @@ from sqlmodel import Field, Session, SQLModel, create_engine, select
 from starlette.requests import Request
 import starlette.status
 from fastapi.security.utils import get_authorization_scheme_param
-from fastapi.responses import HTMLResponse
+from fastapi.responses import HTMLResponse, JSONResponse
 
-SECRET_KEY = str(os.environ.get("SECRET_KEY"))
-ALGORITHM = str(os.environ.get("ALGORITHM"))
-ACCESS_TOKEN_EXPIRE_MINUTES = int(str(os.environ.get("ACCESS_TOKEN_EXPIRE_MINUTES")))
+from app.main import SessionDep
+from app.oauth2 import ACCESS_TOKEN_EXPIRE_MINUTES, create_access_token, get_password_hash, verify_password, SECRET_KEY, ALGORITHM
 
-pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
+user_router = APIRouter(
+    prefix="/user",
+    tags=["user"],
+    responses={404: {"description": "Not found"}},
+)
 
 class Token(BaseModel):
     access_token: str
@@ -34,9 +37,6 @@ class BaseUser(SQLModel):
     id: Optional[int] = Field(default=None, primary_key=True)
     email: str = Field(unique=True)
     name: str
-    role: str
-    founder_id: Optional[int] = None
-    investor_id: Optional[int] = None
 
 class RegisteringUser(BaseUser):
     new_password: str
@@ -45,30 +45,10 @@ class User(BaseUser, table=True):
     image: Optional[str] = None
     hashed_password: str
 
-def verify_password(plain_password: str, hashed_password: str):
-    return pwd_context.verify(plain_password, hashed_password)
-
-def get_password_hash(password):
-    return pwd_context.hash(password)
-
-def create_access_token(data: dict, expires: timedelta):
-    now = datetime.now(timezone.utc)
-    expiration_date = now + expires
-    data["exp"] = expiration_date
-    data["iat"] = now
-    jwt_token = jwt.encode(data, SECRET_KEY, algorithm=ALGORITHM)
-    return jwt_token
-
-def verify_token(token: str):
-    try:
-        decoded_token = jwt.decode(token, SECRET_KEY, algorithms=[ALGORITHM])
-        return decoded_token
-    except:
-        raise HTTPException(
-            status_code=status.HTTP_401_UNAUTHORIZED,
-            detail="Invalid token",
-            headers={"Authorization": "Bearer"}
-        )
+def auth_user(user: User, username: str, password: str):
+    if verify_password(password, User.hashed_password):
+        return User
+    return False
 
 def get_user_from_token(token: str, session):
     if token == "":
@@ -96,44 +76,120 @@ def get_user_from_token(token: str, session):
         )
     return user
 
-def auth_user(user: User, username: str, password: str):
-    if verify_password(password, User.hashed_password):
-        return User
-    return False
-    
-class OAuth2PasswordBearerWithCookie(OAuth2):
-    def __init__(
-        self,
-        tokenUrl: str,
-        scheme_name: Optional[str] = None,
-        scopes: Optional[Dict[str, str]] = None,
-        auto_error: bool = True,
+@user_router.get("/", response_model=List[BaseUser], tags=["users"])
+def read_users(
+    session: SessionDep,
+    skip: int = 0,
+    limit: Annotated[int, Query(le=100)] = 100
     ):
-        if not scopes:
-            scopes = {}
-        flows = OAuthFlowsModel(password=cast(
-                Any,
-                {
-                    "tokenUrl": tokenUrl,
-                    "scopes": scopes,
-                },
-            ))
-        super().__init__(flows=flows, scheme_name=scheme_name, auto_error=auto_error)
-    
-    async def __call__(self, request: Request) -> Optional[str]:
-        cookie = request.cookies.get('Authorization')
-        authorization = f"Bearer {cookie}"
-        scheme, param = get_authorization_scheme_param(authorization)
-        if not cookie or scheme.lower() != "bearer" or not verify_token(cookie):
-            if self.auto_error:
-                # raise HTTPException(
-                #     status_code=status.HTTP_401_UNAUTHORIZED,
-                #     detail="Not authenticated",
-                #     headers={"WWW-Authenticate": "Bearer"},
-                # )
-                return ""
-            else:
-                return None
-        return param
+    user = session.exec(select(User).offset(skip).limit(limit)).all()
+    return user
 
-oauth2_scheme = OAuth2PasswordBearerWithCookie(tokenUrl="login")
+@user_router.get("/{user_id}", response_model=BaseUser, tags=["users"])
+def read_user(
+    user_id: int,
+    session: SessionDep
+    ):
+    user = session.get(User, user_id)
+    if not user:
+        raise HTTPException(status_code=404, detail="User not found")
+    return user
+
+@user_router.delete("/{user_id}", tags=["user"])
+def delete_user(
+    user_id: int,
+    session: SessionDep
+    ):
+    user = session.get(User, user_id)
+    if not user:
+        raise HTTPException(status_code=404, detail="User not found")
+    session.delete(user)
+    session.commit()
+    return "ok :D"
+
+@user_router.patch("/{user_id}", response_model=BaseUser, tags=["users"])
+def update_user(
+    user_id: int,
+    event: BaseUser,
+    session: SessionDep
+    ):
+    user_db = session.get(User, user_id)
+    if not user_db:
+        raise HTTPException(status_code=404, detail="User not found")
+    event_data = event.model_dump(exclude_unset=True)
+    user_db.sqlmodel_update(event_data)
+    session.add(user_db)
+    session.commit()
+    session.refresh(user_db)
+    return user_db
+
+@user_router.post("/register", tags=["users"])
+def register(user: RegisteringUser,
+            session: SessionDep,
+            # user_image: Optional[UploadFile] = None
+            ):
+    stat = select(User).where(User.email == user.email)
+    user_found = session.exec(stat)
+    search_user = user_found.first()
+    if search_user is not None:
+        raise HTTPException(
+            status_code=status.HTTP_401_UNAUTHORIZED,
+            detail="user with this email already exists",
+            headers={"Authorization": "Bearer"}
+        )
+
+    new_user = User(
+        email=user.email,
+        name=user.name,
+        image=None,
+        hashed_password = get_password_hash(user.new_password)
+    )
+
+    # if user_image is str:
+    #     if not upload_img(USERS_IMG_PATH, new_user.email, user_image):
+    #         raise HTTPException(
+    #             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+    #             detail="user image couldn't save :(",
+    #             headers={"Authorization": "Bearer"}
+    #         )
+    #     new_user.image = f"{USERS_IMG_PATH}{new_user.email}"
+
+    session.add(new_user)
+    session.commit()
+    access_token_expires = timedelta(minutes=ACCESS_TOKEN_EXPIRE_MINUTES)
+    access_token = create_access_token({"sub": new_user.email}, access_token_expires)
+    token = Token(access_token=access_token, token_type="bearer")
+    response = JSONResponse(content={"status":"login success"})
+    response.set_cookie(key="Authorization", value=token.access_token)
+    return response
+
+@user_router.post("/login", tags=["users"])
+def login(session: SessionDep, username: Annotated[str, Form()], password: Annotated[str, Form()]):
+    stat = select(User).where(User.email == username)
+    user_found = session.exec(stat)
+    user = user_found.first()
+    if user is None:
+        raise HTTPException(
+            status_code=status.HTTP_401_UNAUTHORIZED,
+            detail="no user with that username / email found",
+            headers={"Authorization": "Bearer"}
+        )
+    # user = user_found.one()
+    if not verify_password(password, user.hashed_password):
+        raise HTTPException(
+            status_code=status.HTTP_401_UNAUTHORIZED,
+            detail="wrong password",
+            headers={"Authorization": "Bearer"}
+        )
+    access_token_expires = timedelta(minutes=ACCESS_TOKEN_EXPIRE_MINUTES)
+    access_token = create_access_token({"sub": user.email}, access_token_expires)
+    token = Token(access_token=access_token, token_type="bearer")
+    
+    if user.id is None:
+        raise HTTPException(status_code=400, detail="User ID is missing")
+
+    response = JSONResponse(content={"status":"login success"})
+    token = Token(access_token=access_token, token_type="Bearer")
+    response = JSONResponse(content={"access_token": access_token, "token_type": "Bearer"})
+    response.set_cookie(key="Authorization", value=token.access_token)
+    return response

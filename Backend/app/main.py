@@ -18,10 +18,10 @@ from starlette.middleware.base import BaseHTTPMiddleware
 from sqlmodel import Field, Session, SQLModel, asc, create_engine, select, func, col, desc
 from typing import Annotated
 
-from db import create_db_tables, engine
+from app.db import create_db_tables, engine
+from app.send_email import send_email
 
-from user import BaseUser, User, RegisteringUser, Token, EmailCheck, PasswordChange, oauth2_scheme, ACCESS_TOKEN_EXPIRE_MINUTES, verify_password, verify_token, get_password_hash, create_access_token, get_user_from_token
-from send_email import send_email
+# from user import BaseUser, User, RegisteringUser, Token, EmailCheck, PasswordChange, oauth2_scheme, ACCESS_TOKEN_EXPIRE_MINUTES, verify_password, verify_token, get_password_hash, create_access_token, get_user_from_token
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
@@ -98,10 +98,13 @@ def get_session():
 
 SessionDep = Annotated[Session, Depends(get_session)]
 
+from app.user import user_router
+
+
 app = FastAPI(lifespan=lifespan, openapi_tags=tags_metadata)
 
-router_login = APIRouter()
-router_user = APIRouter(dependencies=[Depends(oauth2_scheme)])
+# router_login = APIRouter()
+# router_user = APIRouter(dependencies=[Depends(oauth2_scheme)])
 
 app.add_middleware(
     CORSMiddleware,
@@ -115,10 +118,9 @@ app.add_middleware(
 
 templates = Jinja2Templates(directory="templates")
 
-
-
-app.include_router(router_login)
-app.include_router(router_user)
+# app.include_router(router_login)
+# app.include_router(router_user)
+app.include_router(user_router)
 
 def get_client_ip(request: Request) -> str:
     forwarded = request.headers.get("X-Forwarded-For")
