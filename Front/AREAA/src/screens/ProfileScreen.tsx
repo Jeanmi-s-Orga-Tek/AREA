@@ -83,6 +83,9 @@ const ProfileScreen: React.FC = () => {
           <a href="/" className="profile-button profile-button-secondary">
             Retour à l'accueil
           </a>
+          <a href="/areas" className="profile-button profile-button-secondary">
+            Mes AREA
+          </a>
           <a href="/services" className="profile-button profile-button-secondary">
             Gérer les services
           </a>
