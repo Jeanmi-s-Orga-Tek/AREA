@@ -10,6 +10,7 @@ import AboutScreen from "./screens/AboutScreen";
 import ServerScreen from "./screens/ServerScreen";
 import LoginScreen from "./screens/LoginScreen";
 import RegisterScreen from "./screens/RegisterScreen";
+import ProfileScreen from "./screens/ProfileScreen";
 
 const App: React.FC = () => {
   const path = window.location.pathname;
@@ -24,6 +25,10 @@ const App: React.FC = () => {
 
   if (path === "/register") {
     return <RegisterScreen />;
+  }
+
+  if (path === "/profile") {
+    return <ProfileScreen />;
   }
 
   return <ServerScreen />;
