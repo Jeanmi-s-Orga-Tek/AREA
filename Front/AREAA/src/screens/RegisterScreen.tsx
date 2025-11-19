@@ -18,6 +18,8 @@ const RegisterScreen: React.FC = () => {
   const [success, setSuccess] = useState(false);
   const [loading, setLoading] = useState(false);
 
+  const demoProviders = ["Google", "GitHub", "Discord", "Spotify", "Microsoft", "Trello"];
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setError("");
@@ -55,6 +57,10 @@ const RegisterScreen: React.FC = () => {
     } finally {
       setLoading(false);
     }
+  };
+
+  const handleOAuthLogin = (provider: string) => {
+    alert(`Inscription avec ${provider} sera disponible prochainement !`);
   };
 
   return (
@@ -139,6 +145,23 @@ const RegisterScreen: React.FC = () => {
             {loading ? "Inscription en cours..." : "S'inscrire"}
           </button>
         </form>
+
+        <div className="register-divider">
+          <span>OU</span>
+        </div>
+
+        <div className="register-oauth-buttons">
+          {demoProviders.map((provider) => (
+            <button
+              key={provider}
+              onClick={() => handleOAuthLogin(provider)}
+              className="register-oauth-button"
+              disabled={loading}
+            >
+              S'inscrire avec {provider}
+            </button>
+          ))}
+        </div>
 
         <div className="register-footer">
           <p className="register-footer-text">

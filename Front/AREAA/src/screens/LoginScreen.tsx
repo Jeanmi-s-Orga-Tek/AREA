@@ -15,6 +15,9 @@ const LoginScreen: React.FC = () => {
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
 
+  // Liste de démonstration des providers OAuth2 (visuel seulement)
+  const demoProviders = ["Google", "GitHub", "Discord", "Spotify", "Microsoft", "Trello"];
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setError("");
@@ -34,6 +37,10 @@ const LoginScreen: React.FC = () => {
     } finally {
       setLoading(false);
     }
+  };
+
+  const handleOAuthLogin = (provider: string) => {
+    alert(`Connexion avec ${provider} sera disponible prochainement !`);
   };
 
   return (
@@ -85,6 +92,23 @@ const LoginScreen: React.FC = () => {
             {loading ? "Connexion en cours..." : "Se connecter"}
           </button>
         </form>
+
+        <div className="login-divider">
+          <span>OU</span>
+        </div>
+
+        <div className="login-oauth-buttons">
+          {demoProviders.map((provider) => (
+            <button
+              key={provider}
+              onClick={() => handleOAuthLogin(provider)}
+              className="login-oauth-button"
+              disabled={loading}
+            >
+              Se connecter avec {provider}
+            </button>
+          ))}
+        </div>
 
         <div className="login-footer">
           <p className="login-footer-text">

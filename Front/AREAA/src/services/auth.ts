@@ -28,6 +28,15 @@ export interface AuthError {
   detail: string;
 }
 
+export interface OAuthProvider {
+  web: boolean;
+  mobile: boolean;
+}
+
+export interface OAuthProviders {
+  [key: string]: OAuthProvider;
+}
+
 export async function register(data: RegisterData): Promise<void> {
   try {
     const response = await fetch(`${API_BASE_URL}/auth/register`, {
@@ -94,3 +103,26 @@ export function isAuthenticated(): boolean {
   return getToken() !== null;
 }
 
+
+export async function fetchOAuthProviders(): Promise<OAuthProviders> {
+  try {
+    const response = await fetch(`${API_BASE_URL}/oauth/providers`, {
+      headers: {
+        Accept: "application/json",
+      },
+    });
+
+    if (!response.ok) {
+      throw new Error("Failed to fetch OAuth providers");
+    }
+
+    return (await response.json()) as OAuthProviders;
+  } catch (error) {
+    console.error("Error fetching OAuth providers:", error);
+    return {};
+  }
+}
+
+export function getOAuthAuthUrl(provider: string): string {
+  return `${API_BASE_URL}/oauth/authorize/${provider}/web`;
+}
