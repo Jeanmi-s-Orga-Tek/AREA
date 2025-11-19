@@ -83,6 +83,9 @@ const ProfileScreen: React.FC = () => {
           <a href="/" className="profile-button profile-button-secondary">
             Retour à l'accueil
           </a>
+          <a href="/services" className="profile-button profile-button-secondary">
+            Gérer les services
+          </a>
           <button
             onClick={handleLogout}
             className="profile-button profile-button-danger"
