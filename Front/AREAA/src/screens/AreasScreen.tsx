@@ -247,12 +247,16 @@ const AreasScreen: React.FC = () => {
             <p className="areas-empty-text">
               Vous n'avez pas encore créé d'AREA.
             </p>
-            <button className="areas-create-button">Créer ma première AREA</button>
+            <a href="/create-area" className="areas-create-button">
+              Créer ma première AREA
+            </a>
           </div>
         )}
 
         <div className="areas-actions">
-          <button className="areas-create-button">+ Créer une nouvelle AREA</button>
+          <a href="/create-area" className="areas-create-button">
+            + Créer une nouvelle AREA
+          </a>
           <a href="/" className="areas-back-button">
             Retour à l'accueil
           </a>

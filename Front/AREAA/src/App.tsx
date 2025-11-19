@@ -13,6 +13,7 @@ import RegisterScreen from "./screens/RegisterScreen";
 import ProfileScreen from "./screens/ProfileScreen";
 import ServicesScreen from "./screens/ServicesScreen";
 import AreasScreen from "./screens/AreasScreen";
+import CreateAreaScreen from "./screens/CreateAreaScreen";
 
 const App: React.FC = () => {
   const path = window.location.pathname;
@@ -39,6 +40,10 @@ const App: React.FC = () => {
 
   if (path === "/areas") {
     return <AreasScreen />;
+  }
+
+  if (path === "/create-area") {
+    return <CreateAreaScreen />;
   }
 
   return <ServerScreen />;
