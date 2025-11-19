@@ -15,10 +15,10 @@ from fastapi.middleware.cors import CORSMiddleware
 from fastapi.middleware import Middleware
 from starlette.middleware.base import BaseHTTPMiddleware
 
-from sqlmodel import Field, Session, SQLModel, asc, create_engine, select, func, col, desc
-from typing import Annotated
 
-from app.db import create_db_tables, engine
+from sqlmodel import Field, Session, SQLModel, asc, create_engine, select, func, col, desc
+
+from app.db import create_db_tables, engine, SessionDep
 from app.send_email import send_email
 
 # from user import BaseUser, User, RegisteringUser, Token, EmailCheck, PasswordChange, oauth2_scheme, ACCESS_TOKEN_EXPIRE_MINUTES, verify_password, verify_token, get_password_hash, create_access_token, get_user_from_token
@@ -35,54 +35,6 @@ origins = [
 
 tags_metadata = [
     {
-        "name": "startups",
-        "description": "Operations with startups.",
-        "externalDocs": {
-            "description": "Items external docs",
-            "url": "https://fastapi.tiangolo.com/",
-        },
-    },
-    {
-        "name": "investors",
-        "description": "Operations with investors.",
-        "externalDocs": {
-            "description": "Items external docs",
-            "url": "https://fastapi.tiangolo.com/",
-        },
-    },
-    {
-        "name": "partners",
-        "description": "Operations with partners.",
-        "externalDocs": {
-            "description": "Items external docs",
-            "url": "https://fastapi.tiangolo.com/",
-        },
-    },
-    {
-        "name": "news",
-        "description": "Operations with news.",
-        "externalDocs": {
-            "description": "Items external docs",
-            "url": "https://fastapi.tiangolo.com/",
-        },
-    },
-    {
-        "name": "events",
-        "description": "Operations with events",
-        "externalDocs": {
-            "description": "Items external docs",
-            "url": "https://fastapi.tiangolo.com/",
-        },
-    },
-    {
-        "name": "projects",
-        "description": "Operations with projects",
-        "externalDocs": {
-            "description": "Items external docs",
-            "url": "https://fastapi.tiangolo.com/",
-        },
-    },
-    {
         "name": "users",
         "description": "Operations with users.",
         "externalDocs": {
@@ -90,16 +42,45 @@ tags_metadata = [
             "url": "https://fastapi.tiangolo.com/",
         },
     },
+    {
+        "name": "actions",
+        "description": "Operations with actions.",
+        "externalDocs": {
+            "description": "Items external docs",
+            "url": "https://fastapi.tiangolo.com/",
+        },
+    },
+    {
+        "name": "reactions",
+        "description": "Operations with reactions.",
+        "externalDocs": {
+            "description": "Items external docs",
+            "url": "https://fastapi.tiangolo.com/",
+        },
+    },
+    {
+        "name": "user_actions",
+        "description": "Operations with user actions.",
+        "externalDocs": {
+            "description": "Items external docs",
+            "url": "https://fastapi.tiangolo.com/",
+        },
+    },
+    {
+        "name": "user_reactions",
+        "description": "Operations with user reactions.",
+        "externalDocs": {
+            "description": "Items external docs",
+            "url": "https://fastapi.tiangolo.com/",
+        },
+    },
 ]
 
-def get_session():
-    with Session(engine) as session:
-        yield session
-
-SessionDep = Annotated[Session, Depends(get_session)]
-
 from app.user import user_router
-
+from app.action import action_router
+from app.reaction import reaction_router
+from app.user_action import user_action_router
+from app.user_reaction import user_reaction_router
 
 app = FastAPI(lifespan=lifespan, openapi_tags=tags_metadata)
 
@@ -121,6 +102,10 @@ templates = Jinja2Templates(directory="templates")
 # app.include_router(router_login)
 # app.include_router(router_user)
 app.include_router(user_router)
+app.include_router(action_router)
+app.include_router(reaction_router)
+app.include_router(user_action_router)
+app.include_router(user_reaction_router)
 
 def get_client_ip(request: Request) -> str:
     forwarded = request.headers.get("X-Forwarded-For")
