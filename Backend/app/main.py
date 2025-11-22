@@ -43,6 +43,14 @@ tags_metadata = [
         },
     },
     {
+        "name": "services",
+        "description": "Operations with services.",
+        "externalDocs": {
+            "description": "Items external docs",
+            "url": "https://fastapi.tiangolo.com/",
+        },
+    },
+    {
         "name": "actions",
         "description": "Operations with actions.",
         "externalDocs": {
@@ -81,6 +89,7 @@ from app.action import action_router
 from app.reaction import reaction_router
 from app.user_action import user_action_router
 from app.user_reaction import user_reaction_router
+from app.service import service_router
 
 app = FastAPI(lifespan=lifespan, openapi_tags=tags_metadata)
 
@@ -106,6 +115,7 @@ app.include_router(action_router)
 app.include_router(reaction_router)
 app.include_router(user_action_router)
 app.include_router(user_reaction_router)
+app.include_router(service_router)
 
 def get_client_ip(request: Request) -> str:
     forwarded = request.headers.get("X-Forwarded-For")
