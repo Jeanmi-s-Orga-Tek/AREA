@@ -15,6 +15,7 @@ class BaseReaction(SQLModel):
     description: Optional[str] = Field(default=None)
     url: Optional[str] = Field(default=None)
     parameters: Optional[dict] = Field(sa_type=JSONB)
+    service_id: Optional[int] = Field(default=None, foreign_key="service.id")
 
 class Reaction(BaseReaction, table=True):
     pass
