@@ -6,8 +6,9 @@
 # */
 
 from datetime import datetime
-from typing import Optional
+from typing import Any, Dict, Optional
 
+from sqlalchemy import JSON, Column
 from sqlmodel import Field, SQLModel
 
 
@@ -45,3 +46,17 @@ class UserServiceSubscription(SQLModel, table=True):
     is_active: bool = True
     created_at: datetime = Field(default_factory=datetime.utcnow, nullable=False)
     oauth_data: Optional[str] = None
+
+
+class Area(SQLModel, table=True):
+    id: Optional[int] = Field(default=None, primary_key=True)
+    user_id: int = Field(foreign_key="user.id", index=True)
+    action_service_id: int = Field(foreign_key="service.id")
+    action_id: int = Field(foreign_key="serviceaction.id")
+    reaction_service_id: int = Field(foreign_key="service.id")
+    reaction_id: int = Field(foreign_key="servicereaction.id")
+    params_action: Dict[str, Any] = Field(default_factory=dict, sa_column=Column(JSON))
+    params_reaction: Dict[str, Any] = Field(default_factory=dict, sa_column=Column(JSON))
+    is_active: bool = True
+    created_at: datetime = Field(default_factory=datetime.utcnow, nullable=False)
+    updated_at: datetime = Field(default_factory=datetime.utcnow, nullable=False)

@@ -6,9 +6,9 @@
 # */
 
 from datetime import datetime
-from typing import List, Optional
+from typing import Any, Dict, List, Optional
 
-from sqlmodel import SQLModel
+from sqlmodel import Field, SQLModel
 
 
 class ServiceRead(SQLModel):
@@ -44,3 +44,24 @@ class ServiceCapabilitiesRead(SQLModel):
     service: ServiceRead
     actions: List[ServiceActionRead]
     reactions: List[ServiceReactionRead]
+
+
+class AreaBase(SQLModel):
+    action_service_id: int
+    action_id: int
+    reaction_service_id: int
+    reaction_id: int
+    params_action: Dict[str, Any] = Field(default_factory=dict)
+    params_reaction: Dict[str, Any] = Field(default_factory=dict)
+    is_active: bool = True
+
+
+class AreaCreate(AreaBase):
+    pass
+
+
+class AreaRead(AreaBase):
+    id: int
+    user_id: int
+    created_at: datetime
+    updated_at: datetime
