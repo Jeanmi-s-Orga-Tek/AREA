@@ -1,2 +1,6 @@
 .env
 pgdata
+node_modules/
+dist/
+.DS_Store
+.vscode/
