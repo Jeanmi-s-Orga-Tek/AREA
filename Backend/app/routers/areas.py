@@ -5,6 +5,7 @@
 # ** areas.py
 # */
 
+from datetime import datetime
 from typing import Annotated, List
 
 from fastapi import APIRouter, Depends, HTTPException, status
@@ -91,3 +92,34 @@ def list_areas(session: SessionDep, token: TokenDep):
     statement = select(Area).where(Area.user_id == user.id).order_by(Area.created_at.desc())
     areas = session.exec(statement).all()
     return [AreaRead.model_validate(area) for area in areas]
+
+
+def require_area(session: SessionDep, area_id: int, user_id: int) -> Area:
+    area = session.get(Area, area_id)
+    if area is None or area.user_id != user_id:
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Area not found")
+    return area
+
+
+@areas_router.patch("/{area_id}/toggle", response_model=AreaRead)
+def toggle_area(area_id: int, session: SessionDep, token: TokenDep):
+    user = get_user_from_token(token, session)
+    if user.id is None:
+        raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="Invalid user")
+    area = require_area(session, area_id, user.id)
+    area.is_active = not area.is_active
+    area.updated_at = datetime.utcnow()
+    session.add(area)
+    session.commit()
+    session.refresh(area)
+    return AreaRead.model_validate(area)
+
+
+@areas_router.delete("/{area_id}", status_code=status.HTTP_204_NO_CONTENT)
+def delete_area(area_id: int, session: SessionDep, token: TokenDep):
+    user = get_user_from_token(token, session)
+    if user.id is None:
+        raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="Invalid user")
+    area = require_area(session, area_id, user.id)
+    session.delete(area)
+    session.commit()
