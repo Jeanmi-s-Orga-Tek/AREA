@@ -21,7 +21,11 @@ from app.service_manager import (
     get_user_service_accounts, get_service_account, create_or_update_service_account,
     disconnect_service_account, get_service_by_name
 )
-from app.oauth_models import Service, ServiceAccount
+from app.oauth_models import Service, ServiceAccount, OAuthConnection
+from app.token_refresh import (
+    refresh_oauth_connection, refresh_service_account_token,
+    get_valid_service_account_token, batch_refresh_expired_tokens
+)
 
 from sqlmodel import Field, Session, SQLModel, asc, create_engine, select, func, col, desc
 from typing import Annotated
@@ -147,7 +151,7 @@ def auth_get_authorization_url_alias(provider: str, flow: str, state: str = ""):
     return oauth_get_authorization_url(provider, flow, state)
 
 @router_login.get("/oauth/callback/{provider}", tags=["oauth"])
-@router_login.get("/auth/callback/{provider}", tags=["oauth"])  # Alias
+@router_login.get("/auth/callback/{provider}", tags=["oauth"])
 def oauth_callback(provider: str, code: str, state: str = "", flow: str = "web", session: Session = Depends(lambda: Session(engine))):
 
     try:
@@ -314,6 +318,125 @@ def disconnect_service(
         )
     
     return {"success": True, "message": "Service disconnected"}
+
+
+# ============================================================
+# ENDPOINTS POUR LE RAFRAÎCHISSEMENT DES TOKENS
+# ============================================================
+
+@router_user.post("/services/{service_account_id}/refresh", tags=["services"])
+def refresh_service_token(
+    service_account_id: int,
+    session: Session = Depends(lambda: Session(engine)),
+    token: str = Depends(oauth2_scheme)
+):
+ 
+    user = get_user_from_token(token, session)
+    if not user:
+        raise HTTPException(status_code=401, detail="Not authenticated")
+    
+    service_account = session.get(ServiceAccount, service_account_id)
+    if not service_account:
+        raise HTTPException(status_code=404, detail="Service account not found")
+    
+    if service_account.user_id != user.id:
+        raise HTTPException(status_code=403, detail="Forbidden")
+    
+    try:
+        refreshed = refresh_service_account_token(session, service_account)
+        return {
+            "success": True,
+            "message": "Token refreshed successfully",
+            "expires_at": refreshed.expires_at,
+        }
+    except HTTPException:
+        raise
+    except Exception as e:
+        raise HTTPException(
+            status_code=500,
+            detail=f"Failed to refresh token: {str(e)}"
+        )
+
+@router_login.post("/admin/refresh-expired-tokens", tags=["admin"])
+def admin_refresh_all_expired_tokens(
+    session: Session = Depends(lambda: Session(engine)),
+    max_count: int = 100
+):
+    try:
+        stats = batch_refresh_expired_tokens(session, max_count=max_count)
+        return {
+            "success": True,
+            "stats": stats,
+            "message": f"Refreshed {stats['oauth_connections']['success'] + stats['service_accounts']['success']} tokens"
+        }
+    except Exception as e:
+        raise HTTPException(
+            status_code=500,
+            detail=f"Batch refresh failed: {str(e)}"
+        )
+
+@router_user.get("/my/oauth-connections", tags=["oauth"])
+def get_my_oauth_connections(
+    session: Session = Depends(lambda: Session(engine)),
+    token: str = Depends(oauth2_scheme)
+):
+    user = get_user_from_token(token, session)
+    if not user:
+        raise HTTPException(status_code=401, detail="Not authenticated")
+    
+    statement = select(OAuthConnection).where(OAuthConnection.user_id == user.id)
+    connections = session.exec(statement).all()
+    
+    from app.token_refresh import is_token_expired
+    
+    result = []
+    for conn in connections:
+        result.append({
+            "id": conn.id,
+            "provider": conn.provider,
+            "provider_email": conn.provider_email,
+            "provider_name": conn.provider_name,
+            "scope": conn.scope,
+            "expires_at": conn.expires_at,
+            "is_expired": is_token_expired(conn.expires_at),
+            "has_refresh_token": bool(conn.refresh_token),
+            "created_at": conn.created_at,
+            "updated_at": conn.updated_at,
+        })
+    
+    return result
+
+@router_user.post("/oauth-connections/{connection_id}/refresh", tags=["oauth"])
+def refresh_oauth_connection_endpoint(
+    connection_id: int,
+    session: Session = Depends(lambda: Session(engine)),
+    token: str = Depends(oauth2_scheme)
+):
+    user = get_user_from_token(token, session)
+    if not user:
+        raise HTTPException(status_code=401, detail="Not authenticated")
+    
+    oauth_conn = session.get(OAuthConnection, connection_id)
+    if not oauth_conn:
+        raise HTTPException(status_code=404, detail="OAuth connection not found")
+    
+    if oauth_conn.user_id != user.id:
+        raise HTTPException(status_code=403, detail="Forbidden")
+    
+    try:
+        refreshed = refresh_oauth_connection(session, oauth_conn)
+        return {
+            "success": True,
+            "message": "OAuth connection refreshed successfully",
+            "expires_at": refreshed.expires_at,
+        }
+    except HTTPException:
+        raise
+    except Exception as e:
+        raise HTTPException(
+            status_code=500,
+            detail=f"Failed to refresh OAuth connection: {str(e)}"
+        )
 
 
 app.add_middleware(
