@@ -1,6 +1,0 @@
-# /*
-# ** EPITECH PROJECT, 2025
-# ** AREA
-# ** File description:
-# ** __init__.py
-# */
