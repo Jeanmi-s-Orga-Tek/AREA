@@ -99,6 +99,7 @@ def get_session():
 SessionDep = Annotated[Session, Depends(get_session)]
 
 from app.user import user_router
+from app.routers.services import services_router
 
 
 app = FastAPI(lifespan=lifespan, openapi_tags=tags_metadata)
@@ -121,6 +122,7 @@ templates = Jinja2Templates(directory="templates")
 # app.include_router(router_login)
 # app.include_router(router_user)
 app.include_router(user_router)
+app.include_router(services_router)
 
 def get_client_ip(request: Request) -> str:
     forwarded = request.headers.get("X-Forwarded-For")
