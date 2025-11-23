@@ -20,6 +20,7 @@ from sqlmodel import Field, Session, SQLModel, asc, create_engine, select, func,
 
 from app.db import create_db_tables, engine, SessionDep
 from app.send_email import send_email
+from app.models.services import Service, ServiceAction, ServiceReaction
 
 # from user import BaseUser, User, RegisteringUser, Token, EmailCheck, PasswordChange, oauth2_scheme, ACCESS_TOKEN_EXPIRE_MINUTES, verify_password, verify_token, get_password_hash, create_access_token, get_user_from_token
 
@@ -81,6 +82,9 @@ from app.action import action_router
 from app.reaction import reaction_router
 from app.user_action import user_action_router
 from app.user_reaction import user_reaction_router
+from app.routers.services import services_router
+from app.routers.areas import areas_router
+
 
 app = FastAPI(lifespan=lifespan, openapi_tags=tags_metadata)
 
@@ -106,6 +110,8 @@ app.include_router(action_router)
 app.include_router(reaction_router)
 app.include_router(user_action_router)
 app.include_router(user_reaction_router)
+app.include_router(services_router)
+app.include_router(areas_router)
 
 def get_client_ip(request: Request) -> str:
     forwarded = request.headers.get("X-Forwarded-For")
@@ -122,25 +128,44 @@ def health():
 
 
 @app.get("/about.json")
-async def about(request: Request):
+async def about(request: Request, session: SessionDep):
     client_host = get_client_ip(request)
     current_time = int(time.time())
-    services = [
-        {
-            "name": "timer",
+    services_query = select(Service).where(Service.is_active == True).order_by(Service.name)
+    services = session.exec(services_query).all()
+    response_services = []
+    for service in services:
+        actions_query = select(ServiceAction).where(
+            ServiceAction.service_id == service.id,
+            ServiceAction.is_active == True,
+        ).order_by(ServiceAction.name)
+        reactions_query = select(ServiceReaction).where(
+            ServiceReaction.service_id == service.id,
+            ServiceReaction.is_active == True,
+        ).order_by(ServiceReaction.name)
+        actions = session.exec(actions_query).all()
+        reactions = session.exec(reactions_query).all()
+        response_services.append({
+            "name": service.name,
             "actions": [
-                {"name": "at_time", "description": "The current time matches HH:MM"},
-                {"name": "on_date", "description": "The current date matches DD/MM"},
+                {
+                    "name": action.name,
+                    "description": action.description,
+                }
+                for action in actions
             ],
             "reactions": [
-                {"name": "log", "description": "Record a log entry"}
+                {
+                    "name": reaction.name,
+                    "description": reaction.description,
+                }
+                for reaction in reactions
             ],
-        }
-    ]
+        })
     return JSONResponse({
         "client": {"host": client_host},
         "server": {
             "current_time": current_time,
-            "services": services,
+            "services": response_services,
         },
     })

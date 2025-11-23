@@ -45,7 +45,7 @@ def auth_user(user: User, username: str, password: str):
         return User
     return False
 
-def get_user_from_token(token: str, session):
+def get_user_from_token(token: str, session) -> Optional[User]:
     if token == "":
         return None
     cred_except = HTTPException(
