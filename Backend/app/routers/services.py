@@ -11,9 +11,15 @@ from fastapi import APIRouter, Depends, HTTPException, status
 from sqlmodel import select
 
 from app.main import SessionDep
-from app.models.services import Service, UserServiceSubscription
+from app.models.services import Service, ServiceAction, ServiceReaction, UserServiceSubscription
 from app.oauth2 import oauth2_scheme
-from app.schemas.services import ServiceRead, SubscriptionRead
+from app.schemas.services import (
+    ServiceActionRead,
+    ServiceCapabilitiesRead,
+    ServiceReactionRead,
+    ServiceRead,
+    SubscriptionRead,
+)
 from app.user import get_user_from_token
 
 
@@ -38,6 +44,28 @@ def serialize_subscription(subscription: UserServiceSubscription) -> Subscriptio
         user_id=subscription.user_id,
         status="active" if subscription.is_active else "inactive",
         created_at=subscription.created_at,
+    )
+
+
+@services_router.get("/{service_id}/capabilities", response_model=ServiceCapabilitiesRead)
+def get_service_capabilities(service_id: int, session: SessionDep):
+    service = session.get(Service, service_id)
+    if service is None or service.is_active is False:
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Service not found")
+    actions_statement = select(ServiceAction).where(
+        ServiceAction.service_id == service_id,
+        ServiceAction.is_active == True,
+    ).order_by(ServiceAction.name)
+    reactions_statement = select(ServiceReaction).where(
+        ServiceReaction.service_id == service_id,
+        ServiceReaction.is_active == True,
+    ).order_by(ServiceReaction.name)
+    actions = session.exec(actions_statement).all()
+    reactions = session.exec(reactions_statement).all()
+    return ServiceCapabilitiesRead(
+        service=ServiceRead.model_validate(service),
+        actions=[ServiceActionRead.model_validate(action) for action in actions],
+        reactions=[ServiceReactionRead.model_validate(reaction) for reaction in reactions],
     )
 
 

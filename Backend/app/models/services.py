@@ -20,6 +20,24 @@ class Service(SQLModel, table=True):
     is_active: bool = True
 
 
+class ServiceAction(SQLModel, table=True):
+    id: Optional[int] = Field(default=None, primary_key=True)
+    service_id: int = Field(foreign_key="service.id", index=True)
+    name: str
+    description: str
+    technical_key: str
+    is_active: bool = True
+
+
+class ServiceReaction(SQLModel, table=True):
+    id: Optional[int] = Field(default=None, primary_key=True)
+    service_id: int = Field(foreign_key="service.id", index=True)
+    name: str
+    description: str
+    technical_key: str
+    is_active: bool = True
+
+
 class UserServiceSubscription(SQLModel, table=True):
     id: Optional[int] = Field(default=None, primary_key=True)
     user_id: int = Field(index=True, foreign_key="user.id")
