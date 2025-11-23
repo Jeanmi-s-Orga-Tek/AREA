@@ -20,6 +20,7 @@ from typing import Annotated
 
 from app.db import create_db_tables, engine
 from app.send_email import send_email
+from app.models.services import Service, ServiceAction, ServiceReaction
 
 # from user import BaseUser, User, RegisteringUser, Token, EmailCheck, PasswordChange, oauth2_scheme, ACCESS_TOKEN_EXPIRE_MINUTES, verify_password, verify_token, get_password_hash, create_access_token, get_user_from_token
 
@@ -141,25 +142,44 @@ def health():
 
 
 @app.get("/about.json")
-async def about(request: Request):
+async def about(request: Request, session: SessionDep):
     client_host = get_client_ip(request)
     current_time = int(time.time())
-    services = [
-        {
-            "name": "timer",
+    services_query = select(Service).where(Service.is_active == True).order_by(Service.name)
+    services = session.exec(services_query).all()
+    response_services = []
+    for service in services:
+        actions_query = select(ServiceAction).where(
+            ServiceAction.service_id == service.id,
+            ServiceAction.is_active == True,
+        ).order_by(ServiceAction.name)
+        reactions_query = select(ServiceReaction).where(
+            ServiceReaction.service_id == service.id,
+            ServiceReaction.is_active == True,
+        ).order_by(ServiceReaction.name)
+        actions = session.exec(actions_query).all()
+        reactions = session.exec(reactions_query).all()
+        response_services.append({
+            "name": service.name,
             "actions": [
-                {"name": "at_time", "description": "The current time matches HH:MM"},
-                {"name": "on_date", "description": "The current date matches DD/MM"},
+                {
+                    "name": action.name,
+                    "description": action.description,
+                }
+                for action in actions
             ],
             "reactions": [
-                {"name": "log", "description": "Record a log entry"}
+                {
+                    "name": reaction.name,
+                    "description": reaction.description,
+                }
+                for reaction in reactions
             ],
-        }
-    ]
+        })
     return JSONResponse({
         "client": {"host": client_host},
         "server": {
             "current_time": current_time,
-            "services": services,
+            "services": response_services,
         },
     })
