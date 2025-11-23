@@ -4,6 +4,9 @@ from typing import Annotated
 from fastapi import Depends, FastAPI, HTTPException, Query
 from sqlmodel import Field, Session, SQLModel, create_engine, select
 
+from app.user import User
+from app.oauth_models import OAuthConnection, OAuthState, Service, ServiceAccount
+
 POSTGRESQL_URI = str(os.environ.get("POSTGRESQL_URI"))
 
 engine = create_engine(POSTGRESQL_URI)

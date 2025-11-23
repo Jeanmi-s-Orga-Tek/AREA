@@ -21,13 +21,17 @@ class MobileOAuthConfig:
 @dataclass(frozen=True)
 class ProviderConfig:
     key: str
+    display_name: str
+    icon: str
+    color: str
+    auth_url: str
+    token_url: str
     web: Optional[WebOAuthConfig]
     mobile: Optional[MobileOAuthConfig]
 
 _PROVIDERS_CACHE: Optional[Dict[str, ProviderConfig]] = None
 
 def _expand_env_vars(value: str) -> str:
-    """Replace ${VAR_NAME} with environment variable value."""
     if isinstance(value, str):
         pattern = r'\$\{([^}]+)\}'
         matches = re.findall(pattern, value)
@@ -46,6 +50,12 @@ def _load_providers_file(path: str) -> Dict[str, ProviderConfig]:
     out: Dict[str, ProviderConfig] = {}
 
     for key, cfg in provs.items():
+        display_name = cfg.get("display_name", key.capitalize())
+        icon = cfg.get("icon", "🔗")
+        color = cfg.get("color", "#000000")
+        auth_url = cfg.get("auth_url", "")
+        token_url = cfg.get("token_url", "")
+
         web_cfg = cfg.get("web")
         mob_cfg = cfg.get("mobile")
 
@@ -65,7 +75,16 @@ def _load_providers_file(path: str) -> Dict[str, ProviderConfig]:
                 scopes=list(mob_cfg.get("scopes", [])),
             )
 
-        out[key] = ProviderConfig(key=key, web=web, mobile=mobile)
+        out[key] = ProviderConfig(
+            key=key,
+            display_name=display_name,
+            icon=icon,
+            color=color,
+            auth_url=auth_url,
+            token_url=token_url,
+            web=web,
+            mobile=mobile
+        )
     return out
 
 def providers_registry() -> Dict[str, ProviderConfig]:
@@ -98,6 +117,62 @@ def public_provider_info(provider: str, flow: FlowType) -> dict:
             "use_pkce": True,
         }
     raise ValueError(f"Flow not supported for '{provider}': {flow}")
+
+def get_auth_url(provider: str, flow: FlowType, state: str = "") -> str:
+    reg = providers_registry()
+    if provider not in reg:
+        raise ValueError(f"Unknown provider: {provider}")
+    
+    p = reg[provider]
+    
+    if flow == "web" and p.web:
+        from urllib.parse import urlencode
+        params = {
+            "client_id": p.web.client_id,
+            "redirect_uri": p.web.redirect_uri,
+            "response_type": "code",
+            "scope": " ".join(p.web.scopes),
+        }
+        if state:
+            params["state"] = state
+        return f"{p.auth_url}?{urlencode(params)}"
+    
+    if flow == "mobile" and p.mobile:
+        from urllib.parse import urlencode
+        params = {
+            "client_id": p.mobile.client_id,
+            "redirect_uri": p.mobile.redirect_uri,
+            "response_type": "code",
+            "scope": " ".join(p.mobile.scopes),
+        }
+        if state:
+            params["state"] = state
+        return f"{p.auth_url}?{urlencode(params)}"
+    
+    raise ValueError(f"Flow not supported for '{provider}': {flow}")
+
+def list_providers_for_frontend(flow: FlowType = "web") -> List[dict]:
+    reg = providers_registry()
+    result = []
+    
+    for key, provider in reg.items():
+        is_available = (flow == "web" and provider.web is not None) or \
+                      (flow == "mobile" and provider.mobile is not None)
+        
+        if is_available:
+            result.append({
+                "id": key,
+                "name": provider.display_name,
+                "icon": provider.icon,
+                "color": provider.color,
+                "available": True,
+                "flows": {
+                    "web": provider.web is not None,
+                    "mobile": provider.mobile is not None
+                }
+            })
+    
+    return result
 
 def reload_providers() -> None:
     global _PROVIDERS_CACHE
