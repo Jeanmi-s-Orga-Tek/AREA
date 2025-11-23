@@ -39,7 +39,7 @@ export interface OAuthProviders {
 
 export async function register(data: RegisterData): Promise<void> {
   try {
-    const response = await fetch(`${API_BASE_URL}/auth/register`, {
+    const response = await fetch(`${API_BASE_URL}/user/register`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -50,6 +50,11 @@ export async function register(data: RegisterData): Promise<void> {
     if (!response.ok) {
       const errorData = (await response.json()) as AuthError;
       throw new Error(errorData.detail || "Registration failed");
+    }
+    
+    const authData = (await response.json()) as AuthResponse;
+    if (authData.access_token) {
+      localStorage.setItem(TOKEN_KEY, authData.access_token);
     }
   } catch (error) {
     if (error instanceof Error) {
@@ -66,7 +71,7 @@ export async function login(data: LoginData): Promise<void> {
     formData.append("username", data.email);
     formData.append("password", data.password);
 
-    const response = await fetch(`${API_BASE_URL}/auth/login`, {
+    const response = await fetch(`${API_BASE_URL}/user/login`, {
       method: "POST",
       headers: {
         "Content-Type": "application/x-www-form-urlencoded",

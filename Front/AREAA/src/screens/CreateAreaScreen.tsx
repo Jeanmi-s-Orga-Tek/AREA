@@ -5,25 +5,27 @@
 ** CreateAreaScreen component - Create new AREA with multi-step form
 */
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
+import { fetchServices, fetchServiceCapabilities, createArea } from "../services/api";
+import type { Service as APIService, ServiceAction, ServiceReaction } from "../services/api";
 import "./CreateAreaScreen.css";
 
 interface Service {
-  id: string;
+  id: number;
   name: string;
   icon: string;
   color: string;
 }
 
 interface ActionType {
-  id: string;
+  id: number;
   name: string;
   description: string;
   parameters: Parameter[];
 }
 
 interface ReactionType {
-  id: string;
+  id: number;
   name: string;
   description: string;
   parameters: Parameter[];
@@ -35,6 +37,7 @@ interface Parameter {
   type: "text" | "number" | "select";
   options?: string[];
   placeholder?: string;
+  required?: boolean;
 }
 
 const CreateAreaScreen: React.FC = () => {
@@ -46,19 +49,77 @@ const CreateAreaScreen: React.FC = () => {
   const [selectedReactionType, setSelectedReactionType] = useState<ReactionType | null>(null);
   const [reactionParameters, setReactionParameters] = useState<Record<string, string>>({});
   const [areaName, setAreaName] = useState("");
+  
+  const [services, setServices] = useState<Service[]>([]);
+  const [actionTypes, setActionTypes] = useState<Record<number, ActionType[]>>({});
+  const [reactionTypes, setReactionTypes] = useState<Record<number, ReactionType[]>>({});
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState("");
+  const [submitting, setSubmitting] = useState(false);
 
-  const services: Service[] = [
-    { id: "github", name: "GitHub", icon: "⚫", color: "#333" },
-    { id: "google", name: "Google", icon: "🔵", color: "#4285F4" },
-    { id: "discord", name: "Discord", icon: "🟣", color: "#5865F2" },
-    { id: "spotify", name: "Spotify", icon: "🟢", color: "#1DB954" },
-    { id: "trello", name: "Trello", icon: "🔷", color: "#0079BF" },
-    { id: "slack", name: "Slack", icon: "🟥", color: "#4A154B" },
-    { id: "twitter", name: "Twitter", icon: "🐦", color: "#1DA1F2" },
-    { id: "microsoft", name: "Microsoft", icon: "🟦", color: "#00A4EF" },
-  ];
+  useEffect(() => {
+    loadServices();
+  }, []);
 
-  const actionTypes: Record<string, ActionType[]> = {
+  const loadServices = async () => {
+    try {
+      setLoading(true);
+      setError("");
+      const apiServices = await fetchServices();
+      
+      const mappedServices: Service[] = apiServices.map((service) => ({
+        id: service.id,
+        name: service.display_name || service.name,
+        icon: service.icon || "🔵",
+        color: service.color || "#4285f4",
+      }));
+
+      setServices(mappedServices);
+    } catch (err) {
+      setError(err instanceof Error ? err.message : "Erreur lors du chargement des services");
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const loadServiceCapabilities = async (serviceId: number) => {
+    try {
+      const capabilities = await fetchServiceCapabilities(serviceId);
+      
+      const mappedActions: ActionType[] = capabilities.actions.map((action) => ({
+        id: action.id,
+        name: action.name,
+        description: action.description,
+        parameters: parseParameters(action.parameters),
+      }));
+
+      const mappedReactions: ReactionType[] = capabilities.reactions.map((reaction) => ({
+        id: reaction.id,
+        name: reaction.name,
+        description: reaction.description,
+        parameters: parseParameters(reaction.parameters),
+      }));
+
+      setActionTypes((prev) => ({ ...prev, [serviceId]: mappedActions }));
+      setReactionTypes((prev) => ({ ...prev, [serviceId]: mappedReactions }));
+    } catch (err) {
+      console.error("Error loading service capabilities:", err);
+    }
+  };
+
+  const parseParameters = (params?: Record<string, any>): Parameter[] => {
+    if (!params) return [];
+    
+    return Object.entries(params).map(([key, value]) => ({
+      id: key,
+      name: key.charAt(0).toUpperCase() + key.slice(1).replace(/_/g, " "),
+      type: typeof value === "number" ? "number" : "text",
+      placeholder: `Enter ${key}...`,
+      required: value?.required || false,
+    }));
+  };
+
+  const dummyActionTypes: Record<string, ActionType[]> = {
     github: [
       {
         id: "new_issue",
@@ -185,7 +246,7 @@ const CreateAreaScreen: React.FC = () => {
     ],
   };
 
-  const reactionTypes: Record<string, ReactionType[]> = {
+  const dummyReactionTypes: Record<string, ReactionType[]> = {
     discord: [
       {
         id: "send_message",
@@ -282,10 +343,14 @@ const CreateAreaScreen: React.FC = () => {
     setCurrentStep(currentStep - 1);
   };
 
-  const handleSelectActionService = (service: Service) => {
+  const handleSelectActionService = async (service: Service) => {
     setSelectedActionService(service);
     setSelectedActionType(null);
     setActionParameters({});
+    
+    if (!actionTypes[service.id]) {
+      await loadServiceCapabilities(service.id);
+    }
   };
 
   const handleSelectActionType = (type: ActionType) => {
@@ -297,10 +362,14 @@ const CreateAreaScreen: React.FC = () => {
     setActionParameters(params);
   };
 
-  const handleSelectReactionService = (service: Service) => {
+  const handleSelectReactionService = async (service: Service) => {
     setSelectedReactionService(service);
     setSelectedReactionType(null);
     setReactionParameters({});
+    
+    if (!reactionTypes[service.id]) {
+      await loadServiceCapabilities(service.id);
+    }
   };
 
   const handleSelectReactionType = (type: ReactionType) => {
@@ -320,25 +389,31 @@ const CreateAreaScreen: React.FC = () => {
     setReactionParameters({ ...reactionParameters, [paramId]: value });
   };
 
-  const handleSubmit = () => {
-    const newArea = {
-      name: areaName,
-      action: {
-        service: selectedActionService?.name,
-        type: selectedActionType?.name,
-        parameters: actionParameters,
-      },
-      reaction: {
-        service: selectedReactionService?.name,
-        type: selectedReactionType?.name,
-        parameters: reactionParameters,
-      },
-    };
+  const handleSubmit = async () => {
+    if (!selectedActionService || !selectedActionType || !selectedReactionService || !selectedReactionType) {
+      alert("Veuillez sélectionner tous les éléments requis");
+      return;
+    }
 
-    console.log("New AREA:", newArea);
-    alert(`AREA "${areaName}" créée avec succès !\n\nAction: ${selectedActionService?.name} - ${selectedActionType?.name}\nRéaction: ${selectedReactionService?.name} - ${selectedReactionType?.name}`);
-    
-    window.location.href = "/areas";
+    setSubmitting(true);
+
+    try {
+      const newArea = await createArea({
+        name: areaName,
+        action_service_id: selectedActionService.id,
+        action_id: selectedActionType.id,
+        action_parameters: actionParameters,
+        reaction_service_id: selectedReactionService.id,
+        reaction_id: selectedReactionType.id,
+        reaction_parameters: reactionParameters,
+      });
+
+      alert(`AREA "${areaName}" créée avec succès !`);
+      window.location.href = "/areas";
+    } catch (err) {
+      alert(`Erreur: ${err instanceof Error ? err.message : "Erreur inconnue"}`);
+      setSubmitting(false);
+    }
   };
 
   const isStep1Valid = selectedActionService !== null;

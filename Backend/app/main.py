@@ -51,6 +51,8 @@ async def lifespan(app: FastAPI):
 origins = [
     "http://localhost",
     "http://localhost:5173",
+    "http://localhost:8080",
+    "http://localhost:8081"
 ]
 
 tags_metadata = [
@@ -222,7 +224,7 @@ def get_my_connected_services(
     session: Session = Depends(lambda: Session(engine)),
     token: str = Depends(oauth2_scheme)
 ):
-
+    print(token)
     user = get_user_from_token(token, session)
     if not user:
         raise HTTPException(status_code=401, detail="Not authenticated")
@@ -433,15 +435,6 @@ def refresh_oauth_connection_endpoint(
             detail=f"Failed to refresh OAuth connection: {str(e)}"
         )
 
-
-app.add_middleware(
-    CORSMiddleware,
-    allow_origins=origins,
-    allow_credentials=True,
-    allow_methods=["*"],
-    allow_headers=["*"],
-)
-
 templates = Jinja2Templates(directory="templates")
 
 app.include_router(router_login)
@@ -453,6 +446,14 @@ app.include_router(user_action_router)
 app.include_router(user_reaction_router)
 app.include_router(services_router)
 app.include_router(areas_router)
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=origins,
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
 
 def get_client_ip(request: Request) -> str:
     forwarded = request.headers.get("X-Forwarded-For")

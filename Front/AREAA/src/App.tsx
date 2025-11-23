@@ -5,7 +5,7 @@
 ** App
 */
 
-import React from "react";
+import React, { useEffect } from "react";
 import AboutScreen from "./screens/AboutScreen";
 import ServerScreen from "./screens/ServerScreen";
 import LoginScreen from "./screens/LoginScreen";
@@ -14,9 +14,20 @@ import ProfileScreen from "./screens/ProfileScreen";
 import ServicesScreen from "./screens/ServicesScreen";
 import AreasScreen from "./screens/AreasScreen";
 import CreateAreaScreen from "./screens/CreateAreaScreen";
+import { isAuthenticated } from "./services/auth";
 
 const App: React.FC = () => {
   const path = window.location.pathname;
+  const authenticated = isAuthenticated();
+
+  const publicRoutes = ["/about", "/login", "/register"];
+  const isPublicRoute = publicRoutes.includes(path);
+
+  useEffect(() => {
+    if (!authenticated && !isPublicRoute) {
+      window.location.href = "/login";
+    }
+  }, [authenticated, isPublicRoute]);
 
   if (path === "/about") {
     return <AboutScreen />;
@@ -28,6 +39,10 @@ const App: React.FC = () => {
 
   if (path === "/register") {
     return <RegisterScreen />;
+  }
+
+  if (!authenticated) {
+    return <LoginScreen />;
   }
 
   if (path === "/profile") {

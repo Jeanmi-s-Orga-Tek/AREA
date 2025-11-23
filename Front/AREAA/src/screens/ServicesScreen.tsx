@@ -5,101 +5,111 @@
 ** ServicesScreen
 */
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
+import { fetchServices, fetchMyConnectedServices, disconnectService } from "../services/api";
+import type { Service as APIService, ServiceAccount } from "../services/api";
 import "./ServicesScreen.css";
 
 interface Service {
-  id: string;
+  id: number;
   name: string;
   description: string;
   icon: string;
   color: string;
   isConnected: boolean;
+  serviceAccountId?: number;
 }
 
 const ServicesScreen: React.FC = () => {
-  const [services, setServices] = useState<Service[]>([
-    {
-      id: "google",
-      name: "Google",
-      description: "Accédez à Gmail, Google Calendar et Google Drive",
-      icon: "🔵",
-      color: "#4285f4",
-      isConnected: true,
-    },
-    {
-      id: "github",
-      name: "GitHub",
-      description: "Gérez vos repositories et notifications GitHub",
-      icon: "⚫",
-      color: "#333",
-      isConnected: true,
-    },
-    {
-      id: "discord",
-      name: "Discord",
-      description: "Recevez des notifications sur vos serveurs Discord",
-      icon: "🟣",
-      color: "#5865f2",
-      isConnected: true,
-    },
-    {
-      id: "spotify",
-      name: "Spotify",
-      description: "Contrôlez votre musique et playlists",
-      icon: "🟢",
-      color: "#1db954",
-      isConnected: false,
-    },
-    {
-      id: "trello",
-      name: "Trello",
-      description: "Automatisez vos boards et cartes Trello",
-      icon: "🔷",
-      color: "#0079bf",
-      isConnected: false,
-    },
-    {
-      id: "microsoft",
-      name: "Microsoft",
-      description: "Accédez à Outlook, OneDrive et Teams",
-      icon: "🟦",
-      color: "#00a4ef",
-      isConnected: false,
-    },
-    {
-      id: "slack",
-      name: "Slack",
-      description: "Recevez des messages sur vos canaux Slack",
-      icon: "💬",
-      color: "#4a154b",
-      isConnected: false,
-    },
-    {
-      id: "twitter",
-      name: "Twitter / X",
-      description: "Publiez des tweets et suivez votre timeline",
-      icon: "🔷",
-      color: "#1da1f2",
-      isConnected: false,
-    },
-  ]);
+  const [services, setServices] = useState<Service[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState("");
 
-  const handleToggleConnection = (serviceId: string) => {
-    setServices((prevServices) =>
-      prevServices.map((service) => {
-        if (service.id === serviceId) {
-          const action = service.isConnected ? "Déconnexion" : "Connexion";
-          alert(`${action} de ${service.name} sera disponible prochainement !`);
-          return { ...service, isConnected: !service.isConnected };
+  useEffect(() => {
+    loadServices();
+  }, []);
+
+  const loadServices = async () => {
+    try {
+      setLoading(true);
+      setError("");
+      
+      const [allServices, connectedServices] = await Promise.all([
+        fetchServices(),
+        fetchMyConnectedServices(),
+      ]);
+
+      const connectedServiceIds = new Set(connectedServices.map((sa) => sa.service.id));
+      const serviceAccountMap = new Map(
+        connectedServices.map((sa) => [sa.service.id, sa.id])
+      );
+
+      const mappedServices: Service[] = allServices.map((service) => ({
+        id: service.id,
+        name: service.display_name || service.name,
+        description: service.description || `Connectez-vous à ${service.display_name}`,
+        icon: service.icon || "�",
+        color: service.color || "#4285f4",
+        isConnected: connectedServiceIds.has(service.id),
+        serviceAccountId: serviceAccountMap.get(service.id),
+      }));
+
+      setServices(mappedServices);
+    } catch (err) {
+      setError(err instanceof Error ? err.message : "Erreur lors du chargement des services");
+      console.error("Error loading services:", err);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleToggleConnection = async (serviceId: number) => {
+    const service = services.find((s) => s.id === serviceId);
+    if (!service) return;
+
+    if (service.isConnected) {
+      // Disconnect
+      if (service.serviceAccountId) {
+        try {
+          await disconnectService(service.serviceAccountId);
+          alert(`Service ${service.name} déconnecté avec succès !`);
+          await loadServices();
+        } catch (err) {
+          alert(`Erreur lors de la déconnexion: ${err instanceof Error ? err.message : "Erreur inconnue"}`);
         }
-        return service;
-      })
-    );
+      }
+    } else {
+      // Connect - redirect to OAuth flow
+      alert(`Connexion OAuth pour ${service.name} sera implémentée prochainement !`);
+    }
   };
 
   const connectedCount = services.filter((s) => s.isConnected).length;
   const totalCount = services.length;
+
+  if (loading) {
+    return (
+      <div className="services-container">
+        <div className="services-content">
+          <p>Chargement des services...</p>
+        </div>
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <div className="services-container">
+        <div className="services-content">
+          <div style={{ color: "red", padding: "20px" }}>
+            <h3>Erreur</h3>
+            <p>{error}</p>
+            <button onClick={loadServices}>Réessayer</button>
+          </div>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="services-container">
