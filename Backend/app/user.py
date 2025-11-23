@@ -8,7 +8,7 @@ from pydantic import BaseModel
 from sqlmodel import Field, Session, SQLModel, create_engine, select
 from fastapi.responses import HTMLResponse, JSONResponse
 
-from app.main import SessionDep
+from app.db import SessionDep
 from app.oauth2 import ACCESS_TOKEN_EXPIRE_MINUTES, create_access_token, get_password_hash, verify_password, SECRET_KEY, ALGORITHM, oauth2_scheme
 
 user_router = APIRouter(

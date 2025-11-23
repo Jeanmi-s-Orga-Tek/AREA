@@ -10,7 +10,7 @@ from typing import Annotated, List
 from fastapi import APIRouter, Depends, HTTPException, status
 from sqlmodel import select
 
-from app.main import SessionDep
+from app.db import SessionDep
 from app.models.services import Service, ServiceAction, ServiceReaction, UserServiceSubscription
 from app.oauth2 import oauth2_scheme
 from app.schemas.services import (

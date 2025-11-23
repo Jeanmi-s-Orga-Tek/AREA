@@ -13,13 +13,7 @@ def get_session():
 
 SessionDep = Annotated[Session, Depends(get_session)]
 
-POSTGRESQL_URI = str(os.environ.get("POSTGRESQL_URI"))
-
-engine = create_engine(POSTGRESQL_URI)
-
 import yaml
-from app.action import Action
-from app.reaction import Reaction
 
 def scan_yaml_files(base_dir):
     yaml_files = []
@@ -37,6 +31,9 @@ def load_yaml_file(path):
             return None
 
 def insert_actions_and_reactions(session):
+    from app.action import Action
+    from app.reaction import Reaction
+    
     action_files = scan_yaml_files(os.path.join(os.path.dirname(__file__), '../actions'))
     for afile in action_files:
         data = load_yaml_file(afile)
@@ -75,6 +72,10 @@ def insert_actions_and_reactions(session):
     session.commit()
 
 def create_db_tables():
+    # Import models here to ensure they're registered with SQLModel.metadata
+    from app.user import User
+    from app.oauth_models import OAuthConnection, OAuthState, Service, ServiceAccount
+    
     SQLModel.metadata.create_all(engine)
     with Session(engine) as session:
         insert_actions_and_reactions(session)
