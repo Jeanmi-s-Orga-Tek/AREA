@@ -7,10 +7,13 @@ import {
   SafeAreaView,
   KeyboardAvoidingView,
   Platform,
+  ActivityIndicator,
 } from 'react-native';
 import {NativeStackNavigationProp} from '@react-navigation/native-stack';
 import {Button} from '../components';
 import {colors, spacing, typography} from '../theme';
+import {login} from '../api/auth';
+import {useAuth} from '../context/AuthContext';
 
 type RootStackParamList = {
   Login: undefined;
@@ -25,9 +28,29 @@ type LoginScreenProps = {
 export const LoginScreen: React.FC<LoginScreenProps> = ({navigation}) => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState('');
+  const {login: setAuthLogin} = useAuth();
 
-  const handleLogin = () => {
-    navigation.navigate('Areas');
+  const handleLogin = async () => {
+    if (!email || !password) {
+      setError('Please enter email and password');
+      return;
+    }
+
+    setLoading(true);
+    setError('');
+
+    const result = await login({username: email, password});
+
+    if (result.success) {
+      setAuthLogin(email);
+      navigation.navigate('Areas');
+    } else {
+      setError(result.error || 'Login failed');
+    }
+
+    setLoading(false);
   };
 
   return (
@@ -48,6 +71,7 @@ export const LoginScreen: React.FC<LoginScreenProps> = ({navigation}) => {
               onChangeText={setEmail}
               autoCapitalize="none"
               keyboardType="email-address"
+              editable={!loading}
             />
             <TextInput
               style={styles.input}
@@ -56,12 +80,16 @@ export const LoginScreen: React.FC<LoginScreenProps> = ({navigation}) => {
               value={password}
               onChangeText={setPassword}
               secureTextEntry
+              editable={!loading}
             />
+            {error ? <Text style={styles.error}>{error}</Text> : null}
             <Button
-              title="Login"
+              title={loading ? 'Signing in...' : 'Sign in'}
               onPress={handleLogin}
               style={styles.button}
+              disabled={loading}
             />
+            {loading && <ActivityIndicator color={colors.primary} />}
           </View>
         </View>
       </KeyboardAvoidingView>
@@ -109,5 +137,10 @@ const styles = StyleSheet.create({
   },
   button: {
     marginTop: spacing.md,
+  },
+  error: {
+    color: colors.error,
+    ...typography.body,
+    textAlign: 'center',
   },
 });

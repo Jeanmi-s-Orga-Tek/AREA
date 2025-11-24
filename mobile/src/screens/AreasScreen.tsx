@@ -9,6 +9,7 @@ import {
 import {NativeStackNavigationProp} from '@react-navigation/native-stack';
 import {Button, Card} from '../components';
 import {colors, spacing, typography} from '../theme';
+import {useAuth} from '../context/AuthContext';
 
 type RootStackParamList = {
   Login: undefined;
@@ -21,6 +22,13 @@ type AreasScreenProps = {
 };
 
 export const AreasScreen: React.FC<AreasScreenProps> = ({navigation}) => {
+  const {logout} = useAuth();
+
+  const handleLogout = async () => {
+    await logout();
+    navigation.navigate('Login');
+  };
+
   return (
     <SafeAreaView style={styles.container}>
       <ScrollView style={styles.scrollView} contentContainerStyle={styles.content}>
@@ -49,6 +57,13 @@ export const AreasScreen: React.FC<AreasScreenProps> = ({navigation}) => {
           title="Go to Settings"
           variant="outline"
           onPress={() => navigation.navigate('Settings')}
+          style={styles.button}
+        />
+
+        <Button
+          title="Logout"
+          variant="secondary"
+          onPress={handleLogout}
           style={styles.button}
         />
       </ScrollView>

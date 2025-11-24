@@ -1,4 +1,5 @@
 import {getApiBaseUrl} from './storage';
+import {getAuthToken} from './auth';
 
 export class ApiClient {
   private async getBaseUrl(): Promise<string> {
@@ -12,12 +13,14 @@ export class ApiClient {
   async get<T>(endpoint: string): Promise<T> {
     const baseUrl = await this.getBaseUrl();
     const url = `${baseUrl}${endpoint}`;
+    const token = await getAuthToken();
 
     try {
       const response = await fetch(url, {
         method: 'GET',
         headers: {
           'Content-Type': 'application/json',
+          ...(token && {Authorization: `Bearer ${token}`}),
         },
       });
 
