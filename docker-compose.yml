@@ -37,7 +37,7 @@ services:
     ports:
       - "8081:80"
     volumes:
-      - ./mobile/apk:/usr/share/nginx/html/apk:ro
+      - ./mobile/apk/client.apk:/usr/share/nginx/html/client.apk:ro
     depends_on:
       - db
       - client_mobile
