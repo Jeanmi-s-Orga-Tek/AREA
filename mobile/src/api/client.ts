@@ -36,6 +36,34 @@ export class ApiClient {
       throw new Error('Network request failed');
     }
   }
+
+  async patch<T>(endpoint: string, body?: any): Promise<T> {
+    const baseUrl = await this.getBaseUrl();
+    const url = `${baseUrl}${endpoint}`;
+    const token = await getAuthToken();
+
+    try {
+      const response = await fetch(url, {
+        method: 'PATCH',
+        headers: {
+          'Content-Type': 'application/json',
+          ...(token && {Authorization: `Bearer ${token}`}),
+        },
+        ...(body && {body: JSON.stringify(body)}),
+      });
+
+      if (!response.ok) {
+        throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+      }
+
+      return await response.json();
+    } catch (error) {
+      if (error instanceof Error) {
+        throw error;
+      }
+      throw new Error('Network request failed');
+    }
+  }
 }
 
 export const apiClient = new ApiClient();
