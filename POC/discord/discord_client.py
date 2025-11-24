@@ -31,3 +31,4 @@ async def send_discord_message(
     finally:
         if should_close:
             await client.aclose()
+

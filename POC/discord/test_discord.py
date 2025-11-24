@@ -4,7 +4,12 @@ from typing import Any, Dict
 
 import httpx
 
-from app.client_discord import send_discord_message
+try:
+    # When run as a package module: python -m POC.discord.test_discord
+    from .discord_client import send_discord_message
+except ImportError:
+    # When run directly: python test_discord.py
+    from discord_client import send_discord_message
 
 
 async def _main() -> None:
@@ -18,7 +23,7 @@ async def _main() -> None:
     transport = httpx.MockTransport(handler)
     async with httpx.AsyncClient(transport=transport) as client:
         await send_discord_message(
-            "Test message from test_discord.py",
+            "Test message from POC/discord/test_discord.py",
             webhook_url="https://discord.com/api/webhooks/test",
             client=client,
         )

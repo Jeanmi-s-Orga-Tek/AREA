@@ -24,54 +24,17 @@ from typing import Annotated
 from app.models import Area
 from app.db import create_db_tables, engine
 from app.send_email import send_email
-from app.client_discord import send_discord_message
+# from app.client_discord import send_discord_message
+from app.user import user_router
+from app.poc.trigger_engine import lifespan
+from app.poc.routes import router as poc_router
 
-# from user import BaseUser, User, RegisteringUser, Token, EmailCheck, PasswordChange, oauth2_scheme, ACCESS_TOKEN_EXPIRE_MINUTES, verify_password, verify_token, get_password_hash, create_access_token, get_user_from_token
-
-async def trigger_loop() -> None:
-    """Background timer engine: runs every 30 seconds and triggers enabled AREAs."""
-    while True:
-        now = datetime.datetime.utcnow()
-        print("[TRIGGER] Loop tick")
-        with Session(engine) as session:
-            areas = session.exec(select(Area).where(Area.enabled == True)).all()
-            for area in areas:
-                if area.last_triggered_at is None:
-                    print(f"[TRIGGER] First trigger for AREA {area.id} - {area.name}")
-                    await send_discord_message(area.message)
-                    area.last_triggered_at = now
-                    session.add(area)
-                    session.commit()
-                    session.refresh(area)
-                    continue
-
-                delta = now - area.last_triggered_at
-                elapsed_minutes = delta.total_seconds() / 60.0
-                if elapsed_minutes >= area.interval_minutes:
-                    print(f"[TRIGGER] Interval trigger for AREA {area.id} - {area.name}")
-                    await send_discord_message(area.message)
-                    area.last_triggered_at = now
-                    session.add(area)
-                    session.commit()
-                    session.refresh(area)
-        await asyncio.sleep(30)
-
-
-@asynccontextmanager
-async def lifespan(app: FastAPI):
-    create_db_tables()
-    loop_task = asyncio.create_task(trigger_loop())
-    try:
-        yield
-    finally:
-        loop_task.cancel()
-        with contextlib.suppress(asyncio.CancelledError):
-            await loop_task
 
 origins = [
     "http://localhost",
     "http://localhost:5173",
 ]
+
 
 tags_metadata = [
     {
@@ -132,13 +95,13 @@ tags_metadata = [
     },
 ]
 
+
 def get_session():
     with Session(engine) as session:
         yield session
 
-SessionDep = Annotated[Session, Depends(get_session)]
 
-from app.user import user_router
+SessionDep = Annotated[Session, Depends(get_session)]
 
 
 app = FastAPI(lifespan=lifespan, openapi_tags=tags_metadata)
@@ -161,41 +124,4 @@ templates = Jinja2Templates(directory="templates")
 # app.include_router(router_login)
 # app.include_router(router_user)
 app.include_router(user_router)
-
-def get_client_ip(request: Request) -> str:
-    forwarded = request.headers.get("X-Forwarded-For")
-    if forwarded:
-        return forwarded.split(",")[0].strip()
-    if request.client and request.client.host:
-        return request.client.host
-    return "unknown"
-
-
-@app.get("/health")
-def health():
-    return {"status": "ok"}
-
-
-@app.get("/about.json")
-async def about(request: Request):
-    client_host = get_client_ip(request)
-    current_time = int(time.time())
-    services = [
-        {
-            "name": "timer",
-            "actions": [
-                {"name": "at_time", "description": "The current time matches HH:MM"},
-                {"name": "on_date", "description": "The current date matches DD/MM"},
-            ],
-            "reactions": [
-                {"name": "log", "description": "Record a log entry"}
-            ],
-        }
-    ]
-    return JSONResponse({
-        "client": {"host": client_host},
-        "server": {
-            "current_time": current_time,
-            "services": services,
-        },
-    })
+app.include_router(poc_router)
