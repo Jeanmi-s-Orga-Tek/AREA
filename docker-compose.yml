@@ -24,16 +24,23 @@ services:
     image: adminer
     ports:
       - "8080:8080"
-    # restart: always
     depends_on:
       - db
+
+  client_mobile:
+    build: ./mobile
+    volumes:
+      - ./mobile/apk:/apk
   
   client_web:
     build: ./Front/AREAA
     ports:
       - "8081:80"
+    volumes:
+      - ./mobile/apk:/usr/share/nginx/html/apk:ro
     depends_on:
       - db
+      - client_mobile
 
 volumes:
   pgdata:
