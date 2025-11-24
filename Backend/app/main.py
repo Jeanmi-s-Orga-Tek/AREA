@@ -26,8 +26,6 @@ from app.db import create_db_tables, engine
 from app.send_email import send_email
 # from app.client_discord import send_discord_message
 from app.user import user_router
-from app.poc.trigger_engine import lifespan
-from app.poc.routes import router as poc_router
 
 
 origins = [
