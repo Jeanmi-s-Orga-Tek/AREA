@@ -24,3 +24,31 @@ providers:
         - openid
         - https://www.googleapis.com/auth/gmail.readonly
         - https://www.googleapis.com/auth/gmail.send
+
+  microsoft:
+    display_name: "Microsoft"
+    icon: "🟦"
+    color: "#00A4EF"
+    auth_url: "https://login.microsoftonline.com/consumers/oauth2/v2.0/authorize"
+    token_url: "https://login.microsoftonline.com/consumers/oauth2/v2.0/token"
+    web:
+      client_id: "${MICROSOFT_WEB_CLIENT_ID}"
+      client_secret: "${MICROSOFT_WEB_CLIENT_SECRET}"
+      redirect_uri: "http://localhost:8081/auth/callback/microsoft"
+      scopes:
+        - openid
+        - profile
+        - email
+        - User.Read
+        - Mail.Read
+        - Mail.Send
+    mobile:
+      client_id: "${MICROSOFT_MOBILE_CLIENT_ID}"
+      redirect_uri: "area.app:/auth"
+      scopes:
+        - openid
+        - profile
+        - email
+        - User.Read
+        - Mail.Read
+        - Mail.Send
