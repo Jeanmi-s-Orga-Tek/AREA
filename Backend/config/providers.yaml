@@ -102,3 +102,25 @@ providers:
         - playlist-read-private
         - playlist-modify-public
         - playlist-modify-private
+  trello:
+    display_name: "Trello"
+    icon: "🛂"
+    color: "#0079BF"
+    auth_url: "https://trello.com/1/authorize"
+    token_url: "https://trello.com/1/OAuthGetAccessToken"
+    web:
+      client_id: "${TRELLO_WEB_CLIENT_API_KEY}"
+      client_secret: "${TRELLO_WEB_CLIENT_API_SECRET}"
+      redirect_uri: "http://localhost:8081/auth/callback/trello"
+      scopes:
+        - read
+        - write
+        - account
+    mobile:
+      client_id: "${TRELLO_WEB_CLIENT_API_KEY}"
+      client_secret: "${TRELLO_WEB_CLIENT_API_SECRET}"
+      redirect_uri: "area.app:/auth"
+      scopes:
+        - read
+        - write
+        - account

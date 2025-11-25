@@ -127,6 +127,20 @@ def get_auth_url(provider: str, flow: FlowType, state: str = "") -> str:
     
     if flow == "web" and p.web:
         from urllib.parse import urlencode
+
+        if provider == "trello":
+            params = {
+                "key": p.web.client_id,
+                "return_url": p.web.redirect_uri,
+                "callback_method": "fragment",
+                "scope": ",".join(p.web.scopes),
+                "expiration": "never",
+                "name": "AREA App",
+            }
+            if state:
+                params["state"] = state
+            return f"{p.auth_url}?{urlencode(params)}"
+        
         params = {
             "client_id": p.web.client_id,
             "redirect_uri": p.web.redirect_uri,
@@ -139,6 +153,20 @@ def get_auth_url(provider: str, flow: FlowType, state: str = "") -> str:
     
     if flow == "mobile" and p.mobile:
         from urllib.parse import urlencode
+
+        if provider == "trello":
+            params = {
+                "key": p.mobile.client_id,
+                "return_url": p.mobile.redirect_uri,
+                "callback_method": "fragment",
+                "scope": ",".join(p.mobile.scopes),
+                "expiration": "never",
+                "name": "AREA Mobile App",
+            }
+            if state:
+                params["state"] = state
+            return f"{p.auth_url}?{urlencode(params)}"
+        
         params = {
             "client_id": p.mobile.client_id,
             "redirect_uri": p.mobile.redirect_uri,
