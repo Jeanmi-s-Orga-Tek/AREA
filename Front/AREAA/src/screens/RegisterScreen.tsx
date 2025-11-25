@@ -5,8 +5,8 @@
 ** RegisterScreen
 */
 
-import React, { useState } from "react";
-import { register } from "../services/auth";
+import React, { useState, useEffect } from "react";
+import { register, fetchOAuthProviders, initiateOAuthLogin, OAuthProvider } from "../services/auth";
 import "./RegisterScreen.css";
 
 const RegisterScreen: React.FC = () => {
@@ -17,6 +17,23 @@ const RegisterScreen: React.FC = () => {
   const [error, setError] = useState("");
   const [success, setSuccess] = useState(false);
   const [loading, setLoading] = useState(false);
+  const [oauthProviders, setOauthProviders] = useState<OAuthProvider[]>([]);
+  const [loadingProviders, setLoadingProviders] = useState(true);
+
+  useEffect(() => {
+    const loadProviders = async () => {
+      try {
+        const providers = await fetchOAuthProviders();
+        setOauthProviders(providers.filter(p => p.available && p.flows.web));
+      } catch (err) {
+        console.error("Failed to load OAuth providers:", err);
+      } finally {
+        setLoadingProviders(false);
+      }
+    };
+    
+    loadProviders();
+  }, []);
 
   const demoProviders = ["Google", "GitHub", "Discord", "Spotify", "Microsoft", "Trello"];
 
@@ -59,8 +76,16 @@ const RegisterScreen: React.FC = () => {
     }
   };
 
-  const handleOAuthLogin = (provider: string) => {
-    alert(`Inscription avec ${provider} sera disponible prochainement !`);
+  const handleOAuthLogin = async (providerId: string) => {
+    setError("");
+    setLoading(true);
+    
+    try {
+      await initiateOAuthLogin(providerId);
+    } catch (err) {
+      setError(err instanceof Error ? err.message : `Erreur lors de l'inscription OAuth`);
+      setLoading(false);
+    }
   };
 
   return (
@@ -151,16 +176,26 @@ const RegisterScreen: React.FC = () => {
         </div>
 
         <div className="register-oauth-buttons">
-          {demoProviders.map((provider) => (
-            <button
-              key={provider}
-              onClick={() => handleOAuthLogin(provider)}
-              className="register-oauth-button"
-              disabled={loading}
-            >
-              S'inscrire avec {provider}
-            </button>
-          ))}
+          {loadingProviders ? (
+            <p style={{ textAlign: "center", color: "#999" }}>Chargement des providers...</p>
+          ) : oauthProviders.length === 0 ? (
+            <p style={{ textAlign: "center", color: "#999" }}>Aucun provider OAuth2 disponible</p>
+          ) : (
+            oauthProviders.map((provider) => (
+              <button
+                key={provider.id}
+                onClick={() => handleOAuthLogin(provider.id)}
+                className="register-oauth-button"
+                disabled={loading}
+                style={{
+                  borderLeft: `4px solid ${provider.color}`,
+                }}
+              >
+                <span style={{ marginRight: "8px" }}>{provider.icon}</span>
+                S'inscrire avec {provider.name}
+              </button>
+            ))
+          )}
         </div>
 
         <div className="register-footer">

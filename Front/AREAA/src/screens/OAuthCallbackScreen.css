@@ -1,0 +1,11 @@
+/*
+** EPITECH PROJECT, 2025
+** AREA
+** File description:
+** OAuthCallbackScreen styles
+*/
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}

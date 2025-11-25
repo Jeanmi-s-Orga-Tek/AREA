@@ -38,6 +38,7 @@ class RegisteringUser(BaseUser):
 
 class User(BaseUser, table=True):
     image: Optional[str] = None
+    role: str = Field(default="user")
     hashed_password: str
 
 def auth_user(user: User, username: str, password: str):

@@ -14,6 +14,7 @@ import ProfileScreen from "./screens/ProfileScreen";
 import ServicesScreen from "./screens/ServicesScreen";
 import AreasScreen from "./screens/AreasScreen";
 import CreateAreaScreen from "./screens/CreateAreaScreen";
+import OAuthCallbackScreen from "./screens/OAuthCallbackScreen";
 import { isAuthenticated } from "./services/auth";
 
 const App: React.FC = () => {
@@ -21,7 +22,8 @@ const App: React.FC = () => {
   const authenticated = isAuthenticated();
 
   const publicRoutes = ["/about", "/login", "/register"];
-  const isPublicRoute = publicRoutes.includes(path);
+  const isOAuthCallback = path.startsWith("/auth/callback/");
+  const isPublicRoute = publicRoutes.includes(path) || isOAuthCallback;
 
   useEffect(() => {
     if (!authenticated && !isPublicRoute) {
@@ -31,6 +33,10 @@ const App: React.FC = () => {
 
   if (path === "/about") {
     return <AboutScreen />;
+  }
+
+  if (isOAuthCallback) {
+    return <OAuthCallbackScreen />;
   }
 
   if (path === "/login") {
