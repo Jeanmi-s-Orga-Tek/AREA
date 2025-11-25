@@ -8,6 +8,7 @@ from sqlmodel import Session, select
 
 from app.area import Area, AreaCreate, AreaRead
 from app.db import create_db_tables, get_session
+from .discord import DiscordMessage, DiscordMessageCreate, DiscordMessageRead
 
 
 @asynccontextmanager
@@ -52,6 +53,22 @@ def list_areas(session: SessionDep):
     areas = session.exec(statement).all()
     return areas
 
+@app.get("/discord/messages", response_model=list[DiscordMessageRead], tags=["discord"])
+def list_discord_messages(session: SessionDep):
+    statement = select(DiscordMessage).order_by(DiscordMessage.id)
+    results = session.exec(statement).all()
+    return results
+
+@app.post("/discord/messages", response_model=DiscordMessageRead, tags=["discord"])
+def create_discord_message(
+        payload: DiscordMessageCreate,
+        session: SessionDep,
+):
+    obj = DiscordMessage.model_validate(payload)
+    session.add(obj)
+    session.commit()
+    session.refresh(obj)
+    return obj
 
 @app.get("/about.json", tags=["about"])
 def get_about():

@@ -15,6 +15,23 @@ export interface AreaCreate {
   message: string;
 }
 
+export interface discordMessage {
+    id: number;
+    name: string;
+    webhookUrl: string;
+    message: string;
+    interval_minutes: number;
+    enabled: boolean;
+    last_triggered_at: string | null;
+}
+
+export interface discordMessageCreate {
+    name: string;
+    webhookUrl: string;
+    message: string;
+    interval_minutes: number;
+}
+
 async function performFetch(
   path: string,
   init: RequestInit | undefined,
@@ -47,6 +64,10 @@ export async function listAreas(): Promise<Area[]> {
   return parseJsonResponse<Area[]>(response, "Failed to list areas");
 }
 
+export async function listDiscordMessages(): Promise<discordMessage[]> {
+    const response = await performFetch("/discord/messages", undefined, "Unable to reach backend while listing discord messages");
+    return parseJsonResponse<discordMessage[]>(response, "Failed to list discord messages");
+}
 export async function createArea(payload: AreaCreate): Promise<Area> {
   const response = await performFetch(
     "/areas",
@@ -61,4 +82,20 @@ export async function createArea(payload: AreaCreate): Promise<Area> {
   );
 
   return parseJsonResponse<Area>(response, "Failed to create area");
+}
+
+export async function createDiscordMessage(payload: discordMessageCreate): Promise<discordMessage> {
+    const response = await performFetch(
+        "/discord/messages",
+        {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify(payload)
+        },
+        "Unable to reach backend while creating discord message"
+    );
+
+    return parseJsonResponse<discordMessage>(response, "Failed to create discord message");
 }
