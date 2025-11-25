@@ -8,8 +8,10 @@ from sqlmodel import Session, select
 
 from app.area import Area, AreaCreate, AreaRead
 from app.db import create_db_tables, get_session
-from .discord import DiscordMessage, DiscordMessageCreate, DiscordMessageRead
+from .discord import DiscordMessage, DiscordMessageCreate, DiscordMessageRead, discord_router
 
+
+app = FastAPI()
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
@@ -34,6 +36,8 @@ app.add_middleware(
     allow_methods=["*"],
     allow_headers=["*"],
 )
+
+app.include_router(discord_router)
 
 SessionDep = Annotated[Session, Depends(get_session)]
 

@@ -1,30 +1,28 @@
-from datetime import datetime
-from typing import Optional
+from typing import Optional, List
 
-from sqlmodel import Field, SQLModel
+from fastapi import APIRouter
+from sqlmodel import SQLModel, Field
 
-
-class DiscordMessageBase(SQLModel):
-    name: str = Field(index=True)
-    webhookUrl: str
-    message: str
-    interval_minutes: int = Field(ge=1)
-    enabled: bool = Field(default=True)
+discord_router = APIRouter(prefix="/discord", tags=["discord"])
 
 
-class DiscordMessage(DiscordMessageBase, table=True):
-    __tablename__ = "discord_message"
-
+class DiscordMessage(SQLModel, table=True):
     id: Optional[int] = Field(default=None, primary_key=True)
-    last_triggered_at: Optional[datetime] = Field(default=None)
-    created_at: datetime = Field(default_factory=datetime.utcnow)
+    webhook_url: str
+    content: str
 
 
-class DiscordMessageCreate(DiscordMessageBase):
-    pass
+class DiscordMessageCreate(SQLModel):
+    webhook_url: str
+    content: str
 
 
-class DiscordMessageRead(DiscordMessageBase):
+class DiscordMessageRead(SQLModel):
     id: int
-    created_at: datetime
-    last_triggered_at: Optional[datetime] = None
+    webhook_url: str
+    content: str
+
+
+@discord_router.get("/messages", response_model=List[DiscordMessageRead])
+def list_messages():
+    return []

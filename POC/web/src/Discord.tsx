@@ -18,17 +18,20 @@ const Discord: React.FC = () => {
 
     const loadDiscord = async () => {
         setLoadingListDiscord(true);
+        setErrorDiscord(null);
         try {
-            const data = await listDiscordMessages();
+            const resp = await fetch("http://localhost:8080/api/discord");
+            console.log("list messages status:", resp.status);
+            if (!resp.ok) {
+              throw new Error("Backend error");
+            }
+            const data = await resp.json();
             setDiscordMessages(data);
-            setErrorDiscord(null);
         } catch (err) {
-            const message =
-                err instanceof Error ? err.message : "Failed to load discord messages";
-            setErrorDiscord(message);
-            console.error(message, err);
+            console.error("Fetch error while listing discord messages:", err);
+            setErrorDiscord("Unable to reach backend while listing discord messages.");
         } finally {
-            setLoadingListDiscord(false);
+            setLoadingDiscord(false);
         }
     };
 
@@ -44,6 +47,31 @@ const Discord: React.FC = () => {
             setErrorDiscord("Webhook URL and message are required.");
             return;
         }
+
+        try {
+        const resp = await fetch("/api/discord", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+                webhook_url: webhookUrl,
+                content: messageDiscord,
+            }),
+        });
+
+        if (!resp.ok) {
+            const data = await resp.json().catch(() => null);
+            console.error("Discord error:", data);
+            setErrorDiscord(data?.detail || "Failed to send Discord message.");
+            return;
+        }
+        console.log("Discord message sent OK");
+        alert("Discord message sent");
+    } catch (err) {
+        console.error("Network or server error:", err);
+        setErrorDiscord("Error sending Discord message.");
+    }
 
         if (intervalMinutesDiscord < 1) {
             setErrorDiscord("Interval must be at least 1 minute.");
