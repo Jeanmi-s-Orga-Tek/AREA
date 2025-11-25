@@ -71,6 +71,7 @@ def get_user_info_from_provider(provider: str, access_token: str) -> Dict[str, A
         "github": "https://api.github.com/user",
         "discord": "https://discord.com/api/users/@me",
         "microsoft": "https://graph.microsoft.com/v1.0/me",
+        "spotify": "https://api.spotify.com/v1/me",
     }
     
     if provider not in userinfo_urls:
@@ -90,6 +91,7 @@ def get_user_info_from_provider(provider: str, access_token: str) -> Dict[str, A
             )
         
         user_info = response.json()
+        
         if provider == "github" and not user_info.get("email"):
             try:
                 emails_response = requests.get(

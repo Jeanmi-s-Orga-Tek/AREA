@@ -75,3 +75,30 @@ providers:
         - user
         - user:email
         - read:user
+
+  spotify:
+    display_name: "Spotify"
+    icon: "🟢"
+    color: "#1DB954"
+    auth_url: "https://accounts.spotify.com/authorize"
+    token_url: "https://accounts.spotify.com/api/token"
+    web:
+      client_id: "${SPOTIFY_CLIENT_ID}"
+      client_secret: "${SPOTIFY_CLIENT_SECRET}"
+      redirect_uri: "http://127.0.0.1:8081/auth/callback/spotify"
+      scopes:
+        - user-read-email
+        - user-read-private
+        - playlist-read-private
+        - playlist-modify-public
+        - playlist-modify-private
+    mobile:
+      client_id: "${SPOTIFY_MOBILE_CLIENT_ID}"
+      client_secret: "${SPOTIFY_MOBILE_CLIENT_SECRET}"
+      redirect_uri: "area.app:/auth"
+      scopes:
+        - user-read-email
+        - user-read-private
+        - playlist-read-private
+        - playlist-modify-public
+        - playlist-modify-private
