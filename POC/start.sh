@@ -50,7 +50,6 @@ docker run -d \
   -e DATABASE_URL="postgresql://area_user:area_password@area-poc-postgres:5432/area_poc" \
   -p 8080:8080 \
   -v "$(pwd)/backend/app:/code/app" \
-  -v "$(pwd)/backend/discord:/code/discord" \
   area-poc-backend
 
 echo " Attente du backend..."
