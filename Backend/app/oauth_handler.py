@@ -89,7 +89,35 @@ def get_user_info_from_provider(provider: str, access_token: str) -> Dict[str, A
                 detail=f"Failed to get user info: {response.text}"
             )
         
-        return response.json()
+        user_info = response.json()
+        if provider == "github" and not user_info.get("email"):
+            try:
+                emails_response = requests.get(
+                    "https://api.github.com/user/emails",
+                    headers={"Authorization": f"Bearer {access_token}"},
+                    timeout=10
+                )
+                
+                if emails_response.status_code == 200:
+                    emails = emails_response.json()
+                    primary_email = next(
+                        (e["email"] for e in emails if e.get("primary") and e.get("verified")),
+                        None
+                    )
+                    if not primary_email:
+                        primary_email = next(
+                            (e["email"] for e in emails if e.get("verified")),
+                            None
+                        )
+                    if not primary_email and emails:
+                        primary_email = emails[0].get("email")
+                    
+                    if primary_email:
+                        user_info["email"] = primary_email
+            except Exception as e:
+                print(f"Failed to fetch GitHub emails: {e}")
+        
+        return user_info
     
     except requests.RequestException as e:
         raise HTTPException(

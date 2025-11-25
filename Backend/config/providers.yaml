@@ -52,3 +52,26 @@ providers:
         - User.Read
         - Mail.Read
         - Mail.Send
+
+  github:
+    display_name: "GitHub"
+    icon: "⚫"
+    color: "#24292e"
+    auth_url: "https://github.com/login/oauth/authorize"
+    token_url: "https://github.com/login/oauth/access_token"
+    web:
+      client_id: "${GITHUB_WEB_CLIENT_ID}"
+      client_secret: "${GITHUB_WEB_CLIENT_SECRET}"
+      redirect_uri: "http://localhost:8081/auth/callback/github"
+      scopes:
+        - user
+        - user:email
+        - read:user
+    mobile:
+      client_id: "${GITHUB_MOBILE_CLIENT_ID}"
+      client_secret: "${GITHUB_MOBILE_CLIENT_SECRET}"
+      redirect_uri: "area.app:/auth"
+      scopes:
+        - user
+        - user:email
+        - read:user
