@@ -149,10 +149,21 @@ def auth_get_authorization_url_alias(provider: str, flow: str, state: str = ""):
 
 @router_login.get("/oauth/callback/{provider}", tags=["oauth"])
 @router_login.get("/auth/callback/{provider}", tags=["oauth"])
-def oauth_callback(provider: str, code: str, state: str = "", flow: str = "web", session: Session = Depends(lambda: Session(engine))):
+def oauth_callback(
+    provider: str, 
+    code: Optional[str] = None, 
+    token: Optional[str] = None,
+    state: str = "", 
+    flow: str = "web", 
+    session: Session = Depends(lambda: Session(engine))
+):
+    auth_code = token if provider == "trello" and token else code
+    
+    if not auth_code:
+        raise HTTPException(status_code=400, detail="No authorization code or token provided")
 
     try:
-        token_data = exchange_code_for_token(provider, flow, code)
+        token_data = exchange_code_for_token(provider, flow, auth_code)
         
         user_info = get_user_info_from_provider(provider, token_data["access_token"])
         

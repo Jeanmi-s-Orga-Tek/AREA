@@ -16,18 +16,24 @@ const OAuthCallbackScreen: React.FC = () => {
     const processOAuthCallback = async () => {
       try {
         const urlParams = new URLSearchParams(window.location.search);
-        const code = urlParams.get("code");
-        const state = urlParams.get("state");
-        const errorParam = urlParams.get("error");
+        
+        const hash = window.location.hash;
+        const hashContent = hash.replace(/^#/, '');
 
-        console.log("=== OAuth Callback Debug ===");
-        console.log("Full URL:", window.location.href);
-        console.log("Pathname:", window.location.pathname);
-        console.log("Search:", window.location.search);
-        console.log("Code:", code);
-        console.log("State:", state);
-        console.log("Error:", errorParam);
-        console.log("===========================");
+        let hashToken = null;
+        let hashState = null;
+        if (hashContent) {
+          const hashPairs = hashContent.split('&');
+          for (const pair of hashPairs) {
+            const [key, value] = pair.split('=');
+            if (key === 'token') hashToken = decodeURIComponent(value);
+            if (key === 'state') hashState = decodeURIComponent(value);
+          }
+        }
+
+        let code = urlParams.get("code") || urlParams.get("token") || hashToken;
+        let state = urlParams.get("state") || hashState;
+        const errorParam = urlParams.get("error");
 
         if (errorParam) {
           const errorDescription = urlParams.get("error_description") || errorParam;
