@@ -60,8 +60,6 @@ def require_subscription(session: Session, user_id: int, service_id: int):
 @areas_router.post("/", response_model=AreaRead)
 def create_area(area_data: AreaCreate, session: SessionDep, token: TokenDep):
     user = get_user_from_token(token, session)
-    if user is None or user.id is None:
-        raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="Invalid user")
     require_service(session, area_data.action_service_id)
     require_service(session, area_data.reaction_service_id)
     require_action(session, area_data.action_id, area_data.action_service_id)
@@ -87,8 +85,8 @@ def create_area(area_data: AreaCreate, session: SessionDep, token: TokenDep):
 @areas_router.get("/", response_model=List[AreaRead])
 def list_areas(session: SessionDep, token: TokenDep):
     user = get_user_from_token(token, session)
-    if user is None or user.id is None:
-        raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="Invalid user")
+    if user is None:
+        raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="Invalid token")
     statement = select(Area).where(Area.user_id == user.id).order_by(Area.created_at.desc())
     areas = session.exec(statement).all()
     return [AreaRead.model_validate(area) for area in areas]
@@ -104,8 +102,6 @@ def require_area(session: SessionDep, area_id: int, user_id: int) -> Area:
 @areas_router.patch("/{area_id}/toggle", response_model=AreaRead)
 def toggle_area(area_id: int, session: SessionDep, token: TokenDep):
     user = get_user_from_token(token, session)
-    if user is None or user.id is None:
-        raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="Invalid user")
     area = require_area(session, area_id, user.id)
     area.is_active = not area.is_active
     area.updated_at = datetime.utcnow()
@@ -118,8 +114,6 @@ def toggle_area(area_id: int, session: SessionDep, token: TokenDep):
 @areas_router.delete("/{area_id}", status_code=status.HTTP_204_NO_CONTENT)
 def delete_area(area_id: int, session: SessionDep, token: TokenDep):
     user = get_user_from_token(token, session)
-    if user is None or user.id is None:
-        raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="Invalid user")
     area = require_area(session, area_id, user.id)
     session.delete(area)
     session.commit()
