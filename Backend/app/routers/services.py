@@ -38,6 +38,20 @@ def list_services(session: SessionDep):
     return services
 
 
+@services_router.get("/my-services", response_model=List[SubscriptionRead])
+def get_my_services(session: SessionDep, token: TokenDep):
+    user = get_user_from_token(token, session)
+    if user is None or user.id is None:
+        raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="Not authenticated")
+    
+    statement = select(UserServiceSubscription).where(
+        UserServiceSubscription.user_id == user.id,
+        UserServiceSubscription.is_active == True,
+    )
+    subscriptions = session.exec(statement).all()
+    return [serialize_subscription(sub) for sub in subscriptions]
+
+
 def serialize_subscription(subscription: UserServiceSubscription) -> SubscriptionRead:
     return SubscriptionRead(
         service_id=subscription.service_id,

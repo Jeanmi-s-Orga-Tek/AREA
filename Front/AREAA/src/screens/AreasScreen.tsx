@@ -5,7 +5,9 @@
 ** AreasScreen component - List of all AREA
 */
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
+import { fetchMyAreas, toggleAreaStatus, deleteArea } from "../services/api";
+import type { AreaDetail } from "../services/api";
 import "./AreasScreen.css";
 
 interface Action {
@@ -21,7 +23,7 @@ interface Reaction {
 }
 
 interface Area {
-  id: string;
+  id: number;
   name: string;
   action: Action;
   reaction: Reaction;
@@ -30,128 +32,104 @@ interface Area {
 }
 
 const AreasScreen: React.FC = () => {
-  const [areas, setAreas] = useState<Area[]>([
-    {
-      id: "1",
-      name: "Notifications GitHub → Discord",
-      action: {
-        service: "GitHub",
-        type: "New Issue",
-        description: "Quand une nouvelle issue est créée",
-      },
-      reaction: {
-        service: "Discord",
-        type: "Send Message",
-        description: "Envoyer un message dans #dev",
-      },
-      isActive: true,
-      createdAt: "15 Nov 2025",
-    },
-    {
-      id: "2",
-      name: "Emails → Trello",
-      action: {
-        service: "Google",
-        type: "New Email",
-        description: "Quand un email important arrive",
-      },
-      reaction: {
-        service: "Trello",
-        type: "Create Card",
-        description: "Créer une carte dans 'To Do'",
-      },
-      isActive: true,
-      createdAt: "12 Nov 2025",
-    },
-    {
-      id: "3",
-      name: "Spotify → Twitter",
-      action: {
-        service: "Spotify",
-        type: "New Liked Song",
-        description: "Quand j'aime une chanson",
-      },
-      reaction: {
-        service: "Twitter",
-        type: "Post Tweet",
-        description: "Publier un tweet avec le titre",
-      },
-      isActive: false,
-      createdAt: "08 Nov 2025",
-    },
-    {
-      id: "4",
-      name: "GitHub PR → Slack",
-      action: {
-        service: "GitHub",
-        type: "New Pull Request",
-        description: "Quand une PR est créée",
-      },
-      reaction: {
-        service: "Slack",
-        type: "Send Notification",
-        description: "Notifier l'équipe dans #reviews",
-      },
-      isActive: true,
-      createdAt: "05 Nov 2025",
-    },
-    {
-      id: "5",
-      name: "Trello → Microsoft Teams",
-      action: {
-        service: "Trello",
-        type: "Card Moved",
-        description: "Quand une carte est déplacée en 'Done'",
-      },
-      reaction: {
-        service: "Microsoft",
-        type: "Send Message",
-        description: "Célébrer dans le channel Teams",
-      },
-      isActive: true,
-      createdAt: "01 Nov 2025",
-    },
-    {
-      id: "6",
-      name: "Discord → Google Calendar",
-      action: {
-        service: "Discord",
-        type: "Event Created",
-        description: "Quand un événement Discord est créé",
-      },
-      reaction: {
-        service: "Google",
-        type: "Create Event",
-        description: "Ajouter au calendrier Google",
-      },
-      isActive: false,
-      createdAt: "28 Oct 2025",
-    },
-  ]);
+  const [areas, setAreas] = useState<Area[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState("");
 
-  const handleToggleActive = (id: string) => {
-    setAreas(
-      areas.map((area) =>
-        area.id === id ? { ...area, isActive: !area.isActive } : area
-      )
-    );
-    const area = areas.find((a) => a.id === id);
-    if (area) {
-      alert(
-        `AREA "${area.name}" ${area.isActive ? "désactivée" : "activée"} avec succès !`
-      );
+  useEffect(() => {
+    loadAreas();
+  }, []);
+
+  const loadAreas = async () => {
+    try {
+      setLoading(true);
+      setError("");
+      
+      const apiAreas = await fetchMyAreas();
+      
+      const mappedAreas: Area[] = apiAreas.map((area) => ({
+        id: area.id,
+        name: area.name,
+        action: {
+          service: area.action.service.display_name || area.action.service.name,
+          type: area.action.action.name,
+          description: area.action.action.description,
+        },
+        reaction: {
+          service: area.reaction.service.display_name || area.reaction.service.name,
+          type: area.reaction.reaction.name,
+          description: area.reaction.reaction.description,
+        },
+        isActive: area.is_active,
+        createdAt: new Date(area.created_at).toLocaleDateString("fr-FR", {
+          day: "2-digit",
+          month: "short",
+          year: "numeric",
+        }),
+      }));
+
+      setAreas(mappedAreas);
+    } catch (err) {
+      setError(err instanceof Error ? err.message : "Erreur lors du chargement des AREAs");
+      console.error("Error loading areas:", err);
+    } finally {
+      setLoading(false);
     }
   };
 
-  const handleDelete = (id: string) => {
+  const handleToggleActive = async (id: number) => {
     const area = areas.find((a) => a.id === id);
-    if (area && window.confirm(`Voulez-vous vraiment supprimer "${area.name}" ?`)) {
-      setAreas(areas.filter((a) => a.id !== id));
-      alert(`AREA "${area.name}" supprimée avec succès !`);
+    if (!area) return;
+
+    try {
+      await toggleAreaStatus(id, !area.isActive);
+      alert(`AREA "${area.name}" ${area.isActive ? "désactivée" : "activée"} avec succès !`);
+      await loadAreas();
+    } catch (err) {
+      alert(`Erreur: ${err instanceof Error ? err.message : "Erreur inconnue"}`);
+    }
+  };
+
+  const handleDelete = async (id: number) => {
+    const area = areas.find((a) => a.id === id);
+    if (!area) return;
+    
+    if (window.confirm(`Voulez-vous vraiment supprimer "${area.name}" ?`)) {
+      try {
+        await deleteArea(id);
+        alert(`AREA "${area.name}" supprimée avec succès !`);
+        await loadAreas();
+      } catch (err) {
+        alert(`Erreur: ${err instanceof Error ? err.message : "Erreur inconnue"}`);
+      }
     }
   };
 
   const activeCount = areas.filter((area) => area.isActive).length;
+
+  if (loading) {
+    return (
+      <div className="areas-container">
+        <div className="areas-content">
+          <p>Chargement des AREAs...</p>
+        </div>
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <div className="areas-container">
+        <div className="areas-content">
+          <div style={{ color: "red", padding: "20px" }}>
+            <h3>Erreur</h3>
+            <p>{error}</p>
+            <button onClick={loadAreas}>Réessayer</button>
+          </div>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="areas-container">
