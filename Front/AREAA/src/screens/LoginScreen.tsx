@@ -5,8 +5,8 @@
 ** LoginScreen
 */
 
-import React, { useState } from "react";
-import { login } from "../services/auth";
+import React, { useState, useEffect } from "react";
+import { login, fetchOAuthProviders, initiateOAuthLogin, OAuthProvider } from "../services/auth";
 import "./LoginScreen.css";
 
 const LoginScreen: React.FC = () => {
@@ -14,9 +14,23 @@ const LoginScreen: React.FC = () => {
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
+  const [oauthProviders, setOauthProviders] = useState<OAuthProvider[]>([]);
+  const [loadingProviders, setLoadingProviders] = useState(true);
 
-  // Liste de démonstration des providers OAuth2 (visuel seulement)
-  const demoProviders = ["Google", "GitHub", "Discord", "Spotify", "Microsoft", "Trello"];
+  useEffect(() => {
+    const loadProviders = async () => {
+      try {
+        const providers = await fetchOAuthProviders();
+        setOauthProviders(providers.filter(p => p.available && p.flows.web));
+      } catch (err) {
+        console.error("Failed to load OAuth providers:", err);
+      } finally {
+        setLoadingProviders(false);
+      }
+    };
+    
+    loadProviders();
+  }, []);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -39,8 +53,16 @@ const LoginScreen: React.FC = () => {
     }
   };
 
-  const handleOAuthLogin = (provider: string) => {
-    alert(`Connexion avec ${provider} sera disponible prochainement !`);
+  const handleOAuthLogin = async (providerId: string) => {
+    setError("");
+    setLoading(true);
+    
+    try {
+      await initiateOAuthLogin(providerId);
+    } catch (err) {
+      setError(err instanceof Error ? err.message : `Erreur lors de la connexion OAuth`);
+      setLoading(false);
+    }
   };
 
   return (
@@ -98,16 +120,26 @@ const LoginScreen: React.FC = () => {
         </div>
 
         <div className="login-oauth-buttons">
-          {demoProviders.map((provider) => (
-            <button
-              key={provider}
-              onClick={() => handleOAuthLogin(provider)}
-              className="login-oauth-button"
-              disabled={loading}
-            >
-              Se connecter avec {provider}
-            </button>
-          ))}
+          {loadingProviders ? (
+            <p style={{ textAlign: "center", color: "#999" }}>Chargement des providers...</p>
+          ) : oauthProviders.length === 0 ? (
+            <p style={{ textAlign: "center", color: "#999" }}>Aucun provider OAuth2 disponible</p>
+          ) : (
+            oauthProviders.map((provider) => (
+              <button
+                key={provider.id}
+                onClick={() => handleOAuthLogin(provider.id)}
+                className="login-oauth-button"
+                disabled={loading}
+                style={{
+                  borderLeft: `4px solid ${provider.color}`,
+                }}
+              >
+                <span style={{ marginRight: "8px" }}>{provider.icon}</span>
+                Se connecter avec {provider.name}
+              </button>
+            ))
+          )}
         </div>
 
         <div className="login-footer">

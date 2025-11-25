@@ -29,12 +29,19 @@ export interface AuthError {
 }
 
 export interface OAuthProvider {
-  web: boolean;
-  mobile: boolean;
+  id: string;
+  name: string;
+  icon: string;
+  color: string;
+  available: boolean;
+  flows: {
+    web: boolean;
+    mobile: boolean;
+  };
 }
 
-export interface OAuthProviders {
-  [key: string]: OAuthProvider;
+export interface AuthorizeUrlResponse {
+  authorization_url: string;
 }
 
 export async function register(data: RegisterData): Promise<void> {
@@ -108,10 +115,9 @@ export function isAuthenticated(): boolean {
   return getToken() !== null;
 }
 
-
-export async function fetchOAuthProviders(): Promise<OAuthProviders> {
+export async function fetchOAuthProviders(): Promise<OAuthProvider[]> {
   try {
-    const response = await fetch(`${API_BASE_URL}/oauth/providers`, {
+    const response = await fetch(`${API_BASE_URL}/auth/providers`, {
       headers: {
         Accept: "application/json",
       },
@@ -121,13 +127,57 @@ export async function fetchOAuthProviders(): Promise<OAuthProviders> {
       throw new Error("Failed to fetch OAuth providers");
     }
 
-    return (await response.json()) as OAuthProviders;
+    return (await response.json()) as OAuthProvider[];
   } catch (error) {
     console.error("Error fetching OAuth providers:", error);
-    return {};
+    return [];
   }
 }
 
-export function getOAuthAuthUrl(provider: string): string {
-  return `${API_BASE_URL}/oauth/authorize/${provider}/web`;
+export async function initiateOAuthLogin(providerId: string): Promise<void> {
+  try {
+    const response = await fetch(`${API_BASE_URL}/oauth/authorize/${providerId}/web`, {
+      headers: {
+        Accept: "application/json",
+      },
+    });
+
+    if (!response.ok) {
+      throw new Error(`Failed to get OAuth URL for ${providerId}`);
+    }
+
+    const data = (await response.json()) as AuthorizeUrlResponse;
+    
+    window.location.href = data.authorization_url;
+  } catch (error) {
+    console.error(`Error initiating OAuth login for ${providerId}:`, error);
+    throw error;
+  }
+}
+
+export async function handleOAuthCallback(provider: string, code: string, state: string): Promise<void> {
+  try {
+    const response = await fetch(
+      `${API_BASE_URL}/auth/callback/${provider}?code=${encodeURIComponent(code)}&state=${encodeURIComponent(state)}`,
+      {
+        method: "GET",
+        headers: {
+          Accept: "application/json",
+        },
+      }
+    );
+
+    if (!response.ok) {
+      const errorData = (await response.json()) as AuthError;
+      throw new Error(errorData.detail || "OAuth callback failed");
+    }
+
+    const authData = (await response.json()) as AuthResponse;
+    localStorage.setItem(TOKEN_KEY, authData.access_token);
+  } catch (error) {
+    if (error instanceof Error) {
+      throw error;
+    }
+    throw new Error("Network error during OAuth callback");
+  }
 }
