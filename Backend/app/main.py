@@ -224,7 +224,6 @@ def get_my_connected_services(
     session: Session = Depends(lambda: Session(engine)),
     token: str = Depends(oauth2_scheme)
 ):
-    print(token)
     user = get_user_from_token(token, session)
     if not user:
         raise HTTPException(status_code=401, detail="Not authenticated")
