@@ -3,11 +3,15 @@ import random
 import string
 from typing import Iterable, List, Optional, Sequence, Union
 import time
+import asyncio
 import icalendar
 from datetime import timedelta
 # import icalendar
 
 from contextlib import asynccontextmanager
+import datetime
+import contextlib
+
 from fastapi import APIRouter, Cookie, FastAPI, Query, Request, Depends, HTTPException, UploadFile, status, Form
 from fastapi.responses import FileResponse, HTMLResponse, JSONResponse, StreamingResponse
 from fastapi.security import OAuth2PasswordRequestForm
@@ -32,6 +36,7 @@ from app.token_refresh import (
 
 from sqlmodel import Field, Session, SQLModel, asc, create_engine, select, func, col, desc
 
+from app.models import Area
 from app.db import create_db_tables, engine, SessionDep
 from app.send_email import send_email
 from app.models.services import Service, ServiceAction, ServiceReaction
@@ -42,6 +47,8 @@ from app.db import create_db_tables, engine
 from app.user import BaseUser, User, RegisteringUser, Token, EmailCheck, PasswordChange, get_user_from_token
 from app.oauth2 import oauth2_scheme, ACCESS_TOKEN_EXPIRE_MINUTES, verify_password, verify_token, get_password_hash, create_access_token
 from app.send_email import send_email
+# from app.client_discord import send_discord_message
+from app.user import user_router
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
@@ -54,6 +61,7 @@ origins = [
     "http://localhost:8080",
     "http://localhost:8081"
 ]
+
 
 tags_metadata = [
     {
@@ -153,9 +161,9 @@ def oauth_callback(provider: str, code: str, state: str = "", flow: str = "web",
 
     try:
         token_data = exchange_code_for_token(provider, flow, code)
-        
+
         user_info = get_user_info_from_provider(provider, token_data["access_token"])
-        
+
         provider_user_id = str(user_info.get("id") or user_info.get("sub"))
         user = find_or_create_user_from_oauth(
             session=session,
@@ -164,13 +172,13 @@ def oauth_callback(provider: str, code: str, state: str = "", flow: str = "web",
             user_info=user_info,
             token_data=token_data
         )
-        
+
         access_token_expires = timedelta(minutes=ACCESS_TOKEN_EXPIRE_MINUTES)
         app_access_token = create_access_token(
             data={"sub": user.email},
             expires=access_token_expires
         )
-        
+
         return {
             "access_token": app_access_token,
             "token_type": "bearer",
@@ -182,7 +190,7 @@ def oauth_callback(provider: str, code: str, state: str = "", flow: str = "web",
                 "image": user.image
             }
         }
-    
+
     except HTTPException:
         raise
     except Exception as e:
@@ -204,7 +212,7 @@ def oauth_reload():
 def list_services(session: Session = Depends(lambda: Session(engine))):
     statement = select(Service).where(Service.is_active == True)
     services = session.exec(statement).all()
-    
+
     return [
         {
             "id": s.id,
@@ -227,9 +235,9 @@ def get_my_connected_services(
     user = get_user_from_token(token, session)
     if not user:
         raise HTTPException(status_code=401, detail="Not authenticated")
-    
+
     service_accounts = get_user_service_accounts(session, user.id)
-    
+
     result = []
     for sa in service_accounts:
         service = session.get(Service, sa.service_id)
@@ -250,7 +258,7 @@ def get_my_connected_services(
                 "last_used_at": sa.last_used_at,
                 "created_at": sa.created_at,
             })
-    
+
     return result
 
 @router_user.post("/services/{service_name}/connect", tags=["services"])
@@ -265,15 +273,15 @@ def connect_service(
     user = get_user_from_token(token, session)
     if not user:
         raise HTTPException(status_code=401, detail="Not authenticated")
-    
+
     service = get_service_by_name(session, service_name)
     if not service:
         raise HTTPException(status_code=404, detail=f"Service not found: {service_name}")
-    
+
     token_data = exchange_code_for_token(service.oauth_provider, flow, code)
-    
+
     user_info = get_user_info_from_provider(service.oauth_provider, token_data["access_token"])
-    
+
     service_account = create_or_update_service_account(
         session=session,
         user_id=user.id,
@@ -286,7 +294,7 @@ def connect_service(
         remote_email=user_info.get("email"),
         remote_name=user_info.get("name") or user_info.get("login"),
     )
-    
+
     return {
         "success": True,
         "service_account_id": service_account.id,
@@ -304,15 +312,15 @@ def disconnect_service(
     user = get_user_from_token(token, session)
     if not user:
         raise HTTPException(status_code=401, detail="Not authenticated")
-    
+
     success = disconnect_service_account(session, user.id, service_id)
-    
+
     if not success:
         raise HTTPException(
             status_code=404,
             detail="Service account not found or already disconnected"
         )
-    
+
     return {"success": True, "message": "Service disconnected"}
 
 
@@ -326,18 +334,18 @@ def refresh_service_token(
     session: Session = Depends(lambda: Session(engine)),
     token: str = Depends(oauth2_scheme)
 ):
- 
+
     user = get_user_from_token(token, session)
     if not user:
         raise HTTPException(status_code=401, detail="Not authenticated")
-    
+
     service_account = session.get(ServiceAccount, service_account_id)
     if not service_account:
         raise HTTPException(status_code=404, detail="Service account not found")
-    
+
     if service_account.user_id != user.id:
         raise HTTPException(status_code=403, detail="Forbidden")
-    
+
     try:
         refreshed = refresh_service_account_token(session, service_account)
         return {
@@ -379,12 +387,12 @@ def get_my_oauth_connections(
     user = get_user_from_token(token, session)
     if not user:
         raise HTTPException(status_code=401, detail="Not authenticated")
-    
+
     statement = select(OAuthConnection).where(OAuthConnection.user_id == user.id)
     connections = session.exec(statement).all()
-    
+
     from app.token_refresh import is_token_expired
-    
+
     result = []
     for conn in connections:
         result.append({
@@ -399,7 +407,7 @@ def get_my_oauth_connections(
             "created_at": conn.created_at,
             "updated_at": conn.updated_at,
         })
-    
+
     return result
 
 @router_user.post("/oauth-connections/{connection_id}/refresh", tags=["oauth"])
@@ -411,14 +419,14 @@ def refresh_oauth_connection_endpoint(
     user = get_user_from_token(token, session)
     if not user:
         raise HTTPException(status_code=401, detail="Not authenticated")
-    
+
     oauth_conn = session.get(OAuthConnection, connection_id)
     if not oauth_conn:
         raise HTTPException(status_code=404, detail="OAuth connection not found")
-    
+
     if oauth_conn.user_id != user.id:
         raise HTTPException(status_code=403, detail="Forbidden")
-    
+
     try:
         refreshed = refresh_oauth_connection(session, oauth_conn)
         return {

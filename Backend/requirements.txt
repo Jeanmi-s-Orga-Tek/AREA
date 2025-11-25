@@ -9,3 +9,5 @@ pyjwt
 requests
 icalendar
 pyyaml
+
+httpx

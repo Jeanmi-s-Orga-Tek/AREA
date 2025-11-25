@@ -1,7 +1,12 @@
 import React, { useEffect, useState } from "react";
 
 import "./App.css";
-import { Area, AreaCreate, createArea, listAreas } from "./api";
+import {
+    Area,
+    AreaCreate,
+    createArea,
+    listAreas,
+} from "./api";
 
 const App: React.FC = () => {
   const [name, setName] = useState("");
@@ -27,6 +32,8 @@ const App: React.FC = () => {
       setLoadingList(false);
     }
   };
+
+
 
   useEffect(() => {
     loadAreas();
