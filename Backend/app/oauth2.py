@@ -62,19 +62,32 @@ class OAuth2PasswordBearerWithCookie(OAuth2):
         super().__init__(flows=flows, scheme_name=scheme_name, auto_error=auto_error)
     
     async def __call__(self, request: Request) -> Optional[str]:
+        authorization = request.headers.get("Authorization")
+        if authorization:
+            scheme, param = get_authorization_scheme_param(authorization)
+            if scheme.lower() == "bearer" and param:
+                try:
+                    verify_token(param)
+                    return param
+                except:
+                    pass
+
         cookie = request.cookies.get('Authorization')
-        authorization = f"Bearer {cookie}"
-        scheme, param = get_authorization_scheme_param(authorization)
-        if not cookie or scheme.lower() != "bearer" or not verify_token(cookie):
-            if self.auto_error:
-                # raise HTTPException(
-                #     status_code=status.HTTP_401_UNAUTHORIZED,
-                #     detail="Not authenticated",
-                #     headers={"WWW-Authenticate": "Bearer"},
-                # )
-                return ""
-            else:
-                return None
-        return param
+        if cookie:
+            try:
+                verify_token(cookie)
+                return cookie
+            except:
+                pass
+
+        if self.auto_error:
+            # raise HTTPException(
+            #     status_code=status.HTTP_401_UNAUTHORIZED,
+            #     detail="Not authenticated",
+            #     headers={"WWW-Authenticate": "Bearer"},
+            # )
+            return ""
+        else:
+            return None
 
 oauth2_scheme = OAuth2PasswordBearerWithCookie(tokenUrl="login")

@@ -1,24 +1,19 @@
-import os
-from datetime import timedelta, datetime, timezone
+from datetime import timedelta
 from typing import Annotated, Any, Dict, List, Optional, Union, cast
 import jwt
-from fastapi import APIRouter, Form, HTTPException, Query, UploadFile, status
+from fastapi import APIRouter, Form, HTTPException, Query, status, Depends
 from fastapi.security import OAuth2, OAuth2PasswordBearer, OAuth2PasswordRequestForm
 from fastapi.openapi.models import OAuthFlows as OAuthFlowsModel
-from passlib.context import CryptContext
 from pydantic import BaseModel
 from sqlmodel import Field, Session, SQLModel, create_engine, select
-from starlette.requests import Request
-import starlette.status
-from fastapi.security.utils import get_authorization_scheme_param
 from fastapi.responses import HTMLResponse, JSONResponse
 
-from app.main import SessionDep
-from app.oauth2 import ACCESS_TOKEN_EXPIRE_MINUTES, create_access_token, get_password_hash, verify_password, SECRET_KEY, ALGORITHM
+from app.db import SessionDep
+from app.oauth2 import ACCESS_TOKEN_EXPIRE_MINUTES, create_access_token, get_password_hash, verify_password, SECRET_KEY, ALGORITHM, oauth2_scheme
 
 user_router = APIRouter(
     prefix="/user",
-    tags=["user"],
+    tags=["users"],
     responses={404: {"description": "Not found"}},
 )
 
@@ -50,7 +45,7 @@ def auth_user(user: User, username: str, password: str):
         return User
     return False
 
-def get_user_from_token(token: str, session):
+def get_user_from_token(token: str, session) -> Optional[User]:
     if token == "":
         return None
     cred_except = HTTPException(
@@ -85,6 +80,13 @@ def read_users(
     user = session.exec(select(User).offset(skip).limit(limit)).all()
     return user
 
+@user_router.get("/me", response_model=BaseUser, tags=["users"])
+def get_me(session: SessionDep, token: str = Depends(oauth2_scheme)):
+    user = get_user_from_token(token, session)
+    if user is None:
+        raise HTTPException(status_code=401, detail="Not authenticated")
+    return user
+
 @user_router.get("/{user_id}", response_model=BaseUser, tags=["users"])
 def read_user(
     user_id: int,
@@ -95,7 +97,7 @@ def read_user(
         raise HTTPException(status_code=404, detail="User not found")
     return user
 
-@user_router.delete("/{user_id}", tags=["user"])
+@user_router.delete("/{user_id}", tags=["users"])
 def delete_user(
     user_id: int,
     session: SessionDep

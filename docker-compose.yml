@@ -5,7 +5,7 @@ services:
       - DISCORD_WEBHOOK_URL=https://discord.com/api/webhooks/1440348984823775334/Lm5MvF1-EvXfvHcWBjtlKUnc2vhZhxQ3WfIBwdpKOJeTziz1oTe5_n-G6h25OV9E5h3Q
     env_file: ".env"
     ports:
-      - "80:80"
+      - "8080:80"
     depends_on:
       - db
     # volumes:
@@ -25,7 +25,7 @@ services:
   adminer:
     image: adminer
     ports:
-      - "8080:8080"
+      - "8123:8080"
     # restart: always
     depends_on:
       - db

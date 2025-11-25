@@ -1,0 +1,192 @@
+/*
+** EPITECH PROJECT, 2025
+** AREA
+** File description:
+** RegisterScreen
+*/
+
+.register-container {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: #f5f5f5;
+  padding: 20px;
+}
+
+.register-form-card {
+  background-color: white;
+  padding: 40px;
+  border-radius: 8px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+  width: 100%;
+  max-width: 450px;
+}
+
+.register-title {
+  font-size: 28px;
+  font-weight: bold;
+  margin-bottom: 8px;
+  color: #333;
+  text-align: center;
+}
+
+.register-subtitle {
+  font-size: 14px;
+  color: #666;
+  margin-bottom: 30px;
+  text-align: center;
+}
+
+.register-form {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.register-form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.register-label {
+  font-size: 14px;
+  font-weight: 500;
+  color: #333;
+}
+
+.register-input {
+  padding: 12px;
+  font-size: 14px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  outline: none;
+  transition: border-color 0.2s;
+}
+
+.register-input:focus {
+  border-color: #007bff;
+}
+
+.register-input:disabled {
+  background-color: #f5f5f5;
+  cursor: not-allowed;
+}
+
+.register-button {
+  padding: 12px;
+  font-size: 16px;
+  font-weight: 600;
+  background-color: #007bff;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  margin-top: 10px;
+  transition: background-color 0.2s;
+}
+
+.register-button:hover:not(:disabled) {
+  background-color: #0056b3;
+}
+
+.register-button:disabled {
+  background-color: #ccc;
+  cursor: not-allowed;
+}
+
+.register-error-box {
+  padding: 12px;
+  background-color: #fee;
+  border: 1px solid #fcc;
+  border-radius: 4px;
+  color: #c33;
+  font-size: 14px;
+  margin-bottom: 20px;
+}
+
+.register-success-box {
+  padding: 12px;
+  background-color: #efe;
+  border: 1px solid #cfc;
+  border-radius: 4px;
+  color: #3c3;
+  font-size: 14px;
+  margin-bottom: 20px;
+}
+
+.register-footer {
+  margin-top: 30px;
+  text-align: center;
+}
+
+.register-footer-text {
+  font-size: 14px;
+  color: #666;
+}
+
+.register-link {
+  color: #007bff;
+  text-decoration: none;
+  font-weight: 500;
+}
+
+.register-link:hover {
+  text-decoration: underline;
+}
+
+.register-divider {
+  margin: 30px 0 20px;
+  text-align: center;
+  position: relative;
+}
+
+.register-divider::before {
+  content: "";
+  position: absolute;
+  top: 50%;
+  left: 0;
+  right: 0;
+  height: 1px;
+  background-color: #ddd;
+}
+
+.register-divider span {
+  background-color: white;
+  padding: 0 15px;
+  color: #999;
+  font-size: 14px;
+  font-weight: 500;
+  position: relative;
+  z-index: 1;
+}
+
+.register-oauth-buttons {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.register-oauth-button {
+  padding: 12px;
+  font-size: 14px;
+  font-weight: 500;
+  background-color: white;
+  color: #333;
+  border: 2px solid #ddd;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.register-oauth-button:hover:not(:disabled) {
+  border-color: #007bff;
+  color: #007bff;
+  background-color: #f8f9fa;
+}
+
+.register-oauth-button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
