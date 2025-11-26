@@ -15,6 +15,12 @@ const OAuthCallbackScreen: React.FC = () => {
   useEffect(() => {
     const processOAuthCallback = async () => {
       try {
+        if (window.location.hostname === "127.0.0.1") {
+          const newUrl = window.location.href.replace("127.0.0.1", "localhost");
+          window.location.href = newUrl;
+          return;
+        }
+
         const urlParams = new URLSearchParams(window.location.search);
         
         const hash = window.location.hash;
