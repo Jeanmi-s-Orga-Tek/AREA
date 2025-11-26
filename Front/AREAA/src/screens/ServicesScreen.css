@@ -1,0 +1,207 @@
+/*
+** EPITECH PROJECT, 2025
+** AREA
+** File description:
+** ServicesScreen styles
+*/
+
+.services-container {
+  min-height: 100vh;
+  background-color: #f5f5f5;
+  padding: 20px;
+}
+
+.services-content {
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.services-header {
+  background-color: white;
+  padding: 40px;
+  border-radius: 8px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+  text-align: center;
+  margin-bottom: 30px;
+}
+
+.services-title {
+  font-size: 36px;
+  font-weight: bold;
+  color: #333;
+  margin-bottom: 12px;
+}
+
+.services-subtitle {
+  font-size: 18px;
+  color: #666;
+  margin-bottom: 20px;
+}
+
+.services-stats {
+  margin-top: 20px;
+}
+
+.services-stat-badge {
+  display: inline-block;
+  padding: 10px 20px;
+  background-color: #007bff;
+  color: white;
+  border-radius: 20px;
+  font-size: 14px;
+  font-weight: 600;
+}
+
+.services-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+  gap: 20px;
+  margin-bottom: 30px;
+}
+
+.service-card {
+  background-color: white;
+  border-radius: 8px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+  padding: 24px;
+  transition: all 0.3s ease;
+  border: 2px solid transparent;
+  display: flex;
+  flex-direction: column;
+}
+
+.service-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+}
+
+.service-card-connected {
+  border-color: #28a745;
+  background-color: #f8fff9;
+}
+
+.service-card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 16px;
+}
+
+.service-icon {
+  font-size: 48px;
+  width: 60px;
+  height: 60px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.service-badge-connected {
+  background-color: #28a745;
+  color: white;
+  padding: 4px 12px;
+  border-radius: 12px;
+  font-size: 12px;
+  font-weight: 600;
+}
+
+.service-card-body {
+  flex: 1;
+  margin-bottom: 20px;
+}
+
+.service-name {
+  font-size: 24px;
+  font-weight: bold;
+  color: #333;
+  margin-bottom: 8px;
+}
+
+.service-description {
+  font-size: 14px;
+  color: #666;
+  line-height: 1.5;
+}
+
+.service-card-footer {
+  margin-top: auto;
+}
+
+.service-button {
+  width: 100%;
+  padding: 12px;
+  font-size: 16px;
+  font-weight: 600;
+  border: 2px solid;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.service-button-connect {
+  color: white;
+  border-color: transparent;
+}
+
+.service-button-connect:hover {
+  opacity: 0.9;
+  transform: scale(1.02);
+}
+
+.service-button-disconnect {
+  background-color: white;
+  color: #dc3545;
+  border-color: #dc3545;
+}
+
+.service-button-disconnect:hover {
+  background-color: #dc3545;
+  color: white;
+}
+
+.services-actions {
+  text-align: center;
+  margin-top: 40px;
+}
+
+.services-back-button {
+  display: inline-block;
+  padding: 12px 32px;
+  font-size: 16px;
+  font-weight: 600;
+  background-color: white;
+  color: #007bff;
+  border: 2px solid #007bff;
+  border-radius: 4px;
+  text-decoration: none;
+  transition: all 0.2s;
+}
+
+.services-back-button:hover {
+  background-color: #007bff;
+  color: white;
+}
+
+@media (max-width: 768px) {
+  .services-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .services-header {
+    padding: 30px 20px;
+  }
+
+  .services-title {
+    font-size: 28px;
+  }
+
+  .services-subtitle {
+    font-size: 16px;
+  }
+}
+
+@media (min-width: 769px) and (max-width: 1024px) {
+  .services-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}

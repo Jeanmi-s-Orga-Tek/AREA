@@ -2,6 +2,8 @@ import os
 import random
 import string
 from typing import Iterable, List, Optional, Sequence, Union
+import time
+import icalendar
 from datetime import timedelta
 # import icalendar
 
@@ -27,12 +29,18 @@ from app.token_refresh import (
     get_valid_service_account_token, batch_refresh_expired_tokens
 )
 
-from sqlmodel import Field, Session, SQLModel, asc, create_engine, select, func, col, desc
-from typing import Annotated
 
+from sqlmodel import Field, Session, SQLModel, asc, create_engine, select, func, col, desc
+
+from app.db import create_db_tables, engine, SessionDep
+from app.send_email import send_email
+from app.models.services import Service, ServiceAction, ServiceReaction
+
+# from user import BaseUser, User, RegisteringUser, Token, EmailCheck, PasswordChange, oauth2_scheme, ACCESS_TOKEN_EXPIRE_MINUTES, verify_password, verify_token, get_password_hash, create_access_token, get_user_from_token
 from app.db import create_db_tables, engine
 
-from app.user import BaseUser, User, RegisteringUser, Token, EmailCheck, PasswordChange, oauth2_scheme, ACCESS_TOKEN_EXPIRE_MINUTES, verify_password, verify_token, get_password_hash, create_access_token, get_user_from_token
+from app.user import BaseUser, User, RegisteringUser, Token, EmailCheck, PasswordChange, get_user_from_token
+from app.oauth2 import oauth2_scheme, ACCESS_TOKEN_EXPIRE_MINUTES, verify_password, verify_token, get_password_hash, create_access_token
 from app.send_email import send_email
 
 @asynccontextmanager
@@ -43,57 +51,11 @@ async def lifespan(app: FastAPI):
 origins = [
     "http://localhost",
     "http://localhost:5173",
+    "http://localhost:8080",
+    "http://localhost:8081"
 ]
 
 tags_metadata = [
-    {
-        "name": "startups",
-        "description": "Operations with startups.",
-        "externalDocs": {
-            "description": "Items external docs",
-            "url": "https://fastapi.tiangolo.com/",
-        },
-    },
-    {
-        "name": "investors",
-        "description": "Operations with investors.",
-        "externalDocs": {
-            "description": "Items external docs",
-            "url": "https://fastapi.tiangolo.com/",
-        },
-    },
-    {
-        "name": "partners",
-        "description": "Operations with partners.",
-        "externalDocs": {
-            "description": "Items external docs",
-            "url": "https://fastapi.tiangolo.com/",
-        },
-    },
-    {
-        "name": "news",
-        "description": "Operations with news.",
-        "externalDocs": {
-            "description": "Items external docs",
-            "url": "https://fastapi.tiangolo.com/",
-        },
-    },
-    {
-        "name": "events",
-        "description": "Operations with events",
-        "externalDocs": {
-            "description": "Items external docs",
-            "url": "https://fastapi.tiangolo.com/",
-        },
-    },
-    {
-        "name": "projects",
-        "description": "Operations with projects",
-        "externalDocs": {
-            "description": "Items external docs",
-            "url": "https://fastapi.tiangolo.com/",
-        },
-    },
     {
         "name": "users",
         "description": "Operations with users.",
@@ -102,13 +64,48 @@ tags_metadata = [
             "url": "https://fastapi.tiangolo.com/",
         },
     },
+    {
+        "name": "actions",
+        "description": "Operations with actions.",
+        "externalDocs": {
+            "description": "Items external docs",
+            "url": "https://fastapi.tiangolo.com/",
+        },
+    },
+    {
+        "name": "reactions",
+        "description": "Operations with reactions.",
+        "externalDocs": {
+            "description": "Items external docs",
+            "url": "https://fastapi.tiangolo.com/",
+        },
+    },
+    {
+        "name": "user_actions",
+        "description": "Operations with user actions.",
+        "externalDocs": {
+            "description": "Items external docs",
+            "url": "https://fastapi.tiangolo.com/",
+        },
+    },
+    {
+        "name": "user_reactions",
+        "description": "Operations with user reactions.",
+        "externalDocs": {
+            "description": "Items external docs",
+            "url": "https://fastapi.tiangolo.com/",
+        },
+    },
 ]
 
-def get_session():
-    with Session(engine) as session:
-        yield session
+from app.user import user_router
+from app.action import action_router
+from app.reaction import reaction_router
+from app.user_action import user_action_router
+from app.user_reaction import user_reaction_router
+from app.routers.services import services_router
+from app.routers.areas import areas_router
 
-SessionDep = Annotated[Session, Depends(get_session)]
 
 app = FastAPI(lifespan=lifespan, openapi_tags=tags_metadata)
 
@@ -152,10 +149,21 @@ def auth_get_authorization_url_alias(provider: str, flow: str, state: str = ""):
 
 @router_login.get("/oauth/callback/{provider}", tags=["oauth"])
 @router_login.get("/auth/callback/{provider}", tags=["oauth"])
-def oauth_callback(provider: str, code: str, state: str = "", flow: str = "web", session: Session = Depends(lambda: Session(engine))):
+def oauth_callback(
+    provider: str, 
+    code: Optional[str] = None, 
+    token: Optional[str] = None,
+    state: str = "", 
+    flow: str = "web", 
+    session: Session = Depends(lambda: Session(engine))
+):
+    auth_code = token if provider == "trello" and token else code
+    
+    if not auth_code:
+        raise HTTPException(status_code=400, detail="No authorization code or token provided")
 
     try:
-        token_data = exchange_code_for_token(provider, flow, code)
+        token_data = exchange_code_for_token(provider, flow, auth_code)
         
         user_info = get_user_info_from_provider(provider, token_data["access_token"])
         
@@ -227,7 +235,6 @@ def get_my_connected_services(
     session: Session = Depends(lambda: Session(engine)),
     token: str = Depends(oauth2_scheme)
 ):
-
     user = get_user_from_token(token, session)
     if not user:
         raise HTTPException(status_code=401, detail="Not authenticated")
@@ -438,6 +445,17 @@ def refresh_oauth_connection_endpoint(
             detail=f"Failed to refresh OAuth connection: {str(e)}"
         )
 
+templates = Jinja2Templates(directory="templates")
+
+app.include_router(router_login)
+app.include_router(router_user)
+app.include_router(user_router)
+app.include_router(action_router)
+app.include_router(reaction_router)
+app.include_router(user_action_router)
+app.include_router(user_reaction_router)
+app.include_router(services_router)
+app.include_router(areas_router)
 
 app.add_middleware(
     CORSMiddleware,
@@ -447,9 +465,59 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-templates = Jinja2Templates(directory="templates")
+def get_client_ip(request: Request) -> str:
+    forwarded = request.headers.get("X-Forwarded-For")
+    if forwarded:
+        return forwarded.split(",")[0].strip()
+    if request.client and request.client.host:
+        return request.client.host
+    return "unknown"
 
 
+@app.get("/health")
+def health():
+    return {"status": "ok"}
 
-app.include_router(router_login)
-app.include_router(router_user)
+
+@app.get("/about.json")
+async def about(request: Request, session: SessionDep):
+    client_host = get_client_ip(request)
+    current_time = int(time.time())
+    services_query = select(Service).where(Service.is_active == True).order_by(Service.name)
+    services = session.exec(services_query).all()
+    response_services = []
+    for service in services:
+        actions_query = select(ServiceAction).where(
+            ServiceAction.service_id == service.id,
+            ServiceAction.is_active == True,
+        ).order_by(ServiceAction.name)
+        reactions_query = select(ServiceReaction).where(
+            ServiceReaction.service_id == service.id,
+            ServiceReaction.is_active == True,
+        ).order_by(ServiceReaction.name)
+        actions = session.exec(actions_query).all()
+        reactions = session.exec(reactions_query).all()
+        response_services.append({
+            "name": service.name,
+            "actions": [
+                {
+                    "name": action.name,
+                    "description": action.description,
+                }
+                for action in actions
+            ],
+            "reactions": [
+                {
+                    "name": reaction.name,
+                    "description": reaction.description,
+                }
+                for reaction in reactions
+            ],
+        })
+    return JSONResponse({
+        "client": {"host": client_host},
+        "server": {
+            "current_time": current_time,
+            "services": response_services,
+        },
+    })

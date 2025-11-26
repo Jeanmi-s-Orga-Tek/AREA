@@ -1,0 +1,5 @@
+name: "Google - Youtube - New channel upload"
+description: "Triggers when a channel uploads a new video"
+is_polling: false
+parameters:
+  - channel_id: ""

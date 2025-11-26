@@ -30,6 +30,13 @@ def exchange_code_for_token(provider: str, flow: str, code: str) -> Dict[str, An
         config = p.mobile
     else:
         raise HTTPException(status_code=400, detail=f"Flow '{flow}' not supported for provider '{provider}'")
+
+    if provider == "trello":
+        return {
+            "access_token": code,
+            "token_type": "Bearer",
+            "scope": " ".join(config.scopes) if hasattr(config, 'scopes') else "",
+        }
     
     token_data = {
         "client_id": config.client_id,
@@ -71,17 +78,32 @@ def get_user_info_from_provider(provider: str, access_token: str) -> Dict[str, A
         "github": "https://api.github.com/user",
         "discord": "https://discord.com/api/users/@me",
         "microsoft": "https://graph.microsoft.com/v1.0/me",
+        "spotify": "https://api.spotify.com/v1/me",
+        "trello": "https://api.trello.com/1/members/me",
     }
     
     if provider not in userinfo_urls:
         raise HTTPException(status_code=400, detail=f"Userinfo endpoint not configured for provider: {provider}")
     
     try:
-        response = requests.get(
-            userinfo_urls[provider],
-            headers={"Authorization": f"Bearer {access_token}"},
-            timeout=10
-        )
+        if provider == "trello":
+            from app.core.oauth_config import providers_registry
+            registry = providers_registry()
+            p = registry.get(provider)
+            if p and p.web:
+                api_key = p.web.client_id
+                response = requests.get(
+                    f"{userinfo_urls[provider]}?key={api_key}&token={access_token}",
+                    timeout=10
+                )
+            else:
+                raise HTTPException(status_code=400, detail="Trello configuration not found")
+        else:
+            response = requests.get(
+                userinfo_urls[provider],
+                headers={"Authorization": f"Bearer {access_token}"},
+                timeout=10
+            )
         
         if response.status_code != 200:
             raise HTTPException(
@@ -89,7 +111,42 @@ def get_user_info_from_provider(provider: str, access_token: str) -> Dict[str, A
                 detail=f"Failed to get user info: {response.text}"
             )
         
-        return response.json()
+        user_info = response.json()
+
+        if provider == "trello":
+            user_info["name"] = user_info.get("fullName") or user_info.get("username")
+            user_info["login"] = user_info.get("username")
+            if not user_info.get("email"):
+                user_info["email"] = f"{user_info.get('username')}@trello.user"
+        
+        if provider == "github" and not user_info.get("email"):
+            try:
+                emails_response = requests.get(
+                    "https://api.github.com/user/emails",
+                    headers={"Authorization": f"Bearer {access_token}"},
+                    timeout=10
+                )
+                
+                if emails_response.status_code == 200:
+                    emails = emails_response.json()
+                    primary_email = next(
+                        (e["email"] for e in emails if e.get("primary") and e.get("verified")),
+                        None
+                    )
+                    if not primary_email:
+                        primary_email = next(
+                            (e["email"] for e in emails if e.get("verified")),
+                            None
+                        )
+                    if not primary_email and emails:
+                        primary_email = emails[0].get("email")
+                    
+                    if primary_email:
+                        user_info["email"] = primary_email
+            except Exception as e:
+                print(f"Failed to fetch GitHub emails: {e}")
+        
+        return user_info
     
     except requests.RequestException as e:
         raise HTTPException(
