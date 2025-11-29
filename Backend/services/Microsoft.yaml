@@ -1,0 +1,9 @@
+name: microsoft
+display_name: Microsoft
+description: Microsoft services including Outlook, OneDrive, and more
+oauth_provider: microsoft
+required_scopes: openid,profile,email,User.Read,Mail.Read,Mail.Send
+icon: 🟦
+color: "#00A4EF"
+category: Productivity
+is_active: true

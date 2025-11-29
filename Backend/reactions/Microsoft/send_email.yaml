@@ -1,0 +1,10 @@
+name: "Microsoft - Outlook - Send Email"
+description: "Sends an email via Outlook"
+service: microsoft
+url: "https://graph.microsoft.com/v1.0/me/sendMail"
+parameters:
+  to: ""
+  subject: ""
+  body: ""
+  cc: ""
+  importance: ""

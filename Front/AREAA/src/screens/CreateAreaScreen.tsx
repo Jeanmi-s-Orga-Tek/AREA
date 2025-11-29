@@ -86,24 +86,37 @@ const CreateAreaScreen: React.FC = () => {
     try {
       const capabilities = await fetchServiceCapabilities(serviceId);
       
-      const mappedActions: ActionType[] = capabilities.actions.map((action) => ({
+      // console.log("capabilities :", capabilities);
+
+      const actions = capabilities.actions || [];
+      const reactions = capabilities.reactions || [];
+      
+      const mappedActions: ActionType[] = actions.map((action: any) => ({
         id: action.id,
         name: action.name,
-        description: action.description,
+        description: action.description || "",
         parameters: parseParameters(action.parameters),
       }));
 
-      const mappedReactions: ReactionType[] = capabilities.reactions.map((reaction) => ({
+      const mappedReactions: ReactionType[] = reactions.map((reaction: any) => ({
         id: reaction.id,
         name: reaction.name,
-        description: reaction.description,
+        description: reaction.description || "",
         parameters: parseParameters(reaction.parameters),
       }));
 
+      console.log(`${serviceId}: ${mappedActions.length} actions, ${mappedReactions.length} reactions`);
+      
       setActionTypes((prev) => ({ ...prev, [serviceId]: mappedActions }));
       setReactionTypes((prev) => ({ ...prev, [serviceId]: mappedReactions }));
+
+      if (mappedActions.length === 0 && mappedReactions.length === 0) {
+        console.warn(`No actions or reactions available for service ${serviceId}`);
+      }
     } catch (err) {
       console.error("Error loading service capabilities:", err);
+      setActionTypes((prev) => ({ ...prev, [serviceId]: [] }));
+      setReactionTypes((prev) => ({ ...prev, [serviceId]: [] }));
     }
   };
 
@@ -119,221 +132,221 @@ const CreateAreaScreen: React.FC = () => {
     }));
   };
 
-  const dummyActionTypes: Record<string, ActionType[]> = {
-    github: [
-      {
-        id: "new_issue",
-        name: "New Issue",
-        description: "Déclenché quand une nouvelle issue est créée",
-        parameters: [
-          { id: "repository", name: "Repository", type: "text", placeholder: "owner/repo" },
-        ],
-      },
-      {
-        id: "new_pr",
-        name: "New Pull Request",
-        description: "Déclenché quand une nouvelle PR est créée",
-        parameters: [
-          { id: "repository", name: "Repository", type: "text", placeholder: "owner/repo" },
-        ],
-      },
-      {
-        id: "new_star",
-        name: "New Star",
-        description: "Déclenché quand le repo reçoit une étoile",
-        parameters: [
-          { id: "repository", name: "Repository", type: "text", placeholder: "owner/repo" },
-        ],
-      },
-    ],
-    google: [
-      {
-        id: "new_email",
-        name: "New Email",
-        description: "Déclenché à la réception d'un email",
-        parameters: [
-          { id: "from", name: "From (optional)", type: "text", placeholder: "sender@example.com" },
-          { id: "subject", name: "Subject contains", type: "text", placeholder: "Keywords..." },
-        ],
-      },
-      {
-        id: "new_calendar_event",
-        name: "New Calendar Event",
-        description: "Déclenché quand un événement est créé",
-        parameters: [
-          { id: "calendar", name: "Calendar", type: "text", placeholder: "primary" },
-        ],
-      },
-    ],
-    discord: [
-      {
-        id: "new_message",
-        name: "New Message",
-        description: "Déclenché à chaque nouveau message",
-        parameters: [
-          { id: "channel", name: "Channel ID", type: "text", placeholder: "123456789" },
-        ],
-      },
-      {
-        id: "event_created",
-        name: "Event Created",
-        description: "Déclenché quand un événement est créé",
-        parameters: [],
-      },
-    ],
-    spotify: [
-      {
-        id: "new_liked_song",
-        name: "New Liked Song",
-        description: "Déclenché quand vous aimez une chanson",
-        parameters: [],
-      },
-      {
-        id: "new_playlist",
-        name: "New Playlist",
-        description: "Déclenché quand vous créez une playlist",
-        parameters: [],
-      },
-    ],
-    trello: [
-      {
-        id: "card_moved",
-        name: "Card Moved",
-        description: "Déclenché quand une carte est déplacée",
-        parameters: [
-          { id: "board", name: "Board ID", type: "text", placeholder: "Board ID" },
-          { id: "list", name: "To List", type: "text", placeholder: "List name" },
-        ],
-      },
-      {
-        id: "new_card",
-        name: "New Card",
-        description: "Déclenché quand une carte est créée",
-        parameters: [
-          { id: "board", name: "Board ID", type: "text", placeholder: "Board ID" },
-        ],
-      },
-    ],
-    slack: [
-      {
-        id: "new_message",
-        name: "New Message",
-        description: "Déclenché à chaque nouveau message",
-        parameters: [
-          { id: "channel", name: "Channel", type: "text", placeholder: "#general" },
-        ],
-      },
-    ],
-    twitter: [
-      {
-        id: "new_tweet",
-        name: "New Tweet from User",
-        description: "Déclenché quand un utilisateur tweet",
-        parameters: [
-          { id: "username", name: "Username", type: "text", placeholder: "@username" },
-        ],
-      },
-    ],
-    microsoft: [
-      {
-        id: "new_email",
-        name: "New Email (Outlook)",
-        description: "Déclenché à la réception d'un email",
-        parameters: [
-          { id: "from", name: "From (optional)", type: "text", placeholder: "sender@example.com" },
-        ],
-      },
-    ],
-  };
+  // const dummyActionTypes: Record<string, ActionType[]> = {
+  //   github: [
+  //     {
+  //       id: "new_issue",
+  //       name: "New Issue",
+  //       description: "Déclenché quand une nouvelle issue est créée",
+  //       parameters: [
+  //         { id: "repository", name: "Repository", type: "text", placeholder: "owner/repo" },
+  //       ],
+  //     },
+  //     {
+  //       id: "new_pr",
+  //       name: "New Pull Request",
+  //       description: "Déclenché quand une nouvelle PR est créée",
+  //       parameters: [
+  //         { id: "repository", name: "Repository", type: "text", placeholder: "owner/repo" },
+  //       ],
+  //     },
+  //     {
+  //       id: "new_star",
+  //       name: "New Star",
+  //       description: "Déclenché quand le repo reçoit une étoile",
+  //       parameters: [
+  //         { id: "repository", name: "Repository", type: "text", placeholder: "owner/repo" },
+  //       ],
+  //     },
+  //   ],
+  //   google: [
+  //     {
+  //       id: "new_email",
+  //       name: "New Email",
+  //       description: "Déclenché à la réception d'un email",
+  //       parameters: [
+  //         { id: "from", name: "From (optional)", type: "text", placeholder: "sender@example.com" },
+  //         { id: "subject", name: "Subject contains", type: "text", placeholder: "Keywords..." },
+  //       ],
+  //     },
+  //     {
+  //       id: "new_calendar_event",
+  //       name: "New Calendar Event",
+  //       description: "Déclenché quand un événement est créé",
+  //       parameters: [
+  //         { id: "calendar", name: "Calendar", type: "text", placeholder: "primary" },
+  //       ],
+  //     },
+  //   ],
+  //   discord: [
+  //     {
+  //       id: "new_message",
+  //       name: "New Message",
+  //       description: "Déclenché à chaque nouveau message",
+  //       parameters: [
+  //         { id: "channel", name: "Channel ID", type: "text", placeholder: "123456789" },
+  //       ],
+  //     },
+  //     {
+  //       id: "event_created",
+  //       name: "Event Created",
+  //       description: "Déclenché quand un événement est créé",
+  //       parameters: [],
+  //     },
+  //   ],
+  //   spotify: [
+  //     {
+  //       id: "new_liked_song",
+  //       name: "New Liked Song",
+  //       description: "Déclenché quand vous aimez une chanson",
+  //       parameters: [],
+  //     },
+  //     {
+  //       id: "new_playlist",
+  //       name: "New Playlist",
+  //       description: "Déclenché quand vous créez une playlist",
+  //       parameters: [],
+  //     },
+  //   ],
+  //   trello: [
+  //     {
+  //       id: "card_moved",
+  //       name: "Card Moved",
+  //       description: "Déclenché quand une carte est déplacée",
+  //       parameters: [
+  //         { id: "board", name: "Board ID", type: "text", placeholder: "Board ID" },
+  //         { id: "list", name: "To List", type: "text", placeholder: "List name" },
+  //       ],
+  //     },
+  //     {
+  //       id: "new_card",
+  //       name: "New Card",
+  //       description: "Déclenché quand une carte est créée",
+  //       parameters: [
+  //         { id: "board", name: "Board ID", type: "text", placeholder: "Board ID" },
+  //       ],
+  //     },
+  //   ],
+  //   slack: [
+  //     {
+  //       id: "new_message",
+  //       name: "New Message",
+  //       description: "Déclenché à chaque nouveau message",
+  //       parameters: [
+  //         { id: "channel", name: "Channel", type: "text", placeholder: "#general" },
+  //       ],
+  //     },
+  //   ],
+  //   twitter: [
+  //     {
+  //       id: "new_tweet",
+  //       name: "New Tweet from User",
+  //       description: "Déclenché quand un utilisateur tweet",
+  //       parameters: [
+  //         { id: "username", name: "Username", type: "text", placeholder: "@username" },
+  //       ],
+  //     },
+  //   ],
+  //   microsoft: [
+  //     {
+  //       id: "new_email",
+  //       name: "New Email (Outlook)",
+  //       description: "Déclenché à la réception d'un email",
+  //       parameters: [
+  //         { id: "from", name: "From (optional)", type: "text", placeholder: "sender@example.com" },
+  //       ],
+  //     },
+  //   ],
+  // };
 
-  const dummyReactionTypes: Record<string, ReactionType[]> = {
-    discord: [
-      {
-        id: "send_message",
-        name: "Send Message",
-        description: "Envoyer un message dans un channel",
-        parameters: [
-          { id: "channel", name: "Channel ID", type: "text", placeholder: "123456789" },
-          { id: "message", name: "Message", type: "text", placeholder: "Your message..." },
-        ],
-      },
-    ],
-    slack: [
-      {
-        id: "send_notification",
-        name: "Send Notification",
-        description: "Envoyer une notification",
-        parameters: [
-          { id: "channel", name: "Channel", type: "text", placeholder: "#general" },
-          { id: "message", name: "Message", type: "text", placeholder: "Your message..." },
-        ],
-      },
-    ],
-    trello: [
-      {
-        id: "create_card",
-        name: "Create Card",
-        description: "Créer une nouvelle carte",
-        parameters: [
-          { id: "board", name: "Board ID", type: "text", placeholder: "Board ID" },
-          { id: "list", name: "List", type: "text", placeholder: "To Do" },
-          { id: "title", name: "Card Title", type: "text", placeholder: "Card title..." },
-        ],
-      },
-    ],
-    twitter: [
-      {
-        id: "post_tweet",
-        name: "Post Tweet",
-        description: "Publier un tweet",
-        parameters: [
-          { id: "text", name: "Tweet Text", type: "text", placeholder: "Your tweet..." },
-        ],
-      },
-    ],
-    google: [
-      {
-        id: "send_email",
-        name: "Send Email",
-        description: "Envoyer un email via Gmail",
-        parameters: [
-          { id: "to", name: "To", type: "text", placeholder: "recipient@example.com" },
-          { id: "subject", name: "Subject", type: "text", placeholder: "Email subject" },
-          { id: "body", name: "Body", type: "text", placeholder: "Email body..." },
-        ],
-      },
-      {
-        id: "create_calendar_event",
-        name: "Create Calendar Event",
-        description: "Créer un événement dans Google Calendar",
-        parameters: [
-          { id: "title", name: "Event Title", type: "text", placeholder: "Event title" },
-          { id: "date", name: "Date", type: "text", placeholder: "YYYY-MM-DD" },
-        ],
-      },
-    ],
-    microsoft: [
-      {
-        id: "send_teams_message",
-        name: "Send Teams Message",
-        description: "Envoyer un message dans Teams",
-        parameters: [
-          { id: "channel", name: "Channel", type: "text", placeholder: "General" },
-          { id: "message", name: "Message", type: "text", placeholder: "Your message..." },
-        ],
-      },
-    ],
-    spotify: [
-      {
-        id: "add_to_playlist",
-        name: "Add to Playlist",
-        description: "Ajouter une chanson à une playlist",
-        parameters: [
-          { id: "playlist", name: "Playlist ID", type: "text", placeholder: "Playlist ID" },
-        ],
-      },
-    ],
-  };
+  // const dummyReactionTypes: Record<string, ReactionType[]> = {
+  //   discord: [
+  //     {
+  //       id: "send_message",
+  //       name: "Send Message",
+  //       description: "Envoyer un message dans un channel",
+  //       parameters: [
+  //         { id: "channel", name: "Channel ID", type: "text", placeholder: "123456789" },
+  //         { id: "message", name: "Message", type: "text", placeholder: "Your message..." },
+  //       ],
+  //     },
+  //   ],
+  //   slack: [
+  //     {
+  //       id: "send_notification",
+  //       name: "Send Notification",
+  //       description: "Envoyer une notification",
+  //       parameters: [
+  //         { id: "channel", name: "Channel", type: "text", placeholder: "#general" },
+  //         { id: "message", name: "Message", type: "text", placeholder: "Your message..." },
+  //       ],
+  //     },
+  //   ],
+  //   trello: [
+  //     {
+  //       id: "create_card",
+  //       name: "Create Card",
+  //       description: "Créer une nouvelle carte",
+  //       parameters: [
+  //         { id: "board", name: "Board ID", type: "text", placeholder: "Board ID" },
+  //         { id: "list", name: "List", type: "text", placeholder: "To Do" },
+  //         { id: "title", name: "Card Title", type: "text", placeholder: "Card title..." },
+  //       ],
+  //     },
+  //   ],
+  //   twitter: [
+  //     {
+  //       id: "post_tweet",
+  //       name: "Post Tweet",
+  //       description: "Publier un tweet",
+  //       parameters: [
+  //         { id: "text", name: "Tweet Text", type: "text", placeholder: "Your tweet..." },
+  //       ],
+  //     },
+  //   ],
+  //   google: [
+  //     {
+  //       id: "send_email",
+  //       name: "Send Email",
+  //       description: "Envoyer un email via Gmail",
+  //       parameters: [
+  //         { id: "to", name: "To", type: "text", placeholder: "recipient@example.com" },
+  //         { id: "subject", name: "Subject", type: "text", placeholder: "Email subject" },
+  //         { id: "body", name: "Body", type: "text", placeholder: "Email body..." },
+  //       ],
+  //     },
+  //     {
+  //       id: "create_calendar_event",
+  //       name: "Create Calendar Event",
+  //       description: "Créer un événement dans Google Calendar",
+  //       parameters: [
+  //         { id: "title", name: "Event Title", type: "text", placeholder: "Event title" },
+  //         { id: "date", name: "Date", type: "text", placeholder: "YYYY-MM-DD" },
+  //       ],
+  //     },
+  //   ],
+  //   microsoft: [
+  //     {
+  //       id: "send_teams_message",
+  //       name: "Send Teams Message",
+  //       description: "Envoyer un message dans Teams",
+  //       parameters: [
+  //         { id: "channel", name: "Channel", type: "text", placeholder: "General" },
+  //         { id: "message", name: "Message", type: "text", placeholder: "Your message..." },
+  //       ],
+  //     },
+  //   ],
+  //   spotify: [
+  //     {
+  //       id: "add_to_playlist",
+  //       name: "Add to Playlist",
+  //       description: "Ajouter une chanson à une playlist",
+  //       parameters: [
+  //         { id: "playlist", name: "Playlist ID", type: "text", placeholder: "Playlist ID" },
+  //       ],
+  //     },
+  //   ],
+  // };
 
   const handleNextStep = () => {
     setCurrentStep(currentStep + 1);
@@ -490,6 +503,15 @@ const CreateAreaScreen: React.FC = () => {
                 Quel événement sur {selectedActionService.name} doit déclencher l'automatisation ?
               </p>
               <div className="action-types-list">
+                {!actionTypes[selectedActionService.id] && (
+                  <div className="loading-message">Chargement des actions disponibles...</div>
+                )}
+                {actionTypes[selectedActionService.id]?.length === 0 && (
+                  <div className="empty-message">
+                    <p>Aucune action disponible pour ce service.</p>
+                    <p className="text-sm">Les actions seront ajoutées prochainement.</p>
+                  </div>
+                )}
                 {actionTypes[selectedActionService.id]?.map((type) => (
                   <div
                     key={type.id}
@@ -552,6 +574,15 @@ const CreateAreaScreen: React.FC = () => {
                 Que doit faire {selectedReactionService.name} en réponse ?
               </p>
               <div className="action-types-list">
+                {!reactionTypes[selectedReactionService.id] && (
+                  <div className="loading-message">Chargement des réactions disponibles...</div>
+                )}
+                {reactionTypes[selectedReactionService.id]?.length === 0 && (
+                  <div className="empty-message">
+                    <p>Aucune réaction disponible pour ce service.</p>
+                    <p className="text-sm">Les réactions seront ajoutées prochainement.</p>
+                  </div>
+                )}
                 {reactionTypes[selectedReactionService.id]?.map((type) => (
                   <div
                     key={type.id}

@@ -1,0 +1,9 @@
+name: "Discord - Create Channel"
+description: "Creates a new channel in a Discord server"
+service: discord
+url: "https://discord.com/api/v10/guilds/{guild_id}/channels"
+parameters:
+  guild_id: ""
+  channel_name: ""
+  channel_type: ""
+  topic: ""

@@ -1,0 +1,10 @@
+name: "Discord - Send Message"
+description: "Sends a message to a Discord channel"
+service: discord
+url: "https://discord.com/api/v10/channels/{channel_id}/messages"
+parameters:
+  channel_id: ""
+  message: ""
+  embed_title: ""
+  embed_description: ""
+  embed_color: ""

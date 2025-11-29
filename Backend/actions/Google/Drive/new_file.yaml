@@ -1,0 +1,7 @@
+name: "Google - Drive - New File"
+description: "Triggers when a new file is added to Google Drive"
+service: google
+is_polling: true
+parameters:
+  folder_id: ""
+  file_type: ""

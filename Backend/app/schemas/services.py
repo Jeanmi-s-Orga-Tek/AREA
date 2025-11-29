@@ -56,12 +56,64 @@ class AreaBase(SQLModel):
     is_active: bool = True
 
 
-class AreaCreate(AreaBase):
-    pass
+class AreaCreate(SQLModel):
+    name: Optional[str] = None
+    action_service_id: int
+    action_id: int
+    action_parameters: Dict[str, Any] = Field(default_factory=dict)
+    reaction_service_id: int
+    reaction_id: int
+    reaction_parameters: Dict[str, Any] = Field(default_factory=dict)
+    is_active: bool = True
 
 
 class AreaRead(AreaBase):
     id: int
     user_id: int
+    name: Optional[str] = None
+    created_at: datetime
+    updated_at: datetime
+
+
+class ActionRead(SQLModel):
+    id: int
+    name: str
+    description: Optional[str] = None
+    is_polling: bool = False
+    service_id: int
+
+
+class ReactionRead(SQLModel):
+    id: int
+    name: str
+    description: Optional[str] = None
+    url: Optional[str] = None
+    service_id: int
+
+
+class ServiceBasicRead(SQLModel):
+    id: int
+    name: str
+    display_name: str
+    description: Optional[str] = None
+    icon_url: Optional[str] = None
+
+
+class AreaActionDetail(SQLModel):
+    service: ServiceBasicRead
+    action: ActionRead
+
+
+class AreaReactionDetail(SQLModel):
+    service: ServiceBasicRead
+    reaction: ReactionRead
+
+
+class AreaDetailRead(SQLModel):
+    id: int
+    name: str
+    action: AreaActionDetail
+    reaction: AreaReactionDetail
+    is_active: bool
     created_at: datetime
     updated_at: datetime

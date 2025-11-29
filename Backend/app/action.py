@@ -17,6 +17,7 @@ class BaseAction(SQLModel):
     description: Optional[str] = Field(default=None)
     is_polling: bool = Field(default=False)
     parameters: Optional[dict] = Field(sa_type=JSONB)
+    service_id: Optional[int] = Field(default=None, foreign_key="services.id")
 
 class Action(BaseAction, table=True):
     pass

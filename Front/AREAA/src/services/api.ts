@@ -263,7 +263,7 @@ export async function fetchAreaById(areaId: number): Promise<AreaDetail> {
 }
 
 export async function createArea(data: CreateAreaRequest): Promise<AreaDetail> {
-  const response = await fetch(`${API_BASE_URL}/areas/create`, {
+  const response = await fetch(`${API_BASE_URL}/areas/`, {
     method: "POST",
     headers: getAuthHeaders(),
     body: JSON.stringify(data),

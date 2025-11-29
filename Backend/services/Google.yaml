@@ -1,0 +1,9 @@
+name: google
+display_name: Google
+description: Google services including Gmail, YouTube, and more
+oauth_provider: google
+required_scopes: email,profile,openid
+icon: 🔵
+color: "#4285F4"
+category: Productivity
+is_active: true

@@ -425,6 +425,32 @@
   transform: scale(1.02);
 }
 
+.loading-message {
+  text-align: center;
+  padding: 40px 20px;
+  color: #666;
+  font-size: 16px;
+}
+
+.empty-message {
+  text-align: center;
+  padding: 40px 20px;
+  background-color: #fff3cd;
+  border: 2px dashed #ffc107;
+  border-radius: 8px;
+  color: #856404;
+}
+
+.empty-message p {
+  margin: 8px 0;
+}
+
+.empty-message .text-sm {
+  font-size: 14px;
+  color: #856404;
+  opacity: 0.8;
+}
+
 @media (max-width: 768px) {
   .create-area-header {
     padding: 30px 20px;

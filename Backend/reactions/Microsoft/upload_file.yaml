@@ -1,0 +1,7 @@
+name: "Microsoft - OneDrive - Upload File"
+description: "Uploads a file to OneDrive"
+service: microsoft
+url: "https://graph.microsoft.com/v1.0/me/drive/root:/{file_path}:/content"
+parameters:
+  file_path: ""
+  file_content: ""
