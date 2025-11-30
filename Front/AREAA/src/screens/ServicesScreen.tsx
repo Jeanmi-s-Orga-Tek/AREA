@@ -39,9 +39,11 @@ const ServicesScreen: React.FC = () => {
         fetchMyConnectedServices(),
       ]);
 
-      const connectedServiceIds = new Set(connectedServices.map((sa) => sa.service.id));
+      const validConnectedServices = connectedServices.filter(sa => sa.service && sa.service.id);
+
+      const connectedServiceIds = new Set(validConnectedServices.map((sa) => sa.service.id));
       const serviceAccountMap = new Map(
-        connectedServices.map((sa) => [sa.service.id, sa.id])
+        validConnectedServices.map((sa) => [sa.service.id, sa.id])
       );
 
       const mappedServices: Service[] = allServices.map((service) => ({

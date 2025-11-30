@@ -215,7 +215,7 @@ export async function fetchServices(): Promise<Service[]> {
 }
 
 export async function fetchMyConnectedServices(): Promise<ServiceAccount[]> {
-  const response = await fetch(`${API_BASE_URL}/my/services`, {
+  const response = await fetch(`${API_BASE_URL}/services/my`, {
     headers: getAuthHeaders(),
   });
   return handleResponse<ServiceAccount[]>(response);
