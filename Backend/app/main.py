@@ -29,6 +29,8 @@ from app.oauth_models import Service
 from app.action import Action
 from app.reaction import Reaction
 
+from app.timer_router import timer_router
+
 # from user import BaseUser, User, RegisteringUser, Token, EmailCheck, PasswordChange, oauth2_scheme, ACCESS_TOKEN_EXPIRE_MINUTES, verify_password, verify_token, get_password_hash, create_access_token, get_user_from_token
 from app.db import create_db_tables, engine
 
@@ -270,3 +272,5 @@ async def about(request: Request, session: SessionDep):
             "services": response_services,
         },
     })
+
+app.include_router(timer_router)

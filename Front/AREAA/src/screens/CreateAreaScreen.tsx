@@ -8,6 +8,7 @@
 import React, { useState, useEffect } from "react";
 import { fetchServices, fetchServiceCapabilities, createArea } from "../services/api";
 import type { Service as APIService, ServiceAction, ServiceReaction } from "../services/api";
+import { updateTimerReaction } from "../services/api";
 import "./CreateAreaScreen.css";
 
 interface Service {
@@ -49,6 +50,7 @@ const CreateAreaScreen: React.FC = () => {
   const [selectedReactionType, setSelectedReactionType] = useState<ReactionType | null>(null);
   const [reactionParameters, setReactionParameters] = useState<Record<string, string>>({});
   const [areaName, setAreaName] = useState("");
+  const [intervalMinutes, setIntervalMinutes] = useState(5);
   
   const [services, setServices] = useState<Service[]>([]);
   const [actionTypes, setActionTypes] = useState<Record<number, ActionType[]>>({});
@@ -400,6 +402,37 @@ const CreateAreaScreen: React.FC = () => {
 
   const handleReactionParameterChange = (paramId: string, value: string) => {
     setReactionParameters({ ...reactionParameters, [paramId]: value });
+  };
+
+  const handleCreate = async () => {
+      const area = await createArea({
+         name: "Name timer",
+          action_service_id: selectedActionService!.id,
+          action_id: selectedActionService!.id,
+            action_parameters: {
+             mode: "interval",
+                interval_minutes: intervalMinutes,
+                target_action_id: selectedActionType!.id,
+            },
+          reaction_service_id: selectedReactionService!.id,
+            reaction_id: selectedReactionType!.id,
+            reaction_parameters: reactionParameters,
+      });
+      await updateTimerReaction(area.reaction.reaction.id, {
+      mode: "interval",
+      interval_minutes: intervalMinutes,
+      target_action_id: area.action.action.id,
+    });
+    return (
+        <div>
+          <input
+            type="number"
+            value={intervalMinutes}
+            onChange={(e) => setIntervalMinutes(Number(e.target.value))}
+          />
+          <button onClick={handleCreate}>Create timed AREA</button>
+        </div>
+    );
   };
 
   const handleSubmit = async () => {

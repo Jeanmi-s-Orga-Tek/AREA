@@ -1,0 +1,10 @@
+name: "Timer - Create timer"
+description: "Triggers an internal action periodically"
+service: timer
+url: "internal://timer"
+parameters:
+  mode: "interval"
+  interval_minutes: 5
+  time_of_day: "12:00"
+  target_action_id: null
+  next_run_at: null

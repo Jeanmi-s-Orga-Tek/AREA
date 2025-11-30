@@ -296,3 +296,21 @@ export async function deleteArea(areaId: number): Promise<void> {
   });
   await handleResponse<void>(response);
 }
+
+export interface TimerUpdatePayload {
+    mode: "interval" | "daily";
+    interval_minutes?: number;
+    time_of_day?: string;
+    target_action_id?: number;
+}
+
+export async function updateTimerReaction(reactionId: number, payload: TimerUpdatePayload)
+: Promise<{ id: number; parameters: Record<string, any> }> {
+    const reponse = await fetch (`${API_BASE_URL}/timer/reactions/${reactionId}`, {
+        method: "PATCH",
+        headers: getAuthHeaders(),
+        body: JSON.stringify(payload),
+    });
+    return handleResponse<{ id: number; parameters: Record<string, any> }>(reponse);
+    })
+}
