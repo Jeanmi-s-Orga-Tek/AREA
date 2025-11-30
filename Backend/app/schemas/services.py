@@ -114,6 +114,8 @@ class AreaDetailRead(SQLModel):
     name: str
     action: AreaActionDetail
     reaction: AreaReactionDetail
+    action_parameters: Dict[str, Any] = Field(default_factory=dict)
+    reaction_parameters: Dict[str, Any] = Field(default_factory=dict)
     is_active: bool
     created_at: datetime
     updated_at: datetime

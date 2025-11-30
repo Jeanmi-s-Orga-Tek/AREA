@@ -14,12 +14,14 @@ interface Action {
   service: string;
   type: string;
   description: string;
+  parameters: Record<string, any>;
 }
 
 interface Reaction {
   service: string;
   type: string;
   description: string;
+  parameters: Record<string, any>;
 }
 
 interface Area {
@@ -54,11 +56,13 @@ const AreasScreen: React.FC = () => {
           service: area.action.service.display_name || area.action.service.name,
           type: area.action.action.name,
           description: area.action.action.description,
+          parameters: area.action_parameters || {},
         },
         reaction: {
           service: area.reaction.service.display_name || area.reaction.service.name,
           type: area.reaction.reaction.name,
           description: area.reaction.reaction.description,
+          parameters: area.reaction_parameters || {},
         },
         isActive: area.is_active,
         createdAt: new Date(area.created_at).toLocaleDateString("fr-FR", {
@@ -181,6 +185,18 @@ const AreasScreen: React.FC = () => {
                   <div className="area-flow-description">
                     {area.action.description}
                   </div>
+                  {Object.keys(area.action.parameters).length > 0 && (
+                    <div className="area-flow-parameters">
+                      <strong>Paramètres:</strong>
+                      <ul style={{ margin: "5px 0", paddingLeft: "20px" }}>
+                        {Object.entries(area.action.parameters).map(([key, value]) => (
+                          <li key={key}>
+                            <strong>{key}:</strong> {String(value)}
+                          </li>
+                        ))}
+                      </ul>
+                    </div>
+                  )}
                 </div>
 
                 <div className="area-flow-arrow">→</div>
@@ -192,6 +208,18 @@ const AreasScreen: React.FC = () => {
                   <div className="area-flow-description">
                     {area.reaction.description}
                   </div>
+                  {Object.keys(area.reaction.parameters).length > 0 && (
+                    <div className="area-flow-parameters">
+                      <strong>Paramètres:</strong>
+                      <ul style={{ margin: "5px 0", paddingLeft: "20px" }}>
+                        {Object.entries(area.reaction.parameters).map(([key, value]) => (
+                          <li key={key}>
+                            <strong>{key}:</strong> {String(value)}
+                          </li>
+                        ))}
+                      </ul>
+                    </div>
+                  )}
                 </div>
               </div>
 

@@ -154,6 +154,8 @@ def list_areas(session: SessionDep, token: TokenDep):
                     service_id = reaction.service_id,
                 ),
             ),
+            action_parameters = area.params_action or {},
+            reaction_parameters = area.params_reaction or {},
             is_active = area.is_active,
             created_at = area.created_at,
             updated_at = area.updated_at,

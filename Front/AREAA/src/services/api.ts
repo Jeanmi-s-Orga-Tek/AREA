@@ -113,13 +113,13 @@ export interface AreaDetail {
   action: {
     service: Service;
     action: ServiceAction;
-    parameters?: Record<string, any>;
   };
   reaction: {
     service: Service;
     reaction: ServiceReaction;
-    parameters?: Record<string, any>;
   };
+  action_parameters: Record<string, any>;
+  reaction_parameters: Record<string, any>;
   created_at: string;
   updated_at: string;
 }
