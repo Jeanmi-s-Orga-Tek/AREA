@@ -1,0 +1,8 @@
+name: "GitHub - Create Branch"
+description: "Creates a new branch in a repository"
+service: github
+url: "https://api.github.com/repos/{owner}/{repo}/git/refs"
+parameters:
+  repository: ""
+  branch_name: ""
+  from_branch: ""

@@ -1,0 +1,7 @@
+name: "Trello - Move Card"
+description: "Moves a card to another list"
+service: trello
+url: "https://api.trello.com/1/cards/{card_id}"
+parameters:
+  card_id: ""
+  list_id: ""

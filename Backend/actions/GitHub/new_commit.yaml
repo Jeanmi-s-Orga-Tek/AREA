@@ -1,0 +1,8 @@
+name: "GitHub - New Commit"
+description: "Triggers when a new commit is pushed to a repository"
+service: github
+is_polling: true
+parameters:
+  repository: ""
+  branch: ""
+  author: ""

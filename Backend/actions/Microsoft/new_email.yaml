@@ -1,0 +1,8 @@
+name: "Microsoft - Outlook - New Email"
+description: "Triggers when a new email is received in Outlook"
+service: microsoft
+is_polling: true
+parameters:
+  from_address: ""
+  subject_contains: ""
+  folder: ""

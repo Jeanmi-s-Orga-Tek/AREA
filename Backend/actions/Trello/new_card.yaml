@@ -1,0 +1,7 @@
+name: "Trello - New Card"
+description: "Triggers when a new card is created in a board"
+service: trello
+is_polling: true
+parameters:
+  board_id: ""
+  list_id: ""

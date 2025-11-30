@@ -1,0 +1,8 @@
+name: "GitHub - Add Comment"
+description: "Adds a comment to an issue or pull request"
+service: github
+url: "https://api.github.com/repos/{owner}/{repo}/issues/{issue_number}/comments"
+parameters:
+  repository: ""
+  issue_number: ""
+  comment: ""

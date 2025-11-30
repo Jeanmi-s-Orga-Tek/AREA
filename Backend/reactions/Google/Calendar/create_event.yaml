@@ -1,0 +1,10 @@
+name: "Google - Calendar - Create Event"
+description: "Creates a new event in Google Calendar"
+service: google
+url: "https://www.googleapis.com/calendar/v3/calendars/primary/events"
+parameters:
+  title: ""
+  description: ""
+  start_datetime: ""
+  end_datetime: ""
+  location: ""

@@ -1,0 +1,9 @@
+name: trello
+display_name: Trello
+description: Project management and collaboration tool
+oauth_provider: trello
+required_scopes: read,write,account
+icon: 🛂
+color: "#0079BF"
+category: Productivity
+is_active: true

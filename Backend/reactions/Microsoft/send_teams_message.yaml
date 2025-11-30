@@ -1,0 +1,8 @@
+name: "Microsoft - Teams - Send Message"
+description: "Sends a message to a Teams channel"
+service: microsoft
+url: "https://graph.microsoft.com/v1.0/teams/{team_id}/channels/{channel_id}/messages"
+parameters:
+  team_id: ""
+  channel_id: ""
+  message: ""

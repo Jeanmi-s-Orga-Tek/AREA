@@ -81,12 +81,11 @@ class OAuth2PasswordBearerWithCookie(OAuth2):
                 pass
 
         if self.auto_error:
-            # raise HTTPException(
-            #     status_code=status.HTTP_401_UNAUTHORIZED,
-            #     detail="Not authenticated",
-            #     headers={"WWW-Authenticate": "Bearer"},
-            # )
-            return ""
+            raise HTTPException(
+                status_code=status.HTTP_401_UNAUTHORIZED,
+                detail="Not authenticated",
+                headers={"WWW-Authenticate": "Bearer"},
+            )
         else:
             return None
 

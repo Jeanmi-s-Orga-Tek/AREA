@@ -1,0 +1,9 @@
+name: "Google - Gmail - Send Email"
+description: "Sends an email via Gmail"
+service: google
+url: "https://gmail.googleapis.com/gmail/v1/users/me/messages/send"
+parameters:
+  to: ""
+  subject: ""
+  body: ""
+  cc: ""

@@ -1,0 +1,7 @@
+name: "GitHub - New Pull Request"
+description: "Triggers when a new pull request is created"
+service: github
+is_polling: true
+parameters:
+  repository: ""
+  branch: ""

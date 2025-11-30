@@ -1,0 +1,7 @@
+name: "Google - Drive - Create Folder"
+description: "Creates a new folder in Google Drive"
+service: google
+url: "https://www.googleapis.com/drive/v3/files"
+parameters:
+  folder_name: ""
+  parent_folder_id: ""

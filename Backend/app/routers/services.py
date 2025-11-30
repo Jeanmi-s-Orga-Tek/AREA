@@ -11,17 +11,12 @@ from fastapi import APIRouter, Depends, HTTPException, status
 from sqlmodel import select
 
 from app.db import SessionDep
-from app.models.services import Service, ServiceAction, ServiceReaction, UserServiceSubscription
+from app.oauth_models import Service, UserServiceSubscription
+from app.action import Action
+from app.reaction import Reaction
 from app.oauth2 import oauth2_scheme
-from app.schemas.services import (
-    ServiceActionRead,
-    ServiceCapabilitiesRead,
-    ServiceReactionRead,
-    ServiceRead,
-    SubscriptionRead,
-)
+from app.schemas.services import ServiceActionRead, ServiceCapabilitiesRead, ServiceReactionRead, ServiceRead, SubscriptionRead
 from app.user import get_user_from_token
-
 
 services_router = APIRouter(
     prefix="/services",
@@ -30,13 +25,11 @@ services_router = APIRouter(
 
 TokenDep = Annotated[str, Depends(oauth2_scheme)]
 
-
-@services_router.get("/", response_model=List[ServiceRead])
-def list_services(session: SessionDep):
-    statement = select(Service).where(Service.is_active == True).order_by(Service.name)
-    services = session.exec(statement).all()
-    return services
-
+# @services_router.get("/", response_model=List[ServiceRead])
+# def list_services(session: SessionDep):
+#     statement = select(Service).where(Service.is_active == True).order_by(Service.name)
+#     services = session.exec(statement).all()
+#     return services
 
 @services_router.get("/my-services", response_model=List[SubscriptionRead])
 def get_my_services(session: SessionDep, token: TokenDep):
@@ -61,26 +54,51 @@ def serialize_subscription(subscription: UserServiceSubscription) -> Subscriptio
     )
 
 
-@services_router.get("/{service_id}/capabilities", response_model=ServiceCapabilitiesRead)
+@services_router.get("/{service_id}/capabilities")
 def get_service_capabilities(service_id: int, session: SessionDep):
     service = session.get(Service, service_id)
     if service is None or service.is_active is False:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Service not found")
-    actions_statement = select(ServiceAction).where(
-        ServiceAction.service_id == service_id,
-        ServiceAction.is_active == True,
-    ).order_by(ServiceAction.name)
-    reactions_statement = select(ServiceReaction).where(
-        ServiceReaction.service_id == service_id,
-        ServiceReaction.is_active == True,
-    ).order_by(ServiceReaction.name)
+
+    actions_statement = select(Action).where(Action.service_id == service_id)
     actions = session.exec(actions_statement).all()
+
+    reactions_statement = select(Reaction).where(Reaction.service_id == service_id)
     reactions = session.exec(reactions_statement).all()
-    return ServiceCapabilitiesRead(
-        service=ServiceRead.model_validate(service),
-        actions=[ServiceActionRead.model_validate(action) for action in actions],
-        reactions=[ServiceReactionRead.model_validate(reaction) for reaction in reactions],
-    )
+    
+    return {
+        "service": {
+            "id": service.id,
+            "name": service.name,
+            "display_name": service.display_name,
+            "description": service.description,
+            "icon": service.icon,
+            "icon_url": service.icon_url,
+            "color": service.color,
+            "category": service.category,
+            "requires_oauth": service.requires_oauth,
+        },
+        "actions": [
+            {
+                "id": action.id,
+                "name": action.name,
+                "description": action.description,
+                "is_polling": action.is_polling,
+                "parameters": action.parameters or {},
+            }
+            for action in actions
+        ],
+        "reactions": [
+            {
+                "id": reaction.id,
+                "name": reaction.name,
+                "description": reaction.description,
+                "url": reaction.url,
+                "parameters": reaction.parameters or {},
+            }
+            for reaction in reactions
+        ],
+    }
 
 
 @services_router.post("/{service_id}/subscribe", response_model=SubscriptionRead)

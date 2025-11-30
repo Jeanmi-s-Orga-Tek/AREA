@@ -113,13 +113,13 @@ export interface AreaDetail {
   action: {
     service: Service;
     action: ServiceAction;
-    parameters?: Record<string, any>;
   };
   reaction: {
     service: Service;
     reaction: ServiceReaction;
-    parameters?: Record<string, any>;
   };
+  action_parameters: Record<string, any>;
+  reaction_parameters: Record<string, any>;
   created_at: string;
   updated_at: string;
 }
@@ -215,7 +215,7 @@ export async function fetchServices(): Promise<Service[]> {
 }
 
 export async function fetchMyConnectedServices(): Promise<ServiceAccount[]> {
-  const response = await fetch(`${API_BASE_URL}/my/services`, {
+  const response = await fetch(`${API_BASE_URL}/services/my`, {
     headers: getAuthHeaders(),
   });
   return handleResponse<ServiceAccount[]>(response);
@@ -263,7 +263,7 @@ export async function fetchAreaById(areaId: number): Promise<AreaDetail> {
 }
 
 export async function createArea(data: CreateAreaRequest): Promise<AreaDetail> {
-  const response = await fetch(`${API_BASE_URL}/areas/create`, {
+  const response = await fetch(`${API_BASE_URL}/areas/`, {
     method: "POST",
     headers: getAuthHeaders(),
     body: JSON.stringify(data),

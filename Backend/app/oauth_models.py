@@ -1,6 +1,7 @@
-from typing import Optional
+from typing import Optional, Any, Dict
 from datetime import datetime
 from sqlmodel import Field, SQLModel
+from sqlalchemy import JSON, Column
 
 
 class OAuthConnection(SQLModel, table=True):
@@ -42,7 +43,6 @@ class OAuthState(SQLModel, table=True):
 
 
 class Service(SQLModel, table=True):
-
     __tablename__ = "services"
     
     id: Optional[int] = Field(default=None, primary_key=True)
@@ -51,17 +51,56 @@ class Service(SQLModel, table=True):
     display_name: str
     description: Optional[str] = None
     
-    oauth_provider: str
+    oauth_provider: Optional[str] = None
+    required_scopes: Optional[str] = None
+    requires_oauth: bool = False
     
-    required_scopes: str
-
     icon: Optional[str] = None
+    icon_url: Optional[str] = None
     color: Optional[str] = None
     category: Optional[str] = None
-    is_active: bool = True
     
+    is_active: bool = True
+
     created_at: datetime = Field(default_factory=datetime.utcnow)
     updated_at: datetime = Field(default_factory=datetime.utcnow)
+
+
+class ServiceAction(SQLModel, table=True):
+    __tablename__ = "service_actions"
+    
+    id: Optional[int] = Field(default=None, primary_key=True)
+    service_id: int = Field(foreign_key="services.id", index=True)
+    name: str
+    description: str
+    technical_key: str
+    is_active: bool = True
+    created_at: datetime = Field(default_factory=datetime.utcnow)
+    updated_at: datetime = Field(default_factory=datetime.utcnow)
+
+
+class ServiceReaction(SQLModel, table=True):
+    __tablename__ = "service_reactions"
+    
+    id: Optional[int] = Field(default=None, primary_key=True)
+    service_id: int = Field(foreign_key="services.id", index=True)
+    name: str
+    description: str
+    technical_key: str
+    is_active: bool = True
+    created_at: datetime = Field(default_factory=datetime.utcnow)
+    updated_at: datetime = Field(default_factory=datetime.utcnow)
+
+
+class UserServiceSubscription(SQLModel, table=True):
+    __tablename__ = "user_service_subscriptions"
+    
+    id: Optional[int] = Field(default=None, primary_key=True)
+    user_id: int = Field(index=True, foreign_key="user.id")
+    service_id: int = Field(index=True, foreign_key="services.id")
+    is_active: bool = True
+    created_at: datetime = Field(default_factory=datetime.utcnow, nullable=False)
+    oauth_data: Optional[str] = None
 
 
 class ServiceAccount(SQLModel, table=True):
@@ -93,3 +132,20 @@ class ServiceAccount(SQLModel, table=True):
     
     created_at: datetime = Field(default_factory=datetime.utcnow)
     updated_at: datetime = Field(default_factory=datetime.utcnow)
+
+
+class Area(SQLModel, table=True):
+    __tablename__ = "areas"
+    
+    id: Optional[int] = Field(default=None, primary_key=True)
+    user_id: int = Field(foreign_key="user.id", index=True)
+    name: Optional[str] = None
+    action_service_id: int = Field(foreign_key="services.id")
+    action_id: int = Field(foreign_key="action.id")
+    reaction_service_id: int = Field(foreign_key="services.id")
+    reaction_id: int = Field(foreign_key="reaction.id")
+    params_action: Dict[str, Any] = Field(default_factory=dict, sa_column=Column(JSON))
+    params_reaction: Dict[str, Any] = Field(default_factory=dict, sa_column=Column(JSON))
+    is_active: bool = True
+    created_at: datetime = Field(default_factory=datetime.utcnow, nullable=False)
+    updated_at: datetime = Field(default_factory=datetime.utcnow, nullable=False)

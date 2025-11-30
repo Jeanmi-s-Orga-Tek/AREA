@@ -1,0 +1,7 @@
+name: "Microsoft - Calendar - New Event"
+description: "Triggers when a new event is created in Outlook Calendar"
+service: microsoft
+is_polling: true
+parameters:
+  calendar_id: ""
+  subject_contains: ""

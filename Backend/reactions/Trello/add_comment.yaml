@@ -1,0 +1,7 @@
+name: "Trello - Add Comment"
+description: "Adds a comment to a Trello card"
+service: trello
+url: "https://api.trello.com/1/cards/{card_id}/actions/comments"
+parameters:
+  card_id: ""
+  comment: ""

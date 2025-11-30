@@ -1,0 +1,8 @@
+name: "Google - Gmail - New Email"
+description: "Triggers when a new email is received"
+service: google
+is_polling: true
+parameters:
+  from_address: ""
+  subject_contains: ""
+  label: ""

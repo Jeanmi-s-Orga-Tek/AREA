@@ -1,0 +1,9 @@
+name: "Google - Sheets - Update Cell"
+description: "Updates a cell value in a Google Sheet"
+service: google
+url: "https://sheets.googleapis.com/v4/spreadsheets/{spreadsheet_id}/values/{range}"
+parameters:
+  spreadsheet_id: ""
+  sheet_name: ""
+  cell_range: ""
+  value: ""
