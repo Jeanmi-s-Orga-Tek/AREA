@@ -1,11 +1,9 @@
 from typing import Optional
 from fastapi import APIRouter, Depends, HTTPException
 from pydantic import BaseModel
-from sqlmodel import Session
 
 from app.db import SessionDep
 from app.reaction import Reaction
-from app.timer import update_timer_reaction
 
 timer_router = APIRouter(prefix="/timer", tags=["timer"])
 
@@ -36,8 +34,6 @@ def update_timer(
     reaction.parameters = params
     session.add(reaction)
     session.commit()
-
-    update_timer_reaction(session, reaction_id)
 
     session.refresh(reaction)
     return {"id": reaction.id, "parameters": reaction.parameters}

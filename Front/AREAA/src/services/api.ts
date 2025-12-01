@@ -306,7 +306,7 @@ export interface TimerUpdatePayload {
 
 export async function updateTimerReaction(reactionId: number, payload: TimerUpdatePayload)
 : Promise<{ id: number; parameters: Record<string, any> }> {
-    const reponse = await fetch (`${API_BASE_URL}/timer/reactions/${reactionId}`, {
+    const reponse = await fetch (`${API_BASE_URL}/timer/reaction/${reactionId}`, {
         method: "PATCH",
         headers: getAuthHeaders(),
         body: JSON.stringify(payload),
