@@ -42,8 +42,42 @@ export interface ServiceConnectionEvent {
 
 export const SERVICE_OAUTH_EVENT = 'service-oauth-complete';
 
+export interface ServiceActionSummary {
+  id: number;
+  name: string;
+  description?: string;
+  is_polling?: boolean;
+  parameters?: Record<string, any>;
+}
+
+export interface ServiceReactionSummary {
+  id: number;
+  name: string;
+  description?: string;
+  url?: string;
+  parameters?: Record<string, any>;
+}
+
+export interface ServiceCapabilities {
+  service: ServiceSummary & {
+    description?: string;
+    icon_url?: string;
+    requires_oauth?: boolean;
+  };
+  actions: ServiceActionSummary[];
+  reactions: ServiceReactionSummary[];
+}
+
 export const fetchServices = async (): Promise<ServiceSummary[]> => {
   return await apiClient.get<ServiceSummary[]>('/services');
+};
+
+export const fetchServiceCapabilities = async (
+  serviceId: number,
+): Promise<ServiceCapabilities> => {
+  return await apiClient.get<ServiceCapabilities>(
+    `/services/${serviceId}/capabilities`,
+  );
 };
 
 export const fetchConnectedServices = async (): Promise<ServiceAccountSummary[]> => {

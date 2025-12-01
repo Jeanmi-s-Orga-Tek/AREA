@@ -1,4 +1,4 @@
-import React, {useState, useEffect, useCallback} from 'react';
+import React, {useState, useCallback} from 'react';
 import {
   View,
   Text,
@@ -9,11 +9,12 @@ import {
   RefreshControl,
   ActivityIndicator,
 } from 'react-native';
+import {useFocusEffect} from '@react-navigation/native';
 import {NativeStackNavigationProp} from '@react-navigation/native-stack';
 import {Button, Card} from '../components';
 import {colors, spacing, typography} from '../theme';
 import {useAuth} from '../context/AuthContext';
-import {fetchAreas, toggleArea, AreaRead} from '../api/areas';
+import {fetchAreas, toggleArea, AreaDetail} from '../api/areas';
 import {RootStackParamList} from '../navigation/types';
 
 type AreasScreenProps = {
@@ -22,12 +23,12 @@ type AreasScreenProps = {
 
 export const AreasScreen: React.FC<AreasScreenProps> = ({navigation}) => {
   const {logout} = useAuth();
-  const [areas, setAreas] = useState<AreaRead[]>([]);
+  const [areas, setAreas] = useState<AreaDetail[]>([]);
   const [loading, setLoading] = useState(true);
   const [refreshing, setRefreshing] = useState(false);
   const [error, setError] = useState('');
 
-  const loadAreas = async () => {
+  const loadAreas = useCallback(async () => {
     try {
       setError('');
       const data = await fetchAreas();
@@ -38,18 +39,20 @@ export const AreasScreen: React.FC<AreasScreenProps> = ({navigation}) => {
       setLoading(false);
       setRefreshing(false);
     }
-  };
-
-  useEffect(() => {
-    loadAreas();
   }, []);
+
+  useFocusEffect(
+    useCallback(() => {
+      loadAreas();
+    }, [loadAreas]),
+  );
 
   const onRefresh = useCallback(() => {
     setRefreshing(true);
     loadAreas();
-  }, []);
+  }, [loadAreas]);
 
-  const handleToggle = async (area: AreaRead) => {
+  const handleToggle = async (area: AreaDetail) => {
     const previousState = area.is_active;
     setAreas(prev =>
       prev.map(a => (a.id === area.id ? {...a, is_active: !a.is_active} : a)),
@@ -80,16 +83,17 @@ export const AreasScreen: React.FC<AreasScreenProps> = ({navigation}) => {
     );
   }
 
-  const renderArea = ({item}: {item: AreaRead}) => (
+  const renderArea = ({item}: {item: AreaDetail}) => (
     <Card style={styles.card}>
       <View style={styles.cardHeader}>
         <View style={styles.cardContent}>
-          <Text style={styles.cardTitle}>
-            Action #{item.action_id} → Reaction #{item.reaction_id}
-          </Text>
+          <Text style={styles.cardTitle}>{item.name || 'Untitled AREA'}</Text>
           <Text style={styles.cardDescription}>
-            Service {item.action_service_id} → Service{' '}
-            {item.reaction_service_id}
+            {item.action.service.display_name} →{' '}
+            {item.reaction.service.display_name}
+          </Text>
+          <Text style={styles.cardMeta}>
+            {item.action.action.name} • {item.reaction.reaction.name}
           </Text>
         </View>
         <Switch
@@ -137,7 +141,7 @@ export const AreasScreen: React.FC<AreasScreenProps> = ({navigation}) => {
         <Button
           title="Create New AREA"
           variant="primary"
-          onPress={() => {}}
+          onPress={() => navigation.navigate('CreateArea')}
           style={styles.button}
         />
 
@@ -194,6 +198,11 @@ const styles = StyleSheet.create({
     ...typography.body,
     color: colors.textSecondary,
     fontSize: 13,
+  },
+  cardMeta: {
+    ...typography.caption,
+    color: colors.textSecondary,
+    marginTop: spacing.xs,
   },
   emptyContainer: {
     flex: 1,

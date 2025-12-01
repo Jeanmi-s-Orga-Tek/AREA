@@ -5,6 +5,7 @@ import {
   LoginScreen,
   RegisterScreen,
   AreasScreen,
+  CreateAreaScreen,
   SettingsScreen,
 } from '../screens';
 import {useAuth} from '../context/AuthContext';
@@ -48,6 +49,11 @@ export const RootNavigator: React.FC = () => {
                 </TouchableOpacity>
               ),
             })}
+          />
+          <Stack.Screen
+            name="CreateArea"
+            component={CreateAreaScreen}
+            options={{title: 'Create AREA'}}
           />
           <Stack.Screen
             name="Settings"
