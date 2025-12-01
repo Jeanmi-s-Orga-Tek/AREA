@@ -1,4 +1,4 @@
-import React, {useState, useEffect} from 'react';
+import React, {useCallback, useEffect, useState} from 'react';
 import {
   View,
   Text,
@@ -7,41 +7,63 @@ import {
   SafeAreaView,
   ScrollView,
   ActivityIndicator,
+  Alert,
 } from 'react-native';
 import {Button, Card} from '../components';
 import {colors, spacing, typography} from '../theme';
-import {getApiBaseUrl, setApiBaseUrl} from '../api/storage';
+import {getApiBaseUrl, setApiBaseUrl, clearApiBaseUrl} from '../api/storage';
 import {fetchAbout, AboutResponse} from '../api/about';
+import {fetchCurrentUser, CurrentUser} from '../api/user';
 import {useAuth} from '../context/AuthContext';
-import {NativeStackNavigationProp} from '@react-navigation/native-stack';
-import {RootStackParamList} from '../navigation/types';
+type ConnectionStatus = 'idle' | 'loading' | 'success' | 'error';
 
-type SettingsScreenProps = {
-  navigation: NativeStackNavigationProp<RootStackParamList, 'Settings'>;
-};
-
-export const SettingsScreen: React.FC<SettingsScreenProps> = ({navigation}) => {
+export const SettingsScreen: React.FC = () => {
   const [url, setUrl] = useState('');
   const [currentUrl, setCurrentUrl] = useState<string | null>(null);
   const [savedMessage, setSavedMessage] = useState('');
   const [errorMessage, setErrorMessage] = useState('');
-  const [testing, setTesting] = useState(false);
-  const [connectionStatus, setConnectionStatus] = useState<'idle' | 'success' | 'error'>('idle');
-  const [aboutData, setAboutData] = useState<AboutResponse | null>(null);
+  const [connectionStatus, setConnectionStatus] = useState<ConnectionStatus>('idle');
   const [connectionError, setConnectionError] = useState('');
-  const {isLoggedIn} = useAuth();
+  const [aboutData, setAboutData] = useState<AboutResponse | null>(null);
+  const [user, setUser] = useState<CurrentUser | null>(null);
+  const [userLoading, setUserLoading] = useState(false);
+  const [userError, setUserError] = useState('');
+  const {isLoggedIn, logout} = useAuth();
 
   useEffect(() => {
+    const loadUrl = async () => {
+      const storedUrl = await getApiBaseUrl();
+      if (storedUrl) {
+        setUrl(storedUrl);
+        setCurrentUrl(storedUrl);
+      }
+    };
     loadUrl();
   }, []);
 
-  const loadUrl = async () => {
-    const storedUrl = await getApiBaseUrl();
-    if (storedUrl) {
-      setUrl(storedUrl);
-      setCurrentUrl(storedUrl);
+  const loadUserProfile = useCallback(async () => {
+    if (!isLoggedIn) {
+      setUser(null);
+      setUserError('');
+      return;
     }
-  };
+    setUserLoading(true);
+    setUserError('');
+    try {
+      const profile = await fetchCurrentUser();
+      setUser(profile);
+    } catch (error) {
+      setUserError(
+        error instanceof Error ? error.message : 'Unable to load account information.',
+      );
+    } finally {
+      setUserLoading(false);
+    }
+  }, [isLoggedIn]);
+
+  useEffect(() => {
+    loadUserProfile();
+  }, [loadUserProfile]);
 
   const handleSave = async () => {
     setErrorMessage('');
@@ -62,42 +84,143 @@ export const SettingsScreen: React.FC<SettingsScreenProps> = ({navigation}) => {
     }
   };
 
-  const handleTestConnection = async () => {
-    setTesting(true);
-    setConnectionStatus('idle');
+  const handleFetchServerInfo = async () => {
+    setConnectionStatus('loading');
     setConnectionError('');
     setAboutData(null);
-
     try {
-      const data = await fetchAbout();
-      setAboutData(data);
+      const info = await fetchAbout();
+      setAboutData(info);
       setConnectionStatus('success');
     } catch (error) {
       setConnectionStatus('error');
-      if (error instanceof Error) {
-        setConnectionError(error.message);
-      } else {
-        setConnectionError('Unknown error occurred');
-      }
-    } finally {
-      setTesting(false);
+      setConnectionError(
+        error instanceof Error ? error.message : 'Unable to reach the server.',
+      );
     }
   };
+
+  const handleLogout = async () => {
+    await logout();
+  };
+
+  const handleClearLocalData = async () => {
+    try {
+      await clearApiBaseUrl();
+      await logout();
+      setUrl('');
+      setCurrentUrl(null);
+      setSavedMessage('');
+      setAboutData(null);
+      setConnectionStatus('idle');
+      Alert.alert('Local data cleared', 'Server URL and session have been cleared.');
+    } catch (error) {
+      Alert.alert(
+        'Unable to clear data',
+        error instanceof Error ? error.message : 'Unknown error occurred.',
+      );
+    }
+  };
+
+  const renderServerStatus = () => {
+    if (connectionStatus === 'success' && aboutData) {
+      return (
+        <View style={styles.successContainer}>
+          <Text style={styles.connectionSuccess}>Connected ✅</Text>
+          <Text style={styles.infoText}>
+            Services available: {aboutData.server.services.length}
+          </Text>
+          <Text style={styles.infoText}>
+            Server time: {new Date(aboutData.server.current_time * 1000).toLocaleString()}
+          </Text>
+          <Text style={styles.infoText}>Client host: {aboutData.client.host}</Text>
+        </View>
+      );
+    }
+
+    if (connectionStatus === 'error') {
+      return (
+        <View style={styles.errorContainer}>
+          <Text style={styles.connectionError}>Cannot reach server ❌</Text>
+          <Text style={styles.errorDetailText}>{connectionError}</Text>
+        </View>
+      );
+    }
+
+    return null;
+  };
+
+  const renderAccountSection = () => (
+    <Card style={styles.card}>
+      <Text style={styles.cardTitle}>Account</Text>
+      <Text style={styles.cardDescription}>
+        Manage your AREA account and authentication
+      </Text>
+      {userLoading ? (
+        <ActivityIndicator color={colors.primary} style={styles.sectionSpinner} />
+      ) : (
+        <View style={styles.accountDetails}>
+          <Text style={styles.infoText}>
+            Name: {user?.name || user?.email || 'Unknown user'}
+          </Text>
+          <Text style={styles.infoText}>Email: {user?.email || 'N/A'}</Text>
+          {userError ? <Text style={styles.errorText}>{userError}</Text> : null}
+        </View>
+      )}
+      <Button title="Log out" variant="secondary" onPress={handleLogout} style={styles.cardButton} />
+    </Card>
+  );
+
+  const renderAboutSection = () => (
+    <Card style={styles.card}>
+      <Text style={styles.cardTitle}>About / Server info</Text>
+      <Text style={styles.cardDescription}>
+        Inspect the backend instance powering this client
+      </Text>
+      <Button
+        title={connectionStatus === 'loading' ? 'Loading...' : 'View server info'}
+        onPress={handleFetchServerInfo}
+        variant="outline"
+        disabled={connectionStatus === 'loading'}
+        style={styles.cardButton}
+      />
+      {renderServerStatus()}
+    </Card>
+  );
+
+  const renderAdvancedSection = () => (
+    <Card style={styles.card}>
+      <Text style={styles.cardTitle}>Advanced</Text>
+      <Text style={styles.cardDescription}>
+        Troubleshoot by clearing local configuration and session data
+      </Text>
+      <Button
+        title="Clear local data"
+        variant="outline"
+        onPress={handleClearLocalData}
+        style={styles.cardButton}
+      />
+    </Card>
+  );
+
+  const showServerResultsInline = !isLoggedIn;
 
   return (
     <SafeAreaView style={styles.container}>
       <ScrollView style={styles.scrollView} contentContainerStyle={styles.content}>
-        <Text style={styles.title}>Settings</Text>
+        <Text style={styles.title}>{isLoggedIn ? 'Settings' : 'Server settings'}</Text>
 
         <Card style={styles.card}>
-          <Text style={styles.cardTitle}>Server Settings</Text>
+          <Text style={styles.cardTitle}>Server settings</Text>
           <Text style={styles.cardDescription}>
-            Configure the API server URL
+            {isLoggedIn
+              ? 'Changing the server URL will disconnect your current session.'
+              : 'Configure the API base URL before logging in.'}
           </Text>
 
           <TextInput
             style={styles.input}
-            placeholder="http://10.0.2.2:80"
+            placeholder="http://10.0.2.2:8080"
             placeholderTextColor={colors.textSecondary}
             value={url}
             onChangeText={setUrl}
@@ -109,111 +232,41 @@ export const SettingsScreen: React.FC<SettingsScreenProps> = ({navigation}) => {
             <Text style={styles.successText}>{savedMessage}</Text>
           ) : null}
 
-          {errorMessage ? (
-            <Text style={styles.errorText}>{errorMessage}</Text>
-          ) : null}
+          {errorMessage ? <Text style={styles.errorText}>{errorMessage}</Text> : null}
 
-          <Button
-            title="Save"
-            onPress={handleSave}
-            style={styles.saveButton}
-          />
+          <Button title="Save" onPress={handleSave} style={styles.saveButton} />
 
-          {currentUrl ? (
-            <Text style={styles.currentUrlText}>
-              Current server: {currentUrl}
-            </Text>
-          ) : (
-            <Text style={styles.currentUrlText}>
-              Current server: Not set
-            </Text>
+          <Text style={styles.currentUrlText}>
+            Current server: {currentUrl ? currentUrl : 'Not set'}
+          </Text>
+
+          {!isLoggedIn && (
+            <Button
+              title={connectionStatus === 'loading' ? 'Testing...' : 'Test connection'}
+              onPress={handleFetchServerInfo}
+              variant="outline"
+              disabled={connectionStatus === 'loading' || !currentUrl}
+              style={styles.testButton}
+            />
           )}
 
-          <Button
-            title={testing ? 'Testing...' : 'Test Connection'}
-            onPress={handleTestConnection}
-            variant="outline"
-            disabled={testing || !currentUrl}
-            style={styles.testButton}
-          />
-
-          {testing && (
+          {!isLoggedIn && connectionStatus === 'loading' && (
             <View style={styles.testingContainer}>
               <ActivityIndicator size="small" color={colors.primary} />
               <Text style={styles.testingText}>Testing connection...</Text>
             </View>
           )}
 
-          {connectionStatus === 'success' && aboutData && (
-            <View style={styles.successContainer}>
-              <Text style={styles.connectionSuccess}>Connected ✅</Text>
-              <Text style={styles.infoText}>
-                Services available: {aboutData.server.services.length}
-              </Text>
-              <Text style={styles.infoText}>
-                Server time: {new Date(aboutData.server.current_time * 1000).toLocaleString()}
-              </Text>
-              <Text style={styles.infoText}>
-                Client host: {aboutData.client.host}
-              </Text>
-            </View>
-          )}
-
-          {connectionStatus === 'error' && (
-            <View style={styles.errorContainer}>
-              <Text style={styles.connectionError}>Cannot reach server ❌</Text>
-              <Text style={styles.errorDetailText}>{connectionError}</Text>
-            </View>
-          )}
+          {showServerResultsInline && renderServerStatus()}
         </Card>
 
-        <Card style={styles.card}>
-          <Text style={styles.cardTitle}>Account</Text>
-          <Text style={styles.cardDescription}>
-            Manage your account settings and preferences
-          </Text>
-        </Card>
-
-        <Card style={styles.card}>
-          <Text style={styles.cardTitle}>Notifications</Text>
-          <Text style={styles.cardDescription}>
-            Configure how you want to be notified
-          </Text>
-        </Card>
-
-        <Card style={styles.card}>
-          <Text style={styles.cardTitle}>Connected Services</Text>
-          <Text style={styles.cardDescription}>
-            Manage your connected apps and services
-          </Text>
-          {isLoggedIn ? (
-            <Button
-              title="Manage services"
-              onPress={() => navigation.navigate('Services')}
-              style={styles.cardButton}
-            />
-          ) : (
-            <Text style={styles.infoText}>
-              Login to manage service connections.
-            </Text>
-          )}
-        </Card>
-
-        <Button
-          title={isLoggedIn ? 'Back to Areas' : 'Back to Login'}
-          variant="outline"
-          onPress={() =>
-            isLoggedIn ? navigation.navigate('Areas') : navigation.navigate('Login')
-          }
-          style={styles.button}
-        />
-
-        <Button
-          title="Logout"
-          variant="secondary"
-          onPress={() => navigation.navigate('Login')}
-          style={styles.button}
-        />
+        {isLoggedIn ? (
+          <>
+            {renderAccountSection()}
+            {renderAboutSection()}
+            {renderAdvancedSection()}
+          </>
+        ) : null}
       </ScrollView>
     </SafeAreaView>
   );
@@ -288,11 +341,11 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     marginTop: spacing.md,
-    gap: spacing.sm,
   },
   testingText: {
     ...typography.bodySmall,
     color: colors.textSecondary,
+    marginLeft: spacing.sm,
   },
   successContainer: {
     marginTop: spacing.md,
@@ -329,7 +382,10 @@ const styles = StyleSheet.create({
     ...typography.bodySmall,
     color: colors.textSecondary,
   },
-  button: {
-    marginBottom: spacing.md,
+  sectionSpinner: {
+    marginTop: spacing.md,
+  },
+  accountDetails: {
+    marginTop: spacing.md,
   },
 });

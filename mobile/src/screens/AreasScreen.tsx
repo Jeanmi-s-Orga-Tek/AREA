@@ -104,10 +104,6 @@ export const AreasScreen: React.FC<AreasScreenProps> = ({navigation}) => {
 
   return (
     <SafeAreaView style={styles.container}>
-      <View style={styles.header}>
-        <Text style={styles.title}>My AREAs</Text>
-      </View>
-
       {error ? (
         <View style={styles.errorContainer}>
           <Text style={styles.errorText}>{error}</Text>
@@ -146,13 +142,6 @@ export const AreasScreen: React.FC<AreasScreenProps> = ({navigation}) => {
         />
 
         <Button
-          title="Manage Services"
-          variant="primary"
-          onPress={() => navigation.navigate('Services')}
-          style={styles.button}
-        />
-
-        <Button
           title="Go to Settings"
           variant="outline"
           onPress={() => navigation.navigate('Settings')}
@@ -179,14 +168,6 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
-  },
-  header: {
-    padding: spacing.lg,
-    paddingBottom: spacing.md,
-  },
-  title: {
-    ...typography.h1,
-    color: colors.text,
   },
   listContent: {
     padding: spacing.lg,

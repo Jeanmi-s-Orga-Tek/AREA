@@ -53,3 +53,12 @@ export const setApiBaseUrl = async (url: string): Promise<void> => {
     throw error;
   }
 };
+
+export const clearApiBaseUrl = async (): Promise<void> => {
+  try {
+    await AsyncStorage.removeItem(API_BASE_URL_KEY);
+  } catch (error) {
+    console.error('Error clearing API base URL:', error);
+    throw error;
+  }
+};

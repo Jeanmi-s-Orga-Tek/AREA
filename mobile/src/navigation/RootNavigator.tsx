@@ -6,11 +6,16 @@ import {
   RegisterScreen,
   AreasScreen,
   SettingsScreen,
-  ServicesScreen,
 } from '../screens';
 import {useAuth} from '../context/AuthContext';
-import {ActivityIndicator, View, StyleSheet} from 'react-native';
-import {colors} from '../theme';
+import {
+  ActivityIndicator,
+  View,
+  StyleSheet,
+  TouchableOpacity,
+  Text,
+} from 'react-native';
+import {colors, spacing, typography} from '../theme';
 import {RootStackParamList} from './types';
 
 const Stack = createNativeStackNavigator<RootStackParamList>();
@@ -29,27 +34,43 @@ export const RootNavigator: React.FC = () => {
   return (
     <NavigationContainer>
       {isLoggedIn ? (
-        <Stack.Navigator
-          initialRouteName="Areas"
-          screenOptions={{
-            headerShown: false,
-          }}>
-          <Stack.Screen name="Areas" component={AreasScreen} />
-          <Stack.Screen name="Settings" component={SettingsScreen} />
-          <Stack.Screen name="Services" component={ServicesScreen} />
-        </Stack.Navigator>
-      ) : (
-        <Stack.Navigator
-          initialRouteName="Login"
-          screenOptions={{
-            headerShown: false,
-          }}>
-          <Stack.Screen name="Login" component={LoginScreen} />
-          <Stack.Screen name="Register" component={RegisterScreen} />
+        <Stack.Navigator initialRouteName="Areas">
+          <Stack.Screen
+            name="Areas"
+            component={AreasScreen}
+            options={({navigation}) => ({
+              headerTitle: 'My AREAs',
+              headerRight: () => (
+                <TouchableOpacity
+                  onPress={() => navigation.navigate('Settings')}
+                  style={styles.headerButton}>
+                  <Text style={styles.headerButtonText}>Settings</Text>
+                </TouchableOpacity>
+              ),
+            })}
+          />
           <Stack.Screen
             name="Settings"
             component={SettingsScreen}
-            options={{presentation: 'modal'}}
+            options={{title: 'Settings'}}
+          />
+        </Stack.Navigator>
+      ) : (
+        <Stack.Navigator initialRouteName="Login">
+          <Stack.Screen
+            name="Login"
+            component={LoginScreen}
+            options={{headerShown: false}}
+          />
+          <Stack.Screen
+            name="Register"
+            component={RegisterScreen}
+            options={{headerShown: false}}
+          />
+          <Stack.Screen
+            name="Settings"
+            component={SettingsScreen}
+            options={{title: 'Server settings'}}
           />
         </Stack.Navigator>
       )}
@@ -63,5 +84,13 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     backgroundColor: colors.background,
+  },
+  headerButton: {
+    paddingHorizontal: spacing.md,
+    paddingVertical: spacing.xs,
+  },
+  headerButtonText: {
+    ...typography.bodySmall,
+    color: colors.primary,
   },
 });

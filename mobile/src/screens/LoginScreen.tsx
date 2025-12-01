@@ -76,7 +76,6 @@ export const LoginScreen: React.FC<LoginScreenProps> = ({navigation}) => {
 
     if (result.success) {
       setAuthLogin(result.token || email);
-      navigation.navigate('Areas');
     } else {
       setError(result.error || 'Login failed');
     }
@@ -175,9 +174,7 @@ export const LoginScreen: React.FC<LoginScreenProps> = ({navigation}) => {
           <TouchableOpacity
             style={styles.settingsLink}
             onPress={() => navigation.navigate('Settings')}>
-            <Text style={styles.settingsLinkText}>
-              Configure server / API settings
-            </Text>
+            <Text style={styles.settingsLinkText}>Server settings</Text>
           </TouchableOpacity>
 
           <TouchableOpacity

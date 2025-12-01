@@ -131,6 +131,12 @@ export const RegisterScreen: React.FC<RegisterScreenProps> = ({navigation}) => {
             onPress={() => navigation.navigate('Login')}>
             <Text style={styles.linkText}>Already have an account? Log in</Text>
           </TouchableOpacity>
+
+          <TouchableOpacity
+            style={styles.settingsLink}
+            onPress={() => navigation.navigate('Settings')}>
+            <Text style={styles.settingsLinkText}>Server settings</Text>
+          </TouchableOpacity>
         </View>
       </KeyboardAvoidingView>
     </SafeAreaView>
@@ -195,5 +201,14 @@ const styles = StyleSheet.create({
   linkText: {
     color: colors.primary,
     ...typography.body,
+  },
+  settingsLink: {
+    marginTop: spacing.md,
+    alignItems: 'center',
+  },
+  settingsLinkText: {
+    color: colors.textSecondary,
+    textDecorationLine: 'underline',
+    ...typography.bodySmall,
   },
 });
