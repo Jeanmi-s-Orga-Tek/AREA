@@ -200,9 +200,11 @@ export const SettingsScreen: React.FC<SettingsScreenProps> = ({navigation}) => {
         </Card>
 
         <Button
-          title="Back to Areas"
+          title={isLoggedIn ? 'Back to Areas' : 'Back to Login'}
           variant="outline"
-          onPress={() => navigation.navigate('Areas')}
+          onPress={() =>
+            isLoggedIn ? navigation.navigate('Areas') : navigation.navigate('Login')
+          }
           style={styles.button}
         />
 

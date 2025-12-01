@@ -11,6 +11,8 @@ import {
   Alert,
   Linking,
   DeviceEventEmitter,
+  Platform,
+  StatusBar,
 } from 'react-native';
 import {useFocusEffect, useNavigation} from '@react-navigation/native';
 import {NativeStackNavigationProp} from '@react-navigation/native-stack';
@@ -262,6 +264,10 @@ export const ServicesScreen: React.FC = () => {
   );
 };
 
+const HEADER_TOP_INSET =
+  (Platform.OS === 'android' ? StatusBar.currentHeight ?? 0 : 0) +
+  spacing.lg;
+
 const styles = StyleSheet.create({
   container: {
     flex: 1,
@@ -280,7 +286,7 @@ const styles = StyleSheet.create({
   },
   header: {
     paddingHorizontal: spacing.lg,
-    paddingTop: spacing.lg,
+    paddingTop: HEADER_TOP_INSET,
     paddingBottom: spacing.md,
     borderBottomWidth: StyleSheet.hairlineWidth,
     borderBottomColor: colors.border,
