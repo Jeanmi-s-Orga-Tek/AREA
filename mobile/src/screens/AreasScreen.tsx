@@ -14,12 +14,7 @@ import {Button, Card} from '../components';
 import {colors, spacing, typography} from '../theme';
 import {useAuth} from '../context/AuthContext';
 import {fetchAreas, toggleArea, AreaRead} from '../api/areas';
-
-type RootStackParamList = {
-  Login: undefined;
-  Areas: undefined;
-  Settings: undefined;
-};
+import {RootStackParamList} from '../navigation/types';
 
 type AreasScreenProps = {
   navigation: NativeStackNavigationProp<RootStackParamList, 'Areas'>;
@@ -147,6 +142,13 @@ export const AreasScreen: React.FC<AreasScreenProps> = ({navigation}) => {
           title="Create New AREA"
           variant="primary"
           onPress={() => {}}
+          style={styles.button}
+        />
+
+        <Button
+          title="Manage Services"
+          variant="primary"
+          onPress={() => navigation.navigate('Services')}
           style={styles.button}
         />
 

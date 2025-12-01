@@ -1,12 +1,22 @@
 import React, {useCallback, useEffect, useRef} from 'react';
-import {Alert, Linking, StatusBar, useColorScheme} from 'react-native';
+import {
+  Alert,
+  DeviceEventEmitter,
+  Linking,
+  StatusBar,
+  useColorScheme,
+} from 'react-native';
 import {RootNavigator} from './src/navigation';
 import {AuthProvider, useAuth} from './src/context/AuthContext';
 import {
   consumePendingOAuthState,
-  extractProviderFromState,
   finalizeOAuthLogin,
+  parseOAuthState,
 } from './src/api/auth';
+import {
+  completeServiceConnection,
+  SERVICE_OAUTH_EVENT,
+} from './src/api/services';
 
 function App() {
   const isDarkMode = useColorScheme() === 'dark';
@@ -70,12 +80,17 @@ const OAuthRedirectHandler: React.FC = () => {
       }
 
       isProcessingRef.current = true;
+      let isServiceFlow = false;
+      let serviceNameDuringFlow: string | undefined;
       try {
         const params = getSearchParams(incomingUrl);
         const state = params.get('state');
-        const provider = extractProviderFromState(state);
+        const parsedState = parseOAuthState(state);
+        const provider = parsedState?.providerId;
         const code = params.get('code');
         const token = params.get('token');
+        isServiceFlow = parsedState?.mode === 'service';
+        serviceNameDuringFlow = parsedState?.serviceName;
 
         if (!provider) {
           throw new Error('Missing provider information in OAuth state.');
@@ -92,6 +107,35 @@ const OAuthRedirectHandler: React.FC = () => {
           }
         }
 
+        if (isServiceFlow) {
+          if (!serviceNameDuringFlow) {
+            throw new Error('Missing service information for OAuth connection.');
+          }
+
+          try {
+            await completeServiceConnection({
+              serviceName: serviceNameDuringFlow,
+              code,
+              token,
+            });
+            DeviceEventEmitter.emit(SERVICE_OAUTH_EVENT, {
+              serviceName: serviceNameDuringFlow,
+              success: true,
+            });
+          } catch (serviceError) {
+            DeviceEventEmitter.emit(SERVICE_OAUTH_EVENT, {
+              serviceName: serviceNameDuringFlow,
+              success: false,
+              error:
+                serviceError instanceof Error
+                  ? serviceError.message
+                  : 'Failed to connect service.',
+            });
+            throw serviceError;
+          }
+          return;
+        }
+
         const authResponse = await finalizeOAuthLogin({
           providerId: provider,
           code,
@@ -104,11 +148,13 @@ const OAuthRedirectHandler: React.FC = () => {
         }
       } catch (error) {
         console.error('OAuth handling failed', error);
+        const title = isServiceFlow ? 'Service connection' : 'Login error';
+        const fallback = isServiceFlow
+          ? 'Unable to connect the service.'
+          : 'Unable to complete OAuth login.';
         Alert.alert(
-          'Login error',
-          error instanceof Error
-            ? error.message
-            : 'Unable to complete OAuth login.',
+          title,
+          error instanceof Error ? error.message : fallback,
         );
       } finally {
         isProcessingRef.current = false;

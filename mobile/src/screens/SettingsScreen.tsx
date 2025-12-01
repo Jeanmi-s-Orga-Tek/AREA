@@ -8,17 +8,13 @@ import {
   ScrollView,
   ActivityIndicator,
 } from 'react-native';
-import {NativeStackNavigationProp} from '@react-navigation/native-stack';
 import {Button, Card} from '../components';
 import {colors, spacing, typography} from '../theme';
 import {getApiBaseUrl, setApiBaseUrl} from '../api/storage';
 import {fetchAbout, AboutResponse} from '../api/about';
-
-type RootStackParamList = {
-  Login: undefined;
-  Areas: undefined;
-  Settings: undefined;
-};
+import {useAuth} from '../context/AuthContext';
+import {NativeStackNavigationProp} from '@react-navigation/native-stack';
+import {RootStackParamList} from '../navigation/types';
 
 type SettingsScreenProps = {
   navigation: NativeStackNavigationProp<RootStackParamList, 'Settings'>;
@@ -33,6 +29,7 @@ export const SettingsScreen: React.FC<SettingsScreenProps> = ({navigation}) => {
   const [connectionStatus, setConnectionStatus] = useState<'idle' | 'success' | 'error'>('idle');
   const [aboutData, setAboutData] = useState<AboutResponse | null>(null);
   const [connectionError, setConnectionError] = useState('');
+  const {isLoggedIn} = useAuth();
 
   useEffect(() => {
     loadUrl();
@@ -189,6 +186,17 @@ export const SettingsScreen: React.FC<SettingsScreenProps> = ({navigation}) => {
           <Text style={styles.cardDescription}>
             Manage your connected apps and services
           </Text>
+          {isLoggedIn ? (
+            <Button
+              title="Manage services"
+              onPress={() => navigation.navigate('Services')}
+              style={styles.cardButton}
+            />
+          ) : (
+            <Text style={styles.infoText}>
+              Login to manage service connections.
+            </Text>
+          )}
         </Card>
 
         <Button
@@ -236,6 +244,9 @@ const styles = StyleSheet.create({
   cardDescription: {
     ...typography.bodySmall,
     color: colors.textSecondary,
+  },
+  cardButton: {
+    marginTop: spacing.md,
   },
   input: {
     backgroundColor: colors.surface,

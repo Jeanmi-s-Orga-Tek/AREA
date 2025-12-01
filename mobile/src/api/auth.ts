@@ -6,6 +6,15 @@ const AUTH_TOKEN_KEY = 'auth_token';
 const OAUTH_STATE_DELIMITER = '::';
 const pendingOAuthStates = new Set<string>();
 
+export type OAuthStateMode = 'login' | 'service';
+
+export interface ParsedOAuthState {
+  mode: OAuthStateMode;
+  providerId: string;
+  serviceName?: string;
+  nonce: string;
+}
+
 export interface AuthResponse {
   access_token?: string;
   token_type?: string;
@@ -65,9 +74,17 @@ const removeAuthToken = async () => {
   await AsyncStorage.removeItem(AUTH_TOKEN_KEY);
 };
 
-export const createOAuthState = (providerId: string): string => {
-  const randomPart = Math.random().toString(36).slice(2, 10);
-  return `${providerId}${OAUTH_STATE_DELIMITER}${randomPart}`;
+export const createOAuthState = (
+  providerId: string,
+  options?: {mode?: OAuthStateMode; serviceName?: string},
+): string => {
+  const randomPart = Math.random().toString(36).slice(2, 12);
+  const mode = options?.mode ?? 'login';
+  const parts =
+    mode === 'service'
+      ? [mode, providerId, options?.serviceName ?? '', randomPart]
+      : [mode, providerId, randomPart];
+  return parts.join(OAUTH_STATE_DELIMITER);
 };
 
 export const recordPendingOAuthState = (state: string) => {
@@ -85,11 +102,45 @@ export const consumePendingOAuthState = (state?: string | null): boolean => {
   return false;
 };
 
-export const extractProviderFromState = (state?: string | null): string | null => {
-  if (!state || !state.includes(OAUTH_STATE_DELIMITER)) {
+export const parseOAuthState = (state?: string | null): ParsedOAuthState | null => {
+  if (!state) {
     return null;
   }
-  return state.split(OAUTH_STATE_DELIMITER)[0] || null;
+  const parts = state.split(OAUTH_STATE_DELIMITER);
+
+  if (parts.length === 4 && (parts[0] === 'login' || parts[0] === 'service')) {
+    return {
+      mode: parts[0] as OAuthStateMode,
+      providerId: parts[1],
+      serviceName: parts[0] === 'service' ? parts[2] || undefined : undefined,
+      nonce: parts[3],
+    };
+  }
+
+  if (parts.length === 3 && (parts[0] === 'login' || parts[0] === 'service')) {
+    return {
+      mode: parts[0] as OAuthStateMode,
+      providerId: parts[1],
+      serviceName: parts[0] === 'service' ? parts[2] || undefined : undefined,
+      nonce: '',
+    };
+  }
+
+  if (parts.length === 2) {
+    // Backward compatibility with initial implementation (provider::nonce)
+    return {
+      mode: 'login',
+      providerId: parts[0],
+      nonce: parts[1],
+    };
+  }
+
+  return null;
+};
+
+export const extractProviderFromState = (state?: string | null): string | null => {
+  const parsed = parseOAuthState(state);
+  return parsed?.providerId ?? null;
 };
 
 export const login = async (

@@ -1,7 +1,13 @@
 import React from 'react';
 import {NavigationContainer} from '@react-navigation/native';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
-import {LoginScreen, RegisterScreen, AreasScreen, SettingsScreen} from '../screens';
+import {
+  LoginScreen,
+  RegisterScreen,
+  AreasScreen,
+  SettingsScreen,
+  ServicesScreen,
+} from '../screens';
 import {useAuth} from '../context/AuthContext';
 import {ActivityIndicator, View, StyleSheet} from 'react-native';
 import {colors} from '../theme';
@@ -30,6 +36,7 @@ export const RootNavigator: React.FC = () => {
           }}>
           <Stack.Screen name="Areas" component={AreasScreen} />
           <Stack.Screen name="Settings" component={SettingsScreen} />
+          <Stack.Screen name="Services" component={ServicesScreen} />
         </Stack.Navigator>
       ) : (
         <Stack.Navigator

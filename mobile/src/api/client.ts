@@ -110,6 +110,38 @@ export class ApiClient {
     }
   }
 
+  async delete<T>(endpoint: string): Promise<T> {
+    const baseUrl = await this.getBaseUrl();
+    const url = `${baseUrl}${endpoint}`;
+    const token = await getAuthToken();
+
+    try {
+      const response = await fetch(url, {
+        method: 'DELETE',
+        headers: {
+          'Content-Type': 'application/json',
+          ...(token && {Authorization: `Bearer ${token}`}),
+        },
+      });
+
+      if (!response.ok) {
+        const message = await this.extractErrorMessage(response);
+        throw new Error(message);
+      }
+
+      if (response.status === 204) {
+        return {} as T;
+      }
+
+      return await response.json();
+    } catch (error) {
+      if (error instanceof Error) {
+        throw error;
+      }
+      throw new Error('Network request failed');
+    }
+  }
+
   private async extractErrorMessage(response: globalThis.Response): Promise<string> {
     try {
       const data = await response.json();
