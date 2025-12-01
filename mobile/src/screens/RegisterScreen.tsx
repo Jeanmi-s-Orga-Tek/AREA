@@ -1,49 +1,68 @@
 import React, {useState} from 'react';
 import {
+  SafeAreaView,
+  KeyboardAvoidingView,
+  Platform,
   View,
   Text,
   TextInput,
   StyleSheet,
-  SafeAreaView,
-  KeyboardAvoidingView,
-  Platform,
-  ActivityIndicator,
   TouchableOpacity,
+  ActivityIndicator,
+  Alert,
 } from 'react-native';
 import {NativeStackNavigationProp} from '@react-navigation/native-stack';
 import {Button} from '../components';
 import {colors, spacing, typography} from '../theme';
-import {login} from '../api/auth';
+import {register as registerUser} from '../api/auth';
 import {useAuth} from '../context/AuthContext';
 import {RootStackParamList} from '../navigation/types';
 
-type LoginScreenProps = {
-  navigation: NativeStackNavigationProp<RootStackParamList, 'Login'>;
-};
+interface RegisterScreenProps {
+  navigation: NativeStackNavigationProp<RootStackParamList, 'Register'>;
+}
 
-export const LoginScreen: React.FC<LoginScreenProps> = ({navigation}) => {
+export const RegisterScreen: React.FC<RegisterScreenProps> = ({navigation}) => {
+  const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [confirmPassword, setConfirmPassword] = useState('');
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
-  const {login: setAuthLogin} = useAuth();
+  const [success, setSuccess] = useState('');
+  const {login: authenticate} = useAuth();
 
-  const handleLogin = async () => {
-    if (!email || !password) {
-      setError('Please enter email and password');
+  const handleRegister = async () => {
+    if (!name || !email || !password || !confirmPassword) {
+      setError('Please fill in all fields');
+      return;
+    }
+
+    if (password !== confirmPassword) {
+      setError('Passwords do not match');
       return;
     }
 
     setLoading(true);
     setError('');
+    setSuccess('');
 
-    const result = await login({username: email, password});
+    const result = await registerUser({
+      email,
+      new_password: password,
+      name,
+    });
 
     if (result.success) {
-      setAuthLogin(result.token || email);
-      navigation.navigate('Areas');
+      if (result.token) {
+        authenticate(result.token);
+      } else {
+        setSuccess('Account created. Please log in.');
+        Alert.alert('Account created', 'Please log in with your new credentials.');
+        navigation.navigate('Login');
+      }
     } else {
-      setError(result.error || 'Login failed');
+      setError(result.error || 'Registration failed');
     }
 
     setLoading(false);
@@ -55,10 +74,18 @@ export const LoginScreen: React.FC<LoginScreenProps> = ({navigation}) => {
         behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
         style={styles.keyboardView}>
         <View style={styles.content}>
-          <Text style={styles.title}>Welcome to AREA</Text>
-          <Text style={styles.subtitle}>Connect your apps and automate</Text>
+          <Text style={styles.title}>Create your account</Text>
+          <Text style={styles.subtitle}>Start building your AREAs</Text>
 
           <View style={styles.form}>
+            <TextInput
+              style={styles.input}
+              placeholder="Full name"
+              placeholderTextColor={colors.textSecondary}
+              value={name}
+              onChangeText={setName}
+              editable={!loading}
+            />
             <TextInput
               style={styles.input}
               placeholder="Email"
@@ -78,10 +105,20 @@ export const LoginScreen: React.FC<LoginScreenProps> = ({navigation}) => {
               secureTextEntry
               editable={!loading}
             />
+            <TextInput
+              style={styles.input}
+              placeholder="Confirm password"
+              placeholderTextColor={colors.textSecondary}
+              value={confirmPassword}
+              onChangeText={setConfirmPassword}
+              secureTextEntry
+              editable={!loading}
+            />
             {error ? <Text style={styles.error}>{error}</Text> : null}
+            {success ? <Text style={styles.success}>{success}</Text> : null}
             <Button
-              title={loading ? 'Signing in...' : 'Sign in'}
-              onPress={handleLogin}
+              title={loading ? 'Creating account...' : 'Create account'}
+              onPress={handleRegister}
               style={styles.button}
               disabled={loading}
             />
@@ -91,8 +128,8 @@ export const LoginScreen: React.FC<LoginScreenProps> = ({navigation}) => {
           <TouchableOpacity
             style={styles.linkContainer}
             disabled={loading}
-            onPress={() => navigation.navigate('Register')}>
-            <Text style={styles.linkText}>Need an account? Create one</Text>
+            onPress={() => navigation.navigate('Login')}>
+            <Text style={styles.linkText}>Already have an account? Log in</Text>
           </TouchableOpacity>
         </View>
       </KeyboardAvoidingView>
@@ -143,6 +180,11 @@ const styles = StyleSheet.create({
   },
   error: {
     color: colors.error,
+    ...typography.body,
+    textAlign: 'center',
+  },
+  success: {
+    color: colors.success,
     ...typography.body,
     textAlign: 'center',
   },

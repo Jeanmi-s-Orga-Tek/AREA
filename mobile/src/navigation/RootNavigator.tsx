@@ -1,16 +1,11 @@
 import React from 'react';
 import {NavigationContainer} from '@react-navigation/native';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
-import {LoginScreen, AreasScreen, SettingsScreen} from '../screens';
+import {LoginScreen, RegisterScreen, AreasScreen, SettingsScreen} from '../screens';
 import {useAuth} from '../context/AuthContext';
 import {ActivityIndicator, View, StyleSheet} from 'react-native';
 import {colors} from '../theme';
-
-export type RootStackParamList = {
-  Login: undefined;
-  Areas: undefined;
-  Settings: undefined;
-};
+import {RootStackParamList} from './types';
 
 const Stack = createNativeStackNavigator<RootStackParamList>();
 
@@ -27,15 +22,25 @@ export const RootNavigator: React.FC = () => {
 
   return (
     <NavigationContainer>
-      <Stack.Navigator
-        initialRouteName={isLoggedIn ? 'Areas' : 'Login'}
-        screenOptions={{
-          headerShown: false,
-        }}>
-        <Stack.Screen name="Login" component={LoginScreen} />
-        <Stack.Screen name="Areas" component={AreasScreen} />
-        <Stack.Screen name="Settings" component={SettingsScreen} />
-      </Stack.Navigator>
+      {isLoggedIn ? (
+        <Stack.Navigator
+          initialRouteName="Areas"
+          screenOptions={{
+            headerShown: false,
+          }}>
+          <Stack.Screen name="Areas" component={AreasScreen} />
+          <Stack.Screen name="Settings" component={SettingsScreen} />
+        </Stack.Navigator>
+      ) : (
+        <Stack.Navigator
+          initialRouteName="Login"
+          screenOptions={{
+            headerShown: false,
+          }}>
+          <Stack.Screen name="Login" component={LoginScreen} />
+          <Stack.Screen name="Register" component={RegisterScreen} />
+        </Stack.Navigator>
+      )}
     </NavigationContainer>
   );
 };
