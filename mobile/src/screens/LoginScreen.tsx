@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import {
   View,
   Text,
@@ -9,11 +9,19 @@ import {
   Platform,
   ActivityIndicator,
   TouchableOpacity,
+  Linking,
 } from 'react-native';
 import {NativeStackNavigationProp} from '@react-navigation/native-stack';
 import {Button} from '../components';
 import {colors, spacing, typography} from '../theme';
-import {login} from '../api/auth';
+import {
+  createOAuthState,
+  fetchOAuthProviders,
+  getOAuthAuthorizationUrl,
+  login,
+  OAuthProvider,
+  recordPendingOAuthState,
+} from '../api/auth';
 import {useAuth} from '../context/AuthContext';
 import {RootStackParamList} from '../navigation/types';
 
@@ -26,7 +34,34 @@ export const LoginScreen: React.FC<LoginScreenProps> = ({navigation}) => {
   const [password, setPassword] = useState('');
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
+  const [oauthProviders, setOauthProviders] = useState<OAuthProvider[]>([]);
+  const [providerLoading, setProviderLoading] = useState(false);
+  const [isFetchingProviders, setIsFetchingProviders] = useState(true);
   const {login: setAuthLogin} = useAuth();
+
+  useEffect(() => {
+    let isMounted = true;
+    const loadProviders = async () => {
+      try {
+        const providers = await fetchOAuthProviders();
+        if (isMounted) {
+          setOauthProviders(providers);
+        }
+      } catch (err) {
+        console.error('Unable to fetch OAuth providers', err);
+      } finally {
+        if (isMounted) {
+          setIsFetchingProviders(false);
+        }
+      }
+    };
+
+    loadProviders();
+
+    return () => {
+      isMounted = false;
+    };
+  }, []);
 
   const handleLogin = async () => {
     if (!email || !password) {
@@ -47,6 +82,26 @@ export const LoginScreen: React.FC<LoginScreenProps> = ({navigation}) => {
     }
 
     setLoading(false);
+  };
+
+  const handleOAuthLogin = async (providerId: string) => {
+    setError('');
+    setProviderLoading(true);
+    try {
+      const state = createOAuthState(providerId);
+      recordPendingOAuthState(state);
+      const authUrl = await getOAuthAuthorizationUrl(providerId, state);
+      await Linking.openURL(authUrl);
+    } catch (err) {
+      console.error(`OAuth start failed for ${providerId}`, err);
+      const message =
+        err instanceof Error
+          ? err.message
+          : 'Unable to start OAuth authentication.';
+      setError(message);
+    } finally {
+      setProviderLoading(false);
+    }
   };
 
   return (
@@ -87,6 +142,43 @@ export const LoginScreen: React.FC<LoginScreenProps> = ({navigation}) => {
             />
             {loading && <ActivityIndicator color={colors.primary} />}
           </View>
+
+          <View style={styles.oauthSection}>
+            <Text style={styles.orLabel}>Or continue with</Text>
+            {isFetchingProviders ? (
+              <ActivityIndicator color={colors.primary} />
+            ) : oauthProviders.length ? (
+              oauthProviders.map(provider => (
+                <TouchableOpacity
+                  key={provider.id}
+                  style={[styles.oauthButton, {borderColor: provider.color}]}
+                  disabled={providerLoading}
+                  onPress={() => handleOAuthLogin(provider.id)}>
+                  <Text style={styles.oauthButtonText}>
+                    {provider.icon} Continue with {provider.name}
+                  </Text>
+                </TouchableOpacity>
+              ))
+            ) : (
+              <Text style={styles.oauthFallback}>
+                No OAuth providers are currently available.
+              </Text>
+            )}
+            {providerLoading && (
+              <ActivityIndicator
+                color={colors.primary}
+                style={styles.oauthSpinner}
+              />
+            )}
+          </View>
+
+          <TouchableOpacity
+            style={styles.settingsLink}
+            onPress={() => navigation.navigate('Settings')}>
+            <Text style={styles.settingsLinkText}>
+              Configure server / API settings
+            </Text>
+          </TouchableOpacity>
 
           <TouchableOpacity
             style={styles.linkContainer}
@@ -145,6 +237,43 @@ const styles = StyleSheet.create({
     color: colors.error,
     ...typography.body,
     textAlign: 'center',
+  },
+  oauthSection: {
+    marginTop: spacing.xxl,
+    gap: spacing.sm,
+  },
+  orLabel: {
+    ...typography.caption,
+    textAlign: 'center',
+    color: colors.textSecondary,
+  },
+  oauthButton: {
+    borderWidth: 1,
+    borderRadius: 12,
+    paddingVertical: spacing.md,
+    paddingHorizontal: spacing.lg,
+    alignItems: 'center',
+  },
+  oauthButtonText: {
+    ...typography.body,
+    color: colors.text,
+  },
+  oauthFallback: {
+    ...typography.caption,
+    color: colors.textSecondary,
+    textAlign: 'center',
+  },
+  oauthSpinner: {
+    marginTop: spacing.sm,
+  },
+  settingsLink: {
+    marginTop: spacing.lg,
+    alignItems: 'center',
+  },
+  settingsLinkText: {
+    color: colors.textSecondary,
+    textDecorationLine: 'underline',
+    ...typography.bodySmall,
   },
   linkContainer: {
     marginTop: spacing.xl,

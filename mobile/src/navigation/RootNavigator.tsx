@@ -39,6 +39,11 @@ export const RootNavigator: React.FC = () => {
           }}>
           <Stack.Screen name="Login" component={LoginScreen} />
           <Stack.Screen name="Register" component={RegisterScreen} />
+          <Stack.Screen
+            name="Settings"
+            component={SettingsScreen}
+            options={{presentation: 'modal'}}
+          />
         </Stack.Navigator>
       )}
     </NavigationContainer>
