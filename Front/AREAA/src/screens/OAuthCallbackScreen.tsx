@@ -7,6 +7,7 @@
 
 import React, { useEffect, useState } from "react";
 import { handleOAuthCallback } from "../services/auth";
+import { connectService } from "../services/api";
 
 const OAuthCallbackScreen: React.FC = () => {
   const [error, setError] = useState<string | null>(null);
@@ -59,8 +60,42 @@ const OAuthCallbackScreen: React.FC = () => {
           throw new Error("Provider non identifié dans l'URL");
         }
 
-        await handleOAuthCallback(provider, code, stateValue);
+        const connectingService = sessionStorage.getItem("connecting_service");
+        const connectingProvider = sessionStorage.getItem("connecting_service_provider");
+        
+        console.log("=== Vérification connexion service ===");
+        console.log("connecting_service:", connectingService);
+        console.log("connecting_service_provider:", connectingProvider);
+        console.log("current provider:", provider);
+        
+        if (connectingService && connectingProvider === provider) {
+          console.log(" Mode CONNEXION SERVICE (pas login)");
+          console.log("Service à connecter:", connectingService);
+          try {
+            console.log("Appel API connectService avec code:", code.substring(0, 20) + "...");
+            await connectService(connectingService, code, "web");
+            console.log("Service connecté avec succès!");
+            
+            sessionStorage.removeItem("connecting_service");
+            sessionStorage.removeItem("connecting_service_provider");
+            console.log(" SessionStorage nettoyé");
+            
+            console.log("Redirection vers /services");
+            window.location.href = "/services";
+            return;
+          } catch (serviceErr) {
+            console.error("Erreur lors de la connexion du service:", serviceErr);
+            console.error("Details:", serviceErr);
+            throw serviceErr;
+          }
+        }
 
+        console.log("Mode LOGIN OAuth");
+        console.log("Authentification OAuth avec provider:", provider);
+        await handleOAuthCallback(provider, code, stateValue);
+        console.log(" Authentification réussie");
+
+        console.log("Redirection vers /");
         window.location.href = "/";
       } catch (err) {
         console.error("OAuth callback error:", err);
