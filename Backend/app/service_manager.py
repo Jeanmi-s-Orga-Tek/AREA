@@ -1,6 +1,6 @@
 from datetime import datetime, timedelta
 from typing import Optional, List, Dict, Any
-from sqlmodel import Session, select
+from sqlmodel import Session, select, func
 from fastapi import HTTPException
 
 from app.oauth_models import Service, ServiceAccount
@@ -9,7 +9,7 @@ from app.core.oauth_config import providers_registry
 
 
 def get_service_by_name(session: Session, service_name: str) -> Optional[Service]:
-    statement = select(Service).where(Service.name == service_name)
+    statement = select(Service).where(func.lower(Service.name) == service_name.lower())
     return session.exec(statement).first()
 
 
