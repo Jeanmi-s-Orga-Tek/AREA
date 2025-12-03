@@ -9,3 +9,4 @@ pyjwt
 requests
 icalendar
 pyyaml
+python-multipart

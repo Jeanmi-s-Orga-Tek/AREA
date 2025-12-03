@@ -1,0 +1,5 @@
+[tool.pytest.ini_options]
+pythonpath = ["Backend/app"]
+addopts = "-ra"
+testpaths = ["Backend/tests"]
+
