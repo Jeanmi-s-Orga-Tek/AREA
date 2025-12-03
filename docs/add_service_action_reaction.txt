@@ -1,0 +1,30 @@
+Étapes pour ajouter un nouveau Service :
+1. Analyser les services existants pour comprendre le pattern (structure de dossier, factory, clients API, gestion des secrets).
+2. Créer le dossier du service (src/services/<ServiceName>/) avec les sous-fichiers nécessaires (...existing code...) tout en réutilisant les helpers communs.
+3. Définir la configuration (clés .env, variables runtime, mapping de scopes) et mettre à jour la documentation des prérequis.
+4. Implémenter le client (authentification, appels API, gestion des erreurs) puis exposer une interface typée exportée depuis index.ts du service.
+5. Enregistrer le service dans le container ou registre global (ex. services/index.ts) pour qu’il soit visible des actions/réactions.
+6. Vérifier via lint/tests unitaires que le service respecte les conventions.
+
+Étapes pour ajouter une nouvelle Action :
+1. Choisir le service source et relire ses actions existantes pour copier les conventions de nommage, inputs et validations.
+2. Créer le fichier de définition (...existing code...) décrivant métadonnées (id, nom, description, champs requis, scopes).
+3. Implémenter le handler logique : récupérer les données du service, filtrer/transformer, renvoyer un payload normalisé.
+4. Ajouter les schémas de validation (zod/joi) et les tests unitaires couvrant cas nominal + erreurs API.
+5. Enregistrer l’action dans le catalogue (ex. src/actions/index.ts) et mettre à jour les mappings côté backend/frontend (forms, localisation, icônes).
+6. Lancer les tests d’intégration pour s’assurer que le déclencheur publie bien les événements attendus.
+
+Étapes pour ajouter une nouvelle REAction :
+1. Identifier le service cible et étudier les réactions existantes pour reproduire la gestion d’auth, des quotas et des erreurs récupérables.
+2. Définir la fiche métadonnée (id, nom, description, inputs) et aligner les validations avec le payload que l’action fournit.
+3. Implémenter le handler : consommer le payload, invoquer le client service, gérer idempotence et retours d’erreur (retry, logs).
+4. Enregistrer la réaction dans le registre (src/reactions/index.ts) et dans la configuration front (formulaires, champs dynamiques).
+5. Couvrir par des tests unitaires + mocks de service, puis, si possible, un test e2e déclencheur→réaction.
+6. Vérifier que les dashboards (monitoring/logs) sont mis à jour pour suivre cette nouvelle réaction.
+
+Checklist finale :
+- Secrets ajoutés à .env.sample et vault.
+- Types partagés (types.d.ts) mis à jour.
+- Documentation utilisateur (README / wiki) mentionne le nouveau flux.
+- CI (lint, unit, integration) exécutée et validée.
+
