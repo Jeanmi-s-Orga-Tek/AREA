@@ -1,0 +1,13 @@
+<map id="app.oauth_models.OAuthState" name="app.oauth_models.OAuthState">
+<area shape="rect" id="Node000001" title=" " alt="" coords="92,155,283,245"/>
+<area shape="rect" id="Node000002" title=" " alt="" coords="5,5,79,75"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="85,83,149,153,145,157,81,87"/>
+<area shape="rect" id="Node000003" title=" " alt="" coords="103,5,144,75"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="145,87,172,154,167,156,140,89"/>
+<area shape="rect" id="Node000004" title=" " alt="" coords="168,5,207,75"/>
+<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="190,89,190,155,185,155,185,89"/>
+<area shape="rect" id="Node000005" title=" " alt="" coords="231,5,293,75"/>
+<area shape="poly" id="edge4_Node000001_Node000005" title=" " alt="" coords="249,75,218,141,213,138,244,73"/>
+<area shape="rect" id="Node000006" title=" " alt="" coords="325,5,388,75"/>
+<area shape="poly" id="edge5_Node000001_Node000006" title=" " alt="" coords="348,76,334,105,313,132,297,147,294,143,309,129,329,102,343,73"/>
+</map>

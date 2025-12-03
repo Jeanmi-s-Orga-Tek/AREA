@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['send_5femail_0',['send_email',['../namespacesend__email.html#a487dc17107d25b39680c6e489b330978',1,'send_email']]]
+  ['find_5for_5fcreate_5fuser_5ffrom_5foauth_0',['find_or_create_user_from_oauth',['../namespaceapp_1_1oauth__handler.html#abae7da772a6aeaa549a8a59da3b9b891',1,'app::oauth_handler']]]
 ];

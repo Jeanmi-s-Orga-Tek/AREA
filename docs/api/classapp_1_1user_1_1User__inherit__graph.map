@@ -1,0 +1,11 @@
+<map id="app.user.User" name="app.user.User">
+<area shape="rect" id="Node000001" title=" " alt="" coords="129,261,223,352"/>
+<area shape="rect" id="Node000002" href="$classapp_1_1user_1_1BaseUser.html" title=" " alt="" coords="5,123,131,213"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="114,223,143,260,139,263,110,227"/>
+<area shape="rect" id="Node000003" title=" " alt="" coords="31,5,105,75"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="71,89,71,123,65,123,65,89"/>
+<area shape="rect" id="Node000004" title=" " alt="" coords="155,133,197,203"/>
+<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="179,218,179,262,173,262,173,218"/>
+<area shape="rect" id="Node000005" title=" " alt="" coords="221,133,259,203"/>
+<area shape="poly" id="edge4_Node000001_Node000005" title=" " alt="" coords="220,217,199,263,194,260,216,215"/>
+</map>

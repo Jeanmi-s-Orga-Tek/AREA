@@ -1,0 +1,7 @@
+<map id="app.reaction.BaseReaction" name="app.reaction.BaseReaction">
+<area shape="rect" id="Node000001" title=" " alt="" coords="5,203,175,272"/>
+<area shape="rect" id="Node000002" title=" " alt="" coords="8,5,81,75"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="58,89,85,202,80,203,53,90"/>
+<area shape="rect" id="Node000003" title=" " alt="" coords="106,5,167,75"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="131,75,105,187,99,185,126,74"/>
+</map>

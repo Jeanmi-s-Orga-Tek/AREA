@@ -25,6 +25,7 @@
 var NAVTREE =
 [
   [ "AREA", "index.html", [
+    [ "ACTION-REACTION (AREA)", "index.html", "index" ],
     [ "Packages", "namespaces.html", [
       [ "Package List", "namespaces.html", "namespaces_dup" ],
       [ "Package Members", "namespacemembers.html", [
@@ -46,9 +47,9 @@ var NAVTREE =
     [ "Files", "files.html", [
       [ "File List", "files.html", "files_dup" ],
       [ "File Members", "globals.html", [
-        [ "All", "globals.html", null ],
+        [ "All", "globals.html", "globals_dup" ],
         [ "Functions", "globals_func.html", null ],
-        [ "Variables", "globals_vars.html", null ]
+        [ "Variables", "globals_vars.html", "globals_vars" ]
       ] ]
     ] ]
   ] ]
@@ -56,7 +57,12 @@ var NAVTREE =
 
 var NAVTREEINDEX =
 [
-"all__0_8js.html"
+"AboutScreen_8tsx.html",
+"all__a_8js_source.html",
+"classapp_1_1oauth__models_1_1OAuthConnection.html#af83565b3a644b9484e19c8efeca42597",
+"classapp_1_1user__reaction_1_1UserReaction.html#ab0c49b732d06263829e2f6d34a33074f",
+"main_8py.html#a7766109be06158d145f0b1a0e229aca5",
+"pages.html"
 ];
 
 var SYNCONMSG = 'click to disable panel synchronisation';

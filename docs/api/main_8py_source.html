@@ -100,94 +100,94 @@ $(function(){initNavTree('main_8py_source.html',''); initResizable(true); });
   <div class="headertitle"><div class="title">main.py</div></div>
 </div><!--header-->
 <div class="contents">
-<a href="main_8py.html">Go to the documentation of this file.</a><div class="fragment"><div class="line"><a id="l00001" name="l00001"></a><span class="lineno"><a class="line" href="namespacemain.html">    1</a></span><span class="keyword">import</span> os</div>
+<a href="main_8py.html">Go to the documentation of this file.</a><div class="fragment"><div class="line"><a id="l00001" name="l00001"></a><span class="lineno"><a class="line" href="namespaceapp_1_1main.html">    1</a></span><span class="keyword">import</span> os</div>
 <div class="line"><a id="l00002" name="l00002"></a><span class="lineno">    2</span><span class="keyword">import</span> random</div>
 <div class="line"><a id="l00003" name="l00003"></a><span class="lineno">    3</span><span class="keyword">import</span> string</div>
 <div class="line"><a id="l00004" name="l00004"></a><span class="lineno">    4</span><span class="keyword">from</span> typing <span class="keyword">import</span> Iterable, List, Optional, Sequence, Union</div>
-<div class="line"><a id="l00005" name="l00005"></a><span class="lineno">    5</span><span class="keyword">import</span> icalendar</div>
-<div class="line"><a id="l00006" name="l00006"></a><span class="lineno">    6</span> </div>
-<div class="line"><a id="l00007" name="l00007"></a><span class="lineno">    7</span><span class="keyword">from</span> contextlib <span class="keyword">import</span> asynccontextmanager</div>
-<div class="line"><a id="l00008" name="l00008"></a><span class="lineno">    8</span><span class="keyword">from</span> fastapi <span class="keyword">import</span> APIRouter, Cookie, FastAPI, Query, Request, Depends, HTTPException, UploadFile, status, Form</div>
-<div class="line"><a id="l00009" name="l00009"></a><span class="lineno">    9</span><span class="keyword">from</span> fastapi.responses <span class="keyword">import</span> FileResponse, HTMLResponse, JSONResponse, StreamingResponse</div>
-<div class="line"><a id="l00010" name="l00010"></a><span class="lineno">   10</span><span class="keyword">from</span> fastapi.security <span class="keyword">import</span> OAuth2PasswordRequestForm</div>
-<div class="line"><a id="l00011" name="l00011"></a><span class="lineno">   11</span><span class="keyword">from</span> fastapi.staticfiles <span class="keyword">import</span> StaticFiles</div>
-<div class="line"><a id="l00012" name="l00012"></a><span class="lineno">   12</span><span class="keyword">from</span> fastapi.templating <span class="keyword">import</span> Jinja2Templates</div>
-<div class="line"><a id="l00013" name="l00013"></a><span class="lineno">   13</span><span class="keyword">from</span> fastapi.middleware.cors <span class="keyword">import</span> CORSMiddleware</div>
-<div class="line"><a id="l00014" name="l00014"></a><span class="lineno">   14</span><span class="keyword">from</span> fastapi.middleware <span class="keyword">import</span> Middleware</div>
-<div class="line"><a id="l00015" name="l00015"></a><span class="lineno">   15</span><span class="keyword">from</span> starlette.middleware.base <span class="keyword">import</span> BaseHTTPMiddleware</div>
-<div class="line"><a id="l00016" name="l00016"></a><span class="lineno">   16</span> </div>
-<div class="line"><a id="l00017" name="l00017"></a><span class="lineno">   17</span><span class="keyword">from</span> sqlmodel <span class="keyword">import</span> Field, Session, SQLModel, asc, create_engine, select, func, col, desc</div>
-<div class="line"><a id="l00018" name="l00018"></a><span class="lineno">   18</span><span class="keyword">from</span> typing <span class="keyword">import</span> Annotated</div>
-<div class="line"><a id="l00019" name="l00019"></a><span class="lineno">   19</span> </div>
-<div class="line"><a id="l00020" name="l00020"></a><span class="lineno">   20</span><span class="keyword">from</span> db <span class="keyword">import</span> create_db_tables, engine</div>
-<div class="line"><a id="l00021" name="l00021"></a><span class="lineno">   21</span> </div>
-<div class="line"><a id="l00022" name="l00022"></a><span class="lineno">   22</span><span class="keyword">from</span> user <span class="keyword">import</span> BaseUser, User, RegisteringUser, Token, EmailCheck, PasswordChange, oauth2_scheme, ACCESS_TOKEN_EXPIRE_MINUTES, verify_password, verify_token, get_password_hash, create_access_token, get_user_from_token</div>
-<div class="line"><a id="l00023" name="l00023"></a><span class="lineno">   23</span><span class="keyword">from</span> send_email <span class="keyword">import</span> send_email</div>
-<div class="line"><a id="l00024" name="l00024"></a><span class="lineno">   24</span> </div>
-<div class="line"><a id="l00025" name="l00025"></a><span class="lineno">   25</span><span class="preprocessor">@asynccontextmanager</span></div>
-<div class="foldopen" id="foldopen00026" data-start="" data-end="">
-<div class="line"><a id="l00026" name="l00026"></a><span class="lineno"><a class="line" href="namespacemain.html#a4b0afba9bb946ff70defaa002c1f41e2">   26</a></span><span class="keyword">async def </span><a class="code hl_function" href="namespacemain.html#a4b0afba9bb946ff70defaa002c1f41e2">lifespan</a>(app: FastAPI):</div>
-<div class="line"><a id="l00027" name="l00027"></a><span class="lineno">   27</span>    create_db_tables()</div>
-<div class="line"><a id="l00028" name="l00028"></a><span class="lineno">   28</span>    <span class="keywordflow">yield</span></div>
-<div class="line"><a id="l00029" name="l00029"></a><span class="lineno">   29</span> </div>
-</div>
-<div class="line"><a id="l00030" name="l00030"></a><span class="lineno"><a class="line" href="namespacemain.html#ace1dcfeeab1080f5c4530f169022c6e4">   30</a></span>origins = [</div>
-<div class="line"><a id="l00031" name="l00031"></a><span class="lineno">   31</span>    <span class="stringliteral">&quot;http://localhost&quot;</span>,</div>
-<div class="line"><a id="l00032" name="l00032"></a><span class="lineno">   32</span>    <span class="stringliteral">&quot;http://localhost:5173&quot;</span>,</div>
-<div class="line"><a id="l00033" name="l00033"></a><span class="lineno">   33</span>]</div>
+<div class="line"><a id="l00005" name="l00005"></a><span class="lineno">    5</span><span class="keyword">import</span> time</div>
+<div class="line"><a id="l00006" name="l00006"></a><span class="lineno">    6</span><span class="keyword">import</span> icalendar</div>
+<div class="line"><a id="l00007" name="l00007"></a><span class="lineno">    7</span><span class="keyword">from</span> datetime <span class="keyword">import</span> timedelta</div>
+<div class="line"><a id="l00008" name="l00008"></a><span class="lineno">    8</span><span class="comment"># import icalendar</span></div>
+<div class="line"><a id="l00009" name="l00009"></a><span class="lineno">    9</span> </div>
+<div class="line"><a id="l00010" name="l00010"></a><span class="lineno">   10</span><span class="keyword">from</span> contextlib <span class="keyword">import</span> asynccontextmanager</div>
+<div class="line"><a id="l00011" name="l00011"></a><span class="lineno">   11</span><span class="keyword">from</span> fastapi <span class="keyword">import</span> APIRouter, Cookie, FastAPI, Query, Request, Depends, HTTPException, UploadFile, status, Form</div>
+<div class="line"><a id="l00012" name="l00012"></a><span class="lineno">   12</span><span class="keyword">from</span> fastapi.responses <span class="keyword">import</span> FileResponse, HTMLResponse, JSONResponse, StreamingResponse</div>
+<div class="line"><a id="l00013" name="l00013"></a><span class="lineno">   13</span><span class="keyword">from</span> fastapi.security <span class="keyword">import</span> OAuth2PasswordRequestForm</div>
+<div class="line"><a id="l00014" name="l00014"></a><span class="lineno">   14</span><span class="keyword">from</span> fastapi.staticfiles <span class="keyword">import</span> StaticFiles</div>
+<div class="line"><a id="l00015" name="l00015"></a><span class="lineno">   15</span><span class="keyword">from</span> fastapi.templating <span class="keyword">import</span> Jinja2Templates</div>
+<div class="line"><a id="l00016" name="l00016"></a><span class="lineno">   16</span><span class="keyword">from</span> fastapi.middleware.cors <span class="keyword">import</span> CORSMiddleware</div>
+<div class="line"><a id="l00017" name="l00017"></a><span class="lineno">   17</span><span class="keyword">from</span> fastapi.middleware <span class="keyword">import</span> Middleware</div>
+<div class="line"><a id="l00018" name="l00018"></a><span class="lineno">   18</span><span class="keyword">from</span> starlette.middleware.base <span class="keyword">import</span> BaseHTTPMiddleware</div>
+<div class="line"><a id="l00019" name="l00019"></a><span class="lineno">   19</span><span class="keyword">from</span> fastapi <span class="keyword">import</span> HTTPException</div>
+<div class="line"><a id="l00020" name="l00020"></a><span class="lineno">   20</span><span class="keyword">from</span> <a class="code hl_namespace" href="namespaceapp_1_1core_1_1oauth__config.html">app.core.oauth_config</a> <span class="keyword">import</span> public_provider_info, providers_registry, reload_providers, list_providers_for_frontend, get_auth_url</div>
+<div class="line"><a id="l00021" name="l00021"></a><span class="lineno">   21</span><span class="keyword">from</span> <a class="code hl_namespace" href="namespaceapp_1_1oauth__handler.html">app.oauth_handler</a> <span class="keyword">import</span> exchange_code_for_token, get_user_info_from_provider, find_or_create_user_from_oauth</div>
+<div class="line"><a id="l00022" name="l00022"></a><span class="lineno">   22</span> </div>
+<div class="line"><a id="l00023" name="l00023"></a><span class="lineno">   23</span> </div>
+<div class="line"><a id="l00024" name="l00024"></a><span class="lineno">   24</span><span class="keyword">from</span> sqlmodel <span class="keyword">import</span> Field, Session, SQLModel, asc, create_engine, select, func, col, desc</div>
+<div class="line"><a id="l00025" name="l00025"></a><span class="lineno">   25</span> </div>
+<div class="line"><a id="l00026" name="l00026"></a><span class="lineno">   26</span><span class="keyword">from</span> <a class="code hl_namespace" href="namespaceapp_1_1db.html">app.db</a> <span class="keyword">import</span> create_db_tables, engine, SessionDep</div>
+<div class="line"><a id="l00027" name="l00027"></a><span class="lineno">   27</span><span class="keyword">from</span> <a class="code hl_namespace" href="namespaceapp_1_1send__email.html">app.send_email</a> <span class="keyword">import</span> send_email</div>
+<div class="line"><a id="l00028" name="l00028"></a><span class="lineno">   28</span><span class="keyword">from</span> <a class="code hl_namespace" href="namespaceapp_1_1oauth__models.html">app.oauth_models</a> <span class="keyword">import</span> Service</div>
+<div class="line"><a id="l00029" name="l00029"></a><span class="lineno">   29</span><span class="keyword">from</span> <a class="code hl_namespace" href="namespaceapp_1_1action.html">app.action</a> <span class="keyword">import</span> Action</div>
+<div class="line"><a id="l00030" name="l00030"></a><span class="lineno">   30</span><span class="keyword">from</span> <a class="code hl_namespace" href="namespaceapp_1_1reaction.html">app.reaction</a> <span class="keyword">import</span> Reaction</div>
+<div class="line"><a id="l00031" name="l00031"></a><span class="lineno">   31</span> </div>
+<div class="line"><a id="l00032" name="l00032"></a><span class="lineno">   32</span><span class="comment"># from user import BaseUser, User, RegisteringUser, Token, EmailCheck, PasswordChange, oauth2_scheme, ACCESS_TOKEN_EXPIRE_MINUTES, verify_password, verify_token, get_password_hash, create_access_token, get_user_from_token</span></div>
+<div class="line"><a id="l00033" name="l00033"></a><span class="lineno">   33</span><span class="keyword">from</span> <a class="code hl_namespace" href="namespaceapp_1_1db.html">app.db</a> <span class="keyword">import</span> create_db_tables, engine</div>
 <div class="line"><a id="l00034" name="l00034"></a><span class="lineno">   34</span> </div>
-<div class="line"><a id="l00035" name="l00035"></a><span class="lineno"><a class="line" href="namespacemain.html#ab6662d718dfdc08e2587d726aa2a1f31">   35</a></span>tags_metadata = [</div>
-<div class="line"><a id="l00036" name="l00036"></a><span class="lineno">   36</span>    {</div>
-<div class="line"><a id="l00037" name="l00037"></a><span class="lineno">   37</span>        <span class="stringliteral">&quot;name&quot;</span>: <span class="stringliteral">&quot;startups&quot;</span>,</div>
-<div class="line"><a id="l00038" name="l00038"></a><span class="lineno">   38</span>        <span class="stringliteral">&quot;description&quot;</span>: <span class="stringliteral">&quot;Operations with startups.&quot;</span>,</div>
-<div class="line"><a id="l00039" name="l00039"></a><span class="lineno">   39</span>        <span class="stringliteral">&quot;externalDocs&quot;</span>: {</div>
-<div class="line"><a id="l00040" name="l00040"></a><span class="lineno">   40</span>            <span class="stringliteral">&quot;description&quot;</span>: <span class="stringliteral">&quot;Items external docs&quot;</span>,</div>
-<div class="line"><a id="l00041" name="l00041"></a><span class="lineno">   41</span>            <span class="stringliteral">&quot;url&quot;</span>: <span class="stringliteral">&quot;https://fastapi.tiangolo.com/&quot;</span>,</div>
-<div class="line"><a id="l00042" name="l00042"></a><span class="lineno">   42</span>        },</div>
-<div class="line"><a id="l00043" name="l00043"></a><span class="lineno">   43</span>    },</div>
-<div class="line"><a id="l00044" name="l00044"></a><span class="lineno">   44</span>    {</div>
-<div class="line"><a id="l00045" name="l00045"></a><span class="lineno">   45</span>        <span class="stringliteral">&quot;name&quot;</span>: <span class="stringliteral">&quot;investors&quot;</span>,</div>
-<div class="line"><a id="l00046" name="l00046"></a><span class="lineno">   46</span>        <span class="stringliteral">&quot;description&quot;</span>: <span class="stringliteral">&quot;Operations with investors.&quot;</span>,</div>
-<div class="line"><a id="l00047" name="l00047"></a><span class="lineno">   47</span>        <span class="stringliteral">&quot;externalDocs&quot;</span>: {</div>
-<div class="line"><a id="l00048" name="l00048"></a><span class="lineno">   48</span>            <span class="stringliteral">&quot;description&quot;</span>: <span class="stringliteral">&quot;Items external docs&quot;</span>,</div>
-<div class="line"><a id="l00049" name="l00049"></a><span class="lineno">   49</span>            <span class="stringliteral">&quot;url&quot;</span>: <span class="stringliteral">&quot;https://fastapi.tiangolo.com/&quot;</span>,</div>
-<div class="line"><a id="l00050" name="l00050"></a><span class="lineno">   50</span>        },</div>
-<div class="line"><a id="l00051" name="l00051"></a><span class="lineno">   51</span>    },</div>
+<div class="line"><a id="l00035" name="l00035"></a><span class="lineno">   35</span><span class="keyword">from</span> <a class="code hl_namespace" href="namespaceapp_1_1user.html">app.user</a> <span class="keyword">import</span> BaseUser, User, RegisteringUser, Token, EmailCheck, PasswordChange, get_user_from_token</div>
+<div class="line"><a id="l00036" name="l00036"></a><span class="lineno">   36</span><span class="keyword">from</span> <a class="code hl_namespace" href="namespaceapp_1_1oauth2.html">app.oauth2</a> <span class="keyword">import</span> oauth2_scheme, ACCESS_TOKEN_EXPIRE_MINUTES, verify_password, verify_token, get_password_hash, create_access_token</div>
+<div class="line"><a id="l00037" name="l00037"></a><span class="lineno">   37</span><span class="keyword">from</span> <a class="code hl_namespace" href="namespaceapp_1_1send__email.html">app.send_email</a> <span class="keyword">import</span> send_email</div>
+<div class="line"><a id="l00038" name="l00038"></a><span class="lineno">   38</span> </div>
+<div class="line"><a id="l00039" name="l00039"></a><span class="lineno">   39</span><span class="preprocessor">@asynccontextmanager</span></div>
+<div class="foldopen" id="foldopen00040" data-start="" data-end="">
+<div class="line"><a id="l00040" name="l00040"></a><span class="lineno"><a class="line" href="namespaceapp_1_1main.html#a1f22a2bdb69722841cc52c377e2ef10d">   40</a></span><span class="keyword">async def </span><a class="code hl_function" href="namespaceapp_1_1main.html#a1f22a2bdb69722841cc52c377e2ef10d">lifespan</a>(app: FastAPI):</div>
+<div class="line"><a id="l00041" name="l00041"></a><span class="lineno">   41</span>    create_db_tables()</div>
+<div class="line"><a id="l00042" name="l00042"></a><span class="lineno">   42</span>    <span class="keywordflow">yield</span></div>
+<div class="line"><a id="l00043" name="l00043"></a><span class="lineno">   43</span> </div>
+</div>
+<div class="line"><a id="l00044" name="l00044"></a><span class="lineno"><a class="line" href="namespaceapp_1_1main.html#a8003cb21f0cc062995c3e1e6340a97f9">   44</a></span>origins = [</div>
+<div class="line"><a id="l00045" name="l00045"></a><span class="lineno">   45</span>    <span class="stringliteral">&quot;http://localhost&quot;</span>,</div>
+<div class="line"><a id="l00046" name="l00046"></a><span class="lineno">   46</span>    <span class="stringliteral">&quot;http://localhost:5173&quot;</span>,</div>
+<div class="line"><a id="l00047" name="l00047"></a><span class="lineno">   47</span>    <span class="stringliteral">&quot;http://localhost:8080&quot;</span>,</div>
+<div class="line"><a id="l00048" name="l00048"></a><span class="lineno">   48</span>    <span class="stringliteral">&quot;http://localhost:8081&quot;</span></div>
+<div class="line"><a id="l00049" name="l00049"></a><span class="lineno">   49</span>]</div>
+<div class="line"><a id="l00050" name="l00050"></a><span class="lineno">   50</span> </div>
+<div class="line"><a id="l00051" name="l00051"></a><span class="lineno"><a class="line" href="namespaceapp_1_1main.html#a23a01a3494f8692d9047c44773db3c02">   51</a></span>tags_metadata = [</div>
 <div class="line"><a id="l00052" name="l00052"></a><span class="lineno">   52</span>    {</div>
-<div class="line"><a id="l00053" name="l00053"></a><span class="lineno">   53</span>        <span class="stringliteral">&quot;name&quot;</span>: <span class="stringliteral">&quot;partners&quot;</span>,</div>
-<div class="line"><a id="l00054" name="l00054"></a><span class="lineno">   54</span>        <span class="stringliteral">&quot;description&quot;</span>: <span class="stringliteral">&quot;Operations with partners.&quot;</span>,</div>
+<div class="line"><a id="l00053" name="l00053"></a><span class="lineno">   53</span>        <span class="stringliteral">&quot;name&quot;</span>: <span class="stringliteral">&quot;users&quot;</span>,</div>
+<div class="line"><a id="l00054" name="l00054"></a><span class="lineno">   54</span>        <span class="stringliteral">&quot;description&quot;</span>: <span class="stringliteral">&quot;Operations with users.&quot;</span>,</div>
 <div class="line"><a id="l00055" name="l00055"></a><span class="lineno">   55</span>        <span class="stringliteral">&quot;externalDocs&quot;</span>: {</div>
 <div class="line"><a id="l00056" name="l00056"></a><span class="lineno">   56</span>            <span class="stringliteral">&quot;description&quot;</span>: <span class="stringliteral">&quot;Items external docs&quot;</span>,</div>
 <div class="line"><a id="l00057" name="l00057"></a><span class="lineno">   57</span>            <span class="stringliteral">&quot;url&quot;</span>: <span class="stringliteral">&quot;https://fastapi.tiangolo.com/&quot;</span>,</div>
 <div class="line"><a id="l00058" name="l00058"></a><span class="lineno">   58</span>        },</div>
 <div class="line"><a id="l00059" name="l00059"></a><span class="lineno">   59</span>    },</div>
 <div class="line"><a id="l00060" name="l00060"></a><span class="lineno">   60</span>    {</div>
-<div class="line"><a id="l00061" name="l00061"></a><span class="lineno">   61</span>        <span class="stringliteral">&quot;name&quot;</span>: <span class="stringliteral">&quot;news&quot;</span>,</div>
-<div class="line"><a id="l00062" name="l00062"></a><span class="lineno">   62</span>        <span class="stringliteral">&quot;description&quot;</span>: <span class="stringliteral">&quot;Operations with news.&quot;</span>,</div>
+<div class="line"><a id="l00061" name="l00061"></a><span class="lineno">   61</span>        <span class="stringliteral">&quot;name&quot;</span>: <span class="stringliteral">&quot;actions&quot;</span>,</div>
+<div class="line"><a id="l00062" name="l00062"></a><span class="lineno">   62</span>        <span class="stringliteral">&quot;description&quot;</span>: <span class="stringliteral">&quot;Operations with actions.&quot;</span>,</div>
 <div class="line"><a id="l00063" name="l00063"></a><span class="lineno">   63</span>        <span class="stringliteral">&quot;externalDocs&quot;</span>: {</div>
 <div class="line"><a id="l00064" name="l00064"></a><span class="lineno">   64</span>            <span class="stringliteral">&quot;description&quot;</span>: <span class="stringliteral">&quot;Items external docs&quot;</span>,</div>
 <div class="line"><a id="l00065" name="l00065"></a><span class="lineno">   65</span>            <span class="stringliteral">&quot;url&quot;</span>: <span class="stringliteral">&quot;https://fastapi.tiangolo.com/&quot;</span>,</div>
 <div class="line"><a id="l00066" name="l00066"></a><span class="lineno">   66</span>        },</div>
 <div class="line"><a id="l00067" name="l00067"></a><span class="lineno">   67</span>    },</div>
 <div class="line"><a id="l00068" name="l00068"></a><span class="lineno">   68</span>    {</div>
-<div class="line"><a id="l00069" name="l00069"></a><span class="lineno">   69</span>        <span class="stringliteral">&quot;name&quot;</span>: <span class="stringliteral">&quot;events&quot;</span>,</div>
-<div class="line"><a id="l00070" name="l00070"></a><span class="lineno">   70</span>        <span class="stringliteral">&quot;description&quot;</span>: <span class="stringliteral">&quot;Operations with events&quot;</span>,</div>
+<div class="line"><a id="l00069" name="l00069"></a><span class="lineno">   69</span>        <span class="stringliteral">&quot;name&quot;</span>: <span class="stringliteral">&quot;reactions&quot;</span>,</div>
+<div class="line"><a id="l00070" name="l00070"></a><span class="lineno">   70</span>        <span class="stringliteral">&quot;description&quot;</span>: <span class="stringliteral">&quot;Operations with reactions.&quot;</span>,</div>
 <div class="line"><a id="l00071" name="l00071"></a><span class="lineno">   71</span>        <span class="stringliteral">&quot;externalDocs&quot;</span>: {</div>
 <div class="line"><a id="l00072" name="l00072"></a><span class="lineno">   72</span>            <span class="stringliteral">&quot;description&quot;</span>: <span class="stringliteral">&quot;Items external docs&quot;</span>,</div>
 <div class="line"><a id="l00073" name="l00073"></a><span class="lineno">   73</span>            <span class="stringliteral">&quot;url&quot;</span>: <span class="stringliteral">&quot;https://fastapi.tiangolo.com/&quot;</span>,</div>
 <div class="line"><a id="l00074" name="l00074"></a><span class="lineno">   74</span>        },</div>
 <div class="line"><a id="l00075" name="l00075"></a><span class="lineno">   75</span>    },</div>
 <div class="line"><a id="l00076" name="l00076"></a><span class="lineno">   76</span>    {</div>
-<div class="line"><a id="l00077" name="l00077"></a><span class="lineno">   77</span>        <span class="stringliteral">&quot;name&quot;</span>: <span class="stringliteral">&quot;projects&quot;</span>,</div>
-<div class="line"><a id="l00078" name="l00078"></a><span class="lineno">   78</span>        <span class="stringliteral">&quot;description&quot;</span>: <span class="stringliteral">&quot;Operations with projects&quot;</span>,</div>
+<div class="line"><a id="l00077" name="l00077"></a><span class="lineno">   77</span>        <span class="stringliteral">&quot;name&quot;</span>: <span class="stringliteral">&quot;user_actions&quot;</span>,</div>
+<div class="line"><a id="l00078" name="l00078"></a><span class="lineno">   78</span>        <span class="stringliteral">&quot;description&quot;</span>: <span class="stringliteral">&quot;Operations with user actions.&quot;</span>,</div>
 <div class="line"><a id="l00079" name="l00079"></a><span class="lineno">   79</span>        <span class="stringliteral">&quot;externalDocs&quot;</span>: {</div>
 <div class="line"><a id="l00080" name="l00080"></a><span class="lineno">   80</span>            <span class="stringliteral">&quot;description&quot;</span>: <span class="stringliteral">&quot;Items external docs&quot;</span>,</div>
 <div class="line"><a id="l00081" name="l00081"></a><span class="lineno">   81</span>            <span class="stringliteral">&quot;url&quot;</span>: <span class="stringliteral">&quot;https://fastapi.tiangolo.com/&quot;</span>,</div>
 <div class="line"><a id="l00082" name="l00082"></a><span class="lineno">   82</span>        },</div>
 <div class="line"><a id="l00083" name="l00083"></a><span class="lineno">   83</span>    },</div>
 <div class="line"><a id="l00084" name="l00084"></a><span class="lineno">   84</span>    {</div>
-<div class="line"><a id="l00085" name="l00085"></a><span class="lineno">   85</span>        <span class="stringliteral">&quot;name&quot;</span>: <span class="stringliteral">&quot;users&quot;</span>,</div>
-<div class="line"><a id="l00086" name="l00086"></a><span class="lineno">   86</span>        <span class="stringliteral">&quot;description&quot;</span>: <span class="stringliteral">&quot;Operations with users.&quot;</span>,</div>
+<div class="line"><a id="l00085" name="l00085"></a><span class="lineno">   85</span>        <span class="stringliteral">&quot;name&quot;</span>: <span class="stringliteral">&quot;user_reactions&quot;</span>,</div>
+<div class="line"><a id="l00086" name="l00086"></a><span class="lineno">   86</span>        <span class="stringliteral">&quot;description&quot;</span>: <span class="stringliteral">&quot;Operations with user reactions.&quot;</span>,</div>
 <div class="line"><a id="l00087" name="l00087"></a><span class="lineno">   87</span>        <span class="stringliteral">&quot;externalDocs&quot;</span>: {</div>
 <div class="line"><a id="l00088" name="l00088"></a><span class="lineno">   88</span>            <span class="stringliteral">&quot;description&quot;</span>: <span class="stringliteral">&quot;Items external docs&quot;</span>,</div>
 <div class="line"><a id="l00089" name="l00089"></a><span class="lineno">   89</span>            <span class="stringliteral">&quot;url&quot;</span>: <span class="stringliteral">&quot;https://fastapi.tiangolo.com/&quot;</span>,</div>
@@ -195,37 +195,227 @@ $(function(){initNavTree('main_8py_source.html',''); initResizable(true); });
 <div class="line"><a id="l00091" name="l00091"></a><span class="lineno">   91</span>    },</div>
 <div class="line"><a id="l00092" name="l00092"></a><span class="lineno">   92</span>]</div>
 <div class="line"><a id="l00093" name="l00093"></a><span class="lineno">   93</span> </div>
-<div class="foldopen" id="foldopen00094" data-start="" data-end="">
-<div class="line"><a id="l00094" name="l00094"></a><span class="lineno"><a class="line" href="namespacemain.html#a9fbb917a10583cb202d060508eb6bb79">   94</a></span><span class="keyword">def </span><a class="code hl_function" href="namespacemain.html#a9fbb917a10583cb202d060508eb6bb79">get_session</a>():</div>
-<div class="line"><a id="l00095" name="l00095"></a><span class="lineno">   95</span>    <span class="keyword">with</span> Session(engine) <span class="keyword">as</span> session:</div>
-<div class="line"><a id="l00096" name="l00096"></a><span class="lineno">   96</span>        <span class="keywordflow">yield</span> session</div>
-<div class="line"><a id="l00097" name="l00097"></a><span class="lineno">   97</span> </div>
+<div class="line"><a id="l00094" name="l00094"></a><span class="lineno">   94</span><span class="keyword">from</span> <a class="code hl_namespace" href="namespaceapp_1_1user.html">app.user</a> <span class="keyword">import</span> user_router</div>
+<div class="line"><a id="l00095" name="l00095"></a><span class="lineno">   95</span><span class="keyword">from</span> <a class="code hl_namespace" href="namespaceapp_1_1action.html">app.action</a> <span class="keyword">import</span> action_router</div>
+<div class="line"><a id="l00096" name="l00096"></a><span class="lineno">   96</span><span class="keyword">from</span> <a class="code hl_namespace" href="namespaceapp_1_1reaction.html">app.reaction</a> <span class="keyword">import</span> reaction_router</div>
+<div class="line"><a id="l00097" name="l00097"></a><span class="lineno">   97</span><span class="keyword">from</span> <a class="code hl_namespace" href="namespaceapp_1_1user__action.html">app.user_action</a> <span class="keyword">import</span> user_action_router</div>
+<div class="line"><a id="l00098" name="l00098"></a><span class="lineno">   98</span><span class="keyword">from</span> <a class="code hl_namespace" href="namespaceapp_1_1user__reaction.html">app.user_reaction</a> <span class="keyword">import</span> user_reaction_router</div>
+<div class="line"><a id="l00099" name="l00099"></a><span class="lineno">   99</span><span class="keyword">from</span> <a class="code hl_namespace" href="namespaceapp_1_1routers_1_1services.html">app.routers.services</a> <span class="keyword">import</span> services_router</div>
+<div class="line"><a id="l00100" name="l00100"></a><span class="lineno">  100</span><span class="keyword">from</span> <a class="code hl_namespace" href="namespaceapp_1_1routers_1_1service__accounts.html">app.routers.service_accounts</a> <span class="keyword">import</span> service_accounts_router</div>
+<div class="line"><a id="l00101" name="l00101"></a><span class="lineno">  101</span><span class="keyword">from</span> <a class="code hl_namespace" href="namespaceapp_1_1routers_1_1areas.html">app.routers.areas</a> <span class="keyword">import</span> areas_router</div>
+<div class="line"><a id="l00102" name="l00102"></a><span class="lineno">  102</span> </div>
+<div class="line"><a id="l00103" name="l00103"></a><span class="lineno">  103</span> </div>
+<div class="line"><a id="l00104" name="l00104"></a><span class="lineno"><a class="line" href="namespaceapp_1_1main.html#ad298a89244e9e4e8bd9e929313eecea2">  104</a></span>app = FastAPI(lifespan=lifespan, openapi_tags=tags_metadata)</div>
+<div class="line"><a id="l00105" name="l00105"></a><span class="lineno">  105</span> </div>
+<div class="line"><a id="l00106" name="l00106"></a><span class="lineno"><a class="line" href="namespaceapp_1_1main.html#ab9977d7b5af93f8ea1132e581a70b631">  106</a></span>router_login = APIRouter()</div>
+<div class="line"><a id="l00107" name="l00107"></a><span class="lineno"><a class="line" href="namespaceapp_1_1main.html#a0440d0da76cc12fa1da9a1fa9c4e80a8">  107</a></span>router_user = APIRouter(dependencies=[Depends(oauth2_scheme)])</div>
+<div class="line"><a id="l00108" name="l00108"></a><span class="lineno">  108</span> </div>
+<div class="line"><a id="l00109" name="l00109"></a><span class="lineno">  109</span><span class="preprocessor">@router_login.get(&quot;/oauth/providers&quot;, tags=[&quot;oauth&quot;])</span></div>
+<div class="line"><a id="l00110" name="l00110"></a><span class="lineno">  110</span><span class="preprocessor">@router_login.get(&quot;/auth/providers&quot;, tags=[&quot;oauth&quot;])</span></div>
+<div class="foldopen" id="foldopen00111" data-start="" data-end="">
+<div class="line"><a id="l00111" name="l00111"></a><span class="lineno"><a class="line" href="namespaceapp_1_1main.html#a40bd7525f4634966cfa26850b5468ba3">  111</a></span><span class="keyword">def </span><a class="code hl_function" href="namespaceapp_1_1main.html#a40bd7525f4634966cfa26850b5468ba3">oauth_list_providers</a>(flow: str = <span class="stringliteral">&quot;web&quot;</span>):</div>
+<div class="line"><a id="l00112" name="l00112"></a><span class="lineno">  112</span>    <span class="stringliteral">&quot;&quot;&quot;</span></div>
+<div class="line"><a id="l00113" name="l00113"></a><span class="lineno">  113</span><span class="stringliteral">    Liste tous les providers OAuth2 avec leurs métadonnées.</span></div>
+<div class="line"><a id="l00114" name="l00114"></a><span class="lineno">  114</span><span class="stringliteral">    Retourne : [{id, name, icon, color, available, flows}]</span></div>
+<div class="line"><a id="l00115" name="l00115"></a><span class="lineno">  115</span><span class="stringliteral">    &quot;&quot;&quot;</span></div>
+<div class="line"><a id="l00116" name="l00116"></a><span class="lineno">  116</span>    <span class="keywordflow">try</span>:</div>
+<div class="line"><a id="l00117" name="l00117"></a><span class="lineno">  117</span>        <span class="keywordflow">return</span> list_providers_for_frontend(flow)</div>
+<div class="line"><a id="l00118" name="l00118"></a><span class="lineno">  118</span>    <span class="keywordflow">except</span> Exception <span class="keyword">as</span> e:</div>
+<div class="line"><a id="l00119" name="l00119"></a><span class="lineno">  119</span>        <span class="keywordflow">raise</span> HTTPException(status_code=400, detail=str(e))</div>
+<div class="line"><a id="l00120" name="l00120"></a><span class="lineno">  120</span> </div>
+<div class="line"><a id="l00121" name="l00121"></a><span class="lineno">  121</span><span class="preprocessor">@router_login.get(&quot;/oauth/config/{provider}/{flow}&quot;, tags=[&quot;oauth&quot;])</span></div>
 </div>
-<div class="line"><a id="l00098" name="l00098"></a><span class="lineno"><a class="line" href="namespacemain.html#ad390925e2a4933fdf1e286c5928dd575">   98</a></span>SessionDep = Annotated[Session, Depends(get_session)]</div>
-<div class="line"><a id="l00099" name="l00099"></a><span class="lineno">   99</span> </div>
-<div class="line"><a id="l00100" name="l00100"></a><span class="lineno"><a class="line" href="namespacemain.html#a5fa94f0581009434c7a63791944d6ff4">  100</a></span>app = FastAPI(lifespan=lifespan, openapi_tags=tags_metadata)</div>
-<div class="line"><a id="l00101" name="l00101"></a><span class="lineno">  101</span> </div>
-<div class="line"><a id="l00102" name="l00102"></a><span class="lineno"><a class="line" href="namespacemain.html#aeae3d17bb10ccd479ece9555b0437c0c">  102</a></span>router_login = APIRouter()</div>
-<div class="line"><a id="l00103" name="l00103"></a><span class="lineno"><a class="line" href="namespacemain.html#a91bac5e3b8a44c6c1a6945f68aeb84e5">  103</a></span>router_user = APIRouter(dependencies=[Depends(oauth2_scheme)])</div>
-<div class="line"><a id="l00104" name="l00104"></a><span class="lineno">  104</span> </div>
-<div class="line"><a id="l00105" name="l00105"></a><span class="lineno">  105</span>app.add_middleware(</div>
-<div class="line"><a id="l00106" name="l00106"></a><span class="lineno">  106</span>    CORSMiddleware,</div>
-<div class="line"><a id="l00107" name="l00107"></a><span class="lineno"><a class="line" href="namespacemain.html#ab277227e15a80c8a674b8540cc01f33f">  107</a></span>    allow_origins=origins,</div>
-<div class="line"><a id="l00108" name="l00108"></a><span class="lineno"><a class="line" href="namespacemain.html#a723efd63c798243e87a130a80fcdafc0">  108</a></span>    allow_credentials=<span class="keyword">True</span>,</div>
-<div class="line"><a id="l00109" name="l00109"></a><span class="lineno"><a class="line" href="namespacemain.html#a1b7923d71410345d3dbff8017b7e6f0d">  109</a></span>    allow_methods=[<span class="stringliteral">&quot;*&quot;</span>],</div>
-<div class="line"><a id="l00110" name="l00110"></a><span class="lineno"><a class="line" href="namespacemain.html#ab58bda9b3875379c76aa7d3bd977b5bd">  110</a></span>    allow_headers=[<span class="stringliteral">&quot;*&quot;</span>],</div>
-<div class="line"><a id="l00111" name="l00111"></a><span class="lineno">  111</span>)</div>
-<div class="line"><a id="l00112" name="l00112"></a><span class="lineno">  112</span> </div>
-<div class="line"><a id="l00113" name="l00113"></a><span class="lineno">  113</span><span class="comment"># app.mount(&quot;/static&quot;, StaticFiles(directory=&quot;static&quot;), name=&quot;static&quot;)</span></div>
-<div class="line"><a id="l00114" name="l00114"></a><span class="lineno">  114</span> </div>
-<div class="line"><a id="l00115" name="l00115"></a><span class="lineno"><a class="line" href="namespacemain.html#ab3f1d2aacf75deea81eef0821253a06a">  115</a></span>templates = Jinja2Templates(directory=<span class="stringliteral">&quot;templates&quot;</span>)</div>
-<div class="line"><a id="l00116" name="l00116"></a><span class="lineno">  116</span> </div>
-<div class="line"><a id="l00117" name="l00117"></a><span class="lineno">  117</span> </div>
-<div class="line"><a id="l00118" name="l00118"></a><span class="lineno">  118</span> </div>
-<div class="line"><a id="l00119" name="l00119"></a><span class="lineno">  119</span>app.include_router(router_login)</div>
-<div class="line"><a id="l00120" name="l00120"></a><span class="lineno">  120</span>app.include_router(router_user)</div>
-<div class="ttc" id="anamespacemain_html_a4b0afba9bb946ff70defaa002c1f41e2"><div class="ttname"><a href="namespacemain.html#a4b0afba9bb946ff70defaa002c1f41e2">main.lifespan</a></div><div class="ttdeci">lifespan(FastAPI app)</div><div class="ttdef"><b>Definition</b> <a href="#l00026">main.py:26</a></div></div>
-<div class="ttc" id="anamespacemain_html_a9fbb917a10583cb202d060508eb6bb79"><div class="ttname"><a href="namespacemain.html#a9fbb917a10583cb202d060508eb6bb79">main.get_session</a></div><div class="ttdeci">get_session()</div><div class="ttdef"><b>Definition</b> <a href="#l00094">main.py:94</a></div></div>
+<div class="foldopen" id="foldopen00122" data-start="" data-end="">
+<div class="line"><a id="l00122" name="l00122"></a><span class="lineno"><a class="line" href="namespaceapp_1_1main.html#a51c8b718bf026d21f80e544443fed9b7">  122</a></span><span class="keyword">def </span><a class="code hl_function" href="namespaceapp_1_1main.html#a51c8b718bf026d21f80e544443fed9b7">oauth_public_config</a>(provider: str, flow: str):</div>
+<div class="line"><a id="l00123" name="l00123"></a><span class="lineno">  123</span>    <span class="keywordflow">try</span>:</div>
+<div class="line"><a id="l00124" name="l00124"></a><span class="lineno">  124</span>        <span class="keywordflow">return</span> public_provider_info(provider, flow)</div>
+<div class="line"><a id="l00125" name="l00125"></a><span class="lineno">  125</span>    <span class="keywordflow">except</span> Exception <span class="keyword">as</span> e:</div>
+<div class="line"><a id="l00126" name="l00126"></a><span class="lineno">  126</span>        <span class="keywordflow">raise</span> HTTPException(status_code=400, detail=str(e))</div>
+<div class="line"><a id="l00127" name="l00127"></a><span class="lineno">  127</span> </div>
+<div class="line"><a id="l00128" name="l00128"></a><span class="lineno">  128</span><span class="preprocessor">@router_login.get(&quot;/oauth/authorize/{provider}/{flow}&quot;, tags=[&quot;oauth&quot;])</span></div>
+</div>
+<div class="foldopen" id="foldopen00129" data-start="" data-end="">
+<div class="line"><a id="l00129" name="l00129"></a><span class="lineno"><a class="line" href="namespaceapp_1_1main.html#a28e0c388887f6f91b41e5f83eeb7e26e">  129</a></span><span class="keyword">def </span><a class="code hl_function" href="namespaceapp_1_1main.html#a28e0c388887f6f91b41e5f83eeb7e26e">oauth_get_authorization_url</a>(provider: str, flow: str, state: str = <span class="stringliteral">&quot;&quot;</span>):</div>
+<div class="line"><a id="l00130" name="l00130"></a><span class="lineno">  130</span>    <span class="keywordflow">try</span>:</div>
+<div class="line"><a id="l00131" name="l00131"></a><span class="lineno">  131</span>        auth_url = get_auth_url(provider, flow, state)</div>
+<div class="line"><a id="l00132" name="l00132"></a><span class="lineno">  132</span>        <span class="keywordflow">return</span> {<span class="stringliteral">&quot;authorization_url&quot;</span>: auth_url}</div>
+<div class="line"><a id="l00133" name="l00133"></a><span class="lineno">  133</span>    <span class="keywordflow">except</span> Exception <span class="keyword">as</span> e:</div>
+<div class="line"><a id="l00134" name="l00134"></a><span class="lineno">  134</span>        <span class="keywordflow">raise</span> HTTPException(status_code=400, detail=str(e))</div>
+<div class="line"><a id="l00135" name="l00135"></a><span class="lineno">  135</span> </div>
+<div class="line"><a id="l00136" name="l00136"></a><span class="lineno">  136</span><span class="preprocessor">@router_login.get(&quot;/auth/authorize/{provider}/{flow}&quot;, tags=[&quot;oauth&quot;])</span></div>
+</div>
+<div class="foldopen" id="foldopen00137" data-start="" data-end="">
+<div class="line"><a id="l00137" name="l00137"></a><span class="lineno"><a class="line" href="namespaceapp_1_1main.html#a14958015c121493afd39e5bb1fa0c196">  137</a></span><span class="keyword">def </span><a class="code hl_function" href="namespaceapp_1_1main.html#a14958015c121493afd39e5bb1fa0c196">auth_get_authorization_url_alias</a>(provider: str, flow: str, state: str = <span class="stringliteral">&quot;&quot;</span>):</div>
+<div class="line"><a id="l00138" name="l00138"></a><span class="lineno">  138</span>    <span class="keywordflow">return</span> <a class="code hl_function" href="namespaceapp_1_1main.html#a28e0c388887f6f91b41e5f83eeb7e26e">oauth_get_authorization_url</a>(provider, flow, state)</div>
+<div class="line"><a id="l00139" name="l00139"></a><span class="lineno">  139</span> </div>
+<div class="line"><a id="l00140" name="l00140"></a><span class="lineno">  140</span><span class="preprocessor">@router_login.get(&quot;/oauth/callback/{provider}&quot;, tags=[&quot;oauth&quot;])</span></div>
+<div class="line"><a id="l00141" name="l00141"></a><span class="lineno">  141</span><span class="preprocessor">@router_login.get(&quot;/auth/callback/{provider}&quot;, tags=[&quot;oauth&quot;])</span></div>
+</div>
+<div class="foldopen" id="foldopen00142" data-start="" data-end="">
+<div class="line"><a id="l00142" name="l00142"></a><span class="lineno"><a class="line" href="namespaceapp_1_1main.html#a633b419d9ae85a95434625da682a3890">  142</a></span><span class="keyword">def </span><a class="code hl_function" href="namespaceapp_1_1main.html#a633b419d9ae85a95434625da682a3890">oauth_callback</a>(</div>
+<div class="line"><a id="l00143" name="l00143"></a><span class="lineno">  143</span>    provider: str, </div>
+<div class="line"><a id="l00144" name="l00144"></a><span class="lineno">  144</span>    code: Optional[str] = <span class="keywordtype">None</span>, </div>
+<div class="line"><a id="l00145" name="l00145"></a><span class="lineno">  145</span>    token: Optional[str] = <span class="keywordtype">None</span>,</div>
+<div class="line"><a id="l00146" name="l00146"></a><span class="lineno">  146</span>    state: str = <span class="stringliteral">&quot;&quot;</span>, </div>
+<div class="line"><a id="l00147" name="l00147"></a><span class="lineno">  147</span>    flow: str = <span class="stringliteral">&quot;web&quot;</span>, </div>
+<div class="line"><a id="l00148" name="l00148"></a><span class="lineno">  148</span>    session: Session = Depends(<span class="keyword">lambda</span>: Session(engine))</div>
+<div class="line"><a id="l00149" name="l00149"></a><span class="lineno">  149</span>):</div>
+<div class="line"><a id="l00150" name="l00150"></a><span class="lineno">  150</span>    auth_code = token <span class="keywordflow">if</span> provider == <span class="stringliteral">&quot;trello&quot;</span> <span class="keywordflow">and</span> token <span class="keywordflow">else</span> code</div>
+<div class="line"><a id="l00151" name="l00151"></a><span class="lineno">  151</span>    </div>
+<div class="line"><a id="l00152" name="l00152"></a><span class="lineno">  152</span>    <span class="keywordflow">if</span> <span class="keywordflow">not</span> auth_code:</div>
+<div class="line"><a id="l00153" name="l00153"></a><span class="lineno">  153</span>        <span class="keywordflow">raise</span> HTTPException(status_code=400, detail=<span class="stringliteral">&quot;No authorization code or token provided&quot;</span>)</div>
+<div class="line"><a id="l00154" name="l00154"></a><span class="lineno">  154</span> </div>
+<div class="line"><a id="l00155" name="l00155"></a><span class="lineno">  155</span>    <span class="keywordflow">try</span>:</div>
+<div class="line"><a id="l00156" name="l00156"></a><span class="lineno">  156</span>        token_data = exchange_code_for_token(provider, flow, auth_code)</div>
+<div class="line"><a id="l00157" name="l00157"></a><span class="lineno">  157</span>        </div>
+<div class="line"><a id="l00158" name="l00158"></a><span class="lineno">  158</span>        user_info = get_user_info_from_provider(provider, token_data[<span class="stringliteral">&quot;access_token&quot;</span>])</div>
+<div class="line"><a id="l00159" name="l00159"></a><span class="lineno">  159</span>        </div>
+<div class="line"><a id="l00160" name="l00160"></a><span class="lineno">  160</span>        provider_user_id = str(user_info.get(<span class="stringliteral">&quot;id&quot;</span>) <span class="keywordflow">or</span> user_info.get(<span class="stringliteral">&quot;sub&quot;</span>))</div>
+<div class="line"><a id="l00161" name="l00161"></a><span class="lineno">  161</span>        user = find_or_create_user_from_oauth(</div>
+<div class="line"><a id="l00162" name="l00162"></a><span class="lineno">  162</span>            session=session,</div>
+<div class="line"><a id="l00163" name="l00163"></a><span class="lineno">  163</span>            provider=provider,</div>
+<div class="line"><a id="l00164" name="l00164"></a><span class="lineno">  164</span>            provider_user_id=provider_user_id,</div>
+<div class="line"><a id="l00165" name="l00165"></a><span class="lineno">  165</span>            user_info=user_info,</div>
+<div class="line"><a id="l00166" name="l00166"></a><span class="lineno">  166</span>            token_data=token_data</div>
+<div class="line"><a id="l00167" name="l00167"></a><span class="lineno">  167</span>        )</div>
+<div class="line"><a id="l00168" name="l00168"></a><span class="lineno">  168</span>        </div>
+<div class="line"><a id="l00169" name="l00169"></a><span class="lineno">  169</span>        access_token_expires = timedelta(minutes=ACCESS_TOKEN_EXPIRE_MINUTES)</div>
+<div class="line"><a id="l00170" name="l00170"></a><span class="lineno">  170</span>        app_access_token = create_access_token(</div>
+<div class="line"><a id="l00171" name="l00171"></a><span class="lineno">  171</span>            data={<span class="stringliteral">&quot;sub&quot;</span>: user.email},</div>
+<div class="line"><a id="l00172" name="l00172"></a><span class="lineno">  172</span>            expires=access_token_expires</div>
+<div class="line"><a id="l00173" name="l00173"></a><span class="lineno">  173</span>        )</div>
+<div class="line"><a id="l00174" name="l00174"></a><span class="lineno">  174</span>        </div>
+<div class="line"><a id="l00175" name="l00175"></a><span class="lineno">  175</span>        <span class="keywordflow">return</span> {</div>
+<div class="line"><a id="l00176" name="l00176"></a><span class="lineno">  176</span>            <span class="stringliteral">&quot;access_token&quot;</span>: app_access_token,</div>
+<div class="line"><a id="l00177" name="l00177"></a><span class="lineno">  177</span>            <span class="stringliteral">&quot;token_type&quot;</span>: <span class="stringliteral">&quot;bearer&quot;</span>,</div>
+<div class="line"><a id="l00178" name="l00178"></a><span class="lineno">  178</span>            <span class="stringliteral">&quot;user&quot;</span>: {</div>
+<div class="line"><a id="l00179" name="l00179"></a><span class="lineno">  179</span>                <span class="stringliteral">&quot;id&quot;</span>: user.id,</div>
+<div class="line"><a id="l00180" name="l00180"></a><span class="lineno">  180</span>                <span class="stringliteral">&quot;email&quot;</span>: user.email,</div>
+<div class="line"><a id="l00181" name="l00181"></a><span class="lineno">  181</span>                <span class="stringliteral">&quot;name&quot;</span>: user.name,</div>
+<div class="line"><a id="l00182" name="l00182"></a><span class="lineno">  182</span>                <span class="stringliteral">&quot;role&quot;</span>: user.role,</div>
+<div class="line"><a id="l00183" name="l00183"></a><span class="lineno">  183</span>                <span class="stringliteral">&quot;image&quot;</span>: user.image</div>
+<div class="line"><a id="l00184" name="l00184"></a><span class="lineno">  184</span>            }</div>
+<div class="line"><a id="l00185" name="l00185"></a><span class="lineno">  185</span>        }</div>
+<div class="line"><a id="l00186" name="l00186"></a><span class="lineno">  186</span>    </div>
+<div class="line"><a id="l00187" name="l00187"></a><span class="lineno">  187</span>    <span class="keywordflow">except</span> HTTPException:</div>
+<div class="line"><a id="l00188" name="l00188"></a><span class="lineno">  188</span>        <span class="keywordflow">raise</span></div>
+<div class="line"><a id="l00189" name="l00189"></a><span class="lineno">  189</span>    <span class="keywordflow">except</span> Exception <span class="keyword">as</span> e:</div>
+<div class="line"><a id="l00190" name="l00190"></a><span class="lineno">  190</span>        <span class="keywordflow">raise</span> HTTPException(</div>
+<div class="line"><a id="l00191" name="l00191"></a><span class="lineno">  191</span>            status_code=500,</div>
+<div class="line"><a id="l00192" name="l00192"></a><span class="lineno">  192</span>            detail=f<span class="stringliteral">&quot;OAuth callback error: {str(e)}&quot;</span></div>
+<div class="line"><a id="l00193" name="l00193"></a><span class="lineno">  193</span>        )</div>
+<div class="line"><a id="l00194" name="l00194"></a><span class="lineno">  194</span> </div>
+<div class="line"><a id="l00195" name="l00195"></a><span class="lineno">  195</span><span class="preprocessor">@router_login.post(&quot;/oauth/providers/reload&quot;, tags=[&quot;oauth&quot;])</span></div>
+</div>
+<div class="foldopen" id="foldopen00196" data-start="" data-end="">
+<div class="line"><a id="l00196" name="l00196"></a><span class="lineno"><a class="line" href="namespaceapp_1_1main.html#ad4afbc5612b8d0598dc4062a73c50763">  196</a></span><span class="keyword">def </span><a class="code hl_function" href="namespaceapp_1_1main.html#ad4afbc5612b8d0598dc4062a73c50763">oauth_reload</a>():</div>
+<div class="line"><a id="l00197" name="l00197"></a><span class="lineno">  197</span>    reload_providers()</div>
+<div class="line"><a id="l00198" name="l00198"></a><span class="lineno">  198</span>    <span class="keywordflow">return</span> {<span class="stringliteral">&quot;reloaded&quot;</span>: <span class="keyword">True</span>}</div>
+<div class="line"><a id="l00199" name="l00199"></a><span class="lineno">  199</span> </div>
+</div>
+<div class="line"><a id="l00200" name="l00200"></a><span class="lineno"><a class="line" href="namespaceapp_1_1main.html#ae8d55247311031c5e0977650effdbb8b">  200</a></span>templates = Jinja2Templates(directory=<span class="stringliteral">&quot;templates&quot;</span>)</div>
+<div class="line"><a id="l00201" name="l00201"></a><span class="lineno">  201</span> </div>
+<div class="line"><a id="l00202" name="l00202"></a><span class="lineno">  202</span>app.include_router(router_login)</div>
+<div class="line"><a id="l00203" name="l00203"></a><span class="lineno">  203</span>app.include_router(router_user)</div>
+<div class="line"><a id="l00204" name="l00204"></a><span class="lineno">  204</span>app.include_router(user_router)</div>
+<div class="line"><a id="l00205" name="l00205"></a><span class="lineno">  205</span>app.include_router(action_router)</div>
+<div class="line"><a id="l00206" name="l00206"></a><span class="lineno">  206</span>app.include_router(reaction_router)</div>
+<div class="line"><a id="l00207" name="l00207"></a><span class="lineno">  207</span>app.include_router(user_action_router)</div>
+<div class="line"><a id="l00208" name="l00208"></a><span class="lineno">  208</span>app.include_router(user_reaction_router)</div>
+<div class="line"><a id="l00209" name="l00209"></a><span class="lineno">  209</span>app.include_router(services_router)</div>
+<div class="line"><a id="l00210" name="l00210"></a><span class="lineno">  210</span>app.include_router(service_accounts_router)</div>
+<div class="line"><a id="l00211" name="l00211"></a><span class="lineno">  211</span>app.include_router(areas_router)</div>
+<div class="line"><a id="l00212" name="l00212"></a><span class="lineno">  212</span> </div>
+<div class="line"><a id="l00213" name="l00213"></a><span class="lineno">  213</span>app.add_middleware(</div>
+<div class="line"><a id="l00214" name="l00214"></a><span class="lineno">  214</span>    CORSMiddleware,</div>
+<div class="line"><a id="l00215" name="l00215"></a><span class="lineno"><a class="line" href="namespaceapp_1_1main.html#aabd4465835458f6b50293fb5422bb491">  215</a></span>    allow_origins=origins,</div>
+<div class="line"><a id="l00216" name="l00216"></a><span class="lineno"><a class="line" href="namespaceapp_1_1main.html#a52d43ff12c1e726efe6bca8ed74dffe7">  216</a></span>    allow_credentials=<span class="keyword">True</span>,</div>
+<div class="line"><a id="l00217" name="l00217"></a><span class="lineno"><a class="line" href="namespaceapp_1_1main.html#ae5d8d7aa9e3d7d13f413ed6623fc5603">  217</a></span>    allow_methods=[<span class="stringliteral">&quot;*&quot;</span>],</div>
+<div class="line"><a id="l00218" name="l00218"></a><span class="lineno"><a class="line" href="namespaceapp_1_1main.html#a42c3fa639b77e3beb05fe807c0715c84">  218</a></span>    allow_headers=[<span class="stringliteral">&quot;*&quot;</span>],</div>
+<div class="line"><a id="l00219" name="l00219"></a><span class="lineno">  219</span>)</div>
+<div class="line"><a id="l00220" name="l00220"></a><span class="lineno">  220</span> </div>
+<div class="foldopen" id="foldopen00221" data-start="" data-end="">
+<div class="line"><a id="l00221" name="l00221"></a><span class="lineno"><a class="line" href="namespaceapp_1_1main.html#a7766109be06158d145f0b1a0e229aca5">  221</a></span><span class="keyword">def </span><a class="code hl_function" href="namespaceapp_1_1main.html#a7766109be06158d145f0b1a0e229aca5">get_client_ip</a>(request: Request) -&gt; str:</div>
+<div class="line"><a id="l00222" name="l00222"></a><span class="lineno">  222</span>    forwarded = request.headers.get(<span class="stringliteral">&quot;X-Forwarded-For&quot;</span>)</div>
+<div class="line"><a id="l00223" name="l00223"></a><span class="lineno">  223</span>    <span class="keywordflow">if</span> forwarded:</div>
+<div class="line"><a id="l00224" name="l00224"></a><span class="lineno">  224</span>        <span class="keywordflow">return</span> forwarded.split(<span class="stringliteral">&quot;,&quot;</span>)[0].strip()</div>
+<div class="line"><a id="l00225" name="l00225"></a><span class="lineno">  225</span>    <span class="keywordflow">if</span> request.client <span class="keywordflow">and</span> request.client.host:</div>
+<div class="line"><a id="l00226" name="l00226"></a><span class="lineno">  226</span>        <span class="keywordflow">return</span> request.client.host</div>
+<div class="line"><a id="l00227" name="l00227"></a><span class="lineno">  227</span>    <span class="keywordflow">return</span> <span class="stringliteral">&quot;unknown&quot;</span></div>
+<div class="line"><a id="l00228" name="l00228"></a><span class="lineno">  228</span> </div>
+<div class="line"><a id="l00229" name="l00229"></a><span class="lineno">  229</span> </div>
+<div class="line"><a id="l00230" name="l00230"></a><span class="lineno">  230</span><span class="preprocessor">@app.get(&quot;/health&quot;)</span></div>
+</div>
+<div class="foldopen" id="foldopen00231" data-start="" data-end="">
+<div class="line"><a id="l00231" name="l00231"></a><span class="lineno"><a class="line" href="namespaceapp_1_1main.html#ab0a77f1ada0e808c98e4f7bac6ed7b90">  231</a></span><span class="keyword">def </span><a class="code hl_function" href="namespaceapp_1_1main.html#ab0a77f1ada0e808c98e4f7bac6ed7b90">health</a>():</div>
+<div class="line"><a id="l00232" name="l00232"></a><span class="lineno">  232</span>    <span class="keywordflow">return</span> {<span class="stringliteral">&quot;status&quot;</span>: <span class="stringliteral">&quot;ok&quot;</span>}</div>
+<div class="line"><a id="l00233" name="l00233"></a><span class="lineno">  233</span> </div>
+<div class="line"><a id="l00234" name="l00234"></a><span class="lineno">  234</span> </div>
+<div class="line"><a id="l00235" name="l00235"></a><span class="lineno">  235</span><span class="preprocessor">@app.get(&quot;/about.json&quot;)</span></div>
+</div>
+<div class="foldopen" id="foldopen00236" data-start="" data-end="">
+<div class="line"><a id="l00236" name="l00236"></a><span class="lineno"><a class="line" href="namespaceapp_1_1main.html#a219a9db619de87a960254b24e006e20e">  236</a></span><span class="keyword">async def </span><a class="code hl_function" href="namespaceapp_1_1main.html#a219a9db619de87a960254b24e006e20e">about</a>(request: Request, session: SessionDep):</div>
+<div class="line"><a id="l00237" name="l00237"></a><span class="lineno">  237</span>    client_host = <a class="code hl_function" href="namespaceapp_1_1main.html#a7766109be06158d145f0b1a0e229aca5">get_client_ip</a>(request)</div>
+<div class="line"><a id="l00238" name="l00238"></a><span class="lineno">  238</span>    current_time = int(time.time())</div>
+<div class="line"><a id="l00239" name="l00239"></a><span class="lineno">  239</span>    services_query = select(Service).where(Service.is_active == <span class="keyword">True</span>).order_by(Service.name)</div>
+<div class="line"><a id="l00240" name="l00240"></a><span class="lineno">  240</span>    services = session.exec(services_query).all()</div>
+<div class="line"><a id="l00241" name="l00241"></a><span class="lineno">  241</span>    response_services = []</div>
+<div class="line"><a id="l00242" name="l00242"></a><span class="lineno">  242</span>    <span class="keywordflow">for</span> service <span class="keywordflow">in</span> services:</div>
+<div class="line"><a id="l00243" name="l00243"></a><span class="lineno">  243</span>        actions_query = select(Action).where(Action.service_id == service.id)</div>
+<div class="line"><a id="l00244" name="l00244"></a><span class="lineno">  244</span>        actions = session.exec(actions_query).all()</div>
+<div class="line"><a id="l00245" name="l00245"></a><span class="lineno">  245</span> </div>
+<div class="line"><a id="l00246" name="l00246"></a><span class="lineno">  246</span>        reactions_query = select(Reaction).where(Reaction.service_id == service.id)</div>
+<div class="line"><a id="l00247" name="l00247"></a><span class="lineno">  247</span>        reactions = session.exec(reactions_query).all()</div>
+<div class="line"><a id="l00248" name="l00248"></a><span class="lineno">  248</span>        </div>
+<div class="line"><a id="l00249" name="l00249"></a><span class="lineno">  249</span>        response_services.append({</div>
+<div class="line"><a id="l00250" name="l00250"></a><span class="lineno">  250</span>            <span class="stringliteral">&quot;name&quot;</span>: service.name,</div>
+<div class="line"><a id="l00251" name="l00251"></a><span class="lineno">  251</span>            <span class="stringliteral">&quot;actions&quot;</span>: [</div>
+<div class="line"><a id="l00252" name="l00252"></a><span class="lineno">  252</span>                {</div>
+<div class="line"><a id="l00253" name="l00253"></a><span class="lineno">  253</span>                    <span class="stringliteral">&quot;name&quot;</span>: action.name,</div>
+<div class="line"><a id="l00254" name="l00254"></a><span class="lineno">  254</span>                    <span class="stringliteral">&quot;description&quot;</span>: action.description,</div>
+<div class="line"><a id="l00255" name="l00255"></a><span class="lineno">  255</span>                }</div>
+<div class="line"><a id="l00256" name="l00256"></a><span class="lineno">  256</span>                <span class="keywordflow">for</span> action <span class="keywordflow">in</span> actions</div>
+<div class="line"><a id="l00257" name="l00257"></a><span class="lineno">  257</span>            ],</div>
+<div class="line"><a id="l00258" name="l00258"></a><span class="lineno">  258</span>            <span class="stringliteral">&quot;reactions&quot;</span>: [</div>
+<div class="line"><a id="l00259" name="l00259"></a><span class="lineno">  259</span>                {</div>
+<div class="line"><a id="l00260" name="l00260"></a><span class="lineno">  260</span>                    <span class="stringliteral">&quot;name&quot;</span>: reaction.name,</div>
+<div class="line"><a id="l00261" name="l00261"></a><span class="lineno">  261</span>                    <span class="stringliteral">&quot;description&quot;</span>: reaction.description,</div>
+<div class="line"><a id="l00262" name="l00262"></a><span class="lineno">  262</span>                }</div>
+<div class="line"><a id="l00263" name="l00263"></a><span class="lineno">  263</span>                <span class="keywordflow">for</span> reaction <span class="keywordflow">in</span> reactions</div>
+<div class="line"><a id="l00264" name="l00264"></a><span class="lineno">  264</span>            ],</div>
+<div class="line"><a id="l00265" name="l00265"></a><span class="lineno">  265</span>        })</div>
+<div class="line"><a id="l00266" name="l00266"></a><span class="lineno">  266</span>    <span class="keywordflow">return</span> JSONResponse({</div>
+<div class="line"><a id="l00267" name="l00267"></a><span class="lineno">  267</span>        <span class="stringliteral">&quot;client&quot;</span>: {<span class="stringliteral">&quot;host&quot;</span>: client_host},</div>
+<div class="line"><a id="l00268" name="l00268"></a><span class="lineno">  268</span>        <span class="stringliteral">&quot;server&quot;</span>: {</div>
+<div class="line"><a id="l00269" name="l00269"></a><span class="lineno">  269</span>            <span class="stringliteral">&quot;current_time&quot;</span>: current_time,</div>
+<div class="line"><a id="l00270" name="l00270"></a><span class="lineno">  270</span>            <span class="stringliteral">&quot;services&quot;</span>: response_services,</div>
+<div class="line"><a id="l00271" name="l00271"></a><span class="lineno">  271</span>        },</div>
+<div class="line"><a id="l00272" name="l00272"></a><span class="lineno">  272</span>    })</div>
+</div>
+<div class="ttc" id="anamespaceapp_1_1action_html"><div class="ttname"><a href="namespaceapp_1_1action.html">app.action</a></div><div class="ttdef"><b>Definition</b> <a href="action_8py_source.html#l00001">action.py:1</a></div></div>
+<div class="ttc" id="anamespaceapp_1_1core_1_1oauth__config_html"><div class="ttname"><a href="namespaceapp_1_1core_1_1oauth__config.html">app.core.oauth_config</a></div><div class="ttdef"><b>Definition</b> <a href="oauth__config_8py_source.html#l00001">oauth_config.py:1</a></div></div>
+<div class="ttc" id="anamespaceapp_1_1db_html"><div class="ttname"><a href="namespaceapp_1_1db.html">app.db</a></div><div class="ttdef"><b>Definition</b> <a href="db_8py_source.html#l00001">db.py:1</a></div></div>
+<div class="ttc" id="anamespaceapp_1_1main_html_a14958015c121493afd39e5bb1fa0c196"><div class="ttname"><a href="namespaceapp_1_1main.html#a14958015c121493afd39e5bb1fa0c196">app.main.auth_get_authorization_url_alias</a></div><div class="ttdeci">auth_get_authorization_url_alias(str provider, str flow, str state=&quot;&quot;)</div><div class="ttdef"><b>Definition</b> <a href="#l00137">main.py:137</a></div></div>
+<div class="ttc" id="anamespaceapp_1_1main_html_a1f22a2bdb69722841cc52c377e2ef10d"><div class="ttname"><a href="namespaceapp_1_1main.html#a1f22a2bdb69722841cc52c377e2ef10d">app.main.lifespan</a></div><div class="ttdeci">lifespan(FastAPI app)</div><div class="ttdef"><b>Definition</b> <a href="#l00040">main.py:40</a></div></div>
+<div class="ttc" id="anamespaceapp_1_1main_html_a219a9db619de87a960254b24e006e20e"><div class="ttname"><a href="namespaceapp_1_1main.html#a219a9db619de87a960254b24e006e20e">app.main.about</a></div><div class="ttdeci">about(Request request, SessionDep session)</div><div class="ttdef"><b>Definition</b> <a href="#l00236">main.py:236</a></div></div>
+<div class="ttc" id="anamespaceapp_1_1main_html_a28e0c388887f6f91b41e5f83eeb7e26e"><div class="ttname"><a href="namespaceapp_1_1main.html#a28e0c388887f6f91b41e5f83eeb7e26e">app.main.oauth_get_authorization_url</a></div><div class="ttdeci">oauth_get_authorization_url(str provider, str flow, str state=&quot;&quot;)</div><div class="ttdef"><b>Definition</b> <a href="#l00129">main.py:129</a></div></div>
+<div class="ttc" id="anamespaceapp_1_1main_html_a40bd7525f4634966cfa26850b5468ba3"><div class="ttname"><a href="namespaceapp_1_1main.html#a40bd7525f4634966cfa26850b5468ba3">app.main.oauth_list_providers</a></div><div class="ttdeci">oauth_list_providers(str flow=&quot;web&quot;)</div><div class="ttdef"><b>Definition</b> <a href="#l00111">main.py:111</a></div></div>
+<div class="ttc" id="anamespaceapp_1_1main_html_a51c8b718bf026d21f80e544443fed9b7"><div class="ttname"><a href="namespaceapp_1_1main.html#a51c8b718bf026d21f80e544443fed9b7">app.main.oauth_public_config</a></div><div class="ttdeci">oauth_public_config(str provider, str flow)</div><div class="ttdef"><b>Definition</b> <a href="#l00122">main.py:122</a></div></div>
+<div class="ttc" id="anamespaceapp_1_1main_html_a633b419d9ae85a95434625da682a3890"><div class="ttname"><a href="namespaceapp_1_1main.html#a633b419d9ae85a95434625da682a3890">app.main.oauth_callback</a></div><div class="ttdeci">oauth_callback(str provider, Optional[str] code=None, Optional[str] token=None, str state=&quot;&quot;, str flow=&quot;web&quot;, Session session=Depends(lambda:Session(engine)))</div><div class="ttdef"><b>Definition</b> <a href="#l00142">main.py:149</a></div></div>
+<div class="ttc" id="anamespaceapp_1_1main_html_a7766109be06158d145f0b1a0e229aca5"><div class="ttname"><a href="namespaceapp_1_1main.html#a7766109be06158d145f0b1a0e229aca5">app.main.get_client_ip</a></div><div class="ttdeci">str get_client_ip(Request request)</div><div class="ttdef"><b>Definition</b> <a href="#l00221">main.py:221</a></div></div>
+<div class="ttc" id="anamespaceapp_1_1main_html_ab0a77f1ada0e808c98e4f7bac6ed7b90"><div class="ttname"><a href="namespaceapp_1_1main.html#ab0a77f1ada0e808c98e4f7bac6ed7b90">app.main.health</a></div><div class="ttdeci">health()</div><div class="ttdef"><b>Definition</b> <a href="#l00231">main.py:231</a></div></div>
+<div class="ttc" id="anamespaceapp_1_1main_html_ad4afbc5612b8d0598dc4062a73c50763"><div class="ttname"><a href="namespaceapp_1_1main.html#ad4afbc5612b8d0598dc4062a73c50763">app.main.oauth_reload</a></div><div class="ttdeci">oauth_reload()</div><div class="ttdef"><b>Definition</b> <a href="#l00196">main.py:196</a></div></div>
+<div class="ttc" id="anamespaceapp_1_1oauth2_html"><div class="ttname"><a href="namespaceapp_1_1oauth2.html">app.oauth2</a></div><div class="ttdef"><b>Definition</b> <a href="oauth2_8py_source.html#l00001">oauth2.py:1</a></div></div>
+<div class="ttc" id="anamespaceapp_1_1oauth__handler_html"><div class="ttname"><a href="namespaceapp_1_1oauth__handler.html">app.oauth_handler</a></div><div class="ttdef"><b>Definition</b> <a href="oauth__handler_8py_source.html#l00001">oauth_handler.py:1</a></div></div>
+<div class="ttc" id="anamespaceapp_1_1oauth__models_html"><div class="ttname"><a href="namespaceapp_1_1oauth__models.html">app.oauth_models</a></div><div class="ttdef"><b>Definition</b> <a href="oauth__models_8py_source.html#l00001">oauth_models.py:1</a></div></div>
+<div class="ttc" id="anamespaceapp_1_1reaction_html"><div class="ttname"><a href="namespaceapp_1_1reaction.html">app.reaction</a></div><div class="ttdef"><b>Definition</b> <a href="reaction_8py_source.html#l00001">reaction.py:1</a></div></div>
+<div class="ttc" id="anamespaceapp_1_1routers_1_1areas_html"><div class="ttname"><a href="namespaceapp_1_1routers_1_1areas.html">app.routers.areas</a></div><div class="ttdef"><b>Definition</b> <a href="areas_8py_source.html#l00001">areas.py:1</a></div></div>
+<div class="ttc" id="anamespaceapp_1_1routers_1_1service__accounts_html"><div class="ttname"><a href="namespaceapp_1_1routers_1_1service__accounts.html">app.routers.service_accounts</a></div><div class="ttdef"><b>Definition</b> <a href="service__accounts_8py_source.html#l00001">service_accounts.py:1</a></div></div>
+<div class="ttc" id="anamespaceapp_1_1routers_1_1services_html"><div class="ttname"><a href="namespaceapp_1_1routers_1_1services.html">app.routers.services</a></div><div class="ttdef"><b>Definition</b> <a href="routers_2services_8py_source.html#l00001">routers/services.py:1</a></div></div>
+<div class="ttc" id="anamespaceapp_1_1send__email_html"><div class="ttname"><a href="namespaceapp_1_1send__email.html">app.send_email</a></div><div class="ttdef"><b>Definition</b> <a href="send__email_8py_source.html#l00001">send_email.py:1</a></div></div>
+<div class="ttc" id="anamespaceapp_1_1user__action_html"><div class="ttname"><a href="namespaceapp_1_1user__action.html">app.user_action</a></div><div class="ttdef"><b>Definition</b> <a href="user__action_8py_source.html#l00001">user_action.py:1</a></div></div>
+<div class="ttc" id="anamespaceapp_1_1user__reaction_html"><div class="ttname"><a href="namespaceapp_1_1user__reaction.html">app.user_reaction</a></div><div class="ttdef"><b>Definition</b> <a href="user__reaction_8py_source.html#l00001">user_reaction.py:1</a></div></div>
+<div class="ttc" id="anamespaceapp_1_1user_html"><div class="ttname"><a href="namespaceapp_1_1user.html">app.user</a></div><div class="ttdef"><b>Definition</b> <a href="user_8py_source.html#l00001">user.py:1</a></div></div>
 </div><!-- fragment --></div><!-- contents -->
 </div><!-- doc-content -->
 <!-- start footer part -->

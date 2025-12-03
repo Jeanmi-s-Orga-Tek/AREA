@@ -1,4 +1,19 @@
 var searchData=
 [
-  ['vite_2econfig_2ets_0',['vite.config.ts',['../vite_8config_8ts.html',1,'']]]
+  ['schemas_2fservices_2epy_0',['services.py',['../schemas_2services_8py.html',1,'']]],
+  ['search_2ejs_1',['search.js',['../search_8js.html',1,'']]],
+  ['searchdata_2ejs_2',['searchdata.js',['../searchdata_8js.html',1,'']]],
+  ['send_5f_5femail_5f8py_2ejs_3',['send__email_8py.js',['../send____email__8py_8js.html',1,'']]],
+  ['send_5femail_2epy_4',['send_email.py',['../send__email_8py.html',1,'']]],
+  ['send_5fmessage_2eyaml_5',['send_message.yaml',['../send__message_8yaml.html',1,'']]],
+  ['send_5fteams_5fmessage_2eyaml_6',['send_teams_message.yaml',['../send__teams__message_8yaml.html',1,'']]],
+  ['serverscreen_2etsx_7',['ServerScreen.tsx',['../ServerScreen_8tsx.html',1,'']]],
+  ['service_5faccounts_2epy_8',['service_accounts.py',['../service__accounts_8py.html',1,'']]],
+  ['service_5fmanager_2epy_9',['service_manager.py',['../service__manager_8py.html',1,'']]],
+  ['servicesscreen_2etsx_10',['ServicesScreen.tsx',['../ServicesScreen_8tsx.html',1,'']]],
+  ['settings_2epy_11',['settings.py',['../settings_8py.html',1,'']]],
+  ['src_5f2app_5f8tsx_2ejs_12',['src_2App_8tsx.js',['../src__2App__8tsx_8js.html',1,'']]],
+  ['src_5f2screens_5f2aboutscreen_5f8tsx_2ejs_13',['src_2screens_2AboutScreen_8tsx.js',['../src__2screens__2AboutScreen__8tsx_8js.html',1,'']]],
+  ['src_5f2screens_5f2serverscreen_5f8tsx_2ejs_14',['src_2screens_2ServerScreen_8tsx.js',['../src__2screens__2ServerScreen__8tsx_8js.html',1,'']]],
+  ['src_5f2services_5f2api_5f8ts_2ejs_15',['src_2services_2api_8ts.js',['../src__2services__2api__8ts_8js.html',1,'']]]
 ];

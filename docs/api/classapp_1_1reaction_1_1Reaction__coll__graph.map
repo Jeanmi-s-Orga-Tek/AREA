@@ -1,0 +1,13 @@
+<map id="app.reaction.Reaction" name="app.reaction.Reaction">
+<area shape="rect" id="Node000001" title=" " alt="" coords="149,321,289,391"/>
+<area shape="rect" id="Node000002" href="$classapp_1_1reaction_1_1BaseReaction.html" title=" " alt="" coords="5,203,175,272"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="140,280,184,319,180,323,137,284"/>
+<area shape="rect" id="Node000003" title=" " alt="" coords="8,5,81,75"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="58,89,85,202,80,203,53,90"/>
+<area shape="rect" id="Node000004" title=" " alt="" coords="106,5,167,75"/>
+<area shape="poly" id="edge3_Node000002_Node000004" title=" " alt="" coords="131,75,105,187,99,185,126,74"/>
+<area shape="rect" id="Node000005" title=" " alt="" coords="199,203,240,272"/>
+<area shape="poly" id="edge4_Node000001_Node000005" title=" " alt="" coords="222,287,222,322,217,322,217,287"/>
+<area shape="rect" id="Node000006" title=" " alt="" coords="264,203,303,272"/>
+<area shape="poly" id="edge5_Node000001_Node000006" title=" " alt="" coords="260,286,240,323,235,320,255,284"/>
+</map>

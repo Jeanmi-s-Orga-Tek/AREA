@@ -1,0 +1,10 @@
+<map id="app.db.load_yaml_file" name="app.db.load_yaml_file">
+<area shape="rect" id="Node000001" title=" " alt="" coords="417,43,564,69"/>
+<area shape="rect" id="Node000002" href="$namespaceapp_1_1db.html#ab12542aa44f427b1a984f07830f87f3f" title=" " alt="" coords="220,5,366,48"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="401,45,365,40,366,35,402,40"/>
+<area shape="rect" id="Node000004" href="$namespaceapp_1_1db.html#ade2912944889dca3157bec33dd13352f" title=" " alt="" coords="217,72,369,99"/>
+<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="402,72,370,77,369,71,401,67"/>
+<area shape="rect" id="Node000003" href="$namespaceapp_1_1db.html#ac8810a496f6c3ecc6275f5c0f02c64e7" title=" " alt="" coords="5,43,169,69"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="205,42,169,47,169,42,205,37"/>
+<area shape="poly" id="edge4_Node000004_Node000003" title=" " alt="" coords="201,75,169,70,170,65,202,70"/>
+</map>

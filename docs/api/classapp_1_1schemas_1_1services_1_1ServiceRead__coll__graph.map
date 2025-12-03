@@ -1,0 +1,7 @@
+<map id="app.schemas.services.ServiceRead" name="app.schemas.services.ServiceRead">
+<area shape="rect" id="Node000001" title=" " alt="" coords="5,139,228,208"/>
+<area shape="rect" id="Node000002" title=" " alt="" coords="35,5,108,75"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="90,88,108,138,103,140,85,90"/>
+<area shape="rect" id="Node000003" title=" " alt="" coords="133,5,194,75"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="154,76,137,124,132,122,149,74"/>
+</map>

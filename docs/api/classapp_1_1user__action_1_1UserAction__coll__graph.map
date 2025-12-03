@@ -1,0 +1,11 @@
+<map id="app.user_action.UserAction" name="app.user_action.UserAction">
+<area shape="rect" id="Node000001" title=" " alt="" coords="69,203,242,272"/>
+<area shape="rect" id="Node000002" title=" " alt="" coords="5,5,79,75"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="71,86,138,201,134,204,66,89"/>
+<area shape="rect" id="Node000003" title=" " alt="" coords="103,5,144,75"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="134,89,153,202,147,203,129,90"/>
+<area shape="rect" id="Node000004" title=" " alt="" coords="168,5,207,75"/>
+<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="182,90,163,203,158,202,177,89"/>
+<area shape="rect" id="Node000005" title=" " alt="" coords="231,5,293,75"/>
+<area shape="poly" id="edge4_Node000001_Node000005" title=" " alt="" coords="248,76,192,180,187,189,182,187,188,177,243,73"/>
+</map>

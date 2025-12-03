@@ -100,20 +100,20 @@ $(function(){initNavTree('send__email_8py_source.html',''); initResizable(true);
   <div class="headertitle"><div class="title">send_email.py</div></div>
 </div><!--header-->
 <div class="contents">
-<a href="send__email_8py.html">Go to the documentation of this file.</a><div class="fragment"><div class="line"><a id="l00001" name="l00001"></a><span class="lineno"><a class="line" href="namespacesend__email.html">    1</a></span><span class="keyword">import</span> os</div>
+<a href="send__email_8py.html">Go to the documentation of this file.</a><div class="fragment"><div class="line"><a id="l00001" name="l00001"></a><span class="lineno"><a class="line" href="namespaceapp_1_1send__email.html">    1</a></span><span class="keyword">import</span> os</div>
 <div class="line"><a id="l00002" name="l00002"></a><span class="lineno">    2</span><span class="keyword">import</span> smtplib</div>
 <div class="line"><a id="l00003" name="l00003"></a><span class="lineno">    3</span><span class="keyword">import</span> ssl</div>
 <div class="line"><a id="l00004" name="l00004"></a><span class="lineno">    4</span> </div>
-<div class="line"><a id="l00005" name="l00005"></a><span class="lineno"><a class="line" href="namespacesend__email.html#a2a3f41bd44af6daae097b590797b0902">    5</a></span>SMTP_SERVER = str(os.environ.get(<span class="stringliteral">&quot;SMTP_SERVER&quot;</span>))</div>
-<div class="line"><a id="l00006" name="l00006"></a><span class="lineno"><a class="line" href="namespacesend__email.html#a3b1f34fcee797a848e4063b9ed0bf6c3">    6</a></span>smtp_port_str = os.environ.get(<span class="stringliteral">&quot;SMTP_PORT&quot;</span>)</div>
+<div class="line"><a id="l00005" name="l00005"></a><span class="lineno"><a class="line" href="namespaceapp_1_1send__email.html#a53a5f35548dc82e9f8f63e6c5fccee19">    5</a></span>SMTP_SERVER = str(os.environ.get(<span class="stringliteral">&quot;SMTP_SERVER&quot;</span>))</div>
+<div class="line"><a id="l00006" name="l00006"></a><span class="lineno"><a class="line" href="namespaceapp_1_1send__email.html#adfcf0fbac308e04d32e78a4ef479865a">    6</a></span>smtp_port_str = os.environ.get(<span class="stringliteral">&quot;SMTP_PORT&quot;</span>)</div>
 <div class="line"><a id="l00007" name="l00007"></a><span class="lineno">    7</span><span class="keywordflow">if</span> smtp_port_str <span class="keywordflow">is</span> <span class="keywordtype">None</span>:</div>
 <div class="line"><a id="l00008" name="l00008"></a><span class="lineno">    8</span>    <span class="keywordflow">raise</span> ValueError(<span class="stringliteral">&quot;SMTP_PORT environment variable is not set&quot;</span>)</div>
-<div class="line"><a id="l00009" name="l00009"></a><span class="lineno"><a class="line" href="namespacesend__email.html#ac0be5d8e834d99a9ea9b54a8dda0bdae">    9</a></span>SMTP_PORT = int(smtp_port_str)</div>
-<div class="line"><a id="l00010" name="l00010"></a><span class="lineno"><a class="line" href="namespacesend__email.html#a974b0a02898bf215c05af7dafeff11d1">   10</a></span>EMAIL_USERNAME = str(os.environ.get(<span class="stringliteral">&quot;EMAIL_USERNAME&quot;</span>))</div>
-<div class="line"><a id="l00011" name="l00011"></a><span class="lineno"><a class="line" href="namespacesend__email.html#a94d1749e625a742d5826f393522bf1fd">   11</a></span>EMAIL_PASSWORD = str(os.environ.get(<span class="stringliteral">&quot;EMAIL_PASSWORD&quot;</span>))</div>
+<div class="line"><a id="l00009" name="l00009"></a><span class="lineno"><a class="line" href="namespaceapp_1_1send__email.html#a5c6381c5a4a04d758d469c1a53014eb4">    9</a></span>SMTP_PORT = int(smtp_port_str)</div>
+<div class="line"><a id="l00010" name="l00010"></a><span class="lineno"><a class="line" href="namespaceapp_1_1send__email.html#a0816af81e40fa1ef92fc89ea7df5522d">   10</a></span>EMAIL_USERNAME = str(os.environ.get(<span class="stringliteral">&quot;EMAIL_USERNAME&quot;</span>))</div>
+<div class="line"><a id="l00011" name="l00011"></a><span class="lineno"><a class="line" href="namespaceapp_1_1send__email.html#aa5c3a2e912ca130d6deb02995db692c4">   11</a></span>EMAIL_PASSWORD = str(os.environ.get(<span class="stringliteral">&quot;EMAIL_PASSWORD&quot;</span>))</div>
 <div class="line"><a id="l00012" name="l00012"></a><span class="lineno">   12</span> </div>
 <div class="foldopen" id="foldopen00013" data-start="" data-end="">
-<div class="line"><a id="l00013" name="l00013"></a><span class="lineno"><a class="line" href="namespacesend__email.html#a487dc17107d25b39680c6e489b330978">   13</a></span><span class="keyword">def </span>send_email(subject: str, to_email: str, content: str):</div>
+<div class="line"><a id="l00013" name="l00013"></a><span class="lineno"><a class="line" href="namespaceapp_1_1send__email.html#a3d8342d33d51462b42d81be5448ed36b">   13</a></span><span class="keyword">def </span>send_email(subject: str, to_email: str, content: str):</div>
 <div class="line"><a id="l00014" name="l00014"></a><span class="lineno">   14</span>    ssl_context = ssl.create_default_context()</div>
 <div class="line"><a id="l00015" name="l00015"></a><span class="lineno">   15</span>    server = smtplib.SMTP_SSL(SMTP_SERVER, SMTP_PORT, context=ssl_context)</div>
 <div class="line"><a id="l00016" name="l00016"></a><span class="lineno">   16</span>    server.login(EMAIL_USERNAME, EMAIL_PASSWORD)</div>

@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['baseuser_0',['BaseUser',['../classuser_1_1BaseUser.html',1,'user']]]
+  ['3_20install_20dependencies_20local_0',['3. Install dependencies (local)',['../index.html#autotoc_md9',1,'']]]
 ];

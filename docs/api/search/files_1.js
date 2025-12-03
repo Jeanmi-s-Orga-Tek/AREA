@@ -1,5 +1,24 @@
 var searchData=
 [
-  ['clipboard_2ejs_0',['clipboard.js',['../clipboard_8js.html',1,'']]],
-  ['cookie_2ejs_1',['cookie.js',['../cookie_8js.html',1,'']]]
+  ['card_5fdue_5fsoon_2eyaml_0',['card_due_soon.yaml',['../card__due__soon_8yaml.html',1,'']]],
+  ['card_5fmoved_2eyaml_1',['card_moved.yaml',['../card__moved_8yaml.html',1,'']]],
+  ['classes_5f0_2ejs_2',['classes_0.js',['../classes__0_8js.html',1,'']]],
+  ['classes_5f1_2ejs_3',['classes_1.js',['../classes__1_8js.html',1,'']]],
+  ['classes_5f2_2ejs_4',['classes_2.js',['../classes__2_8js.html',1,'']]],
+  ['classes_5f3_2ejs_5',['classes_3.js',['../classes__3_8js.html',1,'']]],
+  ['classes_5f4_2ejs_6',['classes_4.js',['../classes__4_8js.html',1,'']]],
+  ['classes_5f5_2ejs_7',['classes_5.js',['../classes__5_8js.html',1,'']]],
+  ['classes_5f6_2ejs_8',['classes_6.js',['../classes__6_8js.html',1,'']]],
+  ['classuser_5f1_5f1baseuser_2ejs_9',['classuser_1_1BaseUser.js',['../classuser__1__1BaseUser_8js.html',1,'']]],
+  ['classuser_5f1_5f1oauth2passwordbearerwithcookie_2ejs_10',['classuser_1_1OAuth2PasswordBearerWithCookie.js',['../classuser__1__1OAuth2PasswordBearerWithCookie_8js.html',1,'']]],
+  ['classuser_5f1_5f1user_2ejs_11',['classuser_1_1User.js',['../classuser__1__1User_8js.html',1,'']]],
+  ['clipboard_2ejs_12',['clipboard.js',['../clipboard_8js.html',1,'']]],
+  ['cookie_2ejs_13',['cookie.js',['../cookie_8js.html',1,'']]],
+  ['create_5fbranch_2eyaml_14',['create_branch.yaml',['../create__branch_8yaml.html',1,'']]],
+  ['create_5fcard_2eyaml_15',['create_card.yaml',['../create__card_8yaml.html',1,'']]],
+  ['create_5fchannel_2eyaml_16',['create_channel.yaml',['../create__channel_8yaml.html',1,'']]],
+  ['create_5fevent_2eyaml_17',['create_event.yaml',['../create__event_8yaml.html',1,'']]],
+  ['create_5ffolder_2eyaml_18',['create_folder.yaml',['../create__folder_8yaml.html',1,'']]],
+  ['create_5fissue_2eyaml_19',['create_issue.yaml',['../create__issue_8yaml.html',1,'']]],
+  ['createareascreen_2etsx_20',['CreateAreaScreen.tsx',['../CreateAreaScreen_8tsx.html',1,'']]]
 ];

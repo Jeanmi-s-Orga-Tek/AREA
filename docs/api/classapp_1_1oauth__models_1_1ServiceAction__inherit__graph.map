@@ -1,0 +1,9 @@
+<map id="app.oauth_models.ServiceAction" name="app.oauth_models.ServiceAction">
+<area shape="rect" id="Node000001" title=" " alt="" coords="40,123,207,315"/>
+<area shape="rect" id="Node000002" title=" " alt="" coords="5,5,79,75"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="66,87,82,122,77,124,61,89"/>
+<area shape="rect" id="Node000003" title=" " alt="" coords="103,5,144,75"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="126,90,126,123,121,123,121,90"/>
+<area shape="rect" id="Node000004" title=" " alt="" coords="168,5,207,75"/>
+<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="173,90,160,124,155,122,168,88"/>
+</map>

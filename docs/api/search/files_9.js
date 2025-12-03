@@ -1,5 +1,21 @@
 var searchData=
 [
-  ['readme_2emd_0',['README.md',['../README_8md.html',1,'']]],
-  ['resize_2ejs_1',['resize.js',['../resize_8js.html',1,'']]]
+  ['namespaces_5f0_2ejs_0',['namespaces_0.js',['../namespaces__0_8js.html',1,'']]],
+  ['namespaces_5f1_2ejs_1',['namespaces_1.js',['../namespaces__1_8js.html',1,'']]],
+  ['namespaces_5f2_2ejs_2',['namespaces_2.js',['../namespaces__2_8js.html',1,'']]],
+  ['namespaces_5f3_2ejs_3',['namespaces_3.js',['../namespaces__3_8js.html',1,'']]],
+  ['namespaces_5fdup_2ejs_4',['namespaces_dup.js',['../namespaces__dup_8js.html',1,'']]],
+  ['namespaceuser_2ejs_5',['namespaceuser.js',['../namespaceuser_8js.html',1,'']]],
+  ['navtree_2ejs_6',['navtree.js',['../navtree_8js.html',1,'']]],
+  ['navtreedata_2ejs_7',['navtreedata.js',['../navtreedata_8js.html',1,'']]],
+  ['navtreeindex0_2ejs_8',['navtreeindex0.js',['../navtreeindex0_8js.html',1,'']]],
+  ['new_5fcalendar_5fevent_2eyaml_9',['new_calendar_event.yaml',['../new__calendar__event_8yaml.html',1,'']]],
+  ['new_5fcard_2eyaml_10',['new_card.yaml',['../new__card_8yaml.html',1,'']]],
+  ['new_5fchannel_5fupload_2eyaml_11',['new_channel_upload.yaml',['../new__channel__upload_8yaml.html',1,'']]],
+  ['new_5fcommit_2eyaml_12',['new_commit.yaml',['../new__commit_8yaml.html',1,'']]],
+  ['new_5ffile_2eyaml_13',['new_file.yaml',['../new__file_8yaml.html',1,'']]],
+  ['new_5fissue_2eyaml_14',['new_issue.yaml',['../new__issue_8yaml.html',1,'']]],
+  ['new_5fmessage_2eyaml_15',['new_message.yaml',['../new__message_8yaml.html',1,'']]],
+  ['new_5fpull_5frequest_2eyaml_16',['new_pull_request.yaml',['../new__pull__request_8yaml.html',1,'']]],
+  ['new_5fstar_2eyaml_17',['new_star.yaml',['../new__star_8yaml.html',1,'']]]
 ];

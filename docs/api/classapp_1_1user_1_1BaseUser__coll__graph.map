@@ -1,0 +1,7 @@
+<map id="app.user.BaseUser" name="app.user.BaseUser">
+<area shape="rect" id="Node000001" title=" " alt="" coords="25,139,150,208"/>
+<area shape="rect" id="Node000002" title=" " alt="" coords="5,5,79,75"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="61,88,78,138,73,140,56,90"/>
+<area shape="rect" id="Node000003" title=" " alt="" coords="103,5,165,75"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="125,76,107,124,102,122,120,74"/>
+</map>

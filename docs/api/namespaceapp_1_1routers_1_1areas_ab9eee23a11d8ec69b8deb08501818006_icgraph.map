@@ -1,0 +1,7 @@
+<map id="app.routers.areas.require_area" name="app.routers.areas.require_area">
+<area shape="rect" id="Node000001" title=" " alt="" coords="247,31,444,57"/>
+<area shape="rect" id="Node000002" href="$namespaceapp_1_1routers_1_1areas.html#a4a6f99c95c2c334c6ffd23ab58785732" title=" " alt="" coords="5,5,199,32"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="231,35,199,31,199,26,231,29"/>
+<area shape="rect" id="Node000003" href="$namespaceapp_1_1routers_1_1areas.html#a062a90cb0ced5f8b45fdd3f91bf79fdc" title=" " alt="" coords="5,56,199,83"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="231,59,199,62,199,57,231,53"/>
+</map>

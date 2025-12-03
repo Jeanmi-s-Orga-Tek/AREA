@@ -1,5 +1,21 @@
 var searchData=
 [
-  ['verify_5fpassword_0',['verify_password',['../namespaceuser.html#a4151aab302cbbb9fa0ee5101861d8f6c',1,'user']]],
-  ['verify_5ftoken_1',['verify_token',['../namespaceuser.html#a9b16189495bd3dca8a19ea94cc255064',1,'user']]]
+  ['generate_5foauth_5fstate_0',['generate_oauth_state',['../namespaceapp_1_1oauth__handler.html#a12ff2c078ce3674732086f84a4121fb2',1,'app::oauth_handler']]],
+  ['get_5fauth_5furl_1',['get_auth_url',['../namespaceapp_1_1core_1_1oauth__config.html#aa93831d0bf6d5ad90cbcdc949e3165b2',1,'app::core::oauth_config']]],
+  ['get_5fclient_5fip_2',['get_client_ip',['../namespaceapp_1_1main.html#a7766109be06158d145f0b1a0e229aca5',1,'app::main']]],
+  ['get_5fme_3',['get_me',['../namespaceapp_1_1user.html#ae05515e0112b4f50a17b6581c83ed7f8',1,'app::user']]],
+  ['get_5fmy_5fconnected_5fservices_4',['get_my_connected_services',['../namespaceapp_1_1routers_1_1service__accounts.html#a6124bb42f30ffe01d393db7701f17a3f',1,'app::routers::service_accounts']]],
+  ['get_5fmy_5foauth_5fconnections_5',['get_my_oauth_connections',['../namespaceapp_1_1routers_1_1service__accounts.html#a4d26971d3cd72cfca9a26811b4fc8c75',1,'app::routers::service_accounts']]],
+  ['get_5fmy_5fservices_6',['get_my_services',['../namespaceapp_1_1routers_1_1services.html#aca94c6c1ff57633df984f06e7f93b0d5',1,'app::routers::services']]],
+  ['get_5fpassword_5fhash_7',['get_password_hash',['../namespaceapp_1_1oauth2.html#aa0560f178dd7f3458286104d4da1a61e',1,'app::oauth2']]],
+  ['get_5fservice_5faccount_8',['get_service_account',['../namespaceapp_1_1service__manager.html#a910691e5ac56c6aeccac1a8961df7020',1,'app::service_manager']]],
+  ['get_5fservice_5fby_5fname_9',['get_service_by_name',['../namespaceapp_1_1service__manager.html#a6fcd7e9490d972e6e58803f7f60a7c50',1,'app::service_manager']]],
+  ['get_5fservice_5fcapabilities_10',['get_service_capabilities',['../namespaceapp_1_1routers_1_1services.html#a2f940dae03f679d8a1a1723e271e063b',1,'app::routers::services']]],
+  ['get_5fsession_11',['get_session',['../namespaceapp_1_1db.html#a7d68db4b3014cc6380ca063e40edbc5e',1,'app::db']]],
+  ['get_5fuser_5ffrom_5ftoken_12',['get_user_from_token',['../namespaceapp_1_1user.html#a024c46764f72847e812791a752177aaa',1,'app::user']]],
+  ['get_5fuser_5finfo_5ffrom_5fprovider_13',['get_user_info_from_provider',['../namespaceapp_1_1oauth__handler.html#a6a10426c57a38388cb0690b87b5850b3',1,'app::oauth_handler']]],
+  ['get_5fuser_5fservice_5faccounts_14',['get_user_service_accounts',['../namespaceapp_1_1service__manager.html#a746736b157c4d891b921b4d5e1800a4d',1,'app::service_manager']]],
+  ['get_5fvalid_5foauth_5fconnection_5ftoken_15',['get_valid_oauth_connection_token',['../namespaceapp_1_1token__refresh.html#ab73dd7999416d630c4aea18846cd4185',1,'app::token_refresh']]],
+  ['get_5fvalid_5fservice_5faccount_5ftoken_16',['get_valid_service_account_token',['../namespaceapp_1_1token__refresh.html#a72136ce674b4be3cc25f028fcd44d299',1,'app::token_refresh']]],
+  ['get_5fvalid_5ftoken_17',['get_valid_token',['../namespaceapp_1_1service__manager.html#adc4c3798af3227f2da215d22edb9746b',1,'app::service_manager']]]
 ];

@@ -1,5 +1,4 @@
 var searchData=
 [
-  ['tags_5fmetadata_0',['tags_metadata',['../namespacemain.html#ab6662d718dfdc08e2587d726aa2a1f31',1,'main']]],
-  ['templates_1',['templates',['../namespacemain.html#ab3f1d2aacf75deea81eef0821253a06a',1,'main']]]
+  ['justifycontent_0',['justifyContent',['../OAuthCallbackScreen_8tsx.html#afc1eccac961c8e3525f89ae3180dab40',1,'OAuthCallbackScreen.tsx']]]
 ];

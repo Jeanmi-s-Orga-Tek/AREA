@@ -1,13 +1,3 @@
 <map id="Graphical Class Hierarchy" name="Graphical Class Hierarchy">
-<area shape="rect" id="Node000000" title=" " alt="" coords="165,5,214,32"/>
-<area shape="rect" id="Node000001" href="$classuser_1_1User.html" title=" " alt="" coords="325,56,403,83"/>
-<area shape="poly" id="edge5_Node000000_Node000001" title=" " alt="" coords="230,27,325,56,324,61,229,33"/>
-<area shape="rect" id="Node000002" title=" " alt="" coords="166,56,214,83"/>
-<area shape="poly" id="edge6_Node000002_Node000001" title=" " alt="" coords="229,67,325,67,325,72,229,72"/>
-<area shape="rect" id="Node000005" title=" " alt="" coords="5,107,88,133"/>
-<area shape="rect" id="Node000003" href="$classuser_1_1BaseUser.html" title=" " alt="" coords="136,107,244,133"/>
-<area shape="poly" id="edge7_Node000005_Node000003" title=" " alt="" coords="103,117,135,117,135,123,103,123"/>
-<area shape="poly" id="edge9_Node000003_Node000001" title=" " alt="" coords="252,99,324,78,326,83,254,104"/>
-<area shape="rect" id="Node000004" href="$classuser_1_1RegisteringUser.html" title=" " alt="" coords="292,107,436,133"/>
-<area shape="poly" id="edge8_Node000003_Node000004" title=" " alt="" coords="260,117,292,117,292,123,260,123"/>
+<area shape="rect" id="Node000000" href="$classapp_1_1core_1_1oauth__config_1_1WebOAuthConfig.html" title=" " alt="" coords="5,5,185,48"/>
 </map>

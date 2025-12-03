@@ -1,13 +1,13 @@
 var searchData=
 [
-  ['p_2fsrc_2fapp_2etsx_0',['App.tsx',['../p_2src_2App_8tsx.html',1,'']]],
-  ['p_2fsrc_2fscreens_2faboutscreen_2etsx_1',['AboutScreen.tsx',['../p_2src_2screens_2AboutScreen_8tsx.html',1,'']]],
-  ['p_2fsrc_2fscreens_2fcreateareascreen_2etsx_2',['CreateAreaScreen.tsx',['../p_2src_2screens_2CreateAreaScreen_8tsx.html',1,'']]],
-  ['p_2fsrc_2fscreens_2floginscreen_2etsx_3',['LoginScreen.tsx',['../p_2src_2screens_2LoginScreen_8tsx.html',1,'']]],
-  ['p_2fsrc_2fscreens_2fserverscreen_2etsx_4',['ServerScreen.tsx',['../p_2src_2screens_2ServerScreen_8tsx.html',1,'']]],
-  ['p_2fsrc_2fservices_2fapi_2ets_5',['api.ts',['../p_2src_2services_2api_8ts.html',1,'']]],
-  ['p_2fsrc_2fservices_2fauth_2ets_6',['auth.ts',['../p_2src_2services_2auth_8ts.html',1,'']]],
-  ['package_2dlock_2ejson_7',['package-lock.json',['../package-lock_8json.html',1,'']]],
-  ['package_2ejson_8',['package.json',['../package_8json.html',1,'']]],
-  ['pages_5f0_2ejs_9',['pages_0.js',['../pages__0_8js.html',1,'']]]
+  ['main_2epy_0',['main.py',['../main_8py.html',1,'']]],
+  ['main_2etsx_1',['main.tsx',['../main_8tsx.html',1,'']]],
+  ['main_5f8py_2ejs_2',['main_8py.js',['../main__8py_8js.html',1,'']]],
+  ['main_5f8tsx_2ejs_3',['main_8tsx.js',['../main__8tsx_8js.html',1,'']]],
+  ['menu_2ejs_4',['menu.js',['../menu_8js.html',1,'']]],
+  ['menudata_2ejs_5',['menudata.js',['../menudata_8js.html',1,'']]],
+  ['microsoft_2eyaml_6',['Microsoft.yaml',['../Microsoft_8yaml.html',1,'']]],
+  ['microsoft_2fnew_5femail_2eyaml_7',['new_email.yaml',['../Microsoft_2new__email_8yaml.html',1,'']]],
+  ['microsoft_2fsend_5femail_2eyaml_8',['send_email.yaml',['../Microsoft_2send__email_8yaml.html',1,'']]],
+  ['move_5fcard_2eyaml_9',['move_card.yaml',['../move__card_8yaml.html',1,'']]]
 ];

@@ -1,24 +1,4 @@
 var searchData=
 [
-  ['about_5furl_0',['ABOUT_URL',['../src_2services_2api_8ts.html#a89e982870bea3564c3fd541eedda81d9',1,'api.ts']]],
-  ['aboutaction_1',['AboutAction',['../src_2services_2api_8ts.html#abe781a0013b97807cbcdd2bee5841c0b',1,'api.ts']]],
-  ['aboutclient_2',['AboutClient',['../src_2services_2api_8ts.html#aa0fd64a4c8bb794951014c4189e27380',1,'api.ts']]],
-  ['aboutreaction_3',['AboutReaction',['../src_2services_2api_8ts.html#abf637f0516053dd8b1239bc369f63999',1,'api.ts']]],
-  ['aboutresponse_4',['AboutResponse',['../src_2services_2api_8ts.html#a298b7892ded309eec08992d5f15d58f2',1,'api.ts']]],
-  ['aboutscreen_5',['AboutScreen',['../src_2App_8tsx.html#a6310ddd0f573f1d449bbec6581bfb05b',1,'AboutScreen:&#160;App.tsx'],['../src_2screens_2AboutScreen_8tsx.html#a6310ddd0f573f1d449bbec6581bfb05b',1,'AboutScreen:&#160;AboutScreen.tsx']]],
-  ['aboutserver_6',['AboutServer',['../src_2services_2api_8ts.html#a106e594bed13bee6fe91d4ce153ed538',1,'api.ts']]],
-  ['aboutservice_7',['AboutService',['../src_2services_2api_8ts.html#af593c8e9579968b97326fbbc38ddb7c2',1,'api.ts']]],
-  ['access_5ftoken_5fexpire_5fminutes_8',['ACCESS_TOKEN_EXPIRE_MINUTES',['../namespaceuser.html#a034da647dd4213aacee9d7348a05b9b1',1,'user']]],
-  ['algorithm_9',['ALGORITHM',['../namespaceuser.html#a089538aa5be1a804cc6c28d7ca95e864',1,'user']]],
-  ['all_5f0_2ejs_10',['all_0.js',['../all__0_8js.html',1,'']]],
-  ['all_5f1_2ejs_11',['all_1.js',['../all__1_8js.html',1,'']]],
-  ['allow_5fcredentials_12',['allow_credentials',['../namespacemain.html#a723efd63c798243e87a130a80fcdafc0',1,'main']]],
-  ['allow_5fheaders_13',['allow_headers',['../namespacemain.html#ab58bda9b3875379c76aa7d3bd977b5bd',1,'main']]],
-  ['allow_5fmethods_14',['allow_methods',['../namespacemain.html#a1b7923d71410345d3dbff8017b7e6f0d',1,'main']]],
-  ['allow_5forigins_15',['allow_origins',['../namespacemain.html#ab277227e15a80c8a674b8540cc01f33f',1,'main']]],
-  ['app_16',['App',['../src_2App_8tsx.html#a690f095bb8406aa8956b250c0ff7f2d7',1,'App:&#160;App.tsx'],['../main_8tsx.html#ae00ecbae69e5fdd2da4bce4c56bde9b8',1,'App:&#160;main.tsx']]],
-  ['app_17',['app',['../namespacemain.html#a5fa94f0581009434c7a63791944d6ff4',1,'main']]],
-  ['area_18',['AREA',['../index.html',1,'']]],
-  ['auth_5fuser_19',['auth_user',['../namespaceuser.html#a9f7240c8894b08eb18b7ad1037ede880',1,'user']]],
-  ['auto_5ferror_20',['auto_error',['../classuser_1_1OAuth2PasswordBearerWithCookie.html#a15620c2d4d063a98ba8b0a76c6ff5025',1,'user::OAuth2PasswordBearerWithCookie']]]
+  ['2_20environment_20variables_0',['2. Environment variables',['../index.html#autotoc_md8',1,'']]]
 ];

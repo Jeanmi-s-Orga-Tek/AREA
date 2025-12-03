@@ -1,7 +1,13 @@
 var searchData=
 [
-  ['id_0',['id',['../classuser_1_1BaseUser.html#a50d95eeb33d73fb600a3feaf7094c6fc',1,'user::BaseUser']]],
-  ['image_1',['image',['../classuser_1_1User.html#aac4c0bd0a961399ebd2a1b4351f904b1',1,'user::User']]],
-  ['import_2',['import',['../main_8tsx.html#a59be084da8908b7d77ff34b25cd84488',1,'import:&#160;main.tsx'],['../src_2screens_2AboutScreen_8tsx.html#a953be46b94f595d839e88a6d3d270309',1,'import:&#160;AboutScreen.tsx'],['../vite_8config_8ts.html#a59be084da8908b7d77ff34b25cd84488',1,'import:&#160;vite.config.ts']]],
-  ['investor_5fid_3',['investor_id',['../classuser_1_1BaseUser.html#a9480d0440855262341708753787142a5',1,'user::BaseUser']]]
+  ['email_0',['email',['../classapp_1_1user_1_1BaseUser.html#a158e7bcc9e69cf662ae4b8e6c7a5f5d0',1,'app::user::BaseUser']]],
+  ['email_5fpassword_1',['EMAIL_PASSWORD',['../namespaceapp_1_1send__email.html#aa5c3a2e912ca130d6deb02995db692c4',1,'app::send_email']]],
+  ['email_5fusername_2',['EMAIL_USERNAME',['../namespaceapp_1_1send__email.html#a0816af81e40fa1ef92fc89ea7df5522d',1,'app::send_email']]],
+  ['engine_3',['engine',['../namespaceapp_1_1db.html#afb29abb3cec1a87814d87d69e914a960',1,'app::db']]],
+  ['env_5ffile_4',['env_file',['../classapp_1_1core_1_1settings_1_1Settings_1_1Config.html#aaff0acc790acfe7834be28f91eb27400',1,'app::core::settings::Settings::Config']]],
+  ['error_5fcount_5',['error_count',['../classapp_1_1oauth__models_1_1ServiceAccount.html#a8939de6dbda557e31736bde5ff44ea3f',1,'app::oauth_models::ServiceAccount']]],
+  ['erroricon_6',['errorIcon',['../OAuthCallbackScreen_8tsx.html#a364830ebf5b8015f171fcc805a852542',1,'OAuthCallbackScreen.tsx']]],
+  ['errormessage_7',['errorMessage',['../OAuthCallbackScreen_8tsx.html#a929e51e6449f66de69d6718e5b6d2a5e',1,'OAuthCallbackScreen.tsx']]],
+  ['expires_5fat_8',['expires_at',['../classapp_1_1oauth__models_1_1OAuthConnection.html#af83565b3a644b9484e19c8efeca42597',1,'app.oauth_models.OAuthConnection.expires_at'],['../classapp_1_1oauth__models_1_1ServiceAccount.html#a29cf3de316d82356b24476e39bbb706c',1,'app.oauth_models.ServiceAccount.expires_at']]],
+  ['extra_5fdata_9',['extra_data',['../classapp_1_1oauth__models_1_1ServiceAccount.html#a236aa4aae71fea3a4f3a7e60ba4720cb',1,'app::oauth_models::ServiceAccount']]]
 ];

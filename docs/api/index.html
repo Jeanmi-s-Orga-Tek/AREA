@@ -5,7 +5,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=11"/>
 <meta name="generator" content="Doxygen 1.12.0"/>
 <meta name="viewport" content="width=device-width, initial-scale=1"/>
-<title>AREA: AREA</title>
+<title>AREA: ACTION-REACTION (AREA)</title>
 <link href="tabs.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="jquery.js"></script>
 <script type="text/javascript" src="dynsections.js"></script>
@@ -97,10 +97,145 @@ $(function(){initNavTree('index.html',''); initResizable(true); });
 </div>
 
 <div><div class="header">
-  <div class="headertitle"><div class="title">AREA </div></div>
+  <div class="headertitle"><div class="title">ACTION-REACTION (AREA) </div></div>
 </div><!--header-->
 <div class="contents">
-<div class="textblock"><p><a class="anchor" id="md_Front_2AREAApp_2README"></a></p>
+<div class="textblock"><p><a class="anchor" id="md_README"></a></p>
+<p>Automation platform inspired by <b>IFTTT/Zapier</b>. <br  />
+ This repository currently contains only the <b>backend server</b> (FastAPI + PostgreSQL). <br  />
+ Web client, mobile client and docker‑compose root setup are <b>not implemented yet</b>.</p>
+<hr  />
+<h1><a class="anchor" id="autotoc_md2"></a>
+What we have now</h1>
+<h2><a class="anchor" id="autotoc_md3"></a>
+Tech stack</h2>
+<ul>
+<li>Backend: <b>FastAPI</b> (Python 3.9)</li>
+<li>DB: <b>PostgreSQL</b> via <b>SQLModel</b></li>
+<li>Auth: <b>JWT</b> (email + password)</li>
+<li>Email helper: SMTP (env‑based config)</li>
+<li>Container: Docker image for the backend only</li>
+</ul>
+<h2><a class="anchor" id="autotoc_md4"></a>
+Implemented features</h2>
+<ul>
+<li><b>Health check</b><ul>
+<li><code>GET /health</code> → <code>{"status": "ok"}</code></li>
+</ul>
+</li>
+<li><b>about.json</b> (subject requirement)<ul>
+<li><code>GET /about.json</code> returns:<ul>
+<li><code>client.host</code>: caller IP</li>
+<li><code>server.current_time</code>: Unix timestamp</li>
+<li><code>server.services</code>: example <code>timer</code> service with actions/reactions</li>
+</ul>
+</li>
+</ul>
+</li>
+<li><b>User management (minimal)</b><ul>
+<li>Model: <code>User</code> (id, email, name, hashed_password, image?)</li>
+<li>Endpoints under <code>/user</code>:<ul>
+<li><code>POST /user/register</code> <br  />
+<ul>
+<li>Body: <code>{ "email", "name", "new_password" }</code> <br  />
+</li>
+<li>Creates user, returns <code>{"status": "login success"}</code> and sets JWT cookie</li>
+</ul>
+</li>
+<li><code>POST /user/login</code> <br  />
+<ul>
+<li>Form: <code>username</code> (email), <code>password</code> <br  />
+</li>
+<li>Returns <code>{ "access_token", "token_type": "Bearer" }</code> and sets JWT cookie</li>
+</ul>
+</li>
+<li><code>GET /user/</code> → list users (for now, no auth guard)</li>
+<li><code>GET /user/{user_id}</code> → get one user</li>
+<li><code>PATCH /user/{user_id}</code> → update user (name/email)</li>
+<li><code>DELETE /user/{user_id}</code> → delete user</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<blockquote class="doxtable">
+<p>&zwj;Note: There is <b>no</b> service/AREA/hook logic yet. <br  />
+ Only a stub <code>timer</code> service is exposed through <code>/about.json</code>. </p>
+</blockquote>
+<h1><a class="anchor" id="autotoc_md5"></a>
+</h1>
+<h1><a class="anchor" id="autotoc_md6"></a>
+How to launch the project</h1>
+<h2><a class="anchor" id="autotoc_md7"></a>
+1. Requirements</h2>
+<ul>
+<li>Python <b>3.9</b></li>
+<li>PostgreSQL running locally or reachable (create an empty DB, e.g. <code>area</code>)</li>
+<li>Optionally Docker (to run the backend in a container)</li>
+</ul>
+<h2><a class="anchor" id="autotoc_md8"></a>
+2. Environment variables</h2>
+<p>Backend needs at least:</p>
+<div class="fragment"><div class="line">POSTGRESQL_URI=postgresql+psycopg://&lt;user&gt;:&lt;password&gt;@&lt;host&gt;:&lt;port&gt;/&lt;dbname&gt;</div>
+<div class="line">SMTP_SERVER=smtp.example.com       # can be dummy for now</div>
+<div class="line">SMTP_PORT=465                      # must be set (int)</div>
+<div class="line">EMAIL_USERNAME=area@example.com    # can be dummy for now</div>
+<div class="line">EMAIL_PASSWORD=supersecret         # can be dummy for now</div>
+</div><!-- fragment --><p>Example for local dev:</p>
+<div class="fragment"><div class="line">export POSTGRESQL_URI=&quot;postgresql+psycopg://area:area@localhost:5432/area&quot;</div>
+<div class="line">export SMTP_SERVER=&quot;smtp.example.com&quot;</div>
+<div class="line">export SMTP_PORT=&quot;465&quot;</div>
+<div class="line">export EMAIL_USERNAME=&quot;area@example.com&quot;</div>
+<div class="line">export EMAIL_PASSWORD=&quot;supersecret&quot;</div>
+</div><!-- fragment --><h2><a class="anchor" id="autotoc_md9"></a>
+3. Install dependencies (local)</h2>
+<p>From project root:</p>
+<div class="fragment"><div class="line">cd Backend</div>
+<div class="line">python3.9 -m venv .venv</div>
+<div class="line">source .venv/bin/activate</div>
+<div class="line"> </div>
+<div class="line">pip install --upgrade pip</div>
+<div class="line">pip install -r requirements.txt</div>
+</div><!-- fragment --><h2><a class="anchor" id="autotoc_md10"></a>
+4. Run the backend without Docker</h2>
+<p>Still in <code>Backend/</code>:</p>
+<div class="fragment"><div class="line">export POSTGRESQL_URI=&quot;postgresql+psycopg://area:area@localhost:5432/area&quot;</div>
+<div class="line"># export SMTP_* and EMAIL_* as shown above</div>
+<div class="line"> </div>
+<div class="line">fastapi run app/main.py --port 8080</div>
+</div><!-- fragment --><p>Server will be reachable at:</p>
+<ul>
+<li><code><a href="http://localhost:8080/health">http://localhost:8080/health</a></code></li>
+<li><code><a href="http://localhost:8080/about.json">http://localhost:8080/about.json</a></code></li>
+<li><code><a href="http://localhost:8080/docs">http://localhost:8080/docs</a></code></li>
+</ul>
+<h2><a class="anchor" id="autotoc_md11"></a>
+5. Build and run the backend with Docker</h2>
+<p>From <code>Backend/</code>:</p>
+<div class="fragment"><div class="line">./build_fastapi_docker_image.sh</div>
+</div><!-- fragment --><p>Then run:</p>
+<div class="fragment"><div class="line">docker run --rm \</div>
+<div class="line">  -e POSTGRESQL_URI=&quot;postgresql+psycopg://area:area@host.docker.internal:5432/area&quot; \</div>
+<div class="line">  -e SMTP_SERVER=&quot;smtp.example.com&quot; \</div>
+<div class="line">  -e SMTP_PORT=&quot;465&quot; \</div>
+<div class="line">  -e EMAIL_USERNAME=&quot;area@example.com&quot; \</div>
+<div class="line">  -e EMAIL_PASSWORD=&quot;supersecret&quot; \</div>
+<div class="line">  -p 8080:80 \</div>
+<div class="line">  area-fastapi</div>
+</div><!-- fragment --><p>Check:</p>
+<ul>
+<li><code><a href="http://localhost:8080/health">http://localhost:8080/health</a></code></li>
+<li><code><a href="http://localhost:8080/about.json">http://localhost:8080/about.json</a></code></li>
+</ul>
+<hr  />
+<h1><a class="anchor" id="autotoc_md13"></a>
+Current limitations</h1>
+<ul>
+<li>No AREA / hook engine.</li>
+<li>No external services (Gmail, GitHub, etc.).</li>
+<li>No web client, no mobile client, no root <code><a class="el" href="docker-compose_8yml.html">docker-compose.yml</a></code>.</li>
+</ul>
+<p>This README reflects only <b>what exists now</b> and <b>how to run it</b>. </p>
 </div></div><!-- PageDoc -->
 <a href="doxygen_crawl.html"></a>
 </div><!-- contents -->

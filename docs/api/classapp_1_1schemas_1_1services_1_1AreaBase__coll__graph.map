@@ -1,0 +1,7 @@
+<map id="app.schemas.services.AreaBase" name="app.schemas.services.AreaBase">
+<area shape="rect" id="Node000001" title=" " alt="" coords="5,155,211,224"/>
+<area shape="rect" id="Node000002" title=" " alt="" coords="31,5,105,75"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="84,88,102,154,96,156,78,90"/>
+<area shape="rect" id="Node000003" title=" " alt="" coords="129,5,167,75"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="141,75,124,139,119,137,136,74"/>
+</map>

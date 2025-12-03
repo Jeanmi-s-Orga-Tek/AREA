@@ -1,6 +1,5 @@
 var searchData=
 [
-  ['navtree_2ejs_0',['navtree.js',['../navtree_8js.html',1,'']]],
-  ['navtreedata_2ejs_1',['navtreedata.js',['../navtreedata_8js.html',1,'']]],
-  ['navtreeindex0_2ejs_2',['navtreeindex0.js',['../navtreeindex0_8js.html',1,'']]]
+  ['launch_5fdocker_2esh_0',['launch_docker.sh',['../launch__docker_8sh.html',1,'']]],
+  ['loginscreen_2etsx_1',['LoginScreen.tsx',['../LoginScreen_8tsx.html',1,'']]]
 ];

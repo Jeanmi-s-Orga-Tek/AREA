@@ -1,4 +1,32 @@
 var searchData=
 [
-  ['jquery_2ejs_0',['jquery.js',['../jquery_8js.html',1,'']]]
+  ['db_2epy_0',['db.py',['../db_8py.html',1,'']]],
+  ['db_5f8py_2ejs_1',['db_8py.js',['../db__8py_8js.html',1,'']]],
+  ['delete_5faction_2',['delete_action',['../namespaceapp_1_1user__action.html#a6721291e4ffab5a357f26d9de3ae9000',1,'app::user_action']]],
+  ['delete_5farea_3',['delete_area',['../namespaceapp_1_1routers_1_1areas.html#a4a6f99c95c2c334c6ffd23ab58785732',1,'app::routers::areas']]],
+  ['delete_5freaction_4',['delete_reaction',['../namespaceapp_1_1user__reaction.html#a1d1a3c75897c9709e432acb7d4b8601d',1,'app::user_reaction']]],
+  ['delete_5fuser_5',['delete_user',['../namespaceapp_1_1user.html#ac0b56edb03a53fb6e692d9cdb53368d6',1,'app::user']]],
+  ['demoproviders_6',['demoProviders',['../RegisterScreen_8tsx.html#a428f760b2c0a14a1212f3f05c031f04d',1,'RegisterScreen.tsx']]],
+  ['dependencies_20local_7',['3. Install dependencies (local)',['../index.html#autotoc_md9',1,'']]],
+  ['description_8',['description',['../classapp_1_1action_1_1BaseAction.html#a1c5278dca8403ea25b3e47bbddcbc277',1,'app.action.BaseAction.description'],['../classapp_1_1oauth__models_1_1Service.html#a43538f4ada1b3c7cf9aa8178e26061a1',1,'app.oauth_models.Service.description'],['../classapp_1_1reaction_1_1BaseReaction.html#a6aa0594619946d9b447111b30c6a0f5f',1,'app.reaction.BaseReaction.description'],['../classapp_1_1schemas_1_1services_1_1ActionRead.html#a33a2d9ec10fc5b4f2054ba11d4eb4c73',1,'app.schemas.services.ActionRead.description'],['../classapp_1_1schemas_1_1services_1_1ReactionRead.html#a9fe054ad52e1d51c158952f0088da160',1,'app.schemas.services.ReactionRead.description'],['../classapp_1_1schemas_1_1services_1_1ServiceBasicRead.html#ab145ab58990543443e5c87875ad17e91',1,'app.schemas.services.ServiceBasicRead.description']]],
+  ['dir_5f07e07fd65fce89f68bd99fb52a5a42dd_2ejs_9',['dir_07e07fd65fce89f68bd99fb52a5a42dd.js',['../dir__07e07fd65fce89f68bd99fb52a5a42dd_8js.html',1,'']]],
+  ['dir_5f201aba601f4e6aa686aaf86dd67398ef_2ejs_10',['dir_201aba601f4e6aa686aaf86dd67398ef.js',['../dir__201aba601f4e6aa686aaf86dd67398ef_8js.html',1,'']]],
+  ['dir_5f24a4a53a6c50ff2c5c4fcb184a68a449_2ejs_11',['dir_24a4a53a6c50ff2c5c4fcb184a68a449.js',['../dir__24a4a53a6c50ff2c5c4fcb184a68a449_8js.html',1,'']]],
+  ['dir_5f3d5e782aa9710d3af4811317a8b56c6f_2ejs_12',['dir_3d5e782aa9710d3af4811317a8b56c6f.js',['../dir__3d5e782aa9710d3af4811317a8b56c6f_8js.html',1,'']]],
+  ['dir_5f49e56c817e5e54854c35e136979f97ca_2ejs_13',['dir_49e56c817e5e54854c35e136979f97ca.js',['../dir__49e56c817e5e54854c35e136979f97ca_8js.html',1,'']]],
+  ['dir_5f651c397f30f1eeb041f8f66fce79c636_2ejs_14',['dir_651c397f30f1eeb041f8f66fce79c636.js',['../dir__651c397f30f1eeb041f8f66fce79c636_8js.html',1,'']]],
+  ['dir_5f87f6e54d572178b51a16e5c83be80c2a_2ejs_15',['dir_87f6e54d572178b51a16e5c83be80c2a.js',['../dir__87f6e54d572178b51a16e5c83be80c2a_8js.html',1,'']]],
+  ['dir_5f925fef43af9d9ed17c06d4d0d628e807_2ejs_16',['dir_925fef43af9d9ed17c06d4d0d628e807.js',['../dir__925fef43af9d9ed17c06d4d0d628e807_8js.html',1,'']]],
+  ['dir_5fac1723300343ba4d1ab055e48a541c3d_2ejs_17',['dir_ac1723300343ba4d1ab055e48a541c3d.js',['../dir__ac1723300343ba4d1ab055e48a541c3d_8js.html',1,'']]],
+  ['dir_5fb7f3170be9f9a06443e2ef98e44eb443_2ejs_18',['dir_b7f3170be9f9a06443e2ef98e44eb443.js',['../dir__b7f3170be9f9a06443e2ef98e44eb443_8js.html',1,'']]],
+  ['dir_5fc7759d8963b344127fbb48b4642475dd_2ejs_19',['dir_c7759d8963b344127fbb48b4642475dd.js',['../dir__c7759d8963b344127fbb48b4642475dd_8js.html',1,'']]],
+  ['dir_5fd97893c72dedf4e0b2e9e1e8df755fbd_2ejs_20',['dir_d97893c72dedf4e0b2e9e1e8df755fbd.js',['../dir__d97893c72dedf4e0b2e9e1e8df755fbd_8js.html',1,'']]],
+  ['dir_5ff229b208846699ac4e6277b5d15edc37_2ejs_21',['dir_f229b208846699ac4e6277b5d15edc37.js',['../dir__f229b208846699ac4e6277b5d15edc37_8js.html',1,'']]],
+  ['dir_5ff599c8b1b0abf58c379d8a777c01ee80_2ejs_22',['dir_f599c8b1b0abf58c379d8a777c01ee80.js',['../dir__f599c8b1b0abf58c379d8a777c01ee80_8js.html',1,'']]],
+  ['disconnect_5fservice_23',['disconnect_service',['../namespaceapp_1_1routers_1_1service__accounts.html#aa8c9e4894a4ebd2f36ed2163e2d9ec91',1,'app::routers::service_accounts']]],
+  ['disconnect_5fservice_5faccount_24',['disconnect_service_account',['../namespaceapp_1_1service__manager.html#ab15fa03597c23332fece607bc343c0ce',1,'app::service_manager']]],
+  ['discord_2eyaml_25',['Discord.yaml',['../Discord_8yaml.html',1,'']]],
+  ['docker_26',['Docker',['../index.html#autotoc_md10',1,'4. Run the backend without Docker'],['../index.html#autotoc_md11',1,'5. Build and run the backend with Docker']]],
+  ['docker_2dcompose_2eyml_27',['docker-compose.yml',['../docker-compose_8yml.html',1,'']]],
+  ['dynsections_2ejs_28',['dynsections.js',['../dynsections_8js.html',1,'']]]
 ];
