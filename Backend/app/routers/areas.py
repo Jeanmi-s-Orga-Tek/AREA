@@ -65,7 +65,7 @@ def require_subscription(session: Session, user_id: int, service_id: int):
 
 
 @areas_router.post("/", response_model=AreaRead)
-def create_area(area_data: AreaCreate, session: SessionDep, token: TokenDep):
+async def create_area(area_data: AreaCreate, session: SessionDep, token: TokenDep):
     user = get_user_from_token(token, session)
     if user is None:
         raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="Invalid token")
@@ -75,8 +75,7 @@ def create_area(area_data: AreaCreate, session: SessionDep, token: TokenDep):
     require_reaction(session, area_data.reaction_id, area_data.reaction_service_id)
     require_subscription(session, user.id, area_data.action_service_id)
     require_subscription(session, user.id, area_data.reaction_service_id)
-    
-    # Generate default name if not provided
+
     action = session.get(Action, area_data.action_id)
     reaction = session.get(Reaction, area_data.reaction_id)
     default_name = f"{action.name} → {reaction.name}" if action and reaction else "Unnamed AREA"
@@ -95,6 +94,13 @@ def create_area(area_data: AreaCreate, session: SessionDep, token: TokenDep):
     session.add(area)
     session.commit()
     session.refresh(area)
+
+    from app.webhook_manager import WebhookManager
+    try:
+        await WebhookManager.setup_webhooks_for_area(session, area)
+    except Exception as e:
+        print(f"Webhook setup warning for AREA {area.id}: {str(e)}")
+    
     return AreaRead.model_validate(area)
 
 
@@ -185,8 +191,15 @@ def toggle_area(area_id: int, session: SessionDep, token: TokenDep):
 
 
 @areas_router.delete("/{area_id}", status_code=status.HTTP_204_NO_CONTENT)
-def delete_area(area_id: int, session: SessionDep, token: TokenDep):
+async def delete_area(area_id: int, session: SessionDep, token: TokenDep):
     user = get_user_from_token(token, session)
     area = require_area(session, area_id, user.id)
+
+    from app.webhook_manager import WebhookManager
+    try:
+        await WebhookManager.cleanup_webhooks_for_area(session, area)
+    except Exception as e:
+        print(f"Webhook cleanup warning for AREA {area.id}: {str(e)}")
+    
     session.delete(area)
     session.commit()

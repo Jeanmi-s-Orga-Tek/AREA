@@ -2,7 +2,7 @@ name: github
 display_name: GitHub
 description: Code hosting and version control platform
 oauth_provider: github
-required_scopes: user,user:email,read:user
+required_scopes: user:email, read:user, admin:repo_hook, read:repo_hook, write:repo_hook
 icon: ⚫
 color: "#24292e"
 category: Developer Tools

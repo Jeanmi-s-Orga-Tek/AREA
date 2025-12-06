@@ -4,7 +4,7 @@ from sqlmodel import Session
 
 class BaseExecutor(ABC):
     @abstractmethod
-    async def execute(self, user_id: int, parameters: Dict[str, Any], session: Session):
+    async def execute(self, user_id: int, parameters: Dict[str, Any], session: Session) -> bool:
         pass
 
 from app.executors.github import GitHubCreateIssueExecutor
