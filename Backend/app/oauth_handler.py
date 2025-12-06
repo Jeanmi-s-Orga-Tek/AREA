@@ -1,13 +1,82 @@
+import base64
+import json
 import secrets
 import requests
 from datetime import datetime, timedelta
-from typing import Optional, Dict, Any
+from typing import Optional, Dict, Any, Tuple
+from urllib.parse import urlparse, urlencode, parse_qsl, urlunparse
+
 from sqlmodel import Session, select
 from fastapi import HTTPException
 
 from app.oauth_models import OAuthConnection, OAuthState
 from app.user import User, create_access_token, ACCESS_TOKEN_EXPIRE_MINUTES
 from app.core.oauth_config import providers_registry
+
+STATE_PREFIX = "area::v1::"
+
+
+def normalize_client_redirect_uri(uri: Optional[str]) -> Optional[str]:
+    if uri is None:
+        return None
+    cleaned = uri.strip()
+    if not cleaned:
+        return None
+
+    parsed = urlparse(cleaned)
+    if not parsed.scheme:
+        raise HTTPException(status_code=400, detail="client_redirect_uri must include a scheme")
+
+    if parsed.scheme in ("http", "https") and not parsed.netloc:
+        raise HTTPException(status_code=400, detail="client_redirect_uri must include a host when using http/https")
+
+    return cleaned
+
+
+def encode_oauth_state(raw_state: Optional[str], client_redirect_uri: Optional[str]) -> str:
+    base_state = raw_state or ""
+    if not client_redirect_uri:
+        return base_state
+
+    payload = {
+        "v": 1,
+        "state": base_state,
+        "client_redirect_uri": client_redirect_uri,
+    }
+    serialized = json.dumps(payload, separators=(",", ":")).encode("utf-8")
+    encoded = base64.urlsafe_b64encode(serialized).decode("utf-8").rstrip("=")
+    return f"{STATE_PREFIX}{encoded}"
+
+
+def decode_oauth_state(state: Optional[str]) -> Tuple[str, Optional[str]]:
+    if not state:
+        return "", None
+
+    if not state.startswith(STATE_PREFIX):
+        return state, None
+
+    encoded = state[len(STATE_PREFIX):]
+    padding = len(encoded) % 4
+    if padding:
+        encoded += "=" * (4 - padding)
+
+    try:
+        decoded = base64.urlsafe_b64decode(encoded.encode("utf-8"))
+        payload = json.loads(decoded)
+        return payload.get("state", ""), payload.get("client_redirect_uri")
+    except Exception:
+        # Fall back to returning an empty state if decoding fails
+        return "", None
+
+
+def append_query_params(url: str, params: Dict[str, Optional[str]]) -> str:
+    parsed = urlparse(url)
+    existing = dict(parse_qsl(parsed.query, keep_blank_values=True))
+    for key, value in params.items():
+        if value is not None and value != "":
+            existing[key] = value
+    new_query = urlencode(existing)
+    return urlunparse(parsed._replace(query=new_query))
 
 
 def generate_oauth_state(provider: str, flow: str, redirect_uri: Optional[str] = None) -> str:
