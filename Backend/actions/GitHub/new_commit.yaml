@@ -1,4 +1,4 @@
-name: "GitHub - New Commit"
+name: "push"
 description: "Triggered when code is pushed to a repository"
 service: github
 is_polling: false
