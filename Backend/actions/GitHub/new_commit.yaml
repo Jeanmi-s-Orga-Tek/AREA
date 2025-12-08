@@ -1,8 +1,7 @@
-name: "GitHub - New Commit"
-description: "Triggers when a new commit is pushed to a repository"
+name: "push"
+description: "Triggered when code is pushed to a repository"
 service: github
-is_polling: true
+is_polling: false
 parameters:
-  repository: ""
-  branch: ""
-  author: ""
+  repository.full_name: ""
+  repository.default_branch: ""

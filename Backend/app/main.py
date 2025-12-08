@@ -99,6 +99,7 @@ from app.user_reaction import user_reaction_router
 from app.routers.services import services_router
 from app.routers.service_accounts import service_accounts_router
 from app.routers.areas import areas_router
+from app.routers.webhooks import webhooks_router
 
 
 app = FastAPI(lifespan=lifespan, openapi_tags=tags_metadata)
@@ -209,6 +210,7 @@ app.include_router(user_reaction_router)
 app.include_router(services_router)
 app.include_router(service_accounts_router)
 app.include_router(areas_router)
+app.include_router(webhooks_router)
 
 app.add_middleware(
     CORSMiddleware,

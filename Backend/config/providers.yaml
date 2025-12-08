@@ -63,10 +63,15 @@ providers:
       client_id: "${GITHUB_WEB_CLIENT_ID}"
       client_secret: "${GITHUB_WEB_CLIENT_SECRET}"
       redirect_uri: "http://localhost:8081/auth/callback/github"
+      # ADD MORE SCOPES IF NECESSARY (https://docs.github.com/en/apps/oauth-apps/building-oauth-apps/scopes-for-oauth-apps)
       scopes:
         - user
         - user:email
         - read:user
+        - admin:repo_hook
+        - read:repo_hook
+        - write:repo_hook
+        - repo
     mobile:
       client_id: "${GITHUB_MOBILE_CLIENT_ID}"
       client_secret: "${GITHUB_MOBILE_CLIENT_SECRET}"
@@ -75,6 +80,10 @@ providers:
         - user
         - user:email
         - read:user
+        - admin:repo_hook
+        - read:repo_hook
+        - write:repo_hook
+        - repo
 
   spotify:
     display_name: "Spotify"
