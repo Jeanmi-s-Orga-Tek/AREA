@@ -8,10 +8,14 @@ class BaseExecutor(ABC):
         pass
 
 from app.executors.github import GitHubCreateIssueExecutor
+from app.executors.trello import TrelloUpdateDoardTitleExecutor
 
 EXECUTORS = {
     "github": {
         "create_issue": GitHubCreateIssueExecutor(),
+    },
+    "trello": {
+        "update_board_title": TrelloUpdateDoardTitleExecutor(),
     },
     # add the others lol
 }
