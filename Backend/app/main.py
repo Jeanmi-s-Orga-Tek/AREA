@@ -9,7 +9,7 @@ from datetime import timedelta
 
 from contextlib import asynccontextmanager
 from fastapi import APIRouter, Cookie, FastAPI, Query, Request, Depends, HTTPException, UploadFile, status, Form
-from fastapi.responses import FileResponse, HTMLResponse, JSONResponse, StreamingResponse
+from fastapi.responses import FileResponse, HTMLResponse, JSONResponse, StreamingResponse, RedirectResponse
 from fastapi.security import OAuth2PasswordRequestForm
 from fastapi.staticfiles import StaticFiles
 from fastapi.templating import Jinja2Templates
@@ -18,7 +18,15 @@ from fastapi.middleware import Middleware
 from starlette.middleware.base import BaseHTTPMiddleware
 from fastapi import HTTPException
 from app.core.oauth_config import public_provider_info, providers_registry, reload_providers, list_providers_for_frontend, get_auth_url
-from app.oauth_handler import exchange_code_for_token, get_user_info_from_provider, find_or_create_user_from_oauth
+from app.oauth_handler import (
+    exchange_code_for_token,
+    get_user_info_from_provider,
+    find_or_create_user_from_oauth,
+    encode_oauth_state,
+    decode_oauth_state,
+    normalize_client_redirect_uri,
+    append_query_params,
+)
 
 
 from sqlmodel import Field, Session, SQLModel, asc, create_engine, select, func, col, desc
@@ -127,16 +135,28 @@ def oauth_public_config(provider: str, flow: str):
         raise HTTPException(status_code=400, detail=str(e))
 
 @router_login.get("/oauth/authorize/{provider}/{flow}", tags=["oauth"])
-def oauth_get_authorization_url(provider: str, flow: str, state: str = ""):
+def oauth_get_authorization_url(
+    provider: str,
+    flow: str,
+    state: str = "",
+    client_redirect_uri: Optional[str] = None,
+):
     try:
-        auth_url = get_auth_url(provider, flow, state)
+        normalized_redirect = normalize_client_redirect_uri(client_redirect_uri)
+        enriched_state = encode_oauth_state(state, normalized_redirect)
+        auth_url = get_auth_url(provider, flow, enriched_state)
         return {"authorization_url": auth_url}
     except Exception as e:
         raise HTTPException(status_code=400, detail=str(e))
 
 @router_login.get("/auth/authorize/{provider}/{flow}", tags=["oauth"])
-def auth_get_authorization_url_alias(provider: str, flow: str, state: str = ""):
-    return oauth_get_authorization_url(provider, flow, state)
+def auth_get_authorization_url_alias(
+    provider: str,
+    flow: str,
+    state: str = "",
+    client_redirect_uri: Optional[str] = None,
+):
+    return oauth_get_authorization_url(provider, flow, state, client_redirect_uri)
 
 @router_login.get("/oauth/callback/{provider}", tags=["oauth"])
 @router_login.get("/auth/callback/{provider}", tags=["oauth"])
@@ -152,6 +172,8 @@ def oauth_callback(
     
     if not auth_code:
         raise HTTPException(status_code=400, detail="No authorization code or token provided")
+
+    raw_state, client_redirect_uri = decode_oauth_state(state)
 
     try:
         token_data = exchange_code_for_token(provider, flow, auth_code)
@@ -172,6 +194,16 @@ def oauth_callback(
             data={"sub": user.email},
             expires=access_token_expires
         )
+
+        if client_redirect_uri:
+            redirect_url = append_query_params(
+                client_redirect_uri,
+                {
+                    "token": app_access_token,
+                    "state": raw_state,
+                },
+            )
+            return RedirectResponse(url=redirect_url, status_code=302)
         
         return {
             "access_token": app_access_token,
