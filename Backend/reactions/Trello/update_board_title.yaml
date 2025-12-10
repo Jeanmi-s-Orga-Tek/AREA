@@ -1,0 +1,7 @@
+name: "Trello - Update board title"
+description: "Updates the title of the board"
+service: trello
+url: "https://api.trello.com/1/cards/{card_id}/actions/comments"
+parameters:
+  board_id: ""
+  name: ""
