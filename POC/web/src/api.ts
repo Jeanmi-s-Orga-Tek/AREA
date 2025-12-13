@@ -1,4 +1,17 @@
-const API_BASE_URL = "http://localhost:8080";
+const API_BASE_URL = (() => {
+  if (import.meta?.env?.VITE_API_BASE_URL) {
+    return import.meta.env.VITE_API_BASE_URL;
+  }
+
+  if (typeof window === "undefined") {
+    return "http://localhost:8080";
+  }
+
+  const { protocol, hostname } = window.location;
+  const backendHost = hostname === "area-poc-frontend" ? "area-poc-backend" : hostname;
+  const port = "8080";
+  return `${protocol}//${backendHost}:${port}`;
+})();
 
 export interface Area {
   id: number;
@@ -12,6 +25,22 @@ export interface Area {
 export interface AreaCreate {
   name: string;
   interval_minutes: number;
+  message: string;
+}
+
+export interface DiscordMessage {
+  id: number;
+  webhook_url: string;
+  content: string;
+}
+
+export interface DiscordMessageCreate {
+  webhook_url: string;
+  content: string;
+}
+
+export interface DiscordFrontPayload {
+  webhookUrl: string;
   message: string;
 }
 
@@ -47,6 +76,15 @@ export async function listAreas(): Promise<Area[]> {
   return parseJsonResponse<Area[]>(response, "Failed to list areas");
 }
 
+export async function listDiscordMessages(): Promise<DiscordMessage[]> {
+  const response = await performFetch(
+    "/discord/messages",
+    undefined,
+    "Unable to reach backend while listing discord messages"
+  );
+  return parseJsonResponse<DiscordMessage[]>(response, "Failed to list discord messages");
+}
+
 export async function createArea(payload: AreaCreate): Promise<Area> {
   const response = await performFetch(
     "/areas",
@@ -61,4 +99,30 @@ export async function createArea(payload: AreaCreate): Promise<Area> {
   );
 
   return parseJsonResponse<Area>(response, "Failed to create area");
+}
+
+export async function createDiscordMessage(payload: DiscordMessageCreate): Promise<DiscordMessage> {
+  const response = await performFetch(
+    "/discord/messages",
+    {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(payload)
+    },
+    "Unable to reach backend while creating discord message"
+  );
+  return parseJsonResponse<DiscordMessage>(response, "Failed to create discord message");
+}
+
+export async function sendDiscordFrontPayload(payload: DiscordFrontPayload): Promise<void> {
+  const response = await performFetch(
+    "/discord/front-payload",
+    {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(payload)
+    },
+    "Unable to reach backend while sending discord webhook"
+  );
+  await parseJsonResponse<{ status: string }>(response, "Failed to send discord webhook");
 }
