@@ -1,0 +1,10 @@
+name: "Timer - At specific time"
+description: "Triggers the AREA every day at a specific time"
+service: timer
+is_polling: true
+parameters:
+  at_time: "08:00"
+  timezone: "UTC"
+  start_date: null
+  end_date: null
+

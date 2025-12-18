@@ -1,0 +1,22 @@
+name: timer
+display_name: Timer
+description: timer service for scheduling tasks
+oauth_provider: timer
+required_scopes:
+  - identify
+  - email
+icon: 🟣
+color: "#7825F3"
+category: Productivity
+is_active: true
+
+service: timer
+actions:
+  - key: every_x_minutes
+    name: "Timer - Every X minutes"
+    description: "Triggers the AREA every N minutes"
+    service: timer
+    is_polling: true
+    parameters:
+      every_minutes: ""
+      timezone: "UTC"

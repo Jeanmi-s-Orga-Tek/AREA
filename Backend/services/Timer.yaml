@@ -1,0 +1,9 @@
+name: timer
+display_name: Timer
+description: "Internal scheduling service for recurring triggers"
+oauth_provider: timer
+required_scopes: identify,email
+icon: "🟣"
+color: "#7825F3"
+category: Productivity
+is_active: true
