@@ -26,7 +26,6 @@ def resolve_timer_action_identifier(action_identifier: Any) -> str:
 
 
 def build_timer_schedule(action_id: str, raw_params: Dict[str, Any]) -> Dict[str, Any]:
-    """Normalize timer parameters based on the action identifier or stored schedule."""
     timer_params = raw_params.get("timer", raw_params)
 
     stored_schedule: Optional[Dict[str, Any]] = None
@@ -68,9 +67,6 @@ def build_timer_schedule(action_id: str, raw_params: Dict[str, Any]) -> Dict[str
 
 
 def compute_initial_next_run(schedule: Dict[str, Any], now: datetime) -> datetime:
-    """
-    Compute the next run datetime (UTC) from a schedule dict and current time.
-    """
     if schedule["type"] == "interval":
         minutes = int(schedule["every_minutes"])
         tz = ZoneInfo(schedule.get("timezone", "UTC"))
