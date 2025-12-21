@@ -5,7 +5,17 @@ from sqlmodel import Field, Session, SQLModel, create_engine, select
 
 POSTGRESQL_URI = str(os.environ.get("POSTGRESQL_URI"))
 
-engine = create_engine(POSTGRESQL_URI)
+engine = create_engine(
+    POSTGRESQL_URI,
+    pool_pre_ping=True,
+    pool_size=10,
+    max_overflow=20,
+    pool_recycle=3600,
+    connect_args={
+        "connect_timeout": 10,
+        "options": "-c timezone=utc"
+    }
+)
 
 def get_session():
     with Session(engine) as session:

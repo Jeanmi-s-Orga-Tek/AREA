@@ -46,7 +46,27 @@ from app.send_email import send_email
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
-    create_db_tables()
+    import time
+    import sqlalchemy.exc
+
+    max_retries = 5
+    retry_delay = 2
+    
+    for attempt in range(max_retries):
+        try:
+            print(f"Attempting to connect to database (attempt {attempt + 1}/{max_retries})...")
+            create_db_tables()
+            print("Successfully connected to database and created tables!")
+            break
+        except sqlalchemy.exc.OperationalError as e:
+            if attempt < max_retries - 1:
+                print(f"Database connection failed: {e}")
+                print(f"Retrying in {retry_delay} seconds...")
+                time.sleep(retry_delay)
+                retry_delay *= 2
+            else:
+                print(f"Failed to connect to database after {max_retries} attempts")
+                raise
     yield
 
 origins = [

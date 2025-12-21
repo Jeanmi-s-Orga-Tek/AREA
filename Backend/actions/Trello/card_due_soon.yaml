@@ -1,7 +1,7 @@
 name: "Trello - Card Due Date"
 description: "Triggers when a card's due date is approaching"
 service: trello
-is_polling: true
+is_polling: false
 parameters:
   board_id: ""
   hours_before: ""

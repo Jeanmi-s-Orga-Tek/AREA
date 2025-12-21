@@ -3,7 +3,6 @@ description: "Creates a new card in a Trello board"
 service: trello
 url: "https://api.trello.com/1/cards"
 parameters:
-  board_id: ""
   list_id: ""
-  card_name: ""
-  card_description: ""
+  name: ""
+  description: ""

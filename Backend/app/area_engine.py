@@ -16,6 +16,48 @@ def reaction_name_to_key(name: str) -> str:
     key = re.sub(r'[^a-z0-9_]', '', key)
     return key
 
+
+def action_name_to_key(name: str) -> str:
+    if " - " in name:
+        name = name.split(" - ", 1)[1]
+    key = name.lower().replace(" ", "_")
+    key = re.sub(r'[^a-z0-9_]', '', key)
+    return key
+
+
+async def trigger_areas_with_handlers(service: str, event_type: str, payload: Dict[str, Any]):
+    with Session(engine) as session:
+        service_obj = session.exec(select(Service).where(Service.name == service)).first()
+        
+        if not service_obj:
+            print(f"Service {service} not found")
+            return
+
+        all_actions = session.exec(
+            select(Action).where(Action.service_id == service_obj.id)
+        ).all()
+
+        matching_actions = [
+            action for action in all_actions 
+            if action_name_to_key(action.name) == event_type
+        ]
+        
+        if not matching_actions:
+            print(f"No actions found for {service}.{event_type}")
+            return
+
+        for action in matching_actions:
+            areas = session.exec(
+                select(Area).where(
+                    Area.action_id == action.id, 
+                    Area.is_active == True
+                )
+            ).all()
+
+            for area in areas:
+                await execute_area(session, area, payload)
+
+
 async def trigger_areas(service: str, event_type: str, payload: Dict[str, Any]):
     with Session(engine) as session:
         service_obj = session.exec(select(Service).where(Service.name == service)).first()

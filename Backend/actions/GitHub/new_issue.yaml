@@ -1,7 +1,7 @@
 name: "GitHub - New Issue"
 description: "Triggers when a new issue is created in a repository"
 service: github
-is_polling: true
+is_polling: false
 parameters:
   repository: ""
   label: ""

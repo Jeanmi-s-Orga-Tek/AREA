@@ -5,7 +5,9 @@ services:
     ports:
       - "8080:80"
     depends_on:
-      - db
+      db:
+        condition: service_healthy
+    restart: on-failure:5
     # volumes:
     #   - ./user_images:/user_images
     #   - ./event_images:/event_images
@@ -19,6 +21,11 @@ services:
       - "5432:5432"
     volumes:
       - ./pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
 
   adminer:
     image: adminer
@@ -28,10 +35,10 @@ services:
     depends_on:
       - db
 
-  client_mobile:
-    build: ./mobile
-    volumes:
-      - ./mobile/apk:/apk
+  # client_mobile:
+  #   build: ./mobile
+  #   volumes:
+  #     - ./mobile/apk:/apk
   
   client_web:
     build: ./Front/AREAA
@@ -41,7 +48,7 @@ services:
       - ./mobile/apk/client.apk:/usr/share/nginx/html/client.apk:ro
     depends_on:
       - db
-      - client_mobile
+      # - client_mobile
 
 volumes:
   pgdata:

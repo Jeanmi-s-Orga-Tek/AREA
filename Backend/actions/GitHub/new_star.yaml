@@ -1,6 +1,6 @@
 name: "GitHub - New Star"
 description: "Triggers when your repository receives a new star"
 service: github
-is_polling: true
+is_polling: false
 parameters:
   repository: ""
