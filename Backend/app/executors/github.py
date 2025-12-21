@@ -138,3 +138,39 @@ class GitHubAddCommentExecutor(BaseGitHubExecutor):
         
         print(f"GitHub comment added: {result.get('html_url')}")
         return True
+
+
+class GitHubCreateBranchExecutor(BaseGitHubExecutor):
+    async def execute(self, user_id: int, parameters: Dict[str, Any], session: Session) -> bool:
+        repository = parameters.get("repo") or parameters.get("repository")
+        branch_name = parameters.get("branch_name") or parameters.get("branch")
+        from_branch = parameters.get("from_branch") or parameters.get("source_branch") or "main"
+        
+        if not repository or not branch_name:
+            raise HTTPException(
+                status_code=400,
+                detail="Missing required parameters: repository and branch_name"
+            )
+
+        service_account = await self._get_github_credentials(user_id, session)
+
+        ref_result = await self._make_github_request(
+            method="GET",
+            url=f"https://api.github.com/repos/{repository}/git/ref/heads/{from_branch}",
+            access_token=service_account.access_token
+        )
+        
+        sha = ref_result["object"]["sha"]
+
+        result = await self._make_github_request(
+            method="POST",
+            url=f"https://api.github.com/repos/{repository}/git/refs",
+            access_token=service_account.access_token,
+            json_data={
+                "ref": f"refs/heads/{branch_name}",
+                "sha": sha
+            }
+        )
+        
+        print(f"GitHub branch created: {branch_name} from {from_branch}")
+        return True

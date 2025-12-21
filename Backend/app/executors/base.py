@@ -7,13 +7,14 @@ class BaseExecutor(ABC):
     async def execute(self, user_id: int, parameters: Dict[str, Any], session: Session) -> bool:
         pass
 
-from app.executors.github import GitHubCreateIssueExecutor, GitHubAddCommentExecutor
+from app.executors.github import GitHubCreateIssueExecutor, GitHubAddCommentExecutor, GitHubCreateBranchExecutor
 from app.executors.trello import TrelloUpdateBoardTitleExecutor, TrelloAddCommentExecutor, TrelloCreateCardExecutor, TrelloMoveCardExecutor
 
 EXECUTORS = {
     "github": {
         "create_issue": GitHubCreateIssueExecutor(),
         "add_comment": GitHubAddCommentExecutor(),
+        "create_branch": GitHubCreateBranchExecutor(),
     },
     "trello": {
         "update_board_title": TrelloUpdateBoardTitleExecutor(),
