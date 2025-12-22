@@ -2,7 +2,7 @@ name: google
 display_name: Google
 description: Google services including Gmail, YouTube, and more
 oauth_provider: google
-required_scopes: email,profile,openid,https://mail.google.com/,https://www.googleapis.com/auth/drive,https://www.googleapis.com/auth/youtube
+required_scopes: email,profile,openid,https://mail.google.com/,https://www.googleapis.com/auth/drive,https://www.googleapis.com/auth/youtube.readonly,https://www.googleapis.com/auth/calendar,https://www.googleapis.com/auth/spreadsheets
 icon: 🔵
 color: "#4285F4"
 category: Productivity

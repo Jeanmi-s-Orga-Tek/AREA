@@ -16,6 +16,8 @@ providers:
         - https://mail.google.com/
         - https://www.googleapis.com/auth/drive
         - https://www.googleapis.com/auth/youtube
+        - https://www.googleapis.com/auth/calendar
+        - https://www.googleapis.com/auth/spreadsheets
     mobile:
       client_id: "${GOOGLE_MOBILE_CLIENT_ID}"
       redirect_uri: "area.app:/auth"
@@ -26,6 +28,8 @@ providers:
         - https://mail.google.com/
         - https://www.googleapis.com/auth/drive
         - https://www.googleapis.com/auth/youtube
+        - https://www.googleapis.com/auth/calendar
+        - https://www.googleapis.com/auth/spreadsheets
 
   microsoft:
     display_name: "Microsoft"

@@ -9,6 +9,7 @@ class BaseExecutor(ABC):
 
 from app.executors.github import GitHubCreateIssueExecutor, GitHubAddCommentExecutor, GitHubCreateBranchExecutor
 from app.executors.trello import TrelloUpdateBoardTitleExecutor, TrelloAddCommentExecutor, TrelloCreateCardExecutor, TrelloMoveCardExecutor
+from app.executors.google import GoogleSendEmailExecutor, GoogleCreateFolderExecutor, GoogleCreateEventExecutor, GoogleUpdateCellExecutor
 
 EXECUTORS = {
     "github": {
@@ -21,6 +22,12 @@ EXECUTORS = {
         "add_comment": TrelloAddCommentExecutor(),
         "create_card": TrelloCreateCardExecutor(),
         "move_card": TrelloMoveCardExecutor(),
+    },
+    "google": {
+        "gmail__send_email": GoogleSendEmailExecutor(),
+        "drive__create_folder": GoogleCreateFolderExecutor(),
+        "calendar__create_event": GoogleCreateEventExecutor(),
+        "sheets__update_cell": GoogleUpdateCellExecutor(),
     },
     # add the others lol
 }
