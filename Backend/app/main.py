@@ -43,6 +43,8 @@ from app.db import create_db_tables, engine
 from app.user import BaseUser, User, RegisteringUser, Token, EmailCheck, PasswordChange, get_user_from_token
 from app.oauth2 import oauth2_scheme, ACCESS_TOKEN_EXPIRE_MINUTES, verify_password, verify_token, get_password_hash, create_access_token
 from app.send_email import send_email
+from app.polling_worker import polling_worker
+import asyncio
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
@@ -67,7 +69,16 @@ async def lifespan(app: FastAPI):
             else:
                 print(f"Failed to connect to database after {max_retries} attempts")
                 raise
+    
+    polling_task = asyncio.create_task(polling_worker())
+    
     yield
+    
+    polling_task.cancel()
+    try:
+        await polling_task
+    except asyncio.CancelledError:
+        pass
 
 origins = [
     "http://localhost",

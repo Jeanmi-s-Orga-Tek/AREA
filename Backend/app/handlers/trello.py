@@ -194,7 +194,7 @@ class TrelloCardDueSoonHandler(BasePollingHandler):
     
     @property
     def polling_interval(self) -> int:
-        return 300
+        return 60
 
     async def parse_payload(self, raw_payload: Dict[str, Any], headers: Dict[str, str]) -> ActionResult:
         return ActionResult(

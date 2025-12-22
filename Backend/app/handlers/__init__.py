@@ -2,15 +2,18 @@ from typing import Dict, Any, List, Optional, Type
 from app.handlers.base import BaseActionHandler, BaseWebhookHandler, BasePollingHandler, ActionResult
 from app.handlers.github import GITHUB_HANDLERS, GITHUB_EVENT_MAP
 from app.handlers.trello import TRELLO_HANDLERS, TRELLO_EVENT_MAP
+from app.handlers.google import GOOGLE_HANDLERS, GOOGLE_EVENT_MAP
 
 HANDLERS: Dict[str, Dict[str, BaseActionHandler]] = {
     "github": GITHUB_HANDLERS,
     "trello": TRELLO_HANDLERS,
+    "google": GOOGLE_HANDLERS,
 }
 
 WEBHOOK_EVENT_MAP: Dict[str, Dict[str, List[BaseActionHandler]]] = {
     "github": GITHUB_EVENT_MAP,
     "trello": TRELLO_EVENT_MAP,
+    "google": GOOGLE_EVENT_MAP,
 }
 
 def get_handler(service_name: str, action_type: str) -> Optional[BaseActionHandler]:

@@ -13,8 +13,9 @@ providers:
         - email
         - profile
         - openid
-        - https://www.googleapis.com/auth/gmail.readonly
-        - https://www.googleapis.com/auth/gmail.send
+        - https://mail.google.com/
+        - https://www.googleapis.com/auth/drive
+        - https://www.googleapis.com/auth/youtube
     mobile:
       client_id: "${GOOGLE_MOBILE_CLIENT_ID}"
       redirect_uri: "area.app:/auth"
@@ -22,8 +23,9 @@ providers:
         - email
         - profile
         - openid
-        - https://www.googleapis.com/auth/gmail.readonly
-        - https://www.googleapis.com/auth/gmail.send
+        - https://mail.google.com/
+        - https://www.googleapis.com/auth/drive
+        - https://www.googleapis.com/auth/youtube
 
   microsoft:
     display_name: "Microsoft"

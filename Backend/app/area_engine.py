@@ -120,7 +120,14 @@ async def execute_area(session: Session, area: Area, trigger_data: Dict[str, Any
 
 def check_action_conditions(params: Dict[str, Any], data: Dict[str, Any]) -> bool:
     for key, expected_value in params.items():
+        if expected_value == "" or expected_value is None:
+            continue
+        
         actual_value = get_nested_value(data, key)
+        
+        if actual_value is None:
+            continue
+        
         if actual_value != expected_value:
             print(f"WRONG VALUE ! {key} : {actual_value} != {expected_value}")
             return False
