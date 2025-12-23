@@ -1,0 +1,7 @@
+name: "Spotify - Create Playlist"
+description: "Creates a new playlist on your Spotify account"
+service: spotify
+parameters:
+  name: ""
+  description: ""
+  public: "true"

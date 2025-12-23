@@ -1,0 +1,6 @@
+name: "Spotify - Add Track To Playlist"
+description: "Adds a track to one of your Spotify playlists"
+service: spotify
+parameters:
+  playlist_id: ""
+  track_uri: ""

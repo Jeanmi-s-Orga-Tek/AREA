@@ -11,6 +11,7 @@ from app.executors.github import GitHubCreateIssueExecutor, GitHubAddCommentExec
 from app.executors.trello import TrelloUpdateBoardTitleExecutor, TrelloAddCommentExecutor, TrelloCreateCardExecutor, TrelloMoveCardExecutor
 from app.executors.google import GoogleSendEmailExecutor, GoogleCreateFolderExecutor, GoogleCreateEventExecutor, GoogleUpdateCellExecutor
 from app.executors.discord import DiscordSendWebhookMessageExecutor
+from app.executors.spotify import SpotifyCreatePlaylistExecutor, SpotifyAddTrackToPlaylistExecutor
 
 EXECUTORS = {
     "github": {
@@ -32,6 +33,10 @@ EXECUTORS = {
     },
     "discord": {
         "send_webhook_message": DiscordSendWebhookMessageExecutor(),
+    },
+    "spotify": {
+        "create_playlist": SpotifyCreatePlaylistExecutor(),
+        "add_track_to_playlist": SpotifyAddTrackToPlaylistExecutor(),
     },
     # add the others lol
 }

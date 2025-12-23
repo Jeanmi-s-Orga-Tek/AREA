@@ -1,0 +1,5 @@
+name: "Spotify - New Playlist Created"
+description: "Triggers when you create a new playlist on Spotify"
+service: spotify
+is_polling: true
+parameters: {}

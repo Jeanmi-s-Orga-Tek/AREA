@@ -1,0 +1,6 @@
+name: "Spotify - Track Added To Playlist"
+description: "Triggers when a track is added to one of your playlists"
+service: spotify
+is_polling: true
+parameters:
+  playlist_id: ""

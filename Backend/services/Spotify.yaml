@@ -1,0 +1,9 @@
+name: spotify
+display_name: Spotify
+description: Spotify music playlist you know
+oauth_provider: spotify
+required_scopes: user-read-email,user-read-private,playlist-read-private,playlist-modify-public,playlist-modify-private
+icon: 🟢
+color: "#1DB954"
+category: Music
+is_active: true

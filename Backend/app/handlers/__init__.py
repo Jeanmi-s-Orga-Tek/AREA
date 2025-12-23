@@ -4,12 +4,14 @@ from app.handlers.github import GITHUB_HANDLERS, GITHUB_EVENT_MAP
 from app.handlers.trello import TRELLO_HANDLERS, TRELLO_EVENT_MAP
 from app.handlers.google import GOOGLE_HANDLERS, GOOGLE_EVENT_MAP
 from app.handlers.discord import DISCORD_HANDLERS, DISCORD_EVENT_MAP
+from app.handlers.spotify import SPOTIFY_HANDLERS, SPOTIFY_EVENT_MAP
 
 HANDLERS: Dict[str, Dict[str, BaseActionHandler]] = {
     "github": GITHUB_HANDLERS,
     "trello": TRELLO_HANDLERS,
     "google": GOOGLE_HANDLERS,
     "discord": DISCORD_HANDLERS,
+    "spotify": SPOTIFY_HANDLERS,
 }
 
 WEBHOOK_EVENT_MAP: Dict[str, Dict[str, List[BaseActionHandler]]] = {
@@ -17,6 +19,7 @@ WEBHOOK_EVENT_MAP: Dict[str, Dict[str, List[BaseActionHandler]]] = {
     "trello": TRELLO_EVENT_MAP,
     "google": GOOGLE_EVENT_MAP,
     "discord": DISCORD_EVENT_MAP,
+    "spotify": SPOTIFY_EVENT_MAP,
 }
 
 def get_handler(service_name: str, action_type: str) -> Optional[BaseActionHandler]:
