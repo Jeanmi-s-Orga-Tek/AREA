@@ -1,7 +1,0 @@
-name: "Discord - New Message"
-description: "Triggers when a new message is posted in a channel"
-service: discord
-is_polling: true
-parameters:
-  channel_id: ""
-  contains: ""

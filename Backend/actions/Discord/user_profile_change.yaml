@@ -1,0 +1,5 @@
+name: "Discord - Username / Avatar Change"
+description: "Triggers when your Discord username or avatar changes"
+service: discord
+is_polling: true
+parameters: {}

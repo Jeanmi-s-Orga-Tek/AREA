@@ -10,6 +10,7 @@ class BaseExecutor(ABC):
 from app.executors.github import GitHubCreateIssueExecutor, GitHubAddCommentExecutor, GitHubCreateBranchExecutor
 from app.executors.trello import TrelloUpdateBoardTitleExecutor, TrelloAddCommentExecutor, TrelloCreateCardExecutor, TrelloMoveCardExecutor
 from app.executors.google import GoogleSendEmailExecutor, GoogleCreateFolderExecutor, GoogleCreateEventExecutor, GoogleUpdateCellExecutor
+from app.executors.discord import DiscordSendWebhookMessageExecutor
 
 EXECUTORS = {
     "github": {
@@ -28,6 +29,9 @@ EXECUTORS = {
         "drive__create_folder": GoogleCreateFolderExecutor(),
         "calendar__create_event": GoogleCreateEventExecutor(),
         "sheets__update_cell": GoogleUpdateCellExecutor(),
+    },
+    "discord": {
+        "send_webhook_message": DiscordSendWebhookMessageExecutor(),
     },
     # add the others lol
 }

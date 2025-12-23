@@ -1,0 +1,9 @@
+name: "Discord - Send Webhook Message"
+description: "Sends a message to a Discord channel via webhook"
+service: discord
+url: ""
+parameters:
+  webhook_url: ""
+  content: ""
+  username: ""
+  avatar_url: ""

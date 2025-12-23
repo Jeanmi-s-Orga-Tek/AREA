@@ -2,7 +2,7 @@ name: discord
 display_name: Discord
 description: Voice, video, and text communication platform
 oauth_provider: discord
-required_scopes: identify,email
+required_scopes: identify,guilds,messages.read,webhook.incoming
 icon: 🟣
 color: "#5865F2"
 category: Communication
