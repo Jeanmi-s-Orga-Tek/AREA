@@ -135,6 +135,8 @@ def check_action_conditions(params: Dict[str, Any], data: Dict[str, Any]) -> boo
     return True
 
 def interpolate_parameters(params: Dict[str, Any], data: Dict[str, Any]) -> Dict[str, Any]:
+    # print("ABOUT TO BE INTERPOLATED : ", data)
+
     import re
     
     result = {}
@@ -174,6 +176,9 @@ def interpolate_single_value(value: str, data: Dict[str, Any]) -> str:
 
 def get_nested_value(data: Dict, path: str) -> Any:
     import re
+
+    if path in data:
+        return data[path]
 
     components = re.split(r'[\.\[]', path)
     value = data
