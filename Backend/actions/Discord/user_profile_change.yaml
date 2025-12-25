@@ -3,3 +3,10 @@ description: "Triggers when your Discord username or avatar changes"
 service: discord
 is_polling: true
 parameters: {}
+trigger_data:
+  user.id: ""
+  user.username: ""
+  user.global_name: ""
+  user.discriminator: ""
+  user.avatar: ""
+  changes: "" 

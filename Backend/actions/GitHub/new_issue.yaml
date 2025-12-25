@@ -4,4 +4,16 @@ service: github
 is_polling: false
 parameters:
   repository: ""
+trigger_data:
+  repository.full_name: ""
+  repository.name: ""
+  repository: ""
+  issue.number: 0
+  issue.title: ""
+  issue.body: ""
+  issue.url: ""
+  issue.state: ""
+  issue.user.login: ""
+  sender.login: ""
+  sender: ""
   label: ""

@@ -6,3 +6,11 @@ parameters:
   from_address: ""
   subject_contains: ""
   folder: ""
+trigger_data:
+  message.id: ""
+  message.from: ""
+  message.subject: ""
+  message.bodyPreview: ""
+  message.receivedDateTime: ""
+  message.hasAttachments: false
+  message.webLink: ""

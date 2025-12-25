@@ -81,6 +81,7 @@ class ActionRead(SQLModel):
     description: Optional[str] = None
     is_polling: bool = False
     service_id: int
+    trigger_data: Optional[Dict[str, Any]] = None
 
 
 class ReactionRead(SQLModel):

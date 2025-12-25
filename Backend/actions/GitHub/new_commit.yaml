@@ -1,7 +1,22 @@
-name: "push"
+name: "GitHub - New Commit"
 description: "Triggered when code is pushed to a repository"
 service: github
 is_polling: false
 parameters:
   repository.full_name: ""
   repository.default_branch: ""
+trigger_data:
+  repository.full_name: ""
+  repository.name: ""
+  repository: ""
+  pusher.name: ""
+  pusher.email: ""
+  ref: ""
+  branch: ""
+  commits_count: 0
+  head_commit.message: ""
+  head_commit.id: ""
+  head_commit.url: ""
+  compare: ""
+  sender.login: ""
+  sender: ""

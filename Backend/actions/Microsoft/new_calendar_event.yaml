@@ -5,3 +5,12 @@ is_polling: true
 parameters:
   calendar_id: ""
   subject_contains: ""
+trigger_data:
+  event.id: ""
+  event.subject: ""
+  event.bodyPreview: ""
+  event.start: ""
+  event.end: ""
+  event.location: ""
+  event.organizer: ""
+  event.webLink: ""

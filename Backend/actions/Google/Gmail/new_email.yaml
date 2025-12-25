@@ -6,3 +6,11 @@ parameters:
   from_address: ""
   subject_contains: ""
   label: ""
+trigger_data:
+  message.id: ""
+  message.threadId: ""
+  message.from: ""
+  message.subject: ""
+  message.snippet: ""
+  message.date: ""
+  message.labelIds: []

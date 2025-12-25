@@ -4,3 +4,11 @@ service: google
 is_polling: true
 parameters:
   channel_id: ""
+trigger_data:
+  video.id: ""
+  video.title: ""
+  video.description: ""
+  video.publishedAt: ""
+  video.thumbnailUrl: ""
+  video.url: ""
+  channel.id: ""

@@ -112,6 +112,7 @@ def insert_actions_and_reactions(session, service_map):
         
         is_polling = bool(data.get('is_polling', False))
         action_name = data.get('name', os.path.splitext(os.path.basename(afile))[0])
+        trigger_data = data.get('trigger_data')
 
         existing_action = session.exec(
             select(Action).where(Action.name == action_name)
@@ -121,6 +122,7 @@ def insert_actions_and_reactions(session, service_map):
             existing_action.description = data.get('description')
             existing_action.is_polling = is_polling
             existing_action.parameters = params
+            existing_action.trigger_data = trigger_data
             existing_action.service_id = service_id
             session.add(existing_action)
         else:
@@ -129,6 +131,7 @@ def insert_actions_and_reactions(session, service_map):
                 description=data.get('description'),
                 is_polling=is_polling,
                 parameters=params,
+                trigger_data=trigger_data,
                 service_id=service_id
             )
             session.add(action)

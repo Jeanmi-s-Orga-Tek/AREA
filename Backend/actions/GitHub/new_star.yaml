@@ -4,3 +4,11 @@ service: github
 is_polling: false
 parameters:
   repository: ""
+trigger_data:
+  repository.full_name: ""
+  repository.name: ""
+  repository.stargazers_count: 0
+  repository: ""
+  sender.login: ""
+  sender: ""
+  starred_at: ""

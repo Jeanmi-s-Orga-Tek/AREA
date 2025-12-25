@@ -4,3 +4,12 @@ service: spotify
 is_polling: true
 parameters:
   playlist_id: ""
+trigger_data:
+  track.id: ""
+  track.name: ""
+  track.artists: ""
+  track.album: ""
+  track.uri: ""
+  track.url: ""
+  playlist.id: ""
+  added_at: ""

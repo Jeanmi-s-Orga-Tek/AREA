@@ -3,3 +3,11 @@ description: "Triggers when you create a new playlist on Spotify"
 service: spotify
 is_polling: true
 parameters: {}
+trigger_data:
+  playlist.id: ""
+  playlist.name: ""
+  playlist.description: ""
+  playlist.public: false
+  playlist.tracks_total: 0
+  playlist.url: ""
+  playlist.owner: ""

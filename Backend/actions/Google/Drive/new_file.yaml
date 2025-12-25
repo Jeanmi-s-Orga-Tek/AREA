@@ -5,3 +5,11 @@ is_polling: true
 parameters:
   folder_id: ""
   file_type: ""
+trigger_data:
+  file.id: ""
+  file.name: ""
+  file.mimeType: ""
+  file.webViewLink: ""
+  file.createdTime: ""
+  file.size: 0
+  folder.id: ""

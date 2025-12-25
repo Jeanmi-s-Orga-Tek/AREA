@@ -5,3 +5,13 @@ is_polling: false
 parameters:
   board_id: ""
   hours_before: ""
+trigger_data:
+  card.id: ""
+  card.name: ""
+  card.desc: ""
+  card.due: ""
+  card.url: ""
+  card.idList: ""
+  list.name: ""
+  board.name: ""
+  hours_until_due: 0

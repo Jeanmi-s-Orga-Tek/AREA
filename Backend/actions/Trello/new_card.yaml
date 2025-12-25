@@ -5,3 +5,13 @@ is_polling: false
 parameters:
   board_id: ""
   list_id: ""
+trigger_data:
+  card.id: ""
+  card.name: ""
+  card.desc: ""
+  card.due: ""
+  card.url: ""
+  card.idList: ""
+  card.idBoard: ""
+  list.name: ""
+  board.name: ""

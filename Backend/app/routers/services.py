@@ -85,6 +85,7 @@ def get_service_capabilities(service_id: int, session: SessionDep):
                 "description": action.description,
                 "is_polling": action.is_polling,
                 "parameters": action.parameters or {},
+                "trigger_data": action.trigger_data or {},
             }
             for action in actions
         ],
