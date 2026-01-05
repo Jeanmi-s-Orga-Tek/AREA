@@ -8,6 +8,7 @@ from sqlmodel import Session, select
 
 from app.area import Area, AreaCreate, AreaRead
 from app.db import create_db_tables, get_session
+from .discord import discord_router
 
 
 @asynccontextmanager
@@ -27,12 +28,19 @@ app.add_middleware(
     allow_origins=[
         "http://localhost:8081",
         "http://localhost:5173",
+        "http://localhost",
+        "http://127.0.0.1:8081",
+        "http://127.0.0.1:5173",
+        "http://127.0.0.1",
+        "http://server:8081",
         "http://server:8080",
     ],
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
 )
+
+app.include_router(discord_router)
 
 SessionDep = Annotated[Session, Depends(get_session)]
 
