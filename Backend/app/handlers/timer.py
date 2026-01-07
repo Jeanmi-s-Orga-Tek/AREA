@@ -21,7 +21,6 @@ class TimerDailyHandler(BasePollingHandler):
         return ActionResult(triggered=True, event_type="timer_daily", payload=payload)
 
     async def poll(self, session: Session, user_id: int, params: Dict[str, Any]) -> Optional[ActionResult]:
-        """Check if current time matches the scheduled time."""
         time_str = params.get("time")
         timezone_str = params.get("timezone", "Europe/Paris")
 
@@ -67,7 +66,6 @@ class TimerScheduleHandler(BasePollingHandler):
         return ActionResult(triggered=True, event_type="timer_window", payload=payload)
 
     async def poll(self, session: Session, user_id: int, params: Dict[str, Any]) -> Optional[ActionResult]:
-        """Check if current time matches the scheduled time and is within date range."""
         start_date_str = params.get("start_date")
         end_date_str = params.get("end_date")
         time_str = params.get("time")

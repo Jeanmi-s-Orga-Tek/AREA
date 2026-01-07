@@ -7,7 +7,6 @@ if TYPE_CHECKING:
     from app.executors.base import BaseExecutor
 
 class TimerDelayExecutor:
-    """Execute a delay (wait) before continuing - useful for chaining reactions"""
     async def execute(self, user_id: int, parameters: Dict[str, Any], session: Session) -> bool:
         delay_seconds = parameters.get("delay_seconds", 0)
 
@@ -29,7 +28,6 @@ class TimerDelayExecutor:
         return True
 
 class TimerWaitUntilExecutor:
-    """Wait until a specific time before continuing"""
     async def execute(self, user_id: int, parameters: Dict[str, Any], session: Session) -> bool:
         from datetime import datetime
         import pytz
