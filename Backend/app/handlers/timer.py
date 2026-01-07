@@ -57,14 +57,14 @@ class TimerScheduleHandler(BasePollingHandler):
 
     @property
     def action_type(self) -> str:
-        return "schedule"
+        return "window"
 
     @property
     def polling_interval(self) -> int:
         return 60
 
     async def parse_payload(self, payload: Dict[str, Any], headers: Dict[str, str] = None) -> ActionResult:
-        return ActionResult(triggered=True, event_type="timer_schedule", payload=payload)
+        return ActionResult(triggered=True, event_type="timer_window", payload=payload)
 
     async def poll(self, session: Session, user_id: int, params: Dict[str, Any]) -> Optional[ActionResult]:
         """Check if current time matches the scheduled time and is within date range."""
@@ -94,7 +94,7 @@ class TimerScheduleHandler(BasePollingHandler):
             if now.hour == hour and now.minute == minute:
                 return ActionResult(
                     triggered=True,
-                    event_type="timer_schedule",
+                    event_type="timer_window",
                     payload={
                         "triggered_at": now.isoformat(),
                         "time": time_str,
@@ -111,10 +111,10 @@ class TimerScheduleHandler(BasePollingHandler):
 
 TIMER_HANDLERS = {
     "daily": TimerDailyHandler(),
-    "schedule": TimerScheduleHandler(),
+    "window": TimerScheduleHandler(),
 }
 
 TIMER_EVENT_MAP = {
     "timer_daily": [TIMER_HANDLERS["daily"]],
-    "timer_schedule": [TIMER_HANDLERS["schedule"]],
+    "timer_window": [TIMER_HANDLERS["window"]],
 }

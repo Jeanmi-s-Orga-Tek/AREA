@@ -5,13 +5,7 @@ is_polling: true
 parameters:
   time:
     type: "string"
-    description: "Time in HH:mm format (24h)"
     required: true
-    pattern: "^([0-1][0-9]|2[0-3]):[0-5][0-9]$"
-    example: "14:30"
   timezone:
     type: "string"
-    description: "Timezone (e.g., Europe/Paris)"
-    required: true
     default: "Europe/Paris"
-    example: "Europe/Paris"
