@@ -2,6 +2,6 @@ name: timer
 display_name: Timer
 description: "Schedule actions based on time"
 auth_type: "none"
-icon: "timer"
+icon: "⏱️"
 color: "#FF6B6B"
 
