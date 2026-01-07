@@ -1,0 +1,7 @@
+name: timer
+display_name: Timer
+description: "Schedule actions based on time"
+auth_type: "none"
+icon: "timer"
+color: "#FF6B6B"
+
