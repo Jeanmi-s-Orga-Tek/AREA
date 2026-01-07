@@ -1,6 +1,6 @@
 service: Timer
 name: "Timer - Daily"
-description: "Déclenche chaque jour à heure fixe"
+description: "Triggers daily at a fixed time"
 is_polling: true
 parameters:
   time: ""

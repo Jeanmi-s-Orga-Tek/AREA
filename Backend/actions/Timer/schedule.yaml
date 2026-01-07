@@ -1,0 +1,10 @@
+service: Timer
+name: "Timer - Window"
+description: "Triggers every day between two dates at a fixed time"
+is_polling: true
+parameters:
+  start_date: ""
+  end_date: ""
+  time: ""
+  timezone: ""
+
