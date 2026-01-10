@@ -517,13 +517,12 @@
   .create-area-actions {
     flex-direction: column;
   }
-
-  .create-area-button {
-    width: 100%;
+  .service-card-select {
+    padding: 1px 1px;
   }
 }
 
-@media (min-width: 769px) and (max-width: 1024px) {
+@media (min-width: 375px) and (max-width: 1024px) {
   .services-grid {
     grid-template-columns: repeat(4, 1fr);
   }
