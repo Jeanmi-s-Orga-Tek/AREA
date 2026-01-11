@@ -152,6 +152,7 @@
   padding: 20px;
   border-radius: 8px;
   min-width: 0;
+  max-width: 70%;
 }
 
 .area-flow-action {
@@ -361,6 +362,7 @@
   }
 
   .area-flow-item {
-    padding: 16px;
+    padding: 10px;
+
   }
 }
