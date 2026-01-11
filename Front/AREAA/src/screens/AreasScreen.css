@@ -152,7 +152,6 @@
   padding: 20px;
   border-radius: 8px;
   min-width: 0;
-  max-width: 70%;
 }
 
 .area-flow-action {
@@ -324,6 +323,14 @@
   color: white;
 }
 
+.param-value {
+  display: inline-block;
+  max-width: 100%;
+  word-break: break-all;
+  cursor: pointer;
+  color: #007bff;
+}
+
 @media (max-width: 768px) {
   .areas-header {
     padding: 30px 20px;
@@ -354,6 +361,16 @@
   .areas-actions {
     flex-direction: column;
   }
+
+  .area-flow-item {
+    max-width: 100%;
+    width: 100%;
+  }
+
+  .area-card-body {
+    width: 100%;
+  }
+
 }
 
 @media (min-width: 375px) and (max-width: 1024px) {

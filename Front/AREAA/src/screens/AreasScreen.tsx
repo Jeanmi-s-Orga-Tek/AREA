@@ -178,48 +178,61 @@ const AreasScreen: React.FC = () => {
               </div>
 
               <div className="area-card-body">
-                <div className="area-flow-item area-flow-action">
-                  <div className="area-flow-label">ACTION</div>
-                  <div className="area-flow-service">{area.action.service}</div>
-                  <div className="area-flow-type">{area.action.type}</div>
-                  <div className="area-flow-description">
-                    {area.action.description}
-                  </div>
-                  {Object.keys(area.action.parameters).length > 0 && (
-                    <div className="area-flow-parameters">
-                      <strong>Paramètres:</strong>
-                      <ul style={{ margin: "5px 0", paddingLeft: "20px" }}>
-                        {Object.entries(area.action.parameters).map(([key, value]) => (
-                          <li key={key}>
-                            <strong>{key}:</strong> {String(value)}
-                          </li>
-                        ))}
-                      </ul>
+                <div className="area-flow">
+                  <div className="area-flow-item area-flow-action">
+                    <div className="area-flow-label">ACTION</div>
+                    <div className="area-flow-service">{area.action.service}</div>
+                    <div className="area-flow-type">{area.action.type}</div>
+                    <div className="area-flow-description">
+                      {area.action.description}
                     </div>
-                  )}
+                    {Object.keys(area.action.parameters).length > 0 && (
+                      <div className="area-flow-parameters">
+                        <strong>Paramètres:</strong>
+                        <ul style={{ margin: "5px 0", paddingLeft: "20px" }}>
+                          {Object.entries(area.action.parameters).map(([key, value]) => (
+                            <li key={key}>
+                              <strong>{key}:</strong> {String(value)}
+                            </li>
+                          ))}
+                        </ul>
+                      </div>
+                    )}
+                  </div>
                 </div>
 
                 <div className="area-flow-arrow">→</div>
 
                 <div className="area-flow-item area-flow-reaction">
-                  <div className="area-flow-label">RÉACTION</div>
-                  <div className="area-flow-service">{area.reaction.service}</div>
-                  <div className="area-flow-type">{area.reaction.type}</div>
-                  <div className="area-flow-description">
-                    {area.reaction.description}
-                  </div>
-                  {Object.keys(area.reaction.parameters).length > 0 && (
-                    <div className="area-flow-parameters">
-                      <strong>Paramètres:</strong>
-                      <ul style={{ margin: "5px 0", paddingLeft: "20px" }}>
-                        {Object.entries(area.reaction.parameters).map(([key, value]) => (
-                          <li key={key}>
-                            <strong>{key}:</strong> {String(value)}
-                          </li>
-                        ))}
-                      </ul>
+                  <div className="area-flow">
+                    <div className="area-flow-label">RÉACTION</div>
+                    <div className="area-flow-service">{area.reaction.service}</div>
+                    <div className="area-flow-type">{area.reaction.type}</div>
+                    <div className="area-flow-description">
+                      {area.reaction.description}
                     </div>
-                  )}
+                    {Object.keys(area.reaction.parameters).length > 0 && (
+                      <div className="area-flow-parameters">
+                        <strong>Paramètres:</strong>
+                        <ul style={{ margin: "5px 0", paddingLeft: "20px" }}>
+                          {Object.entries(area.reaction.parameters).map(([key, value]) => (
+                              <li key={key}>
+                                <strong>{key}:</strong>{" "}
+                                <span
+                                    className="param-value"
+                                    title="Cliquer pour copier"
+                                    onClick={() => navigator.clipboard.writeText(String(value))}
+                                >
+                                  {String(value).length > 40
+                                      ? `${String(value).slice(0, 20)}...${String(value).slice(-10)}`
+                                      : String(value)}
+                                </span>
+                              </li>
+                          ))}
+                        </ul>
+                      </div>
+                    )}
+                  </div>
                 </div>
               </div>
 
