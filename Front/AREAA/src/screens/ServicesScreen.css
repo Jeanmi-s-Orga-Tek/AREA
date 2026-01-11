@@ -188,17 +188,21 @@
   color: white;
 }
 
-@media (max-width: 768px) {
+@media (max-width: 1920px) {
   .services-container {
     padding: 8px;
+    justify-content: center;
+    align-items: center;
   }
 
   .services-content {
     padding: 0;
+    width: 100%;
+    max-width: 1400px;
   }
 
   .services-grid {
-    grid-template-columns: 1fr;
+    grid-template-columns: repeat(3, 1fr);
     gap: 12px;
   }
 
