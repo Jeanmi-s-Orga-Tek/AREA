@@ -173,6 +173,21 @@
 .service-icon-large {
   font-size: 48px;
   margin-bottom: 12px;
+
+  width: 56px;
+  height: 56px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  line-height: 1;
+}
+
+.service-icon-large img,
+.service-icon-large svg {
+  width: 48px;
+  height: 48px;
+  display: block;
+  object-fit: contain;
 }
 
 .service-name-select {

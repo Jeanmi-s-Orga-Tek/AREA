@@ -5,9 +5,20 @@
 ** LoginScreen
 */
 
-import React, { useState, useEffect } from "react";
+import React, { useState, useMemo, useEffect } from "react";
 import { login, fetchOAuthProviders, initiateOAuthLogin, OAuthProvider } from "../services/auth";
 import "./LoginScreen.css";
+
+
+type Star = {
+  id: string;
+  top: number;
+  left: number;
+  size: number;
+  delay: number;
+  dur: number;
+  alpha: number;
+};
 
 const LoginScreen: React.FC = () => {
   const [email, setEmail] = useState("");
@@ -28,8 +39,23 @@ const LoginScreen: React.FC = () => {
         setLoadingProviders(false);
       }
     };
-    
+
     loadProviders();
+  }, []);
+
+  const stars = useMemo<Star[]>(() => {
+    const count = 120;
+    const rnd = (min: number, max: number) => min + Math.random() * (max - min);
+
+    return Array.from({ length: count }, (_, i) => ({
+      id: `s-${i}-${Math.random().toString(16).slice(2)}`,
+      top: rnd(0, 100),
+      left: rnd(0, 100),
+      size: rnd(1, 2.5),
+      delay: rnd(0, 6),
+      dur: rnd(1.2, 4.5),
+      alpha: rnd(0.25, 0.9),
+    }));
   }, []);
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -56,7 +82,7 @@ const LoginScreen: React.FC = () => {
   const handleOAuthLogin = async (providerId: string) => {
     setError("");
     setLoading(true);
-    
+
     try {
       await initiateOAuthLogin(providerId);
     } catch (err) {
@@ -67,6 +93,23 @@ const LoginScreen: React.FC = () => {
 
   return (
     <div className="login-container">
+      <div className="login-background" aria-hidden="true">
+        {stars.map((s) => (
+            <span
+                key={s.id}
+                className="star"
+                style={{
+                  top: `${s.top}%`,
+                  left: `${s.left}%`,
+                  width: `${s.size}px`,
+                  height: `${s.size}px`,
+                  opacity: s.alpha,
+                  animationDelay: `${s.delay}s`,
+                  animationDuration: `${s.dur}s`,
+                }}
+            />
+        ))}
+      </div>
       <div className="login-form-card">
         <h1 className="login-title">Connexion</h1>
         <p className="login-subtitle">Connectez-vous à votre compte AREA</p>
@@ -111,6 +154,7 @@ const LoginScreen: React.FC = () => {
             className="login-button"
             disabled={loading}
           >
+
             {loading ? "Connexion en cours..." : "Se connecter"}
           </button>
         </form>
@@ -121,24 +165,49 @@ const LoginScreen: React.FC = () => {
 
         <div className="login-oauth-buttons">
           {loadingProviders ? (
-            <p style={{ textAlign: "center", color: "#999" }}>Chargement des providers...</p>
+              <p style={{ textAlign: "center", color: "#999" }}>
+                Chargement des providers...
+              </p>
           ) : oauthProviders.length === 0 ? (
-            <p style={{ textAlign: "center", color: "#999" }}>Aucun provider OAuth2 disponible</p>
+              <p style={{ textAlign: "center", color: "#999" }}>
+                Aucun provider OAuth2 disponible
+              </p>
           ) : (
-            oauthProviders.map((provider) => (
-              <button
-                key={provider.id}
-                onClick={() => handleOAuthLogin(provider.id)}
-                className="login-oauth-button"
-                disabled={loading}
-                style={{
-                  borderLeft: `4px solid ${provider.color}`,
-                }}
-              >
-                <span style={{ marginRight: "8px" }}>{provider.icon}</span>
-                Se connecter avec {provider.name}
-              </button>
-            ))
+              oauthProviders.map((provider) => (
+                  <button
+                      key={provider.id}
+                      onClick={() => handleOAuthLogin(provider.id)}
+                      className="login-oauth-button"
+                      disabled={loading}
+                      style={{
+                        borderLeft: `4px solid ${provider.color}`,
+                      }}
+                  >
+                <span
+                    style={{
+                      marginRight: "8px",
+                      display: "inline-flex",
+                      alignItems: "center",
+                    }}
+                >
+                  {typeof provider.icon === "string" &&
+                  provider.icon.startsWith("http") ? (
+                      <img
+                          src={provider.icon}
+                          alt={`${provider.name} logo`}
+                          style={{
+                            width: "20px",
+                            height: "20px",
+                            objectFit: "contain",
+                          }}
+                      />
+                  ) : (
+                      provider.icon
+                  )}
+                </span>
+                    Se connecter avec {provider.name}
+                  </button>
+              ))
           )}
         </div>
 
