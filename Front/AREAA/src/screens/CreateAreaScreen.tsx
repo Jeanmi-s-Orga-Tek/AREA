@@ -8,6 +8,8 @@
 import React, { useState, useEffect } from "react";
 import { fetchServices, fetchServiceCapabilities, createArea } from "../services/api";
 import type { Service as APIService, ServiceAction, ServiceReaction } from "../services/api";
+import { fetchOAuthProviders } from "../services/auth";
+import type { OAuthProvider } from "../services/auth";
 import "./CreateAreaScreen.css";
 
 interface Service {
@@ -15,6 +17,7 @@ interface Service {
   name: string;
   icon: string;
   color: string;
+  oauthProvider?: string;
 }
 
 interface ActionType {
@@ -51,8 +54,8 @@ const CreateAreaScreen: React.FC = () => {
   const [areaName, setAreaName] = useState("");
   
   const [services, setServices] = useState<Service[]>([]);
-  const [actionTypes, setActionTypes] = useState<Record<number, ActionType[]>>({});
-  const [reactionTypes, setReactionTypes] = useState<Record<number, ReactionType[]>>({});
+  const [actionTypes, setActionTypes] = useState<Record<number, ActionType>>({});
+  const [reactionTypes, setReactionTypes] = useState<Record<number, ReactionType>>({});
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
   const [submitting, setSubmitting] = useState(false);
@@ -65,14 +68,32 @@ const CreateAreaScreen: React.FC = () => {
     try {
       setLoading(true);
       setError("");
-      const apiServices = await fetchServices();
-      
-      const mappedServices: Service[] = apiServices.map((service) => ({
-        id: service.id,
-        name: service.display_name || service.name,
-        icon: service.icon || "🔵",
-        color: service.color || "#4285f4",
-      }));
+
+      // Fetch both sources:
+      // - /services  -> list of services (used for capabilities etc.)
+      // - /auth/providers -> icons/colors from providers.yaml
+      const [apiServices, providers] = await Promise.all([
+        fetchServices(),
+        fetchOAuthProviders(),
+      ]);
+
+      const providerById: Record<string, OAuthProvider> = Object.fromEntries(
+        (providers || []).map((p) => [p.id, p])
+      );
+
+      const mappedServices: Service[] = apiServices.map((service: APIService) => {
+        const providerKey = service.oauth_provider || service.name;
+        const provider = providerById[providerKey];
+
+        return {
+          id: service.id,
+          name: service.display_name || service.name,
+          oauthProvider: service.oauth_provider,
+          // Prefer providers.yaml icon/color if available
+          icon: provider?.icon ?? service.icon ?? "🔵",
+          color: provider?.color ?? service.color ?? "#4285f4",
+        };
+      });
 
       setServices(mappedServices);
     } catch (err) {
@@ -429,6 +450,38 @@ const CreateAreaScreen: React.FC = () => {
     }
   };
 
+  const renderServiceIcon = (service: Service) => {
+    const icon = service.icon;
+
+    if (typeof icon === "string" && /^https?:\/\//i.test(icon)) {
+      return (
+          <img
+              src={icon}
+              alt={`${service.name} logo`}
+              style={{
+                width: "48px",
+                height: "48px",
+                objectFit: "contain",
+                display: "block",
+              }}
+          />
+      );
+    }
+
+    if (typeof icon === "string" && /^\s*<svg[\s>]/i.test(icon)) {
+      return (
+          <span
+              aria-label={`${service.name} logo`}
+              role="img"
+              style={{ width: "48px", height: "48px", display: "inline-block" }}
+              dangerouslySetInnerHTML={{ __html: icon }}
+          />
+      );
+    }
+
+    return <>{icon}</>;
+  };
+
   const isStep1Valid = selectedActionService !== null;
   const isStep2Valid = selectedActionType !== null;
   const isStep3Valid = selectedReactionService !== null;
@@ -481,16 +534,16 @@ const CreateAreaScreen: React.FC = () => {
               </p>
               <div className="services-grid">
                 {services.map((service) => (
-                  <div
-                    key={service.id}
-                    className={`service-card-select ${selectedActionService?.id === service.id ? "selected" : ""}`}
-                    onClick={() => handleSelectActionService(service)}
-                  >
-                    <div className="service-icon-large" style={{ color: service.color }}>
-                      {service.icon}
+                    <div
+                        key={service.id}
+                        className={`service-card-select ${selectedActionService?.id === service.id ? "selected" : ""}`}
+                        onClick={() => handleSelectActionService(service)}
+                    >
+                      <div className="service-icon-large" style={{ color: service.color }}>
+                        {renderServiceIcon(service)}
+                      </div>
+                      <div className="service-name-select">{service.name}</div>
                     </div>
-                    <div className="service-name-select">{service.name}</div>
-                  </div>
                 ))}
               </div>
             </div>
@@ -558,7 +611,7 @@ const CreateAreaScreen: React.FC = () => {
                     onClick={() => handleSelectReactionService(service)}
                   >
                     <div className="service-icon-large" style={{ color: service.color }}>
-                      {service.icon}
+                      {renderServiceIcon(service)}
                     </div>
                     <div className="service-name-select">{service.name}</div>
                   </div>
