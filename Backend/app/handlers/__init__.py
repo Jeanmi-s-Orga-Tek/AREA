@@ -5,6 +5,7 @@ from app.handlers.trello import TRELLO_HANDLERS, TRELLO_EVENT_MAP
 from app.handlers.google import GOOGLE_HANDLERS, GOOGLE_EVENT_MAP
 from app.handlers.discord import DISCORD_HANDLERS, DISCORD_EVENT_MAP
 from app.handlers.spotify import SPOTIFY_HANDLERS, SPOTIFY_EVENT_MAP
+from app.handlers.timer import TIMER_HANDLERS, TIMER_EVENT_MAP
 
 HANDLERS: Dict[str, Dict[str, BaseActionHandler]] = {
     "github": GITHUB_HANDLERS,
@@ -12,6 +13,7 @@ HANDLERS: Dict[str, Dict[str, BaseActionHandler]] = {
     "google": GOOGLE_HANDLERS,
     "discord": DISCORD_HANDLERS,
     "spotify": SPOTIFY_HANDLERS,
+    "timer": TIMER_HANDLERS,
 }
 
 WEBHOOK_EVENT_MAP: Dict[str, Dict[str, List[BaseActionHandler]]] = {
@@ -20,6 +22,7 @@ WEBHOOK_EVENT_MAP: Dict[str, Dict[str, List[BaseActionHandler]]] = {
     "google": GOOGLE_EVENT_MAP,
     "discord": DISCORD_EVENT_MAP,
     "spotify": SPOTIFY_EVENT_MAP,
+    "timer": TIMER_EVENT_MAP,
 }
 
 def get_handler(service_name: str, action_type: str) -> Optional[BaseActionHandler]:

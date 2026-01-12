@@ -1,0 +1,17 @@
+service: timer
+name: "Timer - Schedule"
+description: "Triggers every day between two dates at a fixed time"
+is_polling: true
+parameters:
+  time:
+    type: "string"
+    required: true
+  timezone:
+    type: "string"
+    default: "Europe/Paris"
+  start_date:
+    type: "string"
+    required: true
+  end_date:
+    type: "string"
+    required: true

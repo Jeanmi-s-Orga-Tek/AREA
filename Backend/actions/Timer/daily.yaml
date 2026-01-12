@@ -1,0 +1,11 @@
+service: timer
+name: "Timer - Daily"
+description: "Triggers daily at a fixed time"
+is_polling: true
+parameters:
+  time:
+    type: "string"
+    required: true
+  timezone:
+    type: "string"
+    default: "Europe/Paris"

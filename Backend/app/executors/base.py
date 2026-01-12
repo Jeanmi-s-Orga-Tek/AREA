@@ -41,6 +41,14 @@ EXECUTORS = {
     # add the others lol
 }
 
+# Import timer executors AFTER EXECUTORS dict to avoid circular import
+from app.executors.timer import TimerDelayExecutor, TimerWaitUntilExecutor
+
+EXECUTORS["timer"] = {
+    "delay": TimerDelayExecutor(),
+    "wait_until": TimerWaitUntilExecutor(),
+}
+
 async def execute_reaction(service_name: str, reaction_key: str, user_id: int, parameters: Dict[str, Any], session: Session):  
     executor = EXECUTORS.get(service_name, {}).get(reaction_key)
     if not executor:
