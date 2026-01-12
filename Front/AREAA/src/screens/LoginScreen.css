@@ -50,7 +50,7 @@ body,
   padding: 0;
   position: relative;
   overflow: hidden;
-  background-color: #000000;
+  background-color: #0a0e1a;
   font-family: system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial,
   "Noto Sans", "Liberation Sans", sans-serif;
   font-synthesis: none;
@@ -88,10 +88,12 @@ body,
 .login-form-card {
   position: relative;
   z-index: 1;
-  background-color: #fff;
+  background: rgba(17, 24, 39, 0.95);
+  backdrop-filter: blur(10px);
   padding: 40px;
-  border-radius: 8px;
-  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+  border-radius: 14px;
+  border: 1px solid rgba(55, 65, 81, 0.5);
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
   width: 100%;
   max-width: 450px;
 }
@@ -100,13 +102,16 @@ body,
   font-size: 28px;
   font-weight: bold;
   margin-bottom: 8px;
-  color: #333;
+  background: linear-gradient(135deg, #60a5fa 0%, #a78bfa 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
   text-align: center;
 }
 
 .login-subtitle {
   font-size: 14px;
-  color: #666;
+  color: #9ca3af;
   margin-bottom: 30px;
   text-align: center;
 }
@@ -126,55 +131,68 @@ body,
 .login-label {
   font-size: 14px;
   font-weight: 500;
-  color: #333;
+  color: #e5e7eb;
 }
 
 .login-input {
   padding: 12px;
   font-size: 14px;
-  border: 1px solid #ddd;
-  border-radius: 4px;
+  background: rgba(55, 65, 81, 0.5);
+  border: 1px solid rgba(75, 85, 99, 0.5);
+  border-radius: 8px;
   outline: none;
-  transition: border-color 0.2s;
+  transition: all 0.2s;
+  color: #e5e7eb;
+}
+
+.login-input::placeholder {
+  color: #6b7280;
 }
 
 .login-input:focus {
-  border-color: #007bff;
+  border-color: #60a5fa;
+  background: rgba(55, 65, 81, 0.7);
+  box-shadow: 0 0 0 3px rgba(96, 165, 250, 0.1);
 }
 
 .login-input:disabled {
-  background-color: #f5f5f5;
+  background-color: rgba(31, 41, 55, 0.5);
   cursor: not-allowed;
+  color: #6b7280;
 }
 
 .login-button {
   padding: 12px;
   font-size: 16px;
   font-weight: 600;
-  background-color: #007bff;
+  background: linear-gradient(135deg, #3b82f6 0%, #8b5cf6 100%);
   color: white;
   border: none;
-  border-radius: 4px;
+  border-radius: 8px;
   cursor: pointer;
   margin-top: 10px;
-  transition: background-color 0.2s;
+  transition: all 0.3s;
+  box-shadow: 0 4px 12px rgba(59, 130, 246, 0.3);
 }
 
 .login-button:hover:not(:disabled) {
-  background-color: #0056b3;
+  background: linear-gradient(135deg, #2563eb 0%, #7c3aed 100%);
+  transform: translateY(-2px);
+  box-shadow: 0 6px 16px rgba(59, 130, 246, 0.4);
 }
 
 .login-button:disabled {
-  background-color: #ccc;
+  background: rgba(55, 65, 81, 0.5);
   cursor: not-allowed;
+  box-shadow: none;
 }
 
 .login-error-box {
   padding: 12px;
-  background-color: #fee;
-  border: 1px solid #fcc;
-  border-radius: 4px;
-  color: #c33;
+  background: rgba(239, 68, 68, 0.1);
+  border: 1px solid rgba(239, 68, 68, 0.3);
+  border-radius: 8px;
+  color: #fca5a5;
   font-size: 14px;
   margin-bottom: 20px;
 }
@@ -186,16 +204,18 @@ body,
 
 .login-footer-text {
   font-size: 14px;
-  color: #666;
+  color: #9ca3af;
 }
 
 .login-link {
-  color: #007bff;
+  color: #60a5fa;
   text-decoration: none;
   font-weight: 500;
+  transition: color 0.2s;
 }
 
 .login-link:hover {
+  color: #93c5fd;
   text-decoration: underline;
 }
 
@@ -212,13 +232,13 @@ body,
   left: 0;
   right: 0;
   height: 1px;
-  background-color: #ddd;
+  background: rgba(55, 65, 81, 0.5);
 }
 
 .login-divider span {
-  background-color: white;
+  background: rgba(17, 24, 39, 0.95);
   padding: 0 15px;
-  color: #999;
+  color: #9ca3af;
   font-size: 14px;
   font-weight: 500;
   position: relative;
@@ -235,18 +255,19 @@ body,
   padding: 12px;
   font-size: 14px;
   font-weight: 500;
-  background-color: white;
-  color: #333;
-  border: 2px solid #ddd;
-  border-radius: 4px;
+  background: rgba(55, 65, 81, 0.5);
+  color: #e5e7eb;
+  border: 1px solid rgba(75, 85, 99, 0.5);
+  border-radius: 8px;
   cursor: pointer;
-  transition: all 0.2s;
+  transition: all 0.3s;
 }
 
 .login-oauth-button:hover:not(:disabled) {
-  border-color: #007bff;
-  color: #007bff;
-  background-color: #f8f9fa;
+  border-color: #60a5fa;
+  background: rgba(55, 65, 81, 0.7);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
 }
 
 .login-oauth-button:disabled {
