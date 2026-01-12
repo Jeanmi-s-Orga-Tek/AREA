@@ -1,7 +1,7 @@
 providers:
   google:
     display_name: "Google"
-    icon: "🔵"
+    icon: "https://upload.wikimedia.org/wikipedia/commons/c/c1/Google_%22G%22_logo.svg"
     color: "#4285F4"
     auth_url: "https://accounts.google.com/o/oauth2/v2/auth"
     token_url: "https://oauth2.googleapis.com/token"
@@ -33,7 +33,7 @@ providers:
 
   microsoft:
     display_name: "Microsoft"
-    icon: "🟦"
+    icon: "https://upload.wikimedia.org/wikipedia/commons/4/44/Microsoft_logo.svg"
     color: "#00A4EF"
     auth_url: "https://login.microsoftonline.com/consumers/oauth2/v2.0/authorize"
     token_url: "https://login.microsoftonline.com/consumers/oauth2/v2.0/token"
@@ -61,7 +61,7 @@ providers:
 
   github:
     display_name: "GitHub"
-    icon: "⚫"
+    icon: "https://upload.wikimedia.org/wikipedia/commons/9/91/Octicons-mark-github.svg"
     color: "#24292e"
     auth_url: "https://github.com/login/oauth/authorize"
     token_url: "https://github.com/login/oauth/access_token"
@@ -93,7 +93,7 @@ providers:
 
   spotify:
     display_name: "Spotify"
-    icon: "🟢"
+    icon: "https://upload.wikimedia.org/wikipedia/commons/1/19/Spotify_logo_without_text.svg"
     color: "#1DB954"
     auth_url: "https://accounts.spotify.com/authorize"
     token_url: "https://accounts.spotify.com/api/token"
@@ -119,7 +119,7 @@ providers:
         - playlist-modify-private
   trello:
     display_name: "Trello"
-    icon: "🛂"
+    icon: "https://cdn.jsdelivr.net/npm/simple-icons@v11/icons/trello.svg"
     color: "#0079BF"
     auth_url: "https://trello.com/1/authorize"
     token_url: "https://trello.com/1/OAuthGetAccessToken"
@@ -142,7 +142,7 @@ providers:
 
   discord:
     display_name: "Discord"
-    icon: "🟣"
+    icon: "https://cdn.jsdelivr.net/npm/simple-icons@v11/icons/discord.svg"
     color: "#5865F2"
     auth_url: "https://discord.com/oauth2/authorize"
     token_url: "https://discord.com/api/oauth2/token"
