@@ -6,11 +6,17 @@
 */
 
 import React, { useEffect, useState } from "react";
-import { logout } from "../services/auth";
+import { logout, getToken } from "../services/auth";
 import "./ServerScreen.css";
+
+interface UserInfo {
+  username: string;
+  email: string;
+}
 
 const ServerScreen: React.FC = () => {
   const [stars, setStars] = useState<Array<{ id: number; style: React.CSSProperties }>>([]);
+  const [user, setUser] = useState<UserInfo | null>(null);
 
   useEffect(() => {
     const generateStars = () => {
@@ -32,7 +38,25 @@ const ServerScreen: React.FC = () => {
       setStars(newStars);
     };
 
+    const fetchUser = async () => {
+      try {
+        const token = getToken();
+        const response = await fetch("http://localhost:8080/user/me", {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        });
+        if (response.ok) {
+          const data = await response.json();
+          setUser(data);
+        }
+      } catch (error) {
+        console.error("Error fetching user:", error);
+      }
+    };
+
     generateStars();
+    fetchUser();
   }, []);
 
   const handleLogout = () => {
@@ -41,7 +65,7 @@ const ServerScreen: React.FC = () => {
   };
 
   return (
-    <div className="server-page-wrapper">
+    <div className="dashboard-page">
       <div className="server-background">
         <div>
           {stars.map((star) => (
@@ -49,32 +73,97 @@ const ServerScreen: React.FC = () => {
           ))}
         </div>
       </div>
-      
-      <main style={{ padding: "2rem", fontFamily: "sans-serif", maxWidth: "800px", margin: "0 auto", position: "relative", zIndex: 1 }}>
-      <h1 style={{ color: "white" }}>AREA Dashboard</h1>
-      <p style={{ color: "white" }}>Welcome to the AREA web client. Your automation platform is up and running.</p>
-      
-      <div style={{ marginTop: "2rem", display: "flex", flexDirection: "column", gap: "1rem" }}>
-        <a href="/areas" style={{ padding: "1rem", backgroundColor: "#4285f4", color: "white", textDecoration: "none", borderRadius: "8px", textAlign: "center" }}>
-          📋 Mes AREAs
-        </a>
-        <a href="/create-area" style={{ padding: "1rem", backgroundColor: "#34a853", color: "white", textDecoration: "none", borderRadius: "8px", textAlign: "center" }}>
-          ➕ Créer une nouvelle AREA
-        </a>
-        <a href="/services" style={{ padding: "1rem", backgroundColor: "#fbbc04", color: "white", textDecoration: "none", borderRadius: "8px", textAlign: "center" }}>
-          🔌 Gérer mes services
-        </a>
-        <a href="/profile" style={{ padding: "1rem", backgroundColor: "#ea4335", color: "white", textDecoration: "none", borderRadius: "8px", textAlign: "center" }}>
-          👤 Mon profil
-        </a>
-        <a href="/about" style={{ padding: "1rem", backgroundColor: "#666", color: "white", textDecoration: "none", borderRadius: "8px", textAlign: "center" }}>
-          ℹ️ À propos
-        </a>
-        <button onClick={handleLogout} style={{ padding: "1rem", backgroundColor: "#dc3545", color: "white", border: "none", borderRadius: "8px", cursor: "pointer", fontSize: "1rem" }}>
-          🚪 Se déconnecter
-        </button>
+
+      <div className="dashboard-sidebar">
+        <div className="sidebar-header">
+          <h2 className="sidebar-logo">⚡ AREA</h2>
+        </div>
+        <nav className="sidebar-nav">
+          <a href="/" className="nav-item active">
+            🏠 Dashboard
+          </a>
+          <a href="/areas" className="nav-item">
+            📋 Mes AREAs
+          </a>
+          <a href="/create-area" className="nav-item">
+            ➕ Créer une AREA
+          </a>
+          <a href="/services" className="nav-item">
+            🔌 Services
+          </a>
+          <a href="/profile" className="nav-item">
+            👤 Profil
+          </a>
+          <a href="/about" className="nav-item">
+            ℹ️ À propos
+          </a>
+        </nav>
       </div>
-    </main>
+
+      <div className="dashboard-content">
+        <div className="dashboard-topbar">
+          <h1 className="topbar-title">Dashboard</h1>
+          <div className="topbar-user">
+            <span className="user-name">👋 {user?.username || "Loading..."}</span>
+            <button onClick={handleLogout} className="logout-btn">
+              🚪 Déconnexion
+            </button>
+          </div>
+        </div>
+
+        <div className="dashboard-main">
+          <div className="welcome-card">
+            <h2 className="welcome-title">AREA Dashboard</h2>
+            <p className="welcome-text">
+              Welcome to the AREA web client. Your automation platform is up and running.
+            </p>
+          </div>
+
+          <div className="grid-3">
+            <div className="card">
+              <div className="card-icon">📋</div>
+              <h3 className="card-title">Mes AREAs</h3>
+              <p className="card-description">Gérez vos automatisations</p>
+              <a href="/areas" className="card-link">Voir tout →</a>
+            </div>
+
+            <div className="card">
+              <div className="card-icon">➕</div>
+              <h3 className="card-title">Créer une AREA</h3>
+              <p className="card-description">Nouvelle automatisation</p>
+              <a href="/create-area" className="card-link">Créer →</a>
+            </div>
+
+            <div className="card">
+              <div className="card-icon">🔌</div>
+              <h3 className="card-title">Services</h3>
+              <p className="card-description">Connectez vos services</p>
+              <a href="/services" className="card-link">Gérer →</a>
+            </div>
+          </div>
+
+          <div className="grid-2">
+            <div className="card">
+              <h3 className="card-title">Statistiques</h3>
+              <div className="stats">
+                <div className="stat-item">
+                  <span className="stat-label">AREAs actives</span>
+                  <span className="stat-value">0</span>
+                </div>
+                <div className="stat-item">
+                  <span className="stat-label">Services connectés</span>
+                  <span className="stat-value">0</span>
+                </div>
+              </div>
+            </div>
+
+            <div className="card">
+              <h3 className="card-title">Activité récente</h3>
+              <p className="card-description text-muted">Aucune activité pour le moment</p>
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
   );
 };
