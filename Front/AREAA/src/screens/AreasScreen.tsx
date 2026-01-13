@@ -8,6 +8,7 @@
 import React, { useState, useEffect } from "react";
 import { fetchMyAreas, toggleAreaStatus, deleteArea } from "../services/api";
 import type { AreaDetail } from "../services/api";
+import { logout } from "../services/auth";
 import "./AreasScreen.css";
 
 interface Action {
@@ -37,8 +38,29 @@ const AreasScreen: React.FC = () => {
   const [areas, setAreas] = useState<Area[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
+  const [stars, setStars] = useState<Array<{ id: number; style: React.CSSProperties }>>([]);
 
   useEffect(() => {
+    const generateStars = () => {
+      const newStars = [];
+      for (let i = 0; i < 100; i++) {
+        const size = Math.random() * 3 + 1;
+        newStars.push({
+          id: i,
+          style: {
+            width: `${size}px`,
+            height: `${size}px`,
+            left: `${Math.random() * 100}%`,
+            top: `${Math.random() * 100}%`,
+            animationDelay: `${Math.random() * 5}s`,
+            animationDuration: `${Math.random() * 3 + 2}s`,
+          },
+        });
+      }
+      setStars(newStars);
+    };
+
+    generateStars();
     loadAreas();
   }, []);
 
@@ -109,13 +131,25 @@ const AreasScreen: React.FC = () => {
     }
   };
 
+  const handleLogout = () => {
+    logout();
+    window.location.href = "/login";
+  };
+
   const activeCount = areas.filter((area) => area.isActive).length;
 
   if (loading) {
     return (
       <div className="areas-container">
+        <div className="areas-background">
+          {stars.map((star) => (
+            <div key={star.id} className="star" style={star.style} />
+          ))}
+        </div>
         <div className="areas-content">
-          <p>Chargement des AREAs...</p>
+          <div className="loading-card">
+            <p>Chargement des AREAs...</p>
+          </div>
         </div>
       </div>
     );
@@ -124,11 +158,16 @@ const AreasScreen: React.FC = () => {
   if (error) {
     return (
       <div className="areas-container">
+        <div className="areas-background">
+          {stars.map((star) => (
+            <div key={star.id} className="star" style={star.style} />
+          ))}
+        </div>
         <div className="areas-content">
-          <div style={{ color: "red", padding: "20px" }}>
+          <div className="error-card">
             <h3>Erreur</h3>
             <p>{error}</p>
-            <button onClick={loadAreas}>Réessayer</button>
+            <button onClick={loadAreas} className="retry-button">Réessayer</button>
           </div>
         </div>
       </div>
@@ -137,9 +176,20 @@ const AreasScreen: React.FC = () => {
 
   return (
     <div className="areas-container">
+      <div className="areas-background">
+        {stars.map((star) => (
+          <div key={star.id} className="star" style={star.style} />
+        ))}
+      </div>
       <div className="areas-content">
+        <div className="areas-topbar">
+          <h1 className="topbar-title">Mes AREA</h1>
+          <button onClick={handleLogout} className="logout-btn">
+            Déconnexion
+          </button>
+        </div>
+
         <div className="areas-header">
-          <h1 className="areas-title">Mes AREA</h1>
           <p className="areas-subtitle">
             Gérez vos automatisations entre différents services
           </p>
