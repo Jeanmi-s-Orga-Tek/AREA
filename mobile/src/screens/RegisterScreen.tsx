@@ -1,6 +1,5 @@
 import React, {useState} from 'react';
 import {
-  SafeAreaView,
   KeyboardAvoidingView,
   Platform,
   View,
@@ -11,6 +10,7 @@ import {
   ActivityIndicator,
   Alert,
 } from 'react-native';
+import {SafeAreaView} from 'react-native-safe-area-context';
 import {NativeStackNavigationProp} from '@react-navigation/native-stack';
 import {Button, StarField} from '../components';
 import {colors, spacing, typography} from '../theme';

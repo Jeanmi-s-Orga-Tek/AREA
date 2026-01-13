@@ -4,7 +4,6 @@ import {
   Text,
   TextInput,
   StyleSheet,
-  SafeAreaView,
   KeyboardAvoidingView,
   Platform,
   ActivityIndicator,
@@ -12,6 +11,7 @@ import {
   Linking,
   Image,
 } from 'react-native';
+import {SafeAreaView} from 'react-native-safe-area-context';
 import {NativeStackNavigationProp} from '@react-navigation/native-stack';
 import {SvgUri, SvgXml} from 'react-native-svg';
 import {Button, StarField} from '../components';

@@ -1,5 +1,13 @@
-import React, {useMemo} from 'react';
-import {Dimensions, StyleProp, StyleSheet, View, ViewStyle} from 'react-native';
+import React, {useEffect, useMemo, useRef} from 'react';
+import {
+  Animated,
+  Dimensions,
+  Easing,
+  StyleProp,
+  StyleSheet,
+  View,
+  ViewStyle,
+} from 'react-native';
 import {colors, spacing} from '../theme';
 
 type Star = {
@@ -32,14 +40,68 @@ export const StarField: React.FC<StarFieldProps> = ({
   contentStyle,
   padding = spacing.lg,
 }) => {
-  const stars = useMemo(() => generateStars(90), []);
+  const stars = useMemo(() => generateStars(120), []);
+  const drift = useRef(new Animated.Value(0)).current;
+  const twinkle = useRef(new Animated.Value(0)).current;
+
+  useEffect(() => {
+    Animated.loop(
+      Animated.sequence([
+        Animated.timing(drift, {
+          toValue: 1,
+          duration: 10000,
+          easing: Easing.inOut(Easing.quad),
+          useNativeDriver: true,
+        }),
+        Animated.timing(drift, {
+          toValue: -1,
+          duration: 10000,
+          easing: Easing.inOut(Easing.quad),
+          useNativeDriver: true,
+        }),
+      ]),
+    ).start();
+
+    Animated.loop(
+      Animated.sequence([
+        Animated.timing(twinkle, {
+          toValue: 1,
+          duration: 4000,
+          easing: Easing.inOut(Easing.quad),
+          useNativeDriver: true,
+        }),
+        Animated.timing(twinkle, {
+          toValue: 0,
+          duration: 4000,
+          easing: Easing.inOut(Easing.quad),
+          useNativeDriver: true,
+        }),
+      ]),
+    ).start();
+  }, [drift, twinkle]);
+
+  const translateY = drift.interpolate({
+    inputRange: [-1, 1],
+    outputRange: [16, -16],
+  });
+  const translateX = drift.interpolate({
+    inputRange: [-1, 1],
+    outputRange: [-6, 6],
+  });
+
+  const twinkleOpacity = twinkle.interpolate({
+    inputRange: [0, 1],
+    outputRange: [0.4, 1],
+  });
 
   return (
     <View style={styles.container}>
       <View style={styles.background} />
-      <View pointerEvents="none" style={styles.starLayer}>
+      <Animated.View
+        pointerEvents="none"
+        style={[styles.starLayer, {transform: [{translateY}, {translateX}]}]}>
         {stars.map(star => (
-          <View
+          <Animated.View
             key={star.id}
             style={[
               styles.star,
@@ -48,13 +110,13 @@ export const StarField: React.FC<StarFieldProps> = ({
                 left: star.left,
                 width: star.size,
                 height: star.size,
-                opacity: star.opacity,
+                opacity: Animated.multiply(twinkleOpacity, star.opacity),
               },
             ]}
           />
         ))}
-        <View style={styles.glow} />
-      </View>
+        <Animated.View style={[styles.glow, {opacity: twinkleOpacity}]} />
+      </Animated.View>
       <View style={[styles.content, {padding}, contentStyle]}>{children}</View>
     </View>
   );

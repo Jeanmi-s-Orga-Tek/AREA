@@ -4,11 +4,11 @@ import {
   Text,
   TextInput,
   StyleSheet,
-  SafeAreaView,
   ScrollView,
   ActivityIndicator,
   Alert,
 } from 'react-native';
+import {SafeAreaView} from 'react-native-safe-area-context';
 import {Button, Card, StarField} from '../components';
 import {colors, spacing, typography} from '../theme';
 import {getApiBaseUrl, setApiBaseUrl, clearApiBaseUrl} from '../api/storage';

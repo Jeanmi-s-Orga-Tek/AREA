@@ -2,7 +2,6 @@ import React, {useEffect, useState} from 'react';
 import {
   ActivityIndicator,
   Alert,
-  SafeAreaView,
   ScrollView,
   StyleSheet,
   Text,
@@ -11,6 +10,7 @@ import {
   View,
   Image,
 } from 'react-native';
+import {SafeAreaView} from 'react-native-safe-area-context';
 import {NativeStackNavigationProp} from '@react-navigation/native-stack';
 import {SvgUri, SvgXml} from 'react-native-svg';
 import {Button, StarField} from '../components';
