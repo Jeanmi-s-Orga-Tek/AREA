@@ -4,15 +4,17 @@ import {
   Text,
   TextInput,
   StyleSheet,
-  SafeAreaView,
   KeyboardAvoidingView,
   Platform,
   ActivityIndicator,
   TouchableOpacity,
   Linking,
+  Image,
 } from 'react-native';
+import {SafeAreaView} from 'react-native-safe-area-context';
 import {NativeStackNavigationProp} from '@react-navigation/native-stack';
-import {Button} from '../components';
+import {SvgUri, SvgXml} from 'react-native-svg';
+import {Button, StarField} from '../components';
 import {colors, spacing, typography} from '../theme';
 import {
   createOAuthState,
@@ -37,7 +39,15 @@ export const LoginScreen: React.FC<LoginScreenProps> = ({navigation}) => {
   const [oauthProviders, setOauthProviders] = useState<OAuthProvider[]>([]);
   const [providerLoading, setProviderLoading] = useState(false);
   const [isFetchingProviders, setIsFetchingProviders] = useState(true);
+  const [svgFailures, setSvgFailures] = useState<Record<string, boolean>>({});
   const {login: setAuthLogin} = useAuth();
+
+  const svgFallbacks: Record<string, string> = {
+    google: 'https://cdn.jsdelivr.net/npm/simple-icons@v11/icons/google.svg',
+    microsoft: 'https://cdn.jsdelivr.net/npm/simple-icons@v11/icons/microsoft.svg',
+    github: 'https://cdn.jsdelivr.net/npm/simple-icons@v11/icons/github.svg',
+    spotify: 'https://cdn.jsdelivr.net/npm/simple-icons@v11/icons/spotify.svg',
+  };
 
   useEffect(() => {
     let isMounted = true;
@@ -103,96 +113,191 @@ export const LoginScreen: React.FC<LoginScreenProps> = ({navigation}) => {
     }
   };
 
-  return (
-    <SafeAreaView style={styles.container}>
-      <KeyboardAvoidingView
-        behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
-        style={styles.keyboardView}>
-        <View style={styles.content}>
-          <Text style={styles.title}>Welcome to AREA</Text>
-          <Text style={styles.subtitle}>Connect your apps and automate</Text>
+  const renderProviderIcon = (provider: OAuthProvider) => {
+    const icon = provider.icon;
+    const initial = (provider.name?.[0] || '•').toUpperCase();
+    const key = (provider.id || provider.name || '').toLowerCase();
+    const fallbackUri = svgFallbacks[key];
 
-          <View style={styles.form}>
-            <TextInput
-              style={styles.input}
-              placeholder="Email"
-              placeholderTextColor={colors.textSecondary}
-              value={email}
-              onChangeText={setEmail}
-              autoCapitalize="none"
-              keyboardType="email-address"
-              editable={!loading}
+    const renderFallback = () => {
+      if (fallbackUri) {
+        if (svgFailures[fallbackUri]) {
+          return <Text style={styles.oauthIcon}>{initial}</Text>;
+        }
+        return (
+          <View style={styles.svgWrapper}>
+            <SvgUri
+              width={28}
+              height={28}
+              uri={fallbackUri}
+              onError={() =>
+                setSvgFailures(prev => ({
+                  ...prev,
+                  [fallbackUri]: true,
+                }))
+              }
             />
-            <TextInput
-              style={styles.input}
-              placeholder="Password"
-              placeholderTextColor={colors.textSecondary}
-              value={password}
-              onChangeText={setPassword}
-              secureTextEntry
-              editable={!loading}
-            />
-            {error ? <Text style={styles.error}>{error}</Text> : null}
-            <Button
-              title={loading ? 'Signing in...' : 'Sign in'}
-              onPress={handleLogin}
-              style={styles.button}
-              disabled={loading}
-            />
-            {loading && <ActivityIndicator color={colors.primary} />}
           </View>
+        );
+      }
+      return <Text style={styles.oauthIcon}>{initial}</Text>;
+    };
 
-          <View style={styles.oauthSection}>
-            <Text style={styles.orLabel}>Or continue with</Text>
-            {isFetchingProviders ? (
-              <ActivityIndicator color={colors.primary} />
-            ) : oauthProviders.length ? (
-              oauthProviders.map(provider => (
-                <TouchableOpacity
-                  key={provider.id}
-                  style={[styles.oauthButton, {borderColor: provider.color}]}
-                  disabled={providerLoading}
-                  onPress={() => handleOAuthLogin(provider.id)}>
-                  <Text style={styles.oauthButtonText}>
-                    {provider.icon} Continue with {provider.name}
-                  </Text>
-                </TouchableOpacity>
-              ))
-            ) : (
-              <Text style={styles.oauthFallback}>
-                No OAuth providers are currently available.
-              </Text>
-            )}
-            {providerLoading && (
-              <ActivityIndicator
-                color={colors.primary}
-                style={styles.oauthSpinner}
-              />
-            )}
-          </View>
+    const handleSvgError = () =>
+      setSvgFailures(prev => ({
+        ...prev,
+        [icon || key]: true,
+      }));
 
-          <TouchableOpacity
-            style={styles.settingsLink}
-            onPress={() => navigation.navigate('Settings')}>
-            <Text style={styles.settingsLinkText}>Server settings</Text>
-          </TouchableOpacity>
+    if (!icon) {
+      return renderFallback();
+    }
 
-          <TouchableOpacity
-            style={styles.linkContainer}
-            disabled={loading}
-            onPress={() => navigation.navigate('Register')}>
-            <Text style={styles.linkText}>Need an account? Create one</Text>
-          </TouchableOpacity>
+    if (/^\s*<svg/i.test(icon)) {
+      if (svgFailures[icon]) {
+        return renderFallback();
+      }
+      return (
+        <View style={styles.svgWrapper}>
+          <SvgXml xml={icon} width={28} height={28} onError={handleSvgError} />
         </View>
-      </KeyboardAvoidingView>
-    </SafeAreaView>
+      );
+    }
+
+    if (/^https?:\/\//i.test(icon)) {
+      if (/\.svg(\?|$)/i.test(icon)) {
+        if (svgFailures[icon]) {
+          return renderFallback();
+        }
+        return (
+          <View style={styles.svgWrapper}>
+            <SvgUri
+              width={28}
+              height={28}
+              uri={icon}
+              onError={handleSvgError}
+            />
+          </View>
+        );
+      }
+      return (
+        <Image
+          source={{uri: icon}}
+          style={styles.oauthImage}
+          resizeMode="contain"
+        />
+      );
+    }
+
+    return renderFallback();
+  };
+
+  return (
+    <StarField>
+      <SafeAreaView style={styles.safeArea}>
+        <KeyboardAvoidingView
+          behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+          style={styles.keyboardView}>
+          <View style={styles.content}>
+            <View style={styles.card}>
+              <View style={styles.header}>
+                <Text style={styles.title}>Connexion</Text>
+              </View>
+
+              <View style={styles.form}>
+                <TextInput
+                  style={styles.input}
+                  placeholder="Email"
+                  placeholderTextColor={colors.textSecondary}
+                  value={email}
+                  onChangeText={setEmail}
+                  autoCapitalize="none"
+                  keyboardType="email-address"
+                  editable={!loading}
+                />
+                <TextInput
+                  style={styles.input}
+                  placeholder="Mot de passe"
+                  placeholderTextColor={colors.textSecondary}
+                  value={password}
+                  onChangeText={setPassword}
+                  secureTextEntry
+                  editable={!loading}
+                />
+                {error ? <Text style={styles.errorBox}>{error}</Text> : null}
+                <Button
+                  title={loading ? 'Connexion en cours...' : 'Se connecter'}
+                  onPress={handleLogin}
+                  style={styles.button}
+                  disabled={loading}
+                />
+              </View>
+
+              <View style={styles.divider}>
+                <View style={styles.dividerLine} />
+                <Text style={styles.dividerLabel}>OU</Text>
+                <View style={styles.dividerLine} />
+              </View>
+
+              <View style={styles.oauthSection}>
+                {isFetchingProviders ? (
+                  <ActivityIndicator color={colors.primary} />
+                ) : oauthProviders.length ? (
+                  oauthProviders.map(provider => (
+                    <TouchableOpacity
+                      key={provider.id}
+                      style={[
+                        styles.oauthButton,
+                        {borderLeftColor: provider.color || colors.primary},
+                      ]}
+                      disabled={providerLoading}
+                      onPress={() => handleOAuthLogin(provider.id)}>
+                      <View style={styles.oauthButtonContent}>
+                        {renderProviderIcon(provider)}
+                        <Text style={styles.oauthButtonText}>
+                          Se connecter avec {provider.name}
+                        </Text>
+                      </View>
+                    </TouchableOpacity>
+                  ))
+                ) : (
+                  <Text style={styles.oauthFallback}>
+                    Aucun fournisseur OAuth disponible.
+                  </Text>
+                )}
+                {providerLoading && (
+                  <ActivityIndicator
+                    color={colors.primary}
+                    style={styles.oauthSpinner}
+                  />
+                )}
+              </View>
+
+              <TouchableOpacity
+                style={styles.linkContainer}
+                disabled={loading}
+                onPress={() => navigation.navigate('Register')}>
+                <Text style={styles.linkText}>
+                  Pas encore de compte ? Créez-en un
+                </Text>
+              </TouchableOpacity>
+
+              <TouchableOpacity
+                style={styles.settingsLink}
+                onPress={() => navigation.navigate('Settings')}>
+                <Text style={styles.settingsLinkText}>Paramètres serveur</Text>
+              </TouchableOpacity>
+            </View>
+          </View>
+        </KeyboardAvoidingView>
+      </SafeAreaView>
+    </StarField>
   );
 };
 
 const styles = StyleSheet.create({
-  container: {
+  safeArea: {
     flex: 1,
-    backgroundColor: colors.background,
   },
   keyboardView: {
     flex: 1,
@@ -200,25 +305,42 @@ const styles = StyleSheet.create({
   content: {
     flex: 1,
     justifyContent: 'center',
-    paddingHorizontal: spacing.lg,
+    alignItems: 'center',
+  },
+  card: {
+    width: '100%',
+    maxWidth: 460,
+    backgroundColor: colors.card,
+    borderWidth: 1,
+    borderColor: colors.border,
+    borderRadius: 16,
+    padding: spacing.xl,
+    shadowColor: colors.shadow,
+    shadowOffset: {width: 0, height: 12},
+    shadowOpacity: 0.35,
+    shadowRadius: 18,
+    elevation: 12,
+  },
+  header: {
+    marginBottom: spacing.lg,
   },
   title: {
     ...typography.h1,
-    color: colors.text,
+    color: colors.primary,
     textAlign: 'center',
-    marginBottom: spacing.sm,
+    marginBottom: spacing.xs,
   },
   subtitle: {
-    ...typography.body,
+    ...typography.bodySmall,
     color: colors.textSecondary,
     textAlign: 'center',
-    marginBottom: spacing.xxl,
   },
   form: {
     gap: spacing.md,
+    marginBottom: spacing.lg,
   },
   input: {
-    backgroundColor: colors.surface,
+    backgroundColor: colors.surfaceMuted,
     borderRadius: 12,
     paddingVertical: spacing.md,
     paddingHorizontal: spacing.lg,
@@ -230,26 +352,65 @@ const styles = StyleSheet.create({
   button: {
     marginTop: spacing.md,
   },
-  error: {
+  errorBox: {
     color: colors.error,
-    ...typography.body,
+    ...typography.bodySmall,
     textAlign: 'center',
+    backgroundColor: 'rgba(239, 68, 68, 0.12)',
+    borderColor: colors.error,
+    borderWidth: StyleSheet.hairlineWidth,
+    paddingVertical: spacing.sm,
+    paddingHorizontal: spacing.md,
+    borderRadius: 10,
   },
   oauthSection: {
-    marginTop: spacing.xxl,
     gap: spacing.sm,
   },
-  orLabel: {
+  divider: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: spacing.sm,
+    marginVertical: spacing.md,
+  },
+  dividerLine: {
+    flex: 1,
+    height: StyleSheet.hairlineWidth,
+    backgroundColor: colors.border,
+  },
+  dividerLabel: {
     ...typography.caption,
-    textAlign: 'center',
     color: colors.textSecondary,
+    letterSpacing: 1,
   },
   oauthButton: {
     borderWidth: 1,
+    borderColor: colors.border,
+    borderLeftWidth: 4,
     borderRadius: 12,
     paddingVertical: spacing.md,
     paddingHorizontal: spacing.lg,
+    backgroundColor: colors.surfaceMuted,
+  },
+  oauthButtonContent: {
+    flexDirection: 'row',
     alignItems: 'center',
+    gap: spacing.sm,
+  },
+  oauthImage: {
+    width: 28,
+    height: 28,
+    borderRadius: 6,
+  },
+  svgWrapper: {
+    width: 28,
+    height: 28,
+    borderRadius: 6,
+    overflow: 'hidden',
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  oauthIcon: {
+    fontSize: 22,
   },
   oauthButtonText: {
     ...typography.body,
@@ -263,21 +424,21 @@ const styles = StyleSheet.create({
   oauthSpinner: {
     marginTop: spacing.sm,
   },
-  settingsLink: {
+  linkContainer: {
     marginTop: spacing.lg,
+    alignItems: 'center',
+  },
+  linkText: {
+    color: colors.primary,
+    ...typography.body,
+  },
+  settingsLink: {
+    marginTop: spacing.sm,
     alignItems: 'center',
   },
   settingsLinkText: {
     color: colors.textSecondary,
     textDecorationLine: 'underline',
     ...typography.bodySmall,
-  },
-  linkContainer: {
-    marginTop: spacing.xl,
-    alignItems: 'center',
-  },
-  linkText: {
-    color: colors.primary,
-    ...typography.body,
   },
 });

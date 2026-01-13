@@ -2,16 +2,18 @@ import React, {useEffect, useState} from 'react';
 import {
   ActivityIndicator,
   Alert,
-  SafeAreaView,
   ScrollView,
   StyleSheet,
   Text,
   TextInput,
   TouchableOpacity,
   View,
+  Image,
 } from 'react-native';
+import {SafeAreaView} from 'react-native-safe-area-context';
 import {NativeStackNavigationProp} from '@react-navigation/native-stack';
-import {Button} from '../components';
+import {SvgUri, SvgXml} from 'react-native-svg';
+import {Button, StarField} from '../components';
 import {colors, spacing, typography} from '../theme';
 import {
   fetchServices,
@@ -65,6 +67,7 @@ export const CreateAreaScreen: React.FC<CreateAreaScreenProps> = ({navigation}) 
   const [services, setServices] = useState<ServiceSummary[]>([]);
   const [serviceLoading, setServiceLoading] = useState(true);
   const [error, setError] = useState('');
+  const [svgFailures, setSvgFailures] = useState<Record<string, boolean>>({});
   const [capabilitiesLoadingId, setCapabilitiesLoadingId] = useState<number | null>(
     null,
   );
@@ -263,21 +266,111 @@ export const CreateAreaScreen: React.FC<CreateAreaScreenProps> = ({navigation}) 
     service: ServiceSummary,
     isSelected: boolean,
     onPress: () => void,
-  ) => (
-    <TouchableOpacity
-      key={service.id}
-      style={[
-        styles.serviceCard,
-        isSelected && styles.serviceCardSelected,
-      ]}
-      onPress={onPress}
-      activeOpacity={0.8}>
-      <Text style={styles.serviceIcon}>{service.icon || '⚙️'}</Text>
-      <Text style={styles.serviceName} numberOfLines={1}>
-        {service.display_name || service.name}
-      </Text>
-    </TouchableOpacity>
-  );
+  ) => {
+    const key = (service.name || service.display_name || '').toLowerCase();
+    const fallbackSvgs: Record<string, string> = {
+      google: 'https://cdn.jsdelivr.net/npm/simple-icons@v11/icons/google.svg',
+      microsoft: 'https://cdn.jsdelivr.net/npm/simple-icons@v11/icons/microsoft.svg',
+      github: 'https://cdn.jsdelivr.net/npm/simple-icons@v11/icons/github.svg',
+      spotify: 'https://cdn.jsdelivr.net/npm/simple-icons@v11/icons/spotify.svg',
+      trello: 'https://cdn.jsdelivr.net/npm/simple-icons@v11/icons/trello.svg',
+      discord: 'https://cdn.jsdelivr.net/npm/simple-icons@v11/icons/discord.svg',
+      timer: 'https://cdn.jsdelivr.net/npm/simple-icons@v11/icons/timer.svg',
+    };
+
+    const renderIcon = () => {
+      const icon = service.icon;
+      const initial = (service.display_name?.[0] || service.name?.[0] || '•').toUpperCase();
+      const fallbackUri = fallbackSvgs[key];
+
+      const markFailed = (id: string) =>
+        setSvgFailures(prev => ({
+          ...prev,
+          [id]: true,
+        }));
+
+      const renderFallback = () => {
+        if (fallbackUri) {
+          if (svgFailures[fallbackUri]) {
+            return <Text style={styles.serviceIconText}>{initial}</Text>;
+          }
+          return (
+            <View style={styles.serviceSvgWrapper}>
+              <SvgUri
+                width={32}
+                height={32}
+                uri={fallbackUri}
+                onError={() => markFailed(fallbackUri)}
+              />
+            </View>
+          );
+        }
+        return <Text style={styles.serviceIconText}>{initial}</Text>;
+      };
+
+      if (icon) {
+        if (/^\s*<svg/i.test(icon)) {
+          if (svgFailures[icon]) {
+            return renderFallback();
+          }
+          return (
+            <View style={styles.serviceSvgWrapper}>
+              <SvgXml
+                width={32}
+                height={32}
+                xml={icon}
+                onError={() => markFailed(icon)}
+              />
+            </View>
+          );
+        }
+
+        if (/^https?:\/\//i.test(icon)) {
+          if (/\.svg(\?|$)/i.test(icon)) {
+            if (svgFailures[icon]) {
+              return renderFallback();
+            }
+            return (
+              <View style={styles.serviceSvgWrapper}>
+                <SvgUri
+                  width={32}
+                  height={32}
+                  uri={icon}
+                  onError={() => markFailed(icon)}
+                />
+              </View>
+            );
+          }
+          return (
+            <Image
+              source={{uri: icon}}
+              style={styles.serviceImage}
+              resizeMode="contain"
+              onError={() => markFailed(icon)}
+            />
+          );
+        }
+      }
+
+      return renderFallback();
+    };
+
+    return (
+      <TouchableOpacity
+        key={service.id}
+        style={[
+          styles.serviceCard,
+          isSelected && styles.serviceCardSelected,
+        ]}
+        onPress={onPress}
+        activeOpacity={0.8}>
+        {renderIcon()}
+        <Text style={styles.serviceName} numberOfLines={1}>
+          {service.display_name || service.name}
+        </Text>
+      </TouchableOpacity>
+    );
+  };
 
   const currentActionOptions = selectedActionService
     ? actionOptions[selectedActionService.id]
@@ -290,287 +383,305 @@ export const CreateAreaScreen: React.FC<CreateAreaScreenProps> = ({navigation}) 
     serviceId !== null && capabilitiesLoadingId === serviceId;
 
   return (
-    <SafeAreaView style={styles.container}>
-      <ScrollView contentContainerStyle={styles.content}>
-        <Text style={styles.title}>Create a new AREA</Text>
-        <Text style={styles.subtitle}>
-          Follow the steps to connect an action to a reaction
-        </Text>
-
-        {error ? <Text style={styles.error}>{error}</Text> : null}
-
-        {serviceLoading ? (
-          <View style={styles.loadingContainer}>
-            <ActivityIndicator size="large" color={colors.primary} />
-            <Text style={styles.loadingText}>Loading services…</Text>
+    <StarField padding={0}>
+      <SafeAreaView style={styles.safeArea}>
+        <ScrollView contentContainerStyle={styles.content}>
+          <View style={styles.headerCard}>
+            <Text style={styles.title}>Créer une AREA</Text>
           </View>
-        ) : (
-          <View style={styles.stepContainer}>
-            <Text style={styles.stepLabel}>Step {currentStep} / 5</Text>
 
-            {currentStep === 1 && (
-              <>
-                <Text style={styles.stepTitle}>
-                  Choose the service that triggers the action
-                </Text>
-                <View style={styles.servicesGrid}>
-                  {services.map(service =>
-                    renderServiceCard(service, selectedActionService?.id === service.id, () =>
-                      handleSelectActionService(service),
-                    ),
+          {error ? <Text style={styles.error}>{error}</Text> : null}
+
+          {serviceLoading ? (
+            <View style={styles.loadingContainer}>
+              <ActivityIndicator size="large" color={colors.primary} />
+              <Text style={styles.loadingText}>Chargement des services…</Text>
+            </View>
+          ) : (
+            <View style={styles.stepContainer}>
+              <Text style={styles.stepLabel}>Étape {currentStep} / 5</Text>
+
+              {currentStep === 1 && (
+                <>
+                  <Text style={styles.stepTitle}>
+                    Choisissez le service déclencheur
+                  </Text>
+                  <View style={styles.servicesGrid}>
+                    {services.map(service =>
+                      renderServiceCard(service, selectedActionService?.id === service.id, () =>
+                        handleSelectActionService(service),
+                      ),
+                    )}
+                  </View>
+                </>
+              )}
+
+              {currentStep === 2 && selectedActionService && (
+                <>
+                  <Text style={styles.stepTitle}>
+                    Sélectionnez une action dans {selectedActionService.display_name || selectedActionService.name}
+                  </Text>
+                  {loadingCapabilities(selectedActionService.id) && (
+                    <ActivityIndicator color={colors.primary} />
                   )}
-                </View>
-              </>
-            )}
-
-            {currentStep === 2 && selectedActionService && (
-              <>
-                <Text style={styles.stepTitle}>
-                  Select an action from {selectedActionService.display_name || selectedActionService.name}
-                </Text>
-                {loadingCapabilities(selectedActionService.id) && (
-                  <ActivityIndicator color={colors.primary} />
-                )}
-                {!loadingCapabilities(selectedActionService.id) &&
-                  (currentActionOptions?.length ? (
-                    currentActionOptions.map(action => (
-                      <TouchableOpacity
-                        key={action.id}
-                        style={[
-                          styles.listCard,
-                          selectedAction?.id === action.id && styles.listCardSelected,
-                        ]}
-                        onPress={() => handleSelectAction(action)}>
-                        <Text style={styles.listCardTitle}>{action.name}</Text>
-                        {action.description ? (
-                          <Text style={styles.listCardDescription}>
-                            {action.description}
-                          </Text>
-                        ) : null}
-                      </TouchableOpacity>
-                    ))
-                  ) : (
-                    <Text style={styles.helperText}>
-                      No actions available for this service yet.
-                    </Text>
-                  ))}
-
-                {selectedAction && selectedAction.parameterDefs.length > 0 && (
-                  <View style={styles.parametersContainer}>
-                    <Text style={styles.parametersTitle}>Configure action</Text>
-                    {selectedAction.parameterDefs.map(param => (
-                      <View key={param.id} style={styles.parameterField}>
-                        <Text style={styles.parameterLabel}>{param.label}</Text>
-                        <TextInput
-                          style={styles.parameterInput}
-                          placeholder={`Enter ${param.label}`}
-                          value={actionParameters[param.id] || ''}
-                          onChangeText={value =>
-                            handleActionParameterChange(param.id, value)
-                          }
-                          keyboardType={param.type === 'number' ? 'numeric' : 'default'}
-                        />
-                      </View>
+                  {!loadingCapabilities(selectedActionService.id) &&
+                    (currentActionOptions?.length ? (
+                      currentActionOptions.map(action => (
+                        <TouchableOpacity
+                          key={action.id}
+                          style={[
+                            styles.listCard,
+                            selectedAction?.id === action.id && styles.listCardSelected,
+                          ]}
+                          onPress={() => handleSelectAction(action)}>
+                          <Text style={styles.listCardTitle}>{action.name}</Text>
+                          {action.description ? (
+                            <Text style={styles.listCardDescription}>
+                              {action.description}
+                            </Text>
+                          ) : null}
+                        </TouchableOpacity>
+                      ))
+                    ) : (
+                      <Text style={styles.helperText}>
+                        Aucune action disponible pour ce service.
+                      </Text>
                     ))}
-                  </View>
-                )}
-              </>
-            )}
 
-            {currentStep === 3 && (
-              <>
-                <Text style={styles.stepTitle}>
-                  Choose the service that will react
-                </Text>
-                <View style={styles.servicesGrid}>
-                  {services.map(service =>
-                    renderServiceCard(service, selectedReactionService?.id === service.id, () =>
-                      handleSelectReactionService(service),
-                    ),
+                  {selectedAction && selectedAction.parameterDefs.length > 0 && (
+                    <View style={styles.parametersContainer}>
+                      <Text style={styles.parametersTitle}>Configurer l&apos;action</Text>
+                      {selectedAction.parameterDefs.map(param => (
+                        <View key={param.id} style={styles.parameterField}>
+                          <Text style={styles.parameterLabel}>{param.label}</Text>
+                          <TextInput
+                            style={styles.parameterInput}
+                            placeholder={`Entrez ${param.label}`}
+                            value={actionParameters[param.id] || ''}
+                            onChangeText={value =>
+                              handleActionParameterChange(param.id, value)
+                            }
+                            keyboardType={param.type === 'number' ? 'numeric' : 'default'}
+                          />
+                        </View>
+                      ))}
+                    </View>
                   )}
-                </View>
-              </>
-            )}
+                </>
+              )}
 
-            {currentStep === 4 && selectedReactionService && (
-              <>
-                <Text style={styles.stepTitle}>
-                  Select a reaction from {selectedReactionService.display_name || selectedReactionService.name}
-                </Text>
-                {loadingCapabilities(selectedReactionService.id) && (
-                  <ActivityIndicator color={colors.primary} />
-                )}
-                {!loadingCapabilities(selectedReactionService.id) &&
-                  (currentReactionOptions?.length ? (
-                    currentReactionOptions.map(reaction => (
-                      <TouchableOpacity
-                        key={reaction.id}
-                        style={[
-                          styles.listCard,
-                          selectedReaction?.id === reaction.id && styles.listCardSelected,
-                        ]}
-                        onPress={() => handleSelectReaction(reaction)}>
-                        <Text style={styles.listCardTitle}>{reaction.name}</Text>
-                        {reaction.description ? (
-                          <Text style={styles.listCardDescription}>
-                            {reaction.description}
-                          </Text>
-                        ) : null}
-                      </TouchableOpacity>
-                    ))
-                  ) : (
-                    <Text style={styles.helperText}>
-                      No reactions available for this service yet.
-                    </Text>
-                  ))}
+              {currentStep === 3 && (
+                <>
+                  <Text style={styles.stepTitle}>
+                    Choisissez le service récepteur
+                  </Text>
+                  <View style={styles.servicesGrid}>
+                    {services.map(service =>
+                      renderServiceCard(service, selectedReactionService?.id === service.id, () =>
+                        handleSelectReactionService(service),
+                      ),
+                    )}
+                  </View>
+                </>
+              )}
 
-                {selectedReaction && selectedReaction.parameterDefs.length > 0 && (
-                  <View style={styles.parametersContainer}>
-                    <Text style={styles.parametersTitle}>Configure reaction</Text>
-                    {selectedReaction.parameterDefs.map(param => (
-                      <View key={param.id} style={styles.parameterField}>
-                        <Text style={styles.parameterLabel}>{param.label}</Text>
-                        <TextInput
-                          style={styles.parameterInput}
-                          placeholder={`Enter ${param.label}`}
-                          value={reactionParameters[param.id] || ''}
-                          onChangeText={value =>
-                            handleReactionParameterChange(param.id, value)
-                          }
-                          keyboardType={param.type === 'number' ? 'numeric' : 'default'}
-                        />
-                      </View>
+              {currentStep === 4 && selectedReactionService && (
+                <>
+                  <Text style={styles.stepTitle}>
+                    Sélectionnez une réaction dans {selectedReactionService.display_name || selectedReactionService.name}
+                  </Text>
+                  {loadingCapabilities(selectedReactionService.id) && (
+                    <ActivityIndicator color={colors.primary} />
+                  )}
+                  {!loadingCapabilities(selectedReactionService.id) &&
+                    (currentReactionOptions?.length ? (
+                      currentReactionOptions.map(reaction => (
+                        <TouchableOpacity
+                          key={reaction.id}
+                          style={[
+                            styles.listCard,
+                            selectedReaction?.id === reaction.id && styles.listCardSelected,
+                          ]}
+                          onPress={() => handleSelectReaction(reaction)}>
+                          <Text style={styles.listCardTitle}>{reaction.name}</Text>
+                          {reaction.description ? (
+                            <Text style={styles.listCardDescription}>
+                              {reaction.description}
+                            </Text>
+                          ) : null}
+                        </TouchableOpacity>
+                      ))
+                    ) : (
+                      <Text style={styles.helperText}>
+                        Aucune réaction disponible pour ce service.
+                      </Text>
                     ))}
-                  </View>
-                )}
-              </>
-            )}
 
-            {currentStep === 5 && (
-              <>
-                <Text style={styles.stepTitle}>Name your AREA</Text>
-                <View style={styles.parameterField}>
-                  <Text style={styles.parameterLabel}>AREA name</Text>
-                  <TextInput
-                    style={styles.parameterInput}
-                    placeholder="e.g. GitHub issue → Discord message"
-                    value={areaName}
-                    onChangeText={setAreaName}
-                  />
-                </View>
-
-                <View style={styles.summaryCard}>
-                  <Text style={styles.summaryTitle}>Summary</Text>
-                  <View style={styles.summaryRow}>
-                    <View style={styles.summaryColumn}>
-                      <Text style={styles.summaryLabel}>Action</Text>
-                      <Text style={styles.summaryValue}>
-                        {selectedActionService?.display_name ||
-                          selectedActionService?.name ||
-                          'Not selected'}
-                      </Text>
-                      <Text style={styles.summaryValueSecondary}>
-                        {selectedAction?.name || 'Not selected'}
-                      </Text>
-                      {Object.keys(actionParameters).length > 0 && (
-                        <View style={styles.summaryParams}>
-                          {Object.entries(actionParameters).map(([key, value]) => (
-                            <Text key={key} style={styles.summaryParamText}>
-                              {formatLabel(key)}: {value || '—'}
-                            </Text>
-                          ))}
+                  {selectedReaction && selectedReaction.parameterDefs.length > 0 && (
+                    <View style={styles.parametersContainer}>
+                      <Text style={styles.parametersTitle}>Configurer la réaction</Text>
+                      {selectedReaction.parameterDefs.map(param => (
+                        <View key={param.id} style={styles.parameterField}>
+                          <Text style={styles.parameterLabel}>{param.label}</Text>
+                          <TextInput
+                            style={styles.parameterInput}
+                            placeholder={`Entrez ${param.label}`}
+                            value={reactionParameters[param.id] || ''}
+                            onChangeText={value =>
+                              handleReactionParameterChange(param.id, value)
+                            }
+                            keyboardType={param.type === 'number' ? 'numeric' : 'default'}
+                          />
                         </View>
-                      )}
+                      ))}
                     </View>
-                    <Text style={styles.summaryArrow}>→</Text>
-                    <View style={styles.summaryColumn}>
-                      <Text style={styles.summaryLabel}>Reaction</Text>
-                      <Text style={styles.summaryValue}>
-                        {selectedReactionService?.display_name ||
-                          selectedReactionService?.name ||
-                          'Not selected'}
-                      </Text>
-                      <Text style={styles.summaryValueSecondary}>
-                        {selectedReaction?.name || 'Not selected'}
-                      </Text>
-                      {Object.keys(reactionParameters).length > 0 && (
-                        <View style={styles.summaryParams}>
-                          {Object.entries(reactionParameters).map(([key, value]) => (
-                            <Text key={key} style={styles.summaryParamText}>
-                              {formatLabel(key)}: {value || '—'}
-                            </Text>
-                          ))}
-                        </View>
-                      )}
+                  )}
+                </>
+              )}
+
+              {currentStep === 5 && (
+                <>
+                  <Text style={styles.stepTitle}>Nommez votre AREA</Text>
+                  <View style={styles.parameterField}>
+                    <Text style={styles.parameterLabel}>Nom de l&apos;AREA</Text>
+                    <TextInput
+                      style={styles.parameterInput}
+                      placeholder="ex : Issue GitHub → Message Discord"
+                      value={areaName}
+                      onChangeText={setAreaName}
+                    />
+                  </View>
+
+                  <View style={styles.summaryCard}>
+                    <Text style={styles.summaryTitle}>Récapitulatif</Text>
+                    <View style={styles.summaryRow}>
+                      <View style={styles.summaryColumn}>
+                        <Text style={styles.summaryLabel}>Action</Text>
+                        <Text style={styles.summaryValue}>
+                          {selectedActionService?.display_name ||
+                            selectedActionService?.name ||
+                            'Non défini'}
+                        </Text>
+                        <Text style={styles.summaryValueSecondary}>
+                          {selectedAction?.name || 'Non défini'}
+                        </Text>
+                        {Object.keys(actionParameters).length > 0 && (
+                          <View style={styles.summaryParams}>
+                            {Object.entries(actionParameters).map(([key, value]) => (
+                              <Text key={key} style={styles.summaryParamText}>
+                                {formatLabel(key)}: {value || '—'}
+                              </Text>
+                            ))}
+                          </View>
+                        )}
+                      </View>
+                      <Text style={styles.summaryArrow}>→</Text>
+                      <View style={styles.summaryColumn}>
+                        <Text style={styles.summaryLabel}>Réaction</Text>
+                        <Text style={styles.summaryValue}>
+                          {selectedReactionService?.display_name ||
+                            selectedReactionService?.name ||
+                            'Non défini'}
+                        </Text>
+                        <Text style={styles.summaryValueSecondary}>
+                          {selectedReaction?.name || 'Non défini'}
+                        </Text>
+                        {Object.keys(reactionParameters).length > 0 && (
+                          <View style={styles.summaryParams}>
+                            {Object.entries(reactionParameters).map(([key, value]) => (
+                              <Text key={key} style={styles.summaryParamText}>
+                                {formatLabel(key)}: {value || '—'}
+                              </Text>
+                            ))}
+                          </View>
+                        )}
+                      </View>
                     </View>
                   </View>
-                </View>
-              </>
-            )}
-          </View>
-        )}
-      </ScrollView>
+                </>
+              )}
+            </View>
+          )}
+        </ScrollView>
 
-      <View style={styles.footer}>
-        <Button
-          title="Cancel"
-          variant="outline"
-          onPress={() => navigation.goBack()}
-          style={styles.footerButton}
-        />
-        {currentStep > 1 && (
+        <View style={styles.footer}>
           <Button
-            title="Back"
-            variant="secondary"
-            onPress={handlePreviousStep}
+            title="Annuler"
+            variant="outline"
+            onPress={() => navigation.goBack()}
             style={styles.footerButton}
           />
-        )}
-        {currentStep < 5 && (
-          <Button
-            title="Next"
-            onPress={handleNextStep}
-            disabled={!isStepValid(currentStep)}
-            style={styles.footerButton}
-          />
-        )}
-        {currentStep === 5 && (
-          <Button
-            title={submitting ? 'Creating…' : 'Create AREA'}
-            onPress={handleSubmit}
-            loading={submitting}
-            disabled={!isStepValid(5) || submitting}
-            style={styles.footerButton}
-          />
-        )}
-      </View>
-    </SafeAreaView>
+          {currentStep > 1 && (
+            <Button
+              title="Retour"
+              variant="secondary"
+              onPress={handlePreviousStep}
+              style={styles.footerButton}
+            />
+          )}
+          {currentStep < 5 && (
+            <Button
+              title="Suivant"
+              onPress={handleNextStep}
+              disabled={!isStepValid(currentStep)}
+              style={styles.footerButton}
+            />
+          )}
+          {currentStep === 5 && (
+            <Button
+              title={submitting ? 'Création…' : 'Créer l’AREA'}
+              onPress={handleSubmit}
+              loading={submitting}
+              disabled={!isStepValid(5) || submitting}
+              style={styles.footerButton}
+            />
+          )}
+        </View>
+      </SafeAreaView>
+    </StarField>
   );
 };
 
 const styles = StyleSheet.create({
-  container: {
+  safeArea: {
     flex: 1,
-    backgroundColor: colors.background,
   },
   content: {
     padding: spacing.lg,
     paddingBottom: spacing.xxl,
+    gap: spacing.md,
+  },
+  headerCard: {
+    backgroundColor: colors.card,
+    borderWidth: 1,
+    borderColor: colors.border,
+    borderRadius: 18,
+    padding: spacing.lg,
+    shadowColor: colors.shadow,
+    shadowOffset: {width: 0, height: 8},
+    shadowOpacity: 0.32,
+    shadowRadius: 16,
+    elevation: 10,
   },
   title: {
     ...typography.h1,
-    color: colors.text,
+    color: colors.primary,
     marginBottom: spacing.xs,
   },
   subtitle: {
-    ...typography.body,
+    ...typography.bodySmall,
     color: colors.textSecondary,
-    marginBottom: spacing.lg,
+    marginBottom: spacing.sm,
   },
   error: {
     color: colors.error,
     ...typography.body,
     marginBottom: spacing.md,
+    backgroundColor: 'rgba(239, 68, 68, 0.12)',
+    borderColor: colors.error,
+    borderWidth: StyleSheet.hairlineWidth,
+    padding: spacing.sm,
+    borderRadius: 10,
   },
   loadingContainer: {
     alignItems: 'center',
@@ -587,6 +698,8 @@ const styles = StyleSheet.create({
   stepLabel: {
     ...typography.bodySmall,
     color: colors.textSecondary,
+    textTransform: 'uppercase',
+    letterSpacing: 1,
   },
   stepTitle: {
     ...typography.h3,
@@ -599,20 +712,34 @@ const styles = StyleSheet.create({
   },
   serviceCard: {
     width: '30%',
-    backgroundColor: colors.surface,
+    backgroundColor: colors.surfaceMuted,
     padding: spacing.md,
     borderRadius: 12,
     alignItems: 'center',
     borderWidth: 1,
     borderColor: colors.border,
+    gap: spacing.xs,
   },
   serviceCardSelected: {
     borderColor: colors.primary,
-    backgroundColor: colors.primary + '10',
+    backgroundColor: 'rgba(96, 165, 250, 0.2)',
+    shadowColor: colors.glow,
+    shadowOpacity: 0.35,
+    shadowRadius: 12,
   },
-  serviceIcon: {
-    fontSize: 28,
-    marginBottom: spacing.xs,
+  serviceImage: {
+    width: 36,
+    height: 36,
+  },
+  serviceSvgWrapper: {
+    width: 36,
+    height: 36,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  serviceIconText: {
+    fontSize: 24,
+    color: colors.text,
   },
   serviceName: {
     ...typography.bodySmall,
@@ -625,11 +752,11 @@ const styles = StyleSheet.create({
     borderRadius: 12,
     padding: spacing.md,
     marginBottom: spacing.sm,
-    backgroundColor: colors.surface,
+    backgroundColor: colors.surfaceMuted,
   },
   listCardSelected: {
     borderColor: colors.primary,
-    backgroundColor: colors.primary + '10',
+    backgroundColor: 'rgba(96, 165, 250, 0.2)',
   },
   listCardTitle: {
     ...typography.h4,
@@ -651,7 +778,7 @@ const styles = StyleSheet.create({
     borderRadius: 12,
     borderWidth: 1,
     borderColor: colors.border,
-    backgroundColor: colors.surface,
+    backgroundColor: colors.card,
     gap: spacing.md,
   },
   parametersTitle: {
@@ -671,7 +798,7 @@ const styles = StyleSheet.create({
     borderColor: colors.border,
     borderRadius: 10,
     padding: spacing.md,
-    backgroundColor: colors.surface,
+    backgroundColor: colors.surfaceMuted,
     color: colors.text,
   },
   summaryCard: {
@@ -679,7 +806,7 @@ const styles = StyleSheet.create({
     borderColor: colors.border,
     borderRadius: 12,
     padding: spacing.md,
-    backgroundColor: colors.surface,
+    backgroundColor: colors.card,
   },
   summaryTitle: {
     ...typography.h3,
@@ -717,7 +844,7 @@ const styles = StyleSheet.create({
   },
   summaryArrow: {
     ...typography.h3,
-    color: colors.textSecondary,
+    color: colors.accent,
   },
   footer: {
     padding: spacing.lg,
@@ -727,7 +854,7 @@ const styles = StyleSheet.create({
     gap: spacing.sm,
     borderTopWidth: 1,
     borderColor: colors.border,
-    backgroundColor: colors.background,
+    backgroundColor: colors.card,
   },
   footerButton: {
     flexGrow: 1,

@@ -1,5 +1,5 @@
 import React from 'react';
-import {NavigationContainer} from '@react-navigation/native';
+import {DefaultTheme, NavigationContainer} from '@react-navigation/native';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
 import {
   LoginScreen,
@@ -20,6 +20,25 @@ import {colors, spacing, typography} from '../theme';
 import {RootStackParamList} from './types';
 
 const Stack = createNativeStackNavigator<RootStackParamList>();
+const navigationTheme = {
+  ...DefaultTheme,
+  colors: {
+    ...DefaultTheme.colors,
+    background: colors.background,
+    card: colors.card,
+    text: colors.text,
+    border: colors.border,
+    primary: colors.primary,
+  },
+};
+
+const sharedScreenOptions = {
+  headerStyle: {backgroundColor: colors.card},
+  headerTintColor: colors.text,
+  headerShadowVisible: false,
+  headerTitleStyle: {...typography.h4, color: colors.text},
+  contentStyle: {backgroundColor: 'transparent'},
+};
 
 export const RootNavigator: React.FC = () => {
   const {isLoggedIn, isLoading} = useAuth();
@@ -33,19 +52,19 @@ export const RootNavigator: React.FC = () => {
   }
 
   return (
-    <NavigationContainer>
+    <NavigationContainer theme={navigationTheme}>
       {isLoggedIn ? (
-        <Stack.Navigator initialRouteName="Areas">
+        <Stack.Navigator initialRouteName="Areas" screenOptions={sharedScreenOptions}>
           <Stack.Screen
             name="Areas"
             component={AreasScreen}
             options={({navigation}) => ({
-              headerTitle: 'My AREAs',
+              headerTitle: 'Mes AREAs',
               headerRight: () => (
                 <TouchableOpacity
                   onPress={() => navigation.navigate('Settings')}
                   style={styles.headerButton}>
-                  <Text style={styles.headerButtonText}>Settings</Text>
+                  <Text style={styles.headerButtonText}>Paramètres</Text>
                 </TouchableOpacity>
               ),
             })}
@@ -53,16 +72,16 @@ export const RootNavigator: React.FC = () => {
           <Stack.Screen
             name="CreateArea"
             component={CreateAreaScreen}
-            options={{title: 'Create AREA'}}
+            options={{title: 'Créer une AREA'}}
           />
           <Stack.Screen
             name="Settings"
             component={SettingsScreen}
-            options={{title: 'Settings'}}
+            options={{title: 'Paramètres'}}
           />
         </Stack.Navigator>
       ) : (
-        <Stack.Navigator initialRouteName="Login">
+        <Stack.Navigator initialRouteName="Login" screenOptions={sharedScreenOptions}>
           <Stack.Screen
             name="Login"
             component={LoginScreen}
@@ -76,7 +95,7 @@ export const RootNavigator: React.FC = () => {
           <Stack.Screen
             name="Settings"
             component={SettingsScreen}
-            options={{title: 'Server settings'}}
+            options={{title: 'Paramètres serveur'}}
           />
         </Stack.Navigator>
       )}

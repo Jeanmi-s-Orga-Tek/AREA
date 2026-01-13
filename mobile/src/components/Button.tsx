@@ -10,7 +10,7 @@ import {colors, spacing, typography} from '../theme';
 
 interface ButtonProps extends TouchableOpacityProps {
   title: string;
-  variant?: 'primary' | 'secondary' | 'outline';
+  variant?: 'primary' | 'secondary' | 'outline' | 'danger';
   loading?: boolean;
 }
 
@@ -24,6 +24,8 @@ export const Button: React.FC<ButtonProps> = ({
 }) => {
   const getButtonStyle = () => {
     switch (variant) {
+      case 'danger':
+        return styles.dangerButton;
       case 'secondary':
         return styles.secondaryButton;
       case 'outline':
@@ -42,6 +44,8 @@ export const Button: React.FC<ButtonProps> = ({
     }
   };
 
+  const spinnerColor = variant === 'outline' ? colors.primaryStrong : colors.text;
+
   return (
     <TouchableOpacity
       style={[
@@ -53,7 +57,7 @@ export const Button: React.FC<ButtonProps> = ({
       disabled={disabled || loading}
       {...props}>
       {loading ? (
-        <ActivityIndicator color={variant === 'outline' ? colors.primary : colors.background} />
+        <ActivityIndicator color={spinnerColor} />
       ) : (
         <Text style={[styles.text, getTextStyle()]}>{title}</Text>
       )}
@@ -69,17 +73,33 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     minHeight: 48,
+    borderWidth: 1,
+    shadowColor: colors.shadow,
+    shadowOffset: {width: 0, height: 8},
+    shadowOpacity: 0.35,
+    shadowRadius: 12,
+    elevation: 6,
   },
   primaryButton: {
-    backgroundColor: colors.primary,
+    backgroundColor: colors.primaryStrong,
+    borderColor: colors.accent,
+    shadowColor: colors.glow,
   },
   secondaryButton: {
-    backgroundColor: colors.secondary,
+    backgroundColor: colors.accent,
+    borderColor: colors.primary,
+    shadowColor: colors.glow,
+  },
+  dangerButton: {
+    backgroundColor: colors.error,
+    borderColor: '#f87171',
+    shadowColor: 'rgba(239, 68, 68, 0.45)',
   },
   outlineButton: {
     backgroundColor: 'transparent',
     borderWidth: 2,
     borderColor: colors.primary,
+    shadowOpacity: 0.15,
   },
   disabled: {
     opacity: 0.5,

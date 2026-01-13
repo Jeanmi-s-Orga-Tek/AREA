@@ -4,7 +4,6 @@ import {
   DeviceEventEmitter,
   Linking,
   StatusBar,
-  useColorScheme,
 } from 'react-native';
 import {RootNavigator} from './src/navigation';
 import {AuthProvider, useAuth} from './src/context/AuthContext';
@@ -17,13 +16,12 @@ import {
   completeServiceConnection,
   SERVICE_OAUTH_EVENT,
 } from './src/api/services';
+import {colors} from './src/theme';
 
 function App() {
-  const isDarkMode = useColorScheme() === 'dark';
-
   return (
     <AuthProvider>
-      <StatusBar barStyle={isDarkMode ? 'light-content' : 'dark-content'} />
+      <StatusBar barStyle="light-content" backgroundColor={colors.background} />
       <OAuthRedirectHandler />
       <RootNavigator />
     </AuthProvider>

@@ -3,15 +3,15 @@ import {
   View,
   Text,
   StyleSheet,
-  SafeAreaView,
   FlatList,
   Switch,
   RefreshControl,
   ActivityIndicator,
 } from 'react-native';
+import {SafeAreaView} from 'react-native-safe-area-context';
 import {useFocusEffect} from '@react-navigation/native';
 import {NativeStackNavigationProp} from '@react-navigation/native-stack';
-import {Button, Card} from '../components';
+import {Button, Card, StarField} from '../components';
 import {colors, spacing, typography} from '../theme';
 import {useAuth} from '../context/AuthContext';
 import {fetchAreas, toggleArea, AreaDetail} from '../api/areas';
@@ -75,11 +75,13 @@ export const AreasScreen: React.FC<AreasScreenProps> = ({navigation}) => {
 
   if (loading) {
     return (
-      <SafeAreaView style={styles.container}>
-        <View style={styles.centerContainer}>
-          <ActivityIndicator size="large" color={colors.primary} />
-        </View>
-      </SafeAreaView>
+      <StarField padding={0}>
+        <SafeAreaView style={styles.safeArea}>
+          <View style={styles.centerContainer}>
+            <ActivityIndicator size="large" color={colors.primary} />
+          </View>
+        </SafeAreaView>
+      </StarField>
     );
   }
 
@@ -87,19 +89,32 @@ export const AreasScreen: React.FC<AreasScreenProps> = ({navigation}) => {
     <Card style={styles.card}>
       <View style={styles.cardHeader}>
         <View style={styles.cardContent}>
-          <Text style={styles.cardTitle}>{item.name || 'Untitled AREA'}</Text>
+          <Text style={styles.cardTitle}>{item.name || 'AREA sans nom'}</Text>
+          <View style={styles.cardTags}>
+            <View
+              style={[
+                styles.statusBadge,
+                item.is_active
+                  ? styles.statusBadgeActive
+                  : styles.statusBadgeInactive,
+              ]}>
+              <Text style={styles.statusBadgeText}>
+                {item.is_active ? 'Active' : 'Inactive'}
+              </Text>
+            </View>
+            <Text style={styles.cardMeta}>
+              {item.action.service.display_name} →{' '}
+              {item.reaction.service.display_name}
+            </Text>
+          </View>
           <Text style={styles.cardDescription}>
-            {item.action.service.display_name} →{' '}
-            {item.reaction.service.display_name}
-          </Text>
-          <Text style={styles.cardMeta}>
             {item.action.action.name} • {item.reaction.reaction.name}
           </Text>
         </View>
         <Switch
           value={item.is_active}
           onValueChange={() => handleToggle(item)}
-          trackColor={{false: colors.border, true: colors.primary}}
+          trackColor={{false: colors.borderMuted, true: colors.primary}}
           thumbColor={item.is_active ? colors.surface : colors.textSecondary}
         />
       </View>
@@ -107,71 +122,146 @@ export const AreasScreen: React.FC<AreasScreenProps> = ({navigation}) => {
   );
 
   return (
-    <SafeAreaView style={styles.container}>
-      {error ? (
-        <View style={styles.errorContainer}>
-          <Text style={styles.errorText}>{error}</Text>
+    <StarField padding={0}>
+      <SafeAreaView style={styles.safeArea}>
+        <View style={styles.headerCard}>
+          <Text style={styles.title}>Mes AREAs</Text>
+          <View style={styles.statsRow}>
+            <View style={styles.statPill}>
+              <Text style={styles.statValue}>{areas.length || 0}</Text>
+              <Text style={styles.statLabel}>total</Text>
+            </View>
+            <View style={[styles.statPill, styles.statPillSuccess]}>
+              <Text style={styles.statValue}>
+                {areas.filter(a => a.is_active).length}
+              </Text>
+              <Text style={styles.statLabel}>actives</Text>
+            </View>
+            <View style={[styles.statPill, styles.statPillMuted]}>
+              <Text style={styles.statValue}>
+                {areas.filter(a => !a.is_active).length}
+              </Text>
+              <Text style={styles.statLabel}>inactives</Text>
+            </View>
+          </View>
         </View>
-      ) : null}
 
-      {areas.length === 0 ? (
-        <View style={styles.emptyContainer}>
-          <Text style={styles.emptyText}>No AREAs yet</Text>
-          <Text style={styles.emptySubtext}>
-            Create your first automation
-          </Text>
+        {error ? (
+          <View style={styles.errorContainer}>
+            <Text style={styles.errorText}>{error}</Text>
+          </View>
+        ) : null}
+
+        {areas.length === 0 ? (
+          <View style={styles.emptyContainer}>
+            <Text style={styles.emptyText}>Aucune AREA pour l’instant</Text>
+            <Text style={styles.emptySubtext}>
+              Créez votre première automatisation
+            </Text>
+          </View>
+        ) : (
+          <FlatList
+            data={areas}
+            renderItem={renderArea}
+            keyExtractor={item => item.id.toString()}
+            contentContainerStyle={styles.listContent}
+            refreshControl={
+              <RefreshControl
+                refreshing={refreshing}
+                onRefresh={onRefresh}
+                colors={[colors.primary]}
+              />
+            }
+          />
+        )}
+
+        <View style={styles.footer}>
+          <Button
+            title="Créer une nouvelle AREA"
+            variant="primary"
+            onPress={() => navigation.navigate('CreateArea')}
+            style={styles.button}
+          />
+
+          <Button
+            title="Paramètres"
+            variant="outline"
+            onPress={() => navigation.navigate('Settings')}
+            style={styles.button}
+          />
+
+          <Button
+            title="Déconnexion"
+            variant="danger"
+            onPress={handleLogout}
+            style={styles.button}
+          />
         </View>
-      ) : (
-        <FlatList
-          data={areas}
-          renderItem={renderArea}
-          keyExtractor={item => item.id.toString()}
-          contentContainerStyle={styles.listContent}
-          refreshControl={
-            <RefreshControl
-              refreshing={refreshing}
-              onRefresh={onRefresh}
-              colors={[colors.primary]}
-            />
-          }
-        />
-      )}
-
-      <View style={styles.footer}>
-        <Button
-          title="Create New AREA"
-          variant="primary"
-          onPress={() => navigation.navigate('CreateArea')}
-          style={styles.button}
-        />
-
-        <Button
-          title="Go to Settings"
-          variant="outline"
-          onPress={() => navigation.navigate('Settings')}
-          style={styles.button}
-        />
-
-        <Button
-          title="Logout"
-          variant="secondary"
-          onPress={handleLogout}
-          style={styles.button}
-        />
-      </View>
-    </SafeAreaView>
+      </SafeAreaView>
+    </StarField>
   );
 };
 
 const styles = StyleSheet.create({
-  container: {
+  safeArea: {
     flex: 1,
-    backgroundColor: colors.background,
   },
   centerContainer: {
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
+  },
+  headerCard: {
+    backgroundColor: colors.card,
+    borderWidth: 1,
+    borderColor: colors.border,
+    borderRadius: 18,
+    padding: spacing.lg,
+    marginBottom: spacing.md,
+    shadowColor: colors.shadow,
+    shadowOpacity: 0.32,
+    shadowOffset: {width: 0, height: 8},
+    shadowRadius: 14,
+    elevation: 10,
+  },
+  title: {
+    ...typography.h1,
+    color: colors.primary,
+  },
+  subtitle: {
+    ...typography.bodySmall,
+    color: colors.textSecondary,
+    marginTop: spacing.xs,
+  },
+  statsRow: {
+    flexDirection: 'row',
+    gap: spacing.sm,
+    marginTop: spacing.md,
+  },
+  statPill: {
+    backgroundColor: colors.surfaceMuted,
+    borderColor: colors.border,
+    borderWidth: 1,
+    borderRadius: 12,
+    paddingHorizontal: spacing.md,
+    paddingVertical: spacing.sm,
+    minWidth: 90,
+  },
+  statPillSuccess: {
+    borderColor: colors.successStrong,
+  },
+  statPillMuted: {
+    borderColor: colors.borderMuted,
+  },
+  statValue: {
+    ...typography.h3,
+    color: colors.text,
+  },
+  statLabel: {
+    ...typography.caption,
+    color: colors.textSecondary,
+    textTransform: 'uppercase',
+    letterSpacing: 1,
   },
   listContent: {
     padding: spacing.lg,
@@ -195,14 +285,19 @@ const styles = StyleSheet.create({
     marginBottom: spacing.xs,
   },
   cardDescription: {
-    ...typography.body,
+    ...typography.bodySmall,
     color: colors.textSecondary,
     fontSize: 13,
+    marginTop: spacing.xs,
   },
   cardMeta: {
     ...typography.caption,
     color: colors.textSecondary,
-    marginTop: spacing.xs,
+  },
+  cardTags: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: spacing.sm,
   },
   emptyContainer: {
     flex: 1,
@@ -226,6 +321,8 @@ const styles = StyleSheet.create({
     marginHorizontal: spacing.lg,
     marginBottom: spacing.md,
     borderRadius: 8,
+    borderWidth: 1,
+    borderColor: colors.error,
   },
   errorText: {
     ...typography.body,
@@ -236,6 +333,27 @@ const styles = StyleSheet.create({
     padding: spacing.lg,
     paddingTop: spacing.md,
     gap: spacing.sm,
+    borderTopWidth: 1,
+    borderColor: colors.border,
+    backgroundColor: colors.card,
   },
   button: {},
+  statusBadge: {
+    paddingHorizontal: spacing.sm,
+    paddingVertical: spacing.xs,
+    borderRadius: 10,
+    borderWidth: 1,
+  },
+  statusBadgeActive: {
+    borderColor: colors.successStrong,
+    backgroundColor: 'rgba(16, 185, 129, 0.15)',
+  },
+  statusBadgeInactive: {
+    borderColor: colors.borderMuted,
+    backgroundColor: colors.surfaceMuted,
+  },
+  statusBadgeText: {
+    ...typography.caption,
+    color: colors.text,
+  },
 });
