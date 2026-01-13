@@ -7,8 +7,8 @@
 
 import React, { useState, useEffect } from "react";
 import { fetchServices, fetchServiceCapabilities, createArea } from "../services/api";
-import type { Service as APIService, ServiceAction, ServiceReaction } from "../services/api";
-import { fetchOAuthProviders } from "../services/auth";
+import type { Service as APIService } from "../services/api";
+import { fetchOAuthProviders, logout, getToken } from "../services/auth";
 import type { OAuthProvider } from "../services/auth";
 import "./CreateAreaScreen.css";
 
@@ -43,7 +43,16 @@ interface Parameter {
   required?: boolean;
 }
 
+interface UserInfo {
+  username: string;
+  email: string;
+}
+
 const CreateAreaScreen: React.FC = () => {
+  const [stars, setStars] = useState<Array<{ id: number; style: React.CSSProperties }>>([]);
+  const [user, setUser] = useState<UserInfo | null>(null);
+  const [userLoading, setUserLoading] = useState(true);
+
   const [currentStep, setCurrentStep] = useState(1);
   const [selectedActionService, setSelectedActionService] = useState<Service | null>(null);
   const [selectedActionType, setSelectedActionType] = useState<ActionType | null>(null);
@@ -54,20 +63,71 @@ const CreateAreaScreen: React.FC = () => {
   const [areaName, setAreaName] = useState("");
   
   const [services, setServices] = useState<Service[]>([]);
-  const [actionTypes, setActionTypes] = useState<Record<number, ActionType>>({});
-  const [reactionTypes, setReactionTypes] = useState<Record<number, ReactionType>>({});
+  const [actionTypes, setActionTypes] = useState<Record<number, ActionType[]>>({});
+  const [reactionTypes, setReactionTypes] = useState<Record<number, ReactionType[]>>({});
   const [loading, setLoading] = useState(true);
-  const [error, setError] = useState("");
-  const [submitting, setSubmitting] = useState(false);
 
   useEffect(() => {
+    const generateStars = () => {
+      const newStars = [];
+      for (let i = 0; i < 100; i++) {
+        const size = Math.random() * 3 + 1;
+        newStars.push({
+          id: i,
+          style: {
+            width: `${size}px`,
+            height: `${size}px`,
+            left: `${Math.random() * 100}%`,
+            top: `${Math.random() * 100}%`,
+            animationDelay: `${Math.random() * 5}s`,
+            animationDuration: `${Math.random() * 3 + 2}s`,
+          },
+        });
+      }
+      setStars(newStars);
+    };
+
+    const fetchUser = async () => {
+      try {
+        const token = getToken();
+        if (!token) {
+          setUserLoading(false);
+          return;
+        }
+
+        const response = await fetch("http://localhost:8080/user/me", {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        });
+
+        if (response.ok) {
+          const data = await response.json();
+          setUser(data);
+        } else if (response.status === 401) {
+          logout();
+          window.location.href = "/login";
+        }
+      } catch (error) {
+        console.error("Error fetching user:", error);
+      } finally {
+        setUserLoading(false);
+      }
+    };
+
+    generateStars();
+    fetchUser();
     loadServices();
   }, []);
+
+  const handleLogout = () => {
+    logout();
+    window.location.href = "/login";
+  };
 
   const loadServices = async () => {
     try {
       setLoading(true);
-      setError("");
 
       // Fetch both sources:
       // - /services  -> list of services (used for capabilities etc.)
@@ -97,7 +157,7 @@ const CreateAreaScreen: React.FC = () => {
 
       setServices(mappedServices);
     } catch (err) {
-      setError(err instanceof Error ? err.message : "Erreur lors du chargement des services");
+      console.error("Error loading services:", err);
     } finally {
       setLoading(false);
     }
@@ -429,10 +489,8 @@ const CreateAreaScreen: React.FC = () => {
       return;
     }
 
-    setSubmitting(true);
-
     try {
-      const newArea = await createArea({
+      await createArea({
         name: areaName,
         action_service_id: selectedActionService.id,
         action_id: selectedActionType.id,
@@ -446,14 +504,13 @@ const CreateAreaScreen: React.FC = () => {
       window.location.href = "/areas";
     } catch (err) {
       alert(`Erreur: ${err instanceof Error ? err.message : "Erreur inconnue"}`);
-      setSubmitting(false);
     }
   };
 
   const renderServiceIcon = (service: Service) => {
     const icon = service.icon;
 
-    if (typeof icon === "string" && /^https?:\/\//i.test(icon)) {
+    if (/^https?:\/\//i.test(icon)) {
       return (
           <img
               src={icon}
@@ -468,7 +525,7 @@ const CreateAreaScreen: React.FC = () => {
       );
     }
 
-    if (typeof icon === "string" && /^\s*<svg[\s>]/i.test(icon)) {
+    if (/^\s*<svg[\s>]/i.test(icon)) {
       return (
           <span
               aria-label={`${service.name} logo`}
@@ -489,281 +546,329 @@ const CreateAreaScreen: React.FC = () => {
   const isStep5Valid = areaName.trim() !== "";
 
   return (
-    <div className="create-area-container">
-      <div className="create-area-content">
-        <div className="create-area-header">
-          <h1 className="create-area-title">Créer une nouvelle AREA</h1>
-          <p className="create-area-subtitle">
-            Automatisez vos tâches en connectant vos services préférés
-          </p>
+    <div className="dashboard-page">
+      <div className="server-background">
+        <div>
+          {stars.map((star) => (
+            <div key={star.id} className="star" style={star.style} />
+          ))}
         </div>
+      </div>
 
-        <div className="create-area-stepper">
-          <div className={`stepper-step ${currentStep >= 1 ? "active" : ""} ${currentStep > 1 ? "completed" : ""}`}>
-            <div className="stepper-circle">1</div>
-            <div className="stepper-label">Action Service</div>
-          </div>
-          <div className="stepper-line"></div>
-          <div className={`stepper-step ${currentStep >= 2 ? "active" : ""} ${currentStep > 2 ? "completed" : ""}`}>
-            <div className="stepper-circle">2</div>
-            <div className="stepper-label">Action Type</div>
-          </div>
-          <div className="stepper-line"></div>
-          <div className={`stepper-step ${currentStep >= 3 ? "active" : ""} ${currentStep > 3 ? "completed" : ""}`}>
-            <div className="stepper-circle">3</div>
-            <div className="stepper-label">Réaction Service</div>
-          </div>
-          <div className="stepper-line"></div>
-          <div className={`stepper-step ${currentStep >= 4 ? "active" : ""} ${currentStep > 4 ? "completed" : ""}`}>
-            <div className="stepper-circle">4</div>
-            <div className="stepper-label">Réaction Type</div>
-          </div>
-          <div className="stepper-line"></div>
-          <div className={`stepper-step ${currentStep >= 5 ? "active" : ""} ${currentStep > 5 ? "completed" : ""}`}>
-            <div className="stepper-circle">5</div>
-            <div className="stepper-label">Validation</div>
-          </div>
+      <div className="dashboard-sidebar">
+        <div className="sidebar-header">
+          <h2 className="sidebar-logo">⚡ AREA</h2>
         </div>
-
-        <div className="create-area-step-content">
-          {currentStep === 1 && (
-            <div className="step-section">
-              <h2 className="step-title">Étape 1 : Choisissez le service de l'action</h2>
-              <p className="step-description">
-                Sélectionnez le service qui déclenchera votre automatisation
-              </p>
-              <div className="services-grid">
-                {services.map((service) => (
-                    <div
-                        key={service.id}
-                        className={`service-card-select ${selectedActionService?.id === service.id ? "selected" : ""}`}
-                        onClick={() => handleSelectActionService(service)}
-                    >
-                      <div className="service-icon-large" style={{ color: service.color }}>
-                        {renderServiceIcon(service)}
-                      </div>
-                      <div className="service-name-select">{service.name}</div>
-                    </div>
-                ))}
-              </div>
-            </div>
-          )}
-
-          {currentStep === 2 && selectedActionService && (
-            <div className="step-section">
-              <h2 className="step-title">Étape 2 : Choisissez le type d'action</h2>
-              <p className="step-description">
-                Quel événement sur {selectedActionService.name} doit déclencher l'automatisation ?
-              </p>
-              <div className="action-types-list">
-                {!actionTypes[selectedActionService.id] && (
-                  <div className="loading-message">Chargement des actions disponibles...</div>
-                )}
-                {actionTypes[selectedActionService.id]?.length === 0 && (
-                  <div className="empty-message">
-                    <p>Aucune action disponible pour ce service.</p>
-                    <p className="text-sm">Les actions seront ajoutées prochainement.</p>
-                  </div>
-                )}
-                {actionTypes[selectedActionService.id]?.map((type) => (
-                  <div
-                    key={type.id}
-                    className={`action-type-card ${selectedActionType?.id === type.id ? "selected" : ""}`}
-                    onClick={() => handleSelectActionType(type)}
-                  >
-                    <h3 className="action-type-name">{type.name}</h3>
-                    <p className="action-type-description">{type.description}</p>
-                  </div>
-                ))}
-              </div>
-
-              {selectedActionType && selectedActionType.parameters.length > 0 && (
-                <div className="parameters-section">
-                  <h3 className="parameters-title">Configuration de l'action</h3>
-                  {selectedActionType.parameters.map((param) => (
-                    <div key={param.id} className="parameter-field">
-                      <label className="parameter-label">{param.name}</label>
-                      <input
-                        type={param.type === "number" ? "number" : "text"}
-                        className="parameter-input"
-                        placeholder={param.placeholder}
-                        value={actionParameters[param.id] || ""}
-                        onChange={(e) => handleActionParameterChange(param.id, e.target.value)}
-                      />
-                    </div>
-                  ))}
-                </div>
-              )}
-            </div>
-          )}
-
-          {currentStep === 3 && (
-            <div className="step-section">
-              <h2 className="step-title">Étape 3 : Choisissez le service de la réaction</h2>
-              <p className="step-description">
-                Sélectionnez le service qui exécutera l'action en réponse
-              </p>
-              <div className="services-grid">
-                {services.map((service) => (
-                  <div
-                    key={service.id}
-                    className={`service-card-select ${selectedReactionService?.id === service.id ? "selected" : ""}`}
-                    onClick={() => handleSelectReactionService(service)}
-                  >
-                    <div className="service-icon-large" style={{ color: service.color }}>
-                      {renderServiceIcon(service)}
-                    </div>
-                    <div className="service-name-select">{service.name}</div>
-                  </div>
-                ))}
-              </div>
-            </div>
-          )}
-
-          {currentStep === 4 && selectedReactionService && (
-            <div className="step-section">
-              <h2 className="step-title">Étape 4 : Choisissez le type de réaction</h2>
-              <p className="step-description">
-                Que doit faire {selectedReactionService.name} en réponse ?
-              </p>
-              <div className="action-types-list">
-                {!reactionTypes[selectedReactionService.id] && (
-                  <div className="loading-message">Chargement des réactions disponibles...</div>
-                )}
-                {reactionTypes[selectedReactionService.id]?.length === 0 && (
-                  <div className="empty-message">
-                    <p>Aucune réaction disponible pour ce service.</p>
-                    <p className="text-sm">Les réactions seront ajoutées prochainement.</p>
-                  </div>
-                )}
-                {reactionTypes[selectedReactionService.id]?.map((type) => (
-                  <div
-                    key={type.id}
-                    className={`action-type-card ${selectedReactionType?.id === type.id ? "selected" : ""}`}
-                    onClick={() => handleSelectReactionType(type)}
-                  >
-                    <h3 className="action-type-name">{type.name}</h3>
-                    <p className="action-type-description">{type.description}</p>
-                  </div>
-                ))}
-              </div>
-
-              {selectedReactionType && selectedReactionType.parameters.length > 0 && (
-                <div className="parameters-section">
-                  <h3 className="parameters-title">Configuration de la réaction</h3>
-                  {selectedReactionType.parameters.map((param) => (
-                    <div key={param.id} className="parameter-field">
-                      <label className="parameter-label">{param.name}</label>
-                      <input
-                        type={param.type === "number" ? "number" : "text"}
-                        className="parameter-input"
-                        placeholder={param.placeholder}
-                        value={reactionParameters[param.id] || ""}
-                        onChange={(e) => handleReactionParameterChange(param.id, e.target.value)}
-                      />
-                    </div>
-                  ))}
-                </div>
-              )}
-            </div>
-          )}
-
-          {currentStep === 5 && (
-            <div className="step-section">
-              <h2 className="step-title">Étape 5 : Nommez votre AREA</h2>
-              <p className="step-description">
-                Donnez un nom descriptif à votre automatisation
-              </p>
-
-              <div className="parameter-field">
-                <label className="parameter-label">Nom de l'AREA</label>
-                <input
-                  type="text"
-                  className="parameter-input"
-                  placeholder="Ex: Notifications GitHub → Discord"
-                  value={areaName}
-                  onChange={(e) => setAreaName(e.target.value)}
-                />
-              </div>
-
-              <div className="summary-section">
-                <h3 className="summary-title">Récapitulatif</h3>
-                <div className="summary-flow">
-                  <div className="summary-item summary-action">
-                    <div className="summary-label">ACTION</div>
-                    <div className="summary-service">{selectedActionService?.name}</div>
-                    <div className="summary-type">{selectedActionType?.name}</div>
-                    {Object.keys(actionParameters).length > 0 && (
-                      <div className="summary-params">
-                        {Object.entries(actionParameters).map(([key, value]) => (
-                          <div key={key} className="summary-param">
-                            <strong>{key}:</strong> {value || "(non défini)"}
-                          </div>
-                        ))}
-                      </div>
-                    )}
-                  </div>
-
-                  <div className="summary-arrow">→</div>
-
-                  <div className="summary-item summary-reaction">
-                    <div className="summary-label">RÉACTION</div>
-                    <div className="summary-service">{selectedReactionService?.name}</div>
-                    <div className="summary-type">{selectedReactionType?.name}</div>
-                    {Object.keys(reactionParameters).length > 0 && (
-                      <div className="summary-params">
-                        {Object.entries(reactionParameters).map(([key, value]) => (
-                          <div key={key} className="summary-param">
-                            <strong>{key}:</strong> {value || "(non défini)"}
-                          </div>
-                        ))}
-                      </div>
-                    )}
-                  </div>
-                </div>
-              </div>
-            </div>
-          )}
-        </div>
-
-        <div className="create-area-actions">
-          <a href="/areas" className="create-area-button create-area-button-cancel">
-            Annuler
+        <nav className="sidebar-nav">
+          <a href="/" className="nav-item">
+            🏠 Dashboard
           </a>
+          <a href="/areas" className="nav-item">
+            📋 Mes AREAs
+          </a>
+          <a href="/create-area" className="nav-item active">
+            ➕ Créer une AREA
+          </a>
+          <a href="/services" className="nav-item">
+            🔌 Services
+          </a>
+          <a href="/profile" className="nav-item">
+            👤 Profil
+          </a>
+          <a href="/about" className="nav-item">
+            ℹ️ À propos
+          </a>
+        </nav>
+      </div>
 
-          {currentStep > 1 && (
-            <button
-              onClick={handlePreviousStep}
-              className="create-area-button create-area-button-secondary"
-            >
-              ← Précédent
+      <div className="dashboard-content">
+        <div className="dashboard-topbar">
+          <h1 className="topbar-title">Créer une AREA</h1>
+          <div className="topbar-user">
+            <span className="user-name">👋 {userLoading ? "Chargement..." : (user?.username || "Utilisateur")}</span>
+            <button onClick={handleLogout} className="logout-btn">
+              🚪 Déconnexion
             </button>
-          )}
+          </div>
+        </div>
 
-          {currentStep < 5 && (
-            <button
-              onClick={handleNextStep}
-              disabled={
-                (currentStep === 1 && !isStep1Valid) ||
-                (currentStep === 2 && !isStep2Valid) ||
-                (currentStep === 3 && !isStep3Valid) ||
-                (currentStep === 4 && !isStep4Valid)
-              }
-              className="create-area-button create-area-button-primary"
-            >
-              Suivant →
-            </button>
-          )}
+        <div className="dashboard-main">
+          <div className="create-area-content">
+            <div className="create-area-header">
+              <h1 className="create-area-title">Créer une nouvelle AREA</h1>
+              <p className="create-area-subtitle">
+                Automatisez vos tâches en connectant vos services préférés
+              </p>
+            </div>
 
-          {currentStep === 5 && (
-            <button
-              onClick={handleSubmit}
-              disabled={!isStep5Valid}
-              className="create-area-button create-area-button-success"
-            >
-              ✓ Créer l'AREA
-            </button>
-          )}
+            <div className="create-area-stepper">
+              <div className={`stepper-step ${currentStep >= 1 ? "active" : ""} ${currentStep > 1 ? "completed" : ""}`}>
+                <div className="stepper-circle">1</div>
+                <div className="stepper-label">Action Service</div>
+              </div>
+              <div className="stepper-line"></div>
+              <div className={`stepper-step ${currentStep >= 2 ? "active" : ""} ${currentStep > 2 ? "completed" : ""}`}>
+                <div className="stepper-circle">2</div>
+                <div className="stepper-label">Action Type</div>
+              </div>
+              <div className="stepper-line"></div>
+              <div className={`stepper-step ${currentStep >= 3 ? "active" : ""} ${currentStep > 3 ? "completed" : ""}`}>
+                <div className="stepper-circle">3</div>
+                <div className="stepper-label">Réaction Service</div>
+              </div>
+              <div className="stepper-line"></div>
+              <div className={`stepper-step ${currentStep >= 4 ? "active" : ""} ${currentStep > 4 ? "completed" : ""}`}>
+                <div className="stepper-circle">4</div>
+                <div className="stepper-label">Réaction Type</div>
+              </div>
+              <div className="stepper-line"></div>
+              <div className={`stepper-step ${currentStep >= 5 ? "active" : ""} ${currentStep > 5 ? "completed" : ""}`}>
+                <div className="stepper-circle">5</div>
+                <div className="stepper-label">Validation</div>
+              </div>
+            </div>
+
+            <div className="create-area-step-content">
+              {currentStep === 1 && (
+                <div className="step-section">
+                  <h2 className="step-title">Étape 1 : Choisissez le service de l'action</h2>
+                  <p className="step-description">
+                    Sélectionnez le service qui déclenchera votre automatisation
+                  </p>
+                  <div className="services-grid">
+                    {services.map((service) => (
+                        <div
+                            key={service.id}
+                            className={`service-card-select ${selectedActionService?.id === service.id ? "selected" : ""}`}
+                            onClick={() => handleSelectActionService(service)}
+                        >
+                          <div className="service-icon-large" style={{ color: service.color }}>
+                            {renderServiceIcon(service)}
+                          </div>
+                          <div className="service-name-select">{service.name}</div>
+                        </div>
+                    ))}
+                  </div>
+                </div>
+              )}
+
+              {currentStep === 2 && selectedActionService && (
+                <div className="step-section">
+                  <h2 className="step-title">Étape 2 : Choisissez le type d'action</h2>
+                  <p className="step-description">
+                    Quel événement sur {selectedActionService.name} doit déclencher l'automatisation ?
+                  </p>
+                  <div className="action-types-list">
+                    {!actionTypes[selectedActionService.id] && (
+                      <div className="loading-message">Chargement des actions disponibles...</div>
+                    )}
+                    {actionTypes[selectedActionService.id]?.length === 0 && (
+                      <div className="empty-message">
+                        <p>Aucune action disponible pour ce service.</p>
+                        <p className="text-sm">Les actions seront ajoutées prochainement.</p>
+                      </div>
+                    )}
+                    {actionTypes[selectedActionService.id]?.map((type) => (
+                      <div
+                        key={type.id}
+                        className={`action-type-card ${selectedActionType?.id === type.id ? "selected" : ""}`}
+                        onClick={() => handleSelectActionType(type)}
+                      >
+                        <h3 className="action-type-name">{type.name}</h3>
+                        <p className="action-type-description">{type.description}</p>
+                      </div>
+                    ))}
+                  </div>
+
+                  {selectedActionType && selectedActionType.parameters.length > 0 && (
+                    <div className="parameters-section">
+                      <h3 className="parameters-title">Configuration de l'action</h3>
+                      {selectedActionType.parameters.map((param) => (
+                        <div key={param.id} className="parameter-field">
+                          <label className="parameter-label">{param.name}</label>
+                          <input
+                            type={param.type === "number" ? "number" : "text"}
+                            className="parameter-input"
+                            placeholder={param.placeholder}
+                            value={actionParameters[param.id] || ""}
+                            onChange={(e) => handleActionParameterChange(param.id, e.target.value)}
+                          />
+                        </div>
+                      ))}
+                    </div>
+                  )}
+                </div>
+              )}
+
+              {currentStep === 3 && (
+                <div className="step-section">
+                  <h2 className="step-title">Étape 3 : Choisissez le service de la réaction</h2>
+                  <p className="step-description">
+                    Sélectionnez le service qui exécutera l'action en réponse
+                  </p>
+                  <div className="services-grid">
+                    {services.map((service) => (
+                      <div
+                        key={service.id}
+                        className={`service-card-select ${selectedReactionService?.id === service.id ? "selected" : ""}`}
+                        onClick={() => handleSelectReactionService(service)}
+                      >
+                        <div className="service-icon-large" style={{ color: service.color }}>
+                          {renderServiceIcon(service)}
+                        </div>
+                        <div className="service-name-select">{service.name}</div>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              )}
+
+              {currentStep === 4 && selectedReactionService && (
+                <div className="step-section">
+                  <h2 className="step-title">Étape 4 : Choisissez le type de réaction</h2>
+                  <p className="step-description">
+                    Que doit faire {selectedReactionService.name} en réponse ?
+                  </p>
+                  <div className="action-types-list">
+                    {!reactionTypes[selectedReactionService.id] && (
+                      <div className="loading-message">Chargement des réactions disponibles...</div>
+                    )}
+                    {reactionTypes[selectedReactionService.id]?.length === 0 && (
+                      <div className="empty-message">
+                        <p>Aucune réaction disponible pour ce service.</p>
+                        <p className="text-sm">Les réactions seront ajoutées prochainement.</p>
+                      </div>
+                    )}
+                    {reactionTypes[selectedReactionService.id]?.map((type) => (
+                      <div
+                        key={type.id}
+                        className={`action-type-card ${selectedReactionType?.id === type.id ? "selected" : ""}`}
+                        onClick={() => handleSelectReactionType(type)}
+                      >
+                        <h3 className="action-type-name">{type.name}</h3>
+                        <p className="action-type-description">{type.description}</p>
+                      </div>
+                    ))}
+                  </div>
+
+                  {selectedReactionType && selectedReactionType.parameters.length > 0 && (
+                    <div className="parameters-section">
+                      <h3 className="parameters-title">Configuration de la réaction</h3>
+                      {selectedReactionType.parameters.map((param) => (
+                        <div key={param.id} className="parameter-field">
+                          <label className="parameter-label">{param.name}</label>
+                          <input
+                            type={param.type === "number" ? "number" : "text"}
+                            className="parameter-input"
+                            placeholder={param.placeholder}
+                            value={reactionParameters[param.id] || ""}
+                            onChange={(e) => handleReactionParameterChange(param.id, e.target.value)}
+                          />
+                        </div>
+                      ))}
+                    </div>
+                  )}
+                </div>
+              )}
+
+              {currentStep === 5 && (
+                <div className="step-section">
+                  <h2 className="step-title">Étape 5 : Nommez votre AREA</h2>
+                  <p className="step-description">
+                    Donnez un nom descriptif à votre automatisation
+                  </p>
+
+                  <div className="parameter-field">
+                    <label className="parameter-label">Nom de l'AREA</label>
+                    <input
+                      type="text"
+                      className="parameter-input"
+                      placeholder="Ex: Notifications GitHub → Discord"
+                      value={areaName}
+                      onChange={(e) => setAreaName(e.target.value)}
+                    />
+                  </div>
+
+                  <div className="summary-section">
+                    <h3 className="summary-title">Récapitulatif</h3>
+                    <div className="summary-flow">
+                      <div className="summary-item summary-action">
+                        <div className="summary-label">ACTION</div>
+                        <div className="summary-service">{selectedActionService?.name}</div>
+                        <div className="summary-type">{selectedActionType?.name}</div>
+                        {Object.keys(actionParameters).length > 0 && (
+                          <div className="summary-params">
+                            {Object.entries(actionParameters).map(([key, value]) => (
+                              <div key={key} className="summary-param">
+                                <strong>{key}:</strong> {value || "(non défini)"}
+                              </div>
+                            ))}
+                          </div>
+                        )}
+                      </div>
+
+                      <div className="summary-arrow">→</div>
+
+                      <div className="summary-item summary-reaction">
+                        <div className="summary-label">RÉACTION</div>
+                        <div className="summary-service">{selectedReactionService?.name}</div>
+                        <div className="summary-type">{selectedReactionType?.name}</div>
+                        {Object.keys(reactionParameters).length > 0 && (
+                          <div className="summary-params">
+                            {Object.entries(reactionParameters).map(([key, value]) => (
+                              <div key={key} className="summary-param">
+                                <strong>{key}:</strong> {value || "(non défini)"}
+                              </div>
+                            ))}
+                          </div>
+                        )}
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              )}
+            </div>
+
+            <div className="create-area-actions">
+              <a href="/areas" className="create-area-button create-area-button-cancel">
+                Annuler
+              </a>
+
+              {currentStep > 1 && (
+                <button
+                  onClick={handlePreviousStep}
+                  className="create-area-button create-area-button-secondary"
+                >
+                  ← Précédent
+                </button>
+              )}
+
+              {currentStep < 5 && (
+                <button
+                  onClick={handleNextStep}
+                  disabled={
+                    (currentStep === 1 && !isStep1Valid) ||
+                    (currentStep === 2 && !isStep2Valid) ||
+                    (currentStep === 3 && !isStep3Valid) ||
+                    (currentStep === 4 && !isStep4Valid)
+                  }
+                  className="create-area-button create-area-button-primary"
+                >
+                  Suivant →
+                </button>
+              )}
+
+              {currentStep === 5 && (
+                <button
+                  onClick={handleSubmit}
+                  disabled={!isStep5Valid}
+                  className="create-area-button create-area-button-success"
+                >
+                  ✓ Créer l'AREA
+                </button>
+              )}
+            </div>
+          </div>
         </div>
       </div>
     </div>
