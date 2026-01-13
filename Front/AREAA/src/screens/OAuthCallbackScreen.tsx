@@ -8,10 +8,35 @@
 import React, { useEffect, useState } from "react";
 import { handleOAuthCallback } from "../services/auth";
 import { connectService } from "../services/api";
+import "./OAuthCallbackScreen.css";
 
 const OAuthCallbackScreen: React.FC = () => {
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(true);
+  const [stars, setStars] = useState<Array<{ id: number; style: React.CSSProperties }>>([]);
+
+  useEffect(() => {
+    const generateStars = () => {
+      const newStars = [];
+      for (let i = 0; i < 100; i++) {
+        const size = Math.random() * 3 + 1;
+        newStars.push({
+          id: i,
+          style: {
+            width: `${size}px`,
+            height: `${size}px`,
+            left: `${Math.random() * 100}%`,
+            top: `${Math.random() * 100}%`,
+            animationDelay: `${Math.random() * 5}s`,
+            animationDuration: `${Math.random() * 3 + 2}s`,
+          },
+        });
+      }
+      setStars(newStars);
+    };
+
+    generateStars();
+  }, []);
 
   useEffect(() => {
     const processOAuthCallback = async () => {
@@ -113,11 +138,16 @@ const OAuthCallbackScreen: React.FC = () => {
 
   if (loading) {
     return (
-      <div style={styles.container}>
-        <div style={styles.card}>
-          <div style={styles.spinner}></div>
-          <h2 style={styles.title}>Authentification en cours...</h2>
-          <p style={styles.message}>Veuillez patienter pendant que nous vous connectons.</p>
+      <div className="oauth-container">
+        <div className="oauth-background">
+          {stars.map((star) => (
+            <div key={star.id} className="star" style={star.style} />
+          ))}
+        </div>
+        <div className="oauth-card">
+          <div className="oauth-spinner"></div>
+          <h2 className="oauth-title">Authentification en cours...</h2>
+          <p className="oauth-message">Veuillez patienter pendant que nous vous connectons.</p>
         </div>
       </div>
     );
@@ -125,70 +155,22 @@ const OAuthCallbackScreen: React.FC = () => {
 
   if (error) {
     return (
-      <div style={styles.container}>
-        <div style={styles.card}>
-          {/* <div style={styles.errorIcon}></div> */}
-          <h2 style={styles.title}>Erreur d'authentification</h2>
-          <p style={styles.errorMessage}>{error}</p>
-          <p style={styles.message}>Vous allez être redirigé vers la page de connexion...</p>
+      <div className="oauth-container">
+        <div className="oauth-background">
+          {stars.map((star) => (
+            <div key={star.id} className="star" style={star.style} />
+          ))}
+        </div>
+        <div className="oauth-card">
+          <h2 className="oauth-title">Erreur d'authentification</h2>
+          <p className="oauth-error-message">{error}</p>
+          <p className="oauth-message">Vous allez être redirigé vers la page de connexion...</p>
         </div>
       </div>
     );
   }
 
   return null;
-};
-
-const styles: { [key: string]: React.CSSProperties } = {
-  container: {
-    display: "flex",
-    justifyContent: "center",
-    alignItems: "center",
-    minHeight: "100vh",
-    backgroundColor: "#f5f5f5",
-    padding: "20px",
-  },
-  card: {
-    backgroundColor: "white",
-    borderRadius: "12px",
-    padding: "40px",
-    maxWidth: "500px",
-    width: "100%",
-    textAlign: "center",
-    boxShadow: "0 4px 6px rgba(0, 0, 0, 0.1)",
-  },
-  spinner: {
-    border: "4px solid #f3f3f3",
-    borderTop: "4px solid #3498db",
-    borderRadius: "50%",
-    width: "50px",
-    height: "50px",
-    animation: "spin 1s linear infinite",
-    margin: "0 auto 20px",
-  },
-  title: {
-    fontSize: "24px",
-    fontWeight: "bold",
-    color: "#333",
-    marginBottom: "12px",
-  },
-  message: {
-    fontSize: "16px",
-    color: "#666",
-    marginBottom: "8px",
-  },
-  errorIcon: {
-    fontSize: "50px",
-    marginBottom: "20px",
-  },
-  errorMessage: {
-    fontSize: "16px",
-    color: "#e74c3c",
-    marginBottom: "16px",
-    padding: "12px",
-    backgroundColor: "#fee",
-    borderRadius: "8px",
-  },
 };
 
 export default OAuthCallbackScreen;
