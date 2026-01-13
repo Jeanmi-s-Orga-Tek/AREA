@@ -20,7 +20,8 @@ providers:
         - https://www.googleapis.com/auth/spreadsheets
     mobile:
       client_id: "${GOOGLE_MOBILE_CLIENT_ID}"
-      redirect_uri: "areaapp://auth"
+      client_secret: "${GOOGLE_WEB_CLIENT_SECRET}"
+      redirect_uri: "${API_BASE_URL}/auth/callback/google"
       scopes:
         - email
         - profile
@@ -50,7 +51,8 @@ providers:
         - Mail.Send
     mobile:
       client_id: "${MICROSOFT_MOBILE_CLIENT_ID}"
-      redirect_uri: "areaapp:/auth"
+      client_secret: "${MICROSOFT_WEB_CLIENT_SECRET}"
+      redirect_uri: "${API_BASE_URL}/auth/callback/microsoft"
       scopes:
         - openid
         - profile
@@ -81,7 +83,7 @@ providers:
     mobile:
       client_id: "${GITHUB_MOBILE_CLIENT_ID}"
       client_secret: "${GITHUB_MOBILE_CLIENT_SECRET}"
-      redirect_uri: "areaapp:/auth"
+      redirect_uri: "${API_BASE_URL}/auth/callback/github"
       scopes:
         - user
         - user:email
@@ -110,7 +112,7 @@ providers:
     mobile:
       client_id: "${SPOTIFY_MOBILE_CLIENT_ID}"
       client_secret: "${SPOTIFY_MOBILE_CLIENT_SECRET}"
-      redirect_uri: "areaapp:/auth"
+      redirect_uri: "${API_BASE_URL}/auth/callback/spotify"
       scopes:
         - user-read-email
         - user-read-private
@@ -134,7 +136,7 @@ providers:
     mobile:
       client_id: "${TRELLO_WEB_CLIENT_API_KEY}"
       client_secret: "${TRELLO_WEB_CLIENT_API_SECRET}"
-      redirect_uri: "areaapp:/auth"
+      redirect_uri: "${API_BASE_URL}/auth/callback/trello"
       scopes:
         - read
         - write
@@ -158,7 +160,7 @@ providers:
     mobile:
       client_id: "${DISCORD_WEB_CLIENT_API_KEY}"
       client_secret: "${DISCORD_WEB_CLIENT_API_SECRET}"
-      redirect_uri: "areaapp:/auth"
+      redirect_uri: "${API_BASE_URL}/auth/callback/discord"
       scopes:
         - identify
         - guilds

@@ -17,6 +17,7 @@ class MobileOAuthConfig:
     client_id: str
     redirect_uri: str
     scopes: List[str]
+    client_secret: Optional[str] = None
 
 @dataclass(frozen=True)
 class ProviderConfig:
@@ -73,6 +74,7 @@ def _load_providers_file(path: str) -> Dict[str, ProviderConfig]:
                 client_id=_expand_env_vars(mob_cfg["client_id"]),
                 redirect_uri=_expand_env_vars(mob_cfg["redirect_uri"]),
                 scopes=list(mob_cfg.get("scopes", [])),
+                client_secret=_expand_env_vars(mob_cfg["client_secret"]) if "client_secret" in mob_cfg else None,
             )
 
         out[key] = ProviderConfig(

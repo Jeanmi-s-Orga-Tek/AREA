@@ -10,6 +10,7 @@ import {
   ActivityIndicator,
   TouchableOpacity,
   Linking,
+  Image,
 } from 'react-native';
 import {NativeStackNavigationProp} from '@react-navigation/native-stack';
 import {Button} from '../components';
@@ -153,9 +154,16 @@ export const LoginScreen: React.FC<LoginScreenProps> = ({navigation}) => {
                   style={[styles.oauthButton, {borderColor: provider.color}]}
                   disabled={providerLoading}
                   onPress={() => handleOAuthLogin(provider.id)}>
-                  <Text style={styles.oauthButtonText}>
-                    {provider.icon} Continue with {provider.name}
-                  </Text>
+                  <View style={styles.oauthButtonContent}>
+                    <Image
+                      source={{uri: provider.icon}}
+                      style={styles.oauthIcon}
+                      resizeMode="contain"
+                    />
+                    <Text style={styles.oauthButtonText}>
+                      Continue with {provider.name}
+                    </Text>
+                  </View>
                 </TouchableOpacity>
               ))
             ) : (
@@ -250,6 +258,15 @@ const styles = StyleSheet.create({
     paddingVertical: spacing.md,
     paddingHorizontal: spacing.lg,
     alignItems: 'center',
+  },
+  oauthButtonContent: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: spacing.sm,
+  },
+  oauthIcon: {
+    width: 20,
+    height: 20,
   },
   oauthButtonText: {
     ...typography.body,

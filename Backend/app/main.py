@@ -174,7 +174,8 @@ def oauth_get_authorization_url(
 ):
     try:
         normalized_redirect = normalize_client_redirect_uri(client_redirect_uri)
-        enriched_state = encode_oauth_state(state, normalized_redirect)
+        platform = "mobile" if flow == "mobile" else None
+        enriched_state = encode_oauth_state(state, normalized_redirect, platform)
         auth_url = get_auth_url(provider, flow, enriched_state)
         return {"authorization_url": auth_url}
     except Exception as e:
@@ -196,7 +197,7 @@ def oauth_callback(
     code: Optional[str] = None, 
     token: Optional[str] = None,
     state: str = "", 
-    flow: str = "web", 
+    flow: str = "web",
     session: Session = Depends(lambda: Session(engine))
 ):
     auth_code = token if provider == "trello" and token else code
@@ -204,7 +205,11 @@ def oauth_callback(
     if not auth_code:
         raise HTTPException(status_code=400, detail="No authorization code or token provided")
 
-    raw_state, client_redirect_uri = decode_oauth_state(state)
+    raw_state, client_redirect_uri, platform_from_state = decode_oauth_state(state)
+
+    is_mobile = platform_from_state == "mobile"
+    if is_mobile:
+        flow = "mobile"
 
     try:
         token_data = exchange_code_for_token(provider, flow, auth_code)
@@ -225,6 +230,12 @@ def oauth_callback(
             data={"sub": user.email},
             expires=access_token_expires
         )
+
+        if is_mobile:
+            mobile_redirect_url = f"areaapp://callback?token={app_access_token}&provider={provider}"
+            if raw_state:
+                mobile_redirect_url += f"&state={raw_state}"
+            return RedirectResponse(url=mobile_redirect_url, status_code=302)
 
         if client_redirect_uri:
             redirect_url = append_query_params(

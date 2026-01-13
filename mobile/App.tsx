@@ -12,6 +12,7 @@ import {
   consumePendingOAuthState,
   finalizeOAuthLogin,
   parseOAuthState,
+  storeAuthToken,
 } from './src/api/auth';
 import {
   completeServiceConnection,
@@ -34,10 +35,14 @@ export default App;
 
 const OAUTH_SCHEME_PREFIX = 'area.app:';
 const OAUTH_PATH = '/auth';
+const AREAAPP_CALLBACK_PREFIX = 'areaapp://callback';
 
 const isOAuthCallbackUrl = (url: string) => {
   if (!url) {
     return false;
+  }
+  if (url.startsWith(AREAAPP_CALLBACK_PREFIX)) {
+    return true;
   }
   const normalized = url.replace('://', ':');
   return normalized.startsWith(`${OAUTH_SCHEME_PREFIX}${OAUTH_PATH}`);
@@ -86,11 +91,21 @@ const OAuthRedirectHandler: React.FC = () => {
         const params = getSearchParams(incomingUrl);
         const state = params.get('state');
         const parsedState = parseOAuthState(state);
-        const provider = parsedState?.providerId;
         const code = params.get('code');
         const token = params.get('token');
+
+        const isBackendCallback = incomingUrl.startsWith(AREAAPP_CALLBACK_PREFIX);
+        const providerFromUrl = params.get('provider');
+        const provider = parsedState?.providerId || providerFromUrl;
+        
         isServiceFlow = parsedState?.mode === 'service';
         serviceNameDuringFlow = parsedState?.serviceName;
+
+        if (isBackendCallback && token && !isServiceFlow) {
+          await storeAuthToken(token);
+          login(token);
+          return;
+        }
 
         if (!provider) {
           throw new Error('Missing provider information in OAuth state.');
