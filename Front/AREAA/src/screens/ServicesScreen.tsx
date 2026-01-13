@@ -7,7 +7,8 @@
 
 import React, { useState, useEffect } from "react";
 import { fetchServices, fetchMyConnectedServices, disconnectService } from "../services/api";
-import { logout, getToken } from "../services/auth";
+import { logout, getToken, fetchOAuthProviders } from "../services/auth";
+import type { OAuthProvider } from "../services/auth";
 import "./ServicesScreen.css";
 
 const API_BASE_URL = "http://localhost:8080";
@@ -91,14 +92,16 @@ const ServicesScreen: React.FC = () => {
       setLoading(true);
       setError("");
       
-      console.log(" Chargement des services...");
-      const [allServices, connectedServices] = await Promise.all([
+      console.log(" Chargement des services et providers...");
+      const [allServices, connectedServices, providers] = await Promise.all([
         fetchServices(),
         fetchMyConnectedServices(),
+        fetchOAuthProviders(),
       ]);
 
       console.log(" Tous les services:", allServices);
       console.log(" Services connectés:", connectedServices);
+      console.log(" Providers OAuth:", providers);
 
       const validConnectedServices = connectedServices.filter(sa => sa.service && sa.service.id);
       console.log(" Services connectés valides:", validConnectedServices);
@@ -111,16 +114,25 @@ const ServicesScreen: React.FC = () => {
       );
       console.log(" Map service -> serviceAccount:", serviceAccountMap);
 
-      const mappedServices: Service[] = allServices.map((service) => ({
-        id: service.id,
-        name: service.display_name || service.name,
-        description: service.description || `Connectez-vous à ${service.display_name}`,
-        icon: service.icon || "📦",
-        color: service.color || "#4285f4",
-        isConnected: connectedServiceIds.has(service.id),
-        serviceAccountId: serviceAccountMap.get(service.id),
-        oauth_provider: service.oauth_provider,
-      }));
+      const providerById: Record<string, OAuthProvider> = Object.fromEntries(
+        (providers || []).map((p) => [p.id, p])
+      );
+
+      const mappedServices: Service[] = allServices.map((service) => {
+        const providerKey = service.oauth_provider || service.name;
+        const provider = providerById[providerKey];
+
+        return {
+          id: service.id,
+          name: service.display_name || service.name,
+          description: service.description || `Connectez-vous à ${service.display_name}`,
+          icon: provider?.icon ?? service.icon ?? "📦",
+          color: provider?.color ?? service.color ?? "#4285f4",
+          isConnected: connectedServiceIds.has(service.id),
+          serviceAccountId: serviceAccountMap.get(service.id),
+          oauth_provider: service.oauth_provider,
+        };
+      });
 
       console.log("Services mappés avec état de connexion:");
       mappedServices.forEach(s => {
@@ -140,6 +152,38 @@ const ServicesScreen: React.FC = () => {
   const handleLogout = () => {
     logout();
     window.location.href = "/login";
+  };
+
+  const renderServiceIcon = (service: Service) => {
+    const icon = service.icon;
+
+    if (/^https?:\/\//i.test(icon)) {
+      return (
+        <img
+          src={icon}
+          alt={`${service.name} logo`}
+          style={{
+            width: "48px",
+            height: "48px",
+            objectFit: "contain",
+            display: "block",
+          }}
+        />
+      );
+    }
+
+    if (/^\s*<svg[\s>]/i.test(icon)) {
+      return (
+        <span
+          aria-label={`${service.name} logo`}
+          role="img"
+          style={{ width: "48px", height: "48px", display: "inline-block" }}
+          dangerouslySetInnerHTML={{ __html: icon }}
+        />
+      );
+    }
+
+    return <>{icon}</>;
   };
 
   const handleToggleConnection = async (serviceId: number) => {
@@ -283,7 +327,9 @@ const ServicesScreen: React.FC = () => {
                   className={`card service-card ${service.isConnected ? "service-card-connected" : ""}`}
                 >
                   <div className="service-card-header">
-                    <div className="card-icon">{service.icon}</div>
+                    <div className="card-icon" style={{ color: service.color }}>
+                      {renderServiceIcon(service)}
+                    </div>
                     {service.isConnected && (
                       <span className="service-badge-connected">✓ Connecté</span>
                     )}
