@@ -5,9 +5,19 @@
 ** RegisterScreen
 */
 
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useMemo } from "react";
 import { register, fetchOAuthProviders, initiateOAuthLogin, OAuthProvider } from "../services/auth";
 import "./RegisterScreen.css";
+
+type Star = {
+  id: string;
+  top: number;
+  left: number;
+  size: number;
+  delay: number;
+  dur: number;
+  alpha: number;
+};
 
 const RegisterScreen: React.FC = () => {
   const [email, setEmail] = useState("");
@@ -19,6 +29,21 @@ const RegisterScreen: React.FC = () => {
   const [loading, setLoading] = useState(false);
   const [oauthProviders, setOauthProviders] = useState<OAuthProvider[]>([]);
   const [loadingProviders, setLoadingProviders] = useState(true);
+
+  const stars = useMemo<Star[]>(() => {
+    const count = 120;
+    const rnd = (min: number, max: number) => min + Math.random() * (max - min);
+
+    return Array.from({ length: count }, (_, i) => ({
+      id: `s-${i}-${Math.random().toString(16).slice(2)}`,
+      top: rnd(0, 100),
+      left: rnd(0, 100),
+      size: rnd(1, 2.5),
+      delay: rnd(0, 6),
+      dur: rnd(1.2, 4.5),
+      alpha: rnd(0.25, 0.9),
+    }));
+  }, []);
 
   useEffect(() => {
     const loadProviders = async () => {
@@ -35,7 +60,6 @@ const RegisterScreen: React.FC = () => {
     loadProviders();
   }, []);
 
-  const demoProviders = ["Google", "GitHub", "Discord", "Spotify", "Microsoft", "Trello"];
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -88,8 +112,63 @@ const RegisterScreen: React.FC = () => {
     }
   };
 
+  const renderProviderIcon = (provider: OAuthProvider) => {
+    const icon = provider.icon;
+
+    if (/^https?:\/\//i.test(icon)) {
+      return (
+        <img
+          src={icon}
+          alt={`${provider.name} logo`}
+          style={{
+            width: "24px",
+            height: "24px",
+            objectFit: "contain",
+            display: "inline-block",
+            marginRight: "8px",
+          }}
+        />
+      );
+    }
+
+    if (/^\s*<svg[\s>]/i.test(icon)) {
+      return (
+        <span
+          aria-label={`${provider.name} logo`}
+          role="img"
+          style={{
+            width: "24px",
+            height: "24px",
+            display: "inline-block",
+            marginRight: "8px",
+          }}
+          dangerouslySetInnerHTML={{ __html: icon }}
+        />
+      );
+    }
+
+    return <span style={{ marginRight: "8px" }}>{icon}</span>;
+  };
+
   return (
     <div className="register-container">
+      <div className="register-background" aria-hidden="true">
+        {stars.map((s) => (
+            <span
+                key={s.id}
+                className="star"
+                style={{
+                  top: `${s.top}%`,
+                  left: `${s.left}%`,
+                  width: `${s.size}px`,
+                  height: `${s.size}px`,
+                  opacity: s.alpha,
+                  animationDelay: `${s.delay}s`,
+                  animationDuration: `${s.dur}s`,
+                }}
+            />
+        ))}
+      </div>
       <div className="register-form-card">
         <h1 className="register-title">Inscription</h1>
         <p className="register-subtitle">Créez votre compte AREA</p>
@@ -191,7 +270,7 @@ const RegisterScreen: React.FC = () => {
                   borderLeft: `4px solid ${provider.color}`,
                 }}
               >
-                <span style={{ marginRight: "8px" }}>{provider.icon}</span>
+                {renderProviderIcon(provider)}
                 S'inscrire avec {provider.name}
               </button>
             ))

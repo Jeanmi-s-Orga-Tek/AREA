@@ -91,6 +91,44 @@ const LoginScreen: React.FC = () => {
     }
   };
 
+  const renderProviderIcon = (provider: OAuthProvider) => {
+    const icon = provider.icon;
+
+    if (/^https?:\/\//i.test(icon)) {
+      return (
+        <img
+          src={icon}
+          alt={`${provider.name} logo`}
+          style={{
+            width: "24px",
+            height: "24px",
+            objectFit: "contain",
+            display: "inline-block",
+            marginRight: "8px",
+          }}
+        />
+      );
+    }
+
+    if (/^\s*<svg[\s>]/i.test(icon)) {
+      return (
+        <span
+          aria-label={`${provider.name} logo`}
+          role="img"
+          style={{
+            width: "24px",
+            height: "24px",
+            display: "inline-block",
+            marginRight: "8px",
+          }}
+          dangerouslySetInnerHTML={{ __html: icon }}
+        />
+      );
+    }
+
+    return <span style={{ marginRight: "8px" }}>{icon}</span>;
+  };
+
   return (
     <div className="login-container">
       <div className="login-background" aria-hidden="true">
@@ -183,28 +221,7 @@ const LoginScreen: React.FC = () => {
                         borderLeft: `4px solid ${provider.color}`,
                       }}
                   >
-                <span
-                    style={{
-                      marginRight: "8px",
-                      display: "inline-flex",
-                      alignItems: "center",
-                    }}
-                >
-                  {typeof provider.icon === "string" &&
-                  provider.icon.startsWith("http") ? (
-                      <img
-                          src={provider.icon}
-                          alt={`${provider.name} logo`}
-                          style={{
-                            width: "20px",
-                            height: "20px",
-                            objectFit: "contain",
-                          }}
-                      />
-                  ) : (
-                      provider.icon
-                  )}
-                </span>
+                    {renderProviderIcon(provider)}
                     Se connecter avec {provider.name}
                   </button>
               ))

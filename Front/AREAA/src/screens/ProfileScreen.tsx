@@ -8,7 +8,7 @@
 import React, { useState, useEffect } from "react";
 import { logout } from "../services/auth";
 import { fetchCurrentUser, fetchMyConnectedServices, fetchMyAreas, disconnectService } from "../services/api";
-import type { User, ServiceAccount, AreaDetail } from "../services/api";
+import type { User } from "../services/api";
 import "./ProfileScreen.css";
 
 interface ConnectedService {
@@ -19,6 +19,7 @@ interface ConnectedService {
 }
 
 const ProfileScreen: React.FC = () => {
+  const [stars, setStars] = useState<Array<{ id: number; style: React.CSSProperties }>>([]);
   const [user, setUser] = useState<User | null>(null);
   const [connectedServices, setConnectedServices] = useState<ConnectedService[]>([]);
   const [areaCount, setAreaCount] = useState(0);
@@ -27,6 +28,26 @@ const ProfileScreen: React.FC = () => {
   const [error, setError] = useState("");
 
   useEffect(() => {
+    const generateStars = () => {
+      const newStars = [];
+      for (let i = 0; i < 100; i++) {
+        const size = Math.random() * 3 + 1;
+        newStars.push({
+          id: i,
+          style: {
+            width: `${size}px`,
+            height: `${size}px`,
+            left: `${Math.random() * 100}%`,
+            top: `${Math.random() * 100}%`,
+            animationDelay: `${Math.random() * 5}s`,
+            animationDuration: `${Math.random() * 3 + 2}s`,
+          },
+        });
+      }
+      setStars(newStars);
+    };
+
+    generateStars();
     loadProfileData();
   }, []);
 
@@ -88,9 +109,54 @@ const ProfileScreen: React.FC = () => {
 
   if (loading) {
     return (
-      <div className="profile-container">
-        <div className="profile-content">
-          <p>Chargement du profil...</p>
+      <div className="dashboard-page">
+        <div className="server-background">
+          <div>
+            {stars.map((star) => (
+              <div key={star.id} className="star" style={star.style} />
+            ))}
+          </div>
+        </div>
+
+        <div className="dashboard-sidebar">
+          <div className="sidebar-header">
+            <h2 className="sidebar-logo">⚡ AREA</h2>
+          </div>
+          <nav className="sidebar-nav">
+            <a href="/" className="nav-item">
+              🏠 Dashboard
+            </a>
+            <a href="/areas" className="nav-item">
+              📋 Mes AREAs
+            </a>
+            <a href="/create-area" className="nav-item">
+              ➕ Créer une AREA
+            </a>
+            <a href="/services" className="nav-item">
+              🔌 Services
+            </a>
+            <a href="/profile" className="nav-item active">
+              👤 Profil
+            </a>
+            <a href="/about" className="nav-item">
+              ℹ️ À propos
+            </a>
+          </nav>
+        </div>
+
+        <div className="dashboard-content">
+          <div className="dashboard-topbar">
+            <h1 className="topbar-title">Mon Profil</h1>
+            <div className="topbar-user">
+              <span className="user-name">👋 Chargement...</span>
+            </div>
+          </div>
+
+          <div className="dashboard-main">
+            <div className="card">
+              <p className="card-description">Chargement du profil...</p>
+            </div>
+          </div>
         </div>
       </div>
     );
@@ -98,12 +164,57 @@ const ProfileScreen: React.FC = () => {
 
   if (error) {
     return (
-      <div className="profile-container">
-        <div className="profile-content">
-          <div style={{ color: "red", padding: "20px" }}>
-            <h3>Erreur</h3>
-            <p>{error}</p>
-            <button onClick={loadProfileData}>Réessayer</button>
+      <div className="dashboard-page">
+        <div className="server-background">
+          <div>
+            {stars.map((star) => (
+              <div key={star.id} className="star" style={star.style} />
+            ))}
+          </div>
+        </div>
+
+        <div className="dashboard-sidebar">
+          <div className="sidebar-header">
+            <h2 className="sidebar-logo">⚡ AREA</h2>
+          </div>
+          <nav className="sidebar-nav">
+            <a href="/" className="nav-item">
+              🏠 Dashboard
+            </a>
+            <a href="/areas" className="nav-item">
+              📋 Mes AREAs
+            </a>
+            <a href="/create-area" className="nav-item">
+              ➕ Créer une AREA
+            </a>
+            <a href="/services" className="nav-item">
+              🔌 Services
+            </a>
+            <a href="/profile" className="nav-item active">
+              👤 Profil
+            </a>
+            <a href="/about" className="nav-item">
+              ℹ️ À propos
+            </a>
+          </nav>
+        </div>
+
+        <div className="dashboard-content">
+          <div className="dashboard-topbar">
+            <h1 className="topbar-title">Mon Profil</h1>
+            <div className="topbar-user">
+              <span className="user-name">👋 {user?.name || "Utilisateur"}</span>
+            </div>
+          </div>
+
+          <div className="dashboard-main">
+            <div className="card">
+              <h3 className="card-title" style={{ color: '#ef4444' }}>Erreur</h3>
+              <p className="card-description">{error}</p>
+              <button onClick={loadProfileData} className="btn-connect" style={{ marginTop: '16px' }}>
+                Réessayer
+              </button>
+            </div>
           </div>
         </div>
       </div>
@@ -121,82 +232,121 @@ const ProfileScreen: React.FC = () => {
   }
 
   return (
-    <div className="profile-container">
-      <div className="profile-content">
-        <div className="profile-header">
-          <div className="profile-avatar">
-            {user.image ? (
-              <img src={user.image} alt={user.name} className="profile-avatar-img" />
-            ) : (
-              <span className="profile-avatar-text">
-                {user.email.charAt(0).toUpperCase()}
-              </span>
+    <div className="dashboard-page">
+      <div className="server-background">
+        <div>
+          {stars.map((star) => (
+            <div key={star.id} className="star" style={star.style} />
+          ))}
+        </div>
+      </div>
+
+      <div className="dashboard-sidebar">
+        <div className="sidebar-header">
+          <h2 className="sidebar-logo">⚡ AREA</h2>
+        </div>
+        <nav className="sidebar-nav">
+          <a href="/" className="nav-item">
+            🏠 Dashboard
+          </a>
+          <a href="/areas" className="nav-item">
+            📋 Mes AREAs
+          </a>
+          <a href="/create-area" className="nav-item">
+            ➕ Créer une AREA
+          </a>
+          <a href="/services" className="nav-item">
+            🔌 Services
+          </a>
+          <a href="/profile" className="nav-item active">
+            👤 Profil
+          </a>
+          <a href="/about" className="nav-item">
+            ℹ️ À propos
+          </a>
+        </nav>
+      </div>
+
+      <div className="dashboard-content">
+        <div className="dashboard-topbar">
+          <h1 className="topbar-title">Mon Profil</h1>
+          <div className="topbar-user">
+            <span className="user-name">👋 {user?.name || "Utilisateur"}</span>
+            <button onClick={handleLogout} className="logout-btn">
+              🚪 Déconnexion
+            </button>
+          </div>
+        </div>
+
+        <div className="dashboard-main">
+          <div className="welcome-card">
+            <div className="profile-header">
+              <div className="profile-avatar">
+                {user.image ? (
+                  <img src={user.image} alt={user.name} className="profile-avatar-img" />
+                ) : (
+                  <span className="profile-avatar-text">
+                    {user.email.charAt(0).toUpperCase()}
+                  </span>
+                )}
+              </div>
+              <h2 className="welcome-title">{user.name}</h2>
+              <p className="welcome-text">{user.email}</p>
+            </div>
+          </div>
+
+          <div className="profile-stats">
+            <div className="card stats-card">
+              <div className="profile-stat-value">{areaCount}</div>
+              <div className="profile-stat-label">AREA créés</div>
+            </div>
+            <div className="card stats-card">
+              <div className="profile-stat-value">{activeAreas}</div>
+              <div className="profile-stat-label">AREA actifs</div>
+            </div>
+            <div className="card stats-card">
+              <div className="profile-stat-value">{connectedServices.length}</div>
+              <div className="profile-stat-label">Services connectés</div>
+            </div>
+          </div>
+
+          <div className="card">
+            <h2 className="card-title">Services Connectés</h2>
+            <div className="profile-services">
+              {connectedServices.map((service) => (
+                <div key={service.id} className="card profile-service-card">
+                  <div className="profile-service-icon">{service.icon}</div>
+                  <div className="profile-service-info">
+                    <div className="profile-service-name">{service.name}</div>
+                    <div className="profile-service-date">
+                      Connecté le {service.connectedAt}
+                    </div>
+                  </div>
+                  <button
+                    className="btn-disconnect"
+                    onClick={() => handleDisconnectService(service.id, service.name)}
+                  >
+                    Déconnecter
+                  </button>
+                </div>
+              ))}
+            </div>
+
+            {connectedServices.length === 0 && (
+              <p className="card-description" style={{ textAlign: 'center', padding: '40px' }}>
+                Aucun service connecté pour le moment
+              </p>
             )}
           </div>
-          <h1 className="profile-title">Mon Profil</h1>
-          <p className="profile-name">{user.name}</p>
-          <p className="profile-email">{user.email}</p>
-        </div>
-        <div className="profile-stats">
-          <div className="profile-stat-card">
-            <div className="profile-stat-value">{areaCount}</div>
-            <div className="profile-stat-label">AREA créés</div>
-          </div>
-          <div className="profile-stat-card">
-            <div className="profile-stat-value">{activeAreas}</div>
-            <div className="profile-stat-label">AREA actifs</div>
-          </div>
-          <div className="profile-stat-card">
-            <div className="profile-stat-value">{connectedServices.length}</div>
-            <div className="profile-stat-label">Services connectés</div>
-          </div>
-        </div>
 
-        <div className="profile-section">
-          <h2 className="profile-section-title">Services Connectés</h2>
-          <div className="profile-services">
-            {connectedServices.map((service) => (
-              <div key={service.id} className="profile-service-card">
-                <div className="profile-service-icon">{service.icon}</div>
-                <div className="profile-service-info">
-                  <div className="profile-service-name">{service.name}</div>
-                  <div className="profile-service-date">
-                    Connecté le {service.connectedAt}
-                  </div>
-                </div>
-                <button 
-                  className="profile-service-disconnect"
-                  onClick={() => handleDisconnectService(service.id, service.name)}
-                >
-                  Déconnecter
-                </button>
-              </div>
-            ))}
+          <div className="profile-actions">
+            <a href="/services" className="btn-primary">
+              🔌 Gérer les services
+            </a>
+            <a href="/areas" className="btn-secondary">
+              📋 Mes AREA
+            </a>
           </div>
-
-          {connectedServices.length === 0 && (
-            <p className="profile-empty-state">
-              Aucun service connecté pour le moment
-            </p>
-          )}
-        </div>
-
-        <div className="profile-actions">
-          <a href="/" className="profile-button profile-button-secondary">
-            Retour à l'accueil
-          </a>
-          <a href="/areas" className="profile-button profile-button-secondary">
-            Mes AREA
-          </a>
-          <a href="/services" className="profile-button profile-button-secondary">
-            Gérer les services
-          </a>
-          <button
-            onClick={handleLogout}
-            className="profile-button profile-button-danger"
-          >
-            Se déconnecter
-          </button>
         </div>
       </div>
     </div>
