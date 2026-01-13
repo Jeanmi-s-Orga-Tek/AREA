@@ -12,7 +12,7 @@ import {
   Linking,
 } from 'react-native';
 import {NativeStackNavigationProp} from '@react-navigation/native-stack';
-import {Button} from '../components';
+import {Button, StarField} from '../components';
 import {colors, spacing, typography} from '../theme';
 import {
   createOAuthState,
@@ -104,95 +104,111 @@ export const LoginScreen: React.FC<LoginScreenProps> = ({navigation}) => {
   };
 
   return (
-    <SafeAreaView style={styles.container}>
-      <KeyboardAvoidingView
-        behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
-        style={styles.keyboardView}>
-        <View style={styles.content}>
-          <Text style={styles.title}>Welcome to AREA</Text>
-          <Text style={styles.subtitle}>Connect your apps and automate</Text>
+    <StarField>
+      <SafeAreaView style={styles.safeArea}>
+        <KeyboardAvoidingView
+          behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+          style={styles.keyboardView}>
+          <View style={styles.content}>
+            <View style={styles.card}>
+              <View style={styles.header}>
+                <Text style={styles.title}>Connexion</Text>
+                <Text style={styles.subtitle}>
+                  Retrouvez l&apos;ambiance du tableau de bord web avec un fond étoilé et des cartes glassmorphiques.
+                </Text>
+              </View>
 
-          <View style={styles.form}>
-            <TextInput
-              style={styles.input}
-              placeholder="Email"
-              placeholderTextColor={colors.textSecondary}
-              value={email}
-              onChangeText={setEmail}
-              autoCapitalize="none"
-              keyboardType="email-address"
-              editable={!loading}
-            />
-            <TextInput
-              style={styles.input}
-              placeholder="Password"
-              placeholderTextColor={colors.textSecondary}
-              value={password}
-              onChangeText={setPassword}
-              secureTextEntry
-              editable={!loading}
-            />
-            {error ? <Text style={styles.error}>{error}</Text> : null}
-            <Button
-              title={loading ? 'Signing in...' : 'Sign in'}
-              onPress={handleLogin}
-              style={styles.button}
-              disabled={loading}
-            />
-            {loading && <ActivityIndicator color={colors.primary} />}
-          </View>
+              <View style={styles.form}>
+                <TextInput
+                  style={styles.input}
+                  placeholder="Email"
+                  placeholderTextColor={colors.textSecondary}
+                  value={email}
+                  onChangeText={setEmail}
+                  autoCapitalize="none"
+                  keyboardType="email-address"
+                  editable={!loading}
+                />
+                <TextInput
+                  style={styles.input}
+                  placeholder="Mot de passe"
+                  placeholderTextColor={colors.textSecondary}
+                  value={password}
+                  onChangeText={setPassword}
+                  secureTextEntry
+                  editable={!loading}
+                />
+                {error ? <Text style={styles.errorBox}>{error}</Text> : null}
+                <Button
+                  title={loading ? 'Connexion en cours...' : 'Se connecter'}
+                  onPress={handleLogin}
+                  style={styles.button}
+                  disabled={loading}
+                />
+              </View>
 
-          <View style={styles.oauthSection}>
-            <Text style={styles.orLabel}>Or continue with</Text>
-            {isFetchingProviders ? (
-              <ActivityIndicator color={colors.primary} />
-            ) : oauthProviders.length ? (
-              oauthProviders.map(provider => (
-                <TouchableOpacity
-                  key={provider.id}
-                  style={[styles.oauthButton, {borderColor: provider.color}]}
-                  disabled={providerLoading}
-                  onPress={() => handleOAuthLogin(provider.id)}>
-                  <Text style={styles.oauthButtonText}>
-                    {provider.icon} Continue with {provider.name}
+              <View style={styles.divider}>
+                <View style={styles.dividerLine} />
+                <Text style={styles.dividerLabel}>OU</Text>
+                <View style={styles.dividerLine} />
+              </View>
+
+              <View style={styles.oauthSection}>
+                {isFetchingProviders ? (
+                  <ActivityIndicator color={colors.primary} />
+                ) : oauthProviders.length ? (
+                  oauthProviders.map(provider => (
+                    <TouchableOpacity
+                      key={provider.id}
+                      style={[
+                        styles.oauthButton,
+                        {borderLeftColor: provider.color || colors.primary},
+                      ]}
+                      disabled={providerLoading}
+                      onPress={() => handleOAuthLogin(provider.id)}>
+                      <Text style={styles.oauthButtonText}>
+                        {provider.icon} Se connecter avec {provider.name}
+                      </Text>
+                    </TouchableOpacity>
+                  ))
+                ) : (
+                  <Text style={styles.oauthFallback}>
+                    Aucun fournisseur OAuth disponible.
                   </Text>
-                </TouchableOpacity>
-              ))
-            ) : (
-              <Text style={styles.oauthFallback}>
-                No OAuth providers are currently available.
-              </Text>
-            )}
-            {providerLoading && (
-              <ActivityIndicator
-                color={colors.primary}
-                style={styles.oauthSpinner}
-              />
-            )}
+                )}
+                {providerLoading && (
+                  <ActivityIndicator
+                    color={colors.primary}
+                    style={styles.oauthSpinner}
+                  />
+                )}
+              </View>
+
+              <TouchableOpacity
+                style={styles.linkContainer}
+                disabled={loading}
+                onPress={() => navigation.navigate('Register')}>
+                <Text style={styles.linkText}>
+                  Pas encore de compte ? Créez-en un
+                </Text>
+              </TouchableOpacity>
+
+              <TouchableOpacity
+                style={styles.settingsLink}
+                onPress={() => navigation.navigate('Settings')}>
+                <Text style={styles.settingsLinkText}>Paramètres serveur</Text>
+              </TouchableOpacity>
+            </View>
           </View>
-
-          <TouchableOpacity
-            style={styles.settingsLink}
-            onPress={() => navigation.navigate('Settings')}>
-            <Text style={styles.settingsLinkText}>Server settings</Text>
-          </TouchableOpacity>
-
-          <TouchableOpacity
-            style={styles.linkContainer}
-            disabled={loading}
-            onPress={() => navigation.navigate('Register')}>
-            <Text style={styles.linkText}>Need an account? Create one</Text>
-          </TouchableOpacity>
-        </View>
-      </KeyboardAvoidingView>
-    </SafeAreaView>
+        </KeyboardAvoidingView>
+      </SafeAreaView>
+    </StarField>
   );
 };
 
 const styles = StyleSheet.create({
-  container: {
+  safeArea: {
     flex: 1,
-    backgroundColor: colors.background,
   },
   keyboardView: {
     flex: 1,
@@ -200,25 +216,42 @@ const styles = StyleSheet.create({
   content: {
     flex: 1,
     justifyContent: 'center',
-    paddingHorizontal: spacing.lg,
+    alignItems: 'center',
+  },
+  card: {
+    width: '100%',
+    maxWidth: 460,
+    backgroundColor: colors.card,
+    borderWidth: 1,
+    borderColor: colors.border,
+    borderRadius: 16,
+    padding: spacing.xl,
+    shadowColor: colors.shadow,
+    shadowOffset: {width: 0, height: 12},
+    shadowOpacity: 0.35,
+    shadowRadius: 18,
+    elevation: 12,
+  },
+  header: {
+    marginBottom: spacing.lg,
   },
   title: {
     ...typography.h1,
-    color: colors.text,
+    color: colors.primary,
     textAlign: 'center',
-    marginBottom: spacing.sm,
+    marginBottom: spacing.xs,
   },
   subtitle: {
-    ...typography.body,
+    ...typography.bodySmall,
     color: colors.textSecondary,
     textAlign: 'center',
-    marginBottom: spacing.xxl,
   },
   form: {
     gap: spacing.md,
+    marginBottom: spacing.lg,
   },
   input: {
-    backgroundColor: colors.surface,
+    backgroundColor: colors.surfaceMuted,
     borderRadius: 12,
     paddingVertical: spacing.md,
     paddingHorizontal: spacing.lg,
@@ -230,26 +263,44 @@ const styles = StyleSheet.create({
   button: {
     marginTop: spacing.md,
   },
-  error: {
+  errorBox: {
     color: colors.error,
-    ...typography.body,
+    ...typography.bodySmall,
     textAlign: 'center',
+    backgroundColor: 'rgba(239, 68, 68, 0.12)',
+    borderColor: colors.error,
+    borderWidth: StyleSheet.hairlineWidth,
+    paddingVertical: spacing.sm,
+    paddingHorizontal: spacing.md,
+    borderRadius: 10,
   },
   oauthSection: {
-    marginTop: spacing.xxl,
     gap: spacing.sm,
   },
-  orLabel: {
+  divider: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: spacing.sm,
+    marginVertical: spacing.md,
+  },
+  dividerLine: {
+    flex: 1,
+    height: StyleSheet.hairlineWidth,
+    backgroundColor: colors.border,
+  },
+  dividerLabel: {
     ...typography.caption,
-    textAlign: 'center',
     color: colors.textSecondary,
+    letterSpacing: 1,
   },
   oauthButton: {
     borderWidth: 1,
+    borderColor: colors.border,
+    borderLeftWidth: 4,
     borderRadius: 12,
     paddingVertical: spacing.md,
     paddingHorizontal: spacing.lg,
-    alignItems: 'center',
+    backgroundColor: colors.surfaceMuted,
   },
   oauthButtonText: {
     ...typography.body,
@@ -263,21 +314,21 @@ const styles = StyleSheet.create({
   oauthSpinner: {
     marginTop: spacing.sm,
   },
-  settingsLink: {
+  linkContainer: {
     marginTop: spacing.lg,
+    alignItems: 'center',
+  },
+  linkText: {
+    color: colors.primary,
+    ...typography.body,
+  },
+  settingsLink: {
+    marginTop: spacing.sm,
     alignItems: 'center',
   },
   settingsLinkText: {
     color: colors.textSecondary,
     textDecorationLine: 'underline',
     ...typography.bodySmall,
-  },
-  linkContainer: {
-    marginTop: spacing.xl,
-    alignItems: 'center',
-  },
-  linkText: {
-    color: colors.primary,
-    ...typography.body,
   },
 });

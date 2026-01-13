@@ -16,7 +16,7 @@ import {
 } from 'react-native';
 import {useFocusEffect, useNavigation} from '@react-navigation/native';
 import {NativeStackNavigationProp} from '@react-navigation/native-stack';
-import {Button} from '../components';
+import {Button, StarField} from '../components';
 import {colors, spacing, typography} from '../theme';
 import {
   fetchServices,
@@ -221,46 +221,50 @@ export const ServicesScreen: React.FC = () => {
 
   if (loading && !refreshing && services.length === 0 && !error) {
     return (
-      <SafeAreaView style={styles.centeredContainer}>
-        <ActivityIndicator size="large" color={colors.primary} />
-        <Text style={styles.loadingText}>Loading services...</Text>
-      </SafeAreaView>
+      <StarField padding={0}>
+        <SafeAreaView style={styles.centeredContainer}>
+          <ActivityIndicator size="large" color={colors.primary} />
+          <Text style={styles.loadingText}>Chargement des services...</Text>
+        </SafeAreaView>
+      </StarField>
     );
   }
 
   return (
-    <SafeAreaView style={styles.container}>
-      <View style={styles.header}>
-        <TouchableOpacity onPress={() => navigation.goBack()}>
-          <Text style={styles.backLink}>&lt; Back</Text>
-        </TouchableOpacity>
-        <Text style={styles.title}>Services</Text>
-        <Text style={styles.subtitle}>
-          {connectedCount} / {services.length} services connected
-        </Text>
-        {error && <Text style={styles.error}>{error}</Text>}
-      </View>
-      <FlatList
-        data={services}
-        keyExtractor={item => `${item.id}`}
-        renderItem={renderItem}
-        contentContainerStyle={
-          services.length ? styles.listContent : styles.emptyContent
-        }
-        refreshControl={
-          <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
-        }
-        ListEmptyComponent={
-          !loading ? (
-            <View style={styles.emptyState}>
-              <Text style={styles.emptyText}>
-                No services available yet. Pull down to refresh.
-              </Text>
-            </View>
-          ) : null
-        }
-      />
-    </SafeAreaView>
+    <StarField padding={0}>
+      <SafeAreaView style={styles.container}>
+        <View style={styles.headerCard}>
+          <TouchableOpacity onPress={() => navigation.goBack()}>
+            <Text style={styles.backLink}>← Retour</Text>
+          </TouchableOpacity>
+          <Text style={styles.title}>Services</Text>
+          <Text style={styles.subtitle}>
+            {connectedCount} / {services.length} services connectés
+          </Text>
+          {error && <Text style={styles.error}>{error}</Text>}
+        </View>
+        <FlatList
+          data={services}
+          keyExtractor={item => `${item.id}`}
+          renderItem={renderItem}
+          contentContainerStyle={
+            services.length ? styles.listContent : styles.emptyContent
+          }
+          refreshControl={
+            <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
+          }
+          ListEmptyComponent={
+            !loading ? (
+              <View style={styles.emptyState}>
+                <Text style={styles.emptyText}>
+                  Aucun service disponible pour l’instant.
+                </Text>
+              </View>
+            ) : null
+          }
+        />
+      </SafeAreaView>
+    </StarField>
   );
 };
 
@@ -271,35 +275,43 @@ const HEADER_TOP_INSET =
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: colors.background,
+    backgroundColor: 'transparent',
   },
   centeredContainer: {
     flex: 1,
     alignItems: 'center',
     justifyContent: 'center',
-    backgroundColor: colors.background,
+    backgroundColor: 'transparent',
   },
   loadingText: {
     marginTop: spacing.md,
     ...typography.body,
     color: colors.textSecondary,
   },
-  header: {
+  headerCard: {
     paddingHorizontal: spacing.lg,
     paddingTop: HEADER_TOP_INSET,
     paddingBottom: spacing.md,
-    borderBottomWidth: StyleSheet.hairlineWidth,
-    borderBottomColor: colors.border,
-    backgroundColor: colors.surface,
+    borderWidth: 1,
+    borderColor: colors.border,
+    backgroundColor: colors.card,
+    marginHorizontal: spacing.lg,
+    marginTop: spacing.lg,
+    borderRadius: 18,
+    shadowColor: colors.shadow,
+    shadowOpacity: 0.32,
+    shadowOffset: {width: 0, height: 10},
+    shadowRadius: 18,
+    elevation: 10,
   },
   backLink: {
     ...typography.bodySmall,
-    color: colors.primary,
+    color: colors.textSecondary,
     marginBottom: spacing.sm,
   },
   title: {
     ...typography.h1,
-    color: colors.text,
+    color: colors.primary,
   },
   subtitle: {
     ...typography.bodySmall,
@@ -331,17 +343,20 @@ const styles = StyleSheet.create({
   card: {
     padding: spacing.lg,
     borderRadius: 16,
-    backgroundColor: colors.surface,
-    shadowColor: '#000',
-    shadowOpacity: 0.05,
-    shadowRadius: 12,
-    shadowOffset: {width: 0, height: 2},
-    elevation: 2,
+    backgroundColor: colors.card,
+    borderWidth: 1,
+    borderColor: colors.border,
+    shadowColor: colors.shadow,
+    shadowOpacity: 0.25,
+    shadowRadius: 14,
+    shadowOffset: {width: 0, height: 8},
+    elevation: 8,
     marginBottom: spacing.md,
   },
   cardConnected: {
     borderWidth: 1,
-    borderColor: colors.success,
+    borderColor: colors.successStrong,
+    backgroundColor: colors.surfaceMuted,
   },
   cardAction: {
     marginTop: spacing.md,

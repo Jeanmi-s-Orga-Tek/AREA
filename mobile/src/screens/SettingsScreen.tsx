@@ -9,7 +9,7 @@ import {
   ActivityIndicator,
   Alert,
 } from 'react-native';
-import {Button, Card} from '../components';
+import {Button, Card, StarField} from '../components';
 import {colors, spacing, typography} from '../theme';
 import {getApiBaseUrl, setApiBaseUrl, clearApiBaseUrl} from '../api/storage';
 import {fetchAbout, AboutResponse} from '../api/about';
@@ -126,14 +126,14 @@ export const SettingsScreen: React.FC = () => {
     if (connectionStatus === 'success' && aboutData) {
       return (
         <View style={styles.successContainer}>
-          <Text style={styles.connectionSuccess}>Connected ✅</Text>
+          <Text style={styles.connectionSuccess}>Connecté ✅</Text>
           <Text style={styles.infoText}>
-            Services available: {aboutData.server.services.length}
+            Services disponibles : {aboutData.server.services.length}
           </Text>
           <Text style={styles.infoText}>
-            Server time: {new Date(aboutData.server.current_time * 1000).toLocaleString()}
+            Heure serveur : {new Date(aboutData.server.current_time * 1000).toLocaleString()}
           </Text>
-          <Text style={styles.infoText}>Client host: {aboutData.client.host}</Text>
+          <Text style={styles.infoText}>Client : {aboutData.client.host}</Text>
         </View>
       );
     }
@@ -141,7 +141,7 @@ export const SettingsScreen: React.FC = () => {
     if (connectionStatus === 'error') {
       return (
         <View style={styles.errorContainer}>
-          <Text style={styles.connectionError}>Cannot reach server ❌</Text>
+          <Text style={styles.connectionError}>Serveur injoignable ❌</Text>
           <Text style={styles.errorDetailText}>{connectionError}</Text>
         </View>
       );
@@ -152,33 +152,33 @@ export const SettingsScreen: React.FC = () => {
 
   const renderAccountSection = () => (
     <Card style={styles.card}>
-      <Text style={styles.cardTitle}>Account</Text>
+      <Text style={styles.cardTitle}>Compte</Text>
       <Text style={styles.cardDescription}>
-        Manage your AREA account and authentication
+        Gérez votre profil AREA et votre session
       </Text>
       {userLoading ? (
         <ActivityIndicator color={colors.primary} style={styles.sectionSpinner} />
       ) : (
         <View style={styles.accountDetails}>
           <Text style={styles.infoText}>
-            Name: {user?.name || user?.email || 'Unknown user'}
+            Nom : {user?.name || user?.email || 'Utilisateur inconnu'}
           </Text>
-          <Text style={styles.infoText}>Email: {user?.email || 'N/A'}</Text>
+          <Text style={styles.infoText}>Email : {user?.email || 'N/A'}</Text>
           {userError ? <Text style={styles.errorText}>{userError}</Text> : null}
         </View>
       )}
-      <Button title="Log out" variant="secondary" onPress={handleLogout} style={styles.cardButton} />
+      <Button title="Se déconnecter" variant="danger" onPress={handleLogout} style={styles.cardButton} />
     </Card>
   );
 
   const renderAboutSection = () => (
     <Card style={styles.card}>
-      <Text style={styles.cardTitle}>About / Server info</Text>
+      <Text style={styles.cardTitle}>À propos / Infos serveur</Text>
       <Text style={styles.cardDescription}>
-        Inspect the backend instance powering this client
+        Consultez l&apos;instance backend reliée au client mobile
       </Text>
       <Button
-        title={connectionStatus === 'loading' ? 'Loading...' : 'View server info'}
+        title={connectionStatus === 'loading' ? 'Chargement...' : 'Voir les infos serveur'}
         onPress={handleFetchServerInfo}
         variant="outline"
         disabled={connectionStatus === 'loading'}
@@ -190,12 +190,12 @@ export const SettingsScreen: React.FC = () => {
 
   const renderAdvancedSection = () => (
     <Card style={styles.card}>
-      <Text style={styles.cardTitle}>Advanced</Text>
+      <Text style={styles.cardTitle}>Avancé</Text>
       <Text style={styles.cardDescription}>
-        Troubleshoot by clearing local configuration and session data
+        Nettoyez la configuration locale et la session si besoin
       </Text>
       <Button
-        title="Clear local data"
+        title="Effacer les données locales"
         variant="outline"
         onPress={handleClearLocalData}
         style={styles.cardButton}
@@ -206,76 +206,78 @@ export const SettingsScreen: React.FC = () => {
   const showServerResultsInline = !isLoggedIn;
 
   return (
-    <SafeAreaView style={styles.container}>
-      <ScrollView style={styles.scrollView} contentContainerStyle={styles.content}>
-        <Text style={styles.title}>{isLoggedIn ? 'Settings' : 'Server settings'}</Text>
+    <StarField padding={0}>
+      <SafeAreaView style={styles.safeArea}>
+        <ScrollView style={styles.scrollView} contentContainerStyle={styles.content}>
+          <Text style={styles.title}>{isLoggedIn ? 'Paramètres' : 'Paramètres serveur'}</Text>
 
-        <Card style={styles.card}>
-          <Text style={styles.cardTitle}>Server settings</Text>
-          <Text style={styles.cardDescription}>
-            {isLoggedIn
-              ? 'Changing the server URL will disconnect your current session.'
-              : 'Configure the API base URL before logging in.'}
-          </Text>
+          <Card style={styles.card}>
+            <Text style={styles.cardTitle}>Configuration serveur</Text>
+            <Text style={styles.cardDescription}>
+              {isLoggedIn
+                ? 'Modifier l’URL déconnectera votre session actuelle.'
+                : 'Définissez la base d’API avant de vous connecter.'}
+            </Text>
 
-          <TextInput
-            style={styles.input}
-            placeholder="http://10.0.2.2:8080"
-            placeholderTextColor={colors.textSecondary}
-            value={url}
-            onChangeText={setUrl}
-            autoCapitalize="none"
-            keyboardType="url"
-          />
-
-          {savedMessage ? (
-            <Text style={styles.successText}>{savedMessage}</Text>
-          ) : null}
-
-          {errorMessage ? <Text style={styles.errorText}>{errorMessage}</Text> : null}
-
-          <Button title="Save" onPress={handleSave} style={styles.saveButton} />
-
-          <Text style={styles.currentUrlText}>
-            Current server: {currentUrl ? currentUrl : 'Not set'}
-          </Text>
-
-          {!isLoggedIn && (
-            <Button
-              title={connectionStatus === 'loading' ? 'Testing...' : 'Test connection'}
-              onPress={handleFetchServerInfo}
-              variant="outline"
-              disabled={connectionStatus === 'loading' || !currentUrl}
-              style={styles.testButton}
+            <TextInput
+              style={styles.input}
+              placeholder="http://10.0.2.2:8080"
+              placeholderTextColor={colors.textSecondary}
+              value={url}
+              onChangeText={setUrl}
+              autoCapitalize="none"
+              keyboardType="url"
             />
-          )}
 
-          {!isLoggedIn && connectionStatus === 'loading' && (
-            <View style={styles.testingContainer}>
-              <ActivityIndicator size="small" color={colors.primary} />
-              <Text style={styles.testingText}>Testing connection...</Text>
-            </View>
-          )}
+            {savedMessage ? (
+              <Text style={styles.successText}>{savedMessage}</Text>
+            ) : null}
 
-          {showServerResultsInline && renderServerStatus()}
-        </Card>
+            {errorMessage ? <Text style={styles.errorText}>{errorMessage}</Text> : null}
 
-        {isLoggedIn ? (
-          <>
-            {renderAccountSection()}
-            {renderAboutSection()}
-            {renderAdvancedSection()}
-          </>
-        ) : null}
-      </ScrollView>
-    </SafeAreaView>
+            <Button title="Enregistrer" onPress={handleSave} style={styles.saveButton} />
+
+            <Text style={styles.currentUrlText}>
+              Serveur actuel : {currentUrl ? currentUrl : 'Non défini'}
+            </Text>
+
+            {!isLoggedIn && (
+              <Button
+                title={connectionStatus === 'loading' ? 'Test en cours...' : 'Tester la connexion'}
+                onPress={handleFetchServerInfo}
+                variant="outline"
+                disabled={connectionStatus === 'loading' || !currentUrl}
+                style={styles.testButton}
+              />
+            )}
+
+            {!isLoggedIn && connectionStatus === 'loading' && (
+              <View style={styles.testingContainer}>
+                <ActivityIndicator size="small" color={colors.primary} />
+                <Text style={styles.testingText}>Test de connexion...</Text>
+              </View>
+            )}
+
+            {showServerResultsInline && renderServerStatus()}
+          </Card>
+
+          {isLoggedIn ? (
+            <>
+              {renderAccountSection()}
+              {renderAboutSection()}
+              {renderAdvancedSection()}
+            </>
+          ) : null}
+        </ScrollView>
+      </SafeAreaView>
+    </StarField>
   );
 };
 
 const styles = StyleSheet.create({
-  container: {
+  safeArea: {
     flex: 1,
-    backgroundColor: colors.background,
+    backgroundColor: 'transparent',
   },
   scrollView: {
     flex: 1,
@@ -285,7 +287,7 @@ const styles = StyleSheet.create({
   },
   title: {
     ...typography.h1,
-    color: colors.text,
+    color: colors.primary,
     marginBottom: spacing.lg,
   },
   card: {
@@ -304,7 +306,7 @@ const styles = StyleSheet.create({
     marginTop: spacing.md,
   },
   input: {
-    backgroundColor: colors.surface,
+    backgroundColor: colors.surfaceMuted,
     borderRadius: 12,
     paddingVertical: spacing.md,
     paddingHorizontal: spacing.lg,
@@ -326,13 +328,19 @@ const styles = StyleSheet.create({
   },
   successText: {
     ...typography.bodySmall,
-    color: colors.success,
+    color: colors.successStrong,
     marginTop: spacing.sm,
+    backgroundColor: 'rgba(16, 185, 129, 0.12)',
+    padding: spacing.xs,
+    borderRadius: 8,
   },
   errorText: {
     ...typography.bodySmall,
     color: colors.error,
     marginTop: spacing.sm,
+    backgroundColor: 'rgba(239, 68, 68, 0.12)',
+    padding: spacing.xs,
+    borderRadius: 8,
   },
   testButton: {
     marginTop: spacing.md,
@@ -350,14 +358,14 @@ const styles = StyleSheet.create({
   successContainer: {
     marginTop: spacing.md,
     padding: spacing.md,
-    backgroundColor: colors.surface,
+    backgroundColor: colors.surfaceMuted,
     borderRadius: 8,
     borderLeftWidth: 4,
     borderLeftColor: colors.success,
   },
   connectionSuccess: {
     ...typography.h3,
-    color: colors.success,
+    color: colors.successStrong,
     marginBottom: spacing.sm,
   },
   infoText: {
@@ -368,7 +376,7 @@ const styles = StyleSheet.create({
   errorContainer: {
     marginTop: spacing.md,
     padding: spacing.md,
-    backgroundColor: colors.surface,
+    backgroundColor: colors.surfaceMuted,
     borderRadius: 8,
     borderLeftWidth: 4,
     borderLeftColor: colors.error,

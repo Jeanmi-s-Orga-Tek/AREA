@@ -12,7 +12,7 @@ import {
   Alert,
 } from 'react-native';
 import {NativeStackNavigationProp} from '@react-navigation/native-stack';
-import {Button} from '../components';
+import {Button, StarField} from '../components';
 import {colors, spacing, typography} from '../theme';
 import {register as registerUser} from '../api/auth';
 import {useAuth} from '../context/AuthContext';
@@ -69,84 +69,91 @@ export const RegisterScreen: React.FC<RegisterScreenProps> = ({navigation}) => {
   };
 
   return (
-    <SafeAreaView style={styles.container}>
-      <KeyboardAvoidingView
-        behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
-        style={styles.keyboardView}>
-        <View style={styles.content}>
-          <Text style={styles.title}>Create your account</Text>
-          <Text style={styles.subtitle}>Start building your AREAs</Text>
+    <StarField>
+      <SafeAreaView style={styles.safeArea}>
+        <KeyboardAvoidingView
+          behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+          style={styles.keyboardView}>
+          <View style={styles.content}>
+            <View style={styles.card}>
+              <View style={styles.header}>
+                <Text style={styles.title}>Créer un compte</Text>
+                <Text style={styles.subtitle}>
+                  Même esthétique que le web : fond nocturne, cartes vitrées et actions colorées.
+                </Text>
+              </View>
 
-          <View style={styles.form}>
-            <TextInput
-              style={styles.input}
-              placeholder="Full name"
-              placeholderTextColor={colors.textSecondary}
-              value={name}
-              onChangeText={setName}
-              editable={!loading}
-            />
-            <TextInput
-              style={styles.input}
-              placeholder="Email"
-              placeholderTextColor={colors.textSecondary}
-              value={email}
-              onChangeText={setEmail}
-              autoCapitalize="none"
-              keyboardType="email-address"
-              editable={!loading}
-            />
-            <TextInput
-              style={styles.input}
-              placeholder="Password"
-              placeholderTextColor={colors.textSecondary}
-              value={password}
-              onChangeText={setPassword}
-              secureTextEntry
-              editable={!loading}
-            />
-            <TextInput
-              style={styles.input}
-              placeholder="Confirm password"
-              placeholderTextColor={colors.textSecondary}
-              value={confirmPassword}
-              onChangeText={setConfirmPassword}
-              secureTextEntry
-              editable={!loading}
-            />
-            {error ? <Text style={styles.error}>{error}</Text> : null}
-            {success ? <Text style={styles.success}>{success}</Text> : null}
-            <Button
-              title={loading ? 'Creating account...' : 'Create account'}
-              onPress={handleRegister}
-              style={styles.button}
-              disabled={loading}
-            />
-            {loading && <ActivityIndicator color={colors.primary} />}
+              <View style={styles.form}>
+                <TextInput
+                  style={styles.input}
+                  placeholder="Nom complet"
+                  placeholderTextColor={colors.textSecondary}
+                  value={name}
+                  onChangeText={setName}
+                  editable={!loading}
+                />
+                <TextInput
+                  style={styles.input}
+                  placeholder="Email"
+                  placeholderTextColor={colors.textSecondary}
+                  value={email}
+                  onChangeText={setEmail}
+                  autoCapitalize="none"
+                  keyboardType="email-address"
+                  editable={!loading}
+                />
+                <TextInput
+                  style={styles.input}
+                  placeholder="Mot de passe"
+                  placeholderTextColor={colors.textSecondary}
+                  value={password}
+                  onChangeText={setPassword}
+                  secureTextEntry
+                  editable={!loading}
+                />
+                <TextInput
+                  style={styles.input}
+                  placeholder="Confirmer le mot de passe"
+                  placeholderTextColor={colors.textSecondary}
+                  value={confirmPassword}
+                  onChangeText={setConfirmPassword}
+                  secureTextEntry
+                  editable={!loading}
+                />
+                {error ? <Text style={styles.errorBox}>{error}</Text> : null}
+                {success ? <Text style={styles.successBox}>{success}</Text> : null}
+                <Button
+                  title={loading ? 'Création en cours...' : 'Créer mon compte'}
+                  onPress={handleRegister}
+                  style={styles.button}
+                  disabled={loading}
+                />
+                {loading && <ActivityIndicator color={colors.primary} />}
+              </View>
+
+              <TouchableOpacity
+                style={styles.linkContainer}
+                disabled={loading}
+                onPress={() => navigation.navigate('Login')}>
+                <Text style={styles.linkText}>Déjà inscrit ? Se connecter</Text>
+              </TouchableOpacity>
+
+              <TouchableOpacity
+                style={styles.settingsLink}
+                onPress={() => navigation.navigate('Settings')}>
+                <Text style={styles.settingsLinkText}>Paramètres serveur</Text>
+              </TouchableOpacity>
+            </View>
           </View>
-
-          <TouchableOpacity
-            style={styles.linkContainer}
-            disabled={loading}
-            onPress={() => navigation.navigate('Login')}>
-            <Text style={styles.linkText}>Already have an account? Log in</Text>
-          </TouchableOpacity>
-
-          <TouchableOpacity
-            style={styles.settingsLink}
-            onPress={() => navigation.navigate('Settings')}>
-            <Text style={styles.settingsLinkText}>Server settings</Text>
-          </TouchableOpacity>
-        </View>
-      </KeyboardAvoidingView>
-    </SafeAreaView>
+        </KeyboardAvoidingView>
+      </SafeAreaView>
+    </StarField>
   );
 };
 
 const styles = StyleSheet.create({
-  container: {
+  safeArea: {
     flex: 1,
-    backgroundColor: colors.background,
   },
   keyboardView: {
     flex: 1,
@@ -154,25 +161,42 @@ const styles = StyleSheet.create({
   content: {
     flex: 1,
     justifyContent: 'center',
-    paddingHorizontal: spacing.lg,
+    alignItems: 'center',
+  },
+  card: {
+    width: '100%',
+    maxWidth: 480,
+    backgroundColor: colors.card,
+    borderWidth: 1,
+    borderColor: colors.border,
+    borderRadius: 16,
+    padding: spacing.xl,
+    shadowColor: colors.shadow,
+    shadowOffset: {width: 0, height: 12},
+    shadowOpacity: 0.35,
+    shadowRadius: 18,
+    elevation: 12,
+  },
+  header: {
+    marginBottom: spacing.lg,
   },
   title: {
     ...typography.h1,
-    color: colors.text,
+    color: colors.primary,
     textAlign: 'center',
-    marginBottom: spacing.sm,
+    marginBottom: spacing.xs,
   },
   subtitle: {
-    ...typography.body,
+    ...typography.bodySmall,
     color: colors.textSecondary,
     textAlign: 'center',
-    marginBottom: spacing.xxl,
   },
   form: {
     gap: spacing.md,
+    marginBottom: spacing.lg,
   },
   input: {
-    backgroundColor: colors.surface,
+    backgroundColor: colors.surfaceMuted,
     borderRadius: 12,
     paddingVertical: spacing.md,
     paddingHorizontal: spacing.lg,
@@ -184,18 +208,30 @@ const styles = StyleSheet.create({
   button: {
     marginTop: spacing.md,
   },
-  error: {
+  errorBox: {
     color: colors.error,
-    ...typography.body,
+    ...typography.bodySmall,
     textAlign: 'center',
+    backgroundColor: 'rgba(239, 68, 68, 0.12)',
+    borderColor: colors.error,
+    borderWidth: StyleSheet.hairlineWidth,
+    paddingVertical: spacing.sm,
+    paddingHorizontal: spacing.md,
+    borderRadius: 10,
   },
-  success: {
-    color: colors.success,
-    ...typography.body,
+  successBox: {
+    color: colors.successStrong,
+    ...typography.bodySmall,
     textAlign: 'center',
+    backgroundColor: 'rgba(16, 185, 129, 0.12)',
+    borderColor: colors.successStrong,
+    borderWidth: StyleSheet.hairlineWidth,
+    paddingVertical: spacing.sm,
+    paddingHorizontal: spacing.md,
+    borderRadius: 10,
   },
   linkContainer: {
-    marginTop: spacing.xl,
+    marginTop: spacing.lg,
     alignItems: 'center',
   },
   linkText: {
@@ -203,7 +239,7 @@ const styles = StyleSheet.create({
     ...typography.body,
   },
   settingsLink: {
-    marginTop: spacing.md,
+    marginTop: spacing.sm,
     alignItems: 'center',
   },
   settingsLinkText: {
