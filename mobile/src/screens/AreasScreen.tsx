@@ -126,9 +126,6 @@ export const AreasScreen: React.FC<AreasScreenProps> = ({navigation}) => {
       <SafeAreaView style={styles.safeArea}>
         <View style={styles.headerCard}>
           <Text style={styles.title}>Mes AREAs</Text>
-          <Text style={styles.subtitle}>
-            La même ambiance que sur le web : badges colorés et cartes vitrées.
-          </Text>
           <View style={styles.statsRow}>
             <View style={styles.statPill}>
               <Text style={styles.statValue}>{areas.length || 0}</Text>

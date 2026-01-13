@@ -295,9 +295,6 @@ export const CreateAreaScreen: React.FC<CreateAreaScreenProps> = ({navigation}) 
         <ScrollView contentContainerStyle={styles.content}>
           <View style={styles.headerCard}>
             <Text style={styles.title}>Créer une AREA</Text>
-            <Text style={styles.subtitle}>
-              Interface sombre et cartes vitrées pour rester cohérent avec le web.
-            </Text>
           </View>
 
           {error ? <Text style={styles.error}>{error}</Text> : null}

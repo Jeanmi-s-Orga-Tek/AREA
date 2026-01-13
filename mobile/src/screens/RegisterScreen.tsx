@@ -78,9 +78,6 @@ export const RegisterScreen: React.FC<RegisterScreenProps> = ({navigation}) => {
             <View style={styles.card}>
               <View style={styles.header}>
                 <Text style={styles.title}>Créer un compte</Text>
-                <Text style={styles.subtitle}>
-                  Même esthétique que le web : fond nocturne, cartes vitrées et actions colorées.
-                </Text>
               </View>
 
               <View style={styles.form}>

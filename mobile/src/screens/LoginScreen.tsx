@@ -10,8 +10,10 @@ import {
   ActivityIndicator,
   TouchableOpacity,
   Linking,
+  Image,
 } from 'react-native';
 import {NativeStackNavigationProp} from '@react-navigation/native-stack';
+import {SvgUri, SvgXml} from 'react-native-svg';
 import {Button, StarField} from '../components';
 import {colors, spacing, typography} from '../theme';
 import {
@@ -37,7 +39,15 @@ export const LoginScreen: React.FC<LoginScreenProps> = ({navigation}) => {
   const [oauthProviders, setOauthProviders] = useState<OAuthProvider[]>([]);
   const [providerLoading, setProviderLoading] = useState(false);
   const [isFetchingProviders, setIsFetchingProviders] = useState(true);
+  const [svgFailures, setSvgFailures] = useState<Record<string, boolean>>({});
   const {login: setAuthLogin} = useAuth();
+
+  const svgFallbacks: Record<string, string> = {
+    google: 'https://cdn.jsdelivr.net/npm/simple-icons@v11/icons/google.svg',
+    microsoft: 'https://cdn.jsdelivr.net/npm/simple-icons@v11/icons/microsoft.svg',
+    github: 'https://cdn.jsdelivr.net/npm/simple-icons@v11/icons/github.svg',
+    spotify: 'https://cdn.jsdelivr.net/npm/simple-icons@v11/icons/spotify.svg',
+  };
 
   useEffect(() => {
     let isMounted = true;
@@ -103,6 +113,78 @@ export const LoginScreen: React.FC<LoginScreenProps> = ({navigation}) => {
     }
   };
 
+  const renderProviderIcon = (provider: OAuthProvider) => {
+    const icon = provider.icon;
+    const initial = (provider.name?.[0] || '•').toUpperCase();
+    const key = (provider.id || provider.name || '').toLowerCase();
+    const fallbackUri = svgFallbacks[key];
+
+    const handleSvgError = () =>
+      setSvgFailures(prev => ({
+        ...prev,
+        [icon || key]: true,
+      }));
+
+    if (!icon) {
+      return <Text style={styles.oauthIcon}>{initial}</Text>;
+    }
+
+    if (/^\s*<svg/i.test(icon)) {
+      if (svgFailures[icon]) {
+        return <Text style={styles.oauthIcon}>{initial}</Text>;
+      }
+      return (
+        <View style={styles.svgWrapper}>
+          <SvgXml xml={icon} width={28} height={28} onError={handleSvgError} />
+        </View>
+      );
+    }
+
+    if (/^https?:\/\//i.test(icon)) {
+      if (/\.svg(\?|$)/i.test(icon)) {
+        if (svgFailures[icon]) {
+          if (fallbackUri) {
+            return (
+              <View style={styles.svgWrapper}>
+                <SvgUri
+                  width={28}
+                  height={28}
+                  uri={fallbackUri}
+                  onError={handleSvgError}
+                />
+              </View>
+            );
+          }
+          return <Text style={styles.oauthIcon}>{initial}</Text>;
+        }
+        return (
+          <View style={styles.svgWrapper}>
+            <SvgUri
+              width={28}
+              height={28}
+              uri={icon}
+              onError={handleSvgError}
+            />
+          </View>
+        );
+      }
+      return (
+        <Image
+          source={{uri: icon}}
+          style={styles.oauthImage}
+          resizeMode="contain"
+        />
+      );
+    }
+    if (/^\s*<svg/i.test(icon)) {
+      return <Text style={styles.oauthIcon}>🔗</Text>;
+    }
+    if (icon.length <= 4) {
+      return <Text style={styles.oauthIcon}>{icon}</Text>;
+    }
+    return <Text style={styles.oauthIcon}>{initial}</Text>;
+  };
+
   return (
     <StarField>
       <SafeAreaView style={styles.safeArea}>
@@ -113,9 +195,6 @@ export const LoginScreen: React.FC<LoginScreenProps> = ({navigation}) => {
             <View style={styles.card}>
               <View style={styles.header}>
                 <Text style={styles.title}>Connexion</Text>
-                <Text style={styles.subtitle}>
-                  Retrouvez l&apos;ambiance du tableau de bord web avec un fond étoilé et des cartes glassmorphiques.
-                </Text>
               </View>
 
               <View style={styles.form}>
@@ -166,9 +245,12 @@ export const LoginScreen: React.FC<LoginScreenProps> = ({navigation}) => {
                       ]}
                       disabled={providerLoading}
                       onPress={() => handleOAuthLogin(provider.id)}>
-                      <Text style={styles.oauthButtonText}>
-                        {provider.icon} Se connecter avec {provider.name}
-                      </Text>
+                      <View style={styles.oauthButtonContent}>
+                        {renderProviderIcon(provider)}
+                        <Text style={styles.oauthButtonText}>
+                          Se connecter avec {provider.name}
+                        </Text>
+                      </View>
                     </TouchableOpacity>
                   ))
                 ) : (
@@ -301,6 +383,27 @@ const styles = StyleSheet.create({
     paddingVertical: spacing.md,
     paddingHorizontal: spacing.lg,
     backgroundColor: colors.surfaceMuted,
+  },
+  oauthButtonContent: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: spacing.sm,
+  },
+  oauthImage: {
+    width: 28,
+    height: 28,
+    borderRadius: 6,
+  },
+  svgWrapper: {
+    width: 28,
+    height: 28,
+    borderRadius: 6,
+    overflow: 'hidden',
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  oauthIcon: {
+    fontSize: 22,
   },
   oauthButtonText: {
     ...typography.body,
