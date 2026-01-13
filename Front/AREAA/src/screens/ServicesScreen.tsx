@@ -6,8 +6,9 @@
 */
 
 import React, { useState, useEffect } from "react";
-import { fetchServices, fetchMyConnectedServices, disconnectService } from "../services/api";
-import { logout, getToken, fetchOAuthProviders } from "../services/auth";
+import { fetchServices, fetchMyConnectedServices, disconnectService, fetchCurrentUser } from "../services/api";
+import type { User } from "../services/api";
+import { logout, fetchOAuthProviders } from "../services/auth";
 import type { OAuthProvider } from "../services/auth";
 import "./ServicesScreen.css";
 
@@ -24,14 +25,9 @@ interface Service {
   oauth_provider?: string | null;
 }
 
-interface UserInfo {
-  username: string;
-  email: string;
-}
-
 const ServicesScreen: React.FC = () => {
   const [stars, setStars] = useState<Array<{ id: number; style: React.CSSProperties }>>([]);
-  const [user, setUser] = useState<UserInfo | null>(null);
+  const [user, setUser] = useState<User | null>(null);
   const [services, setServices] = useState<Service[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
@@ -58,24 +54,8 @@ const ServicesScreen: React.FC = () => {
 
     const fetchUser = async () => {
       try {
-        const token = getToken();
-        if (!token) {
-          return;
-        }
-
-        const response = await fetch("http://localhost:8080/user/me", {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        });
-
-        if (response.ok) {
-          const data = await response.json();
-          setUser(data);
-        } else if (response.status === 401) {
-          logout();
-          window.location.href = "/login";
-        }
+        const userData = await fetchCurrentUser();
+        setUser(userData);
       } catch (error) {
         console.error("Error fetching user:", error);
       }
@@ -288,7 +268,7 @@ const ServicesScreen: React.FC = () => {
         <div className="dashboard-topbar">
           <h1 className="topbar-title">Services</h1>
           <div className="topbar-user">
-            <span className="user-name">👋 {loading ? "Chargement..." : (user?.username || "Utilisateur")}</span>
+            <span className="user-name">👋 {loading ? "Chargement..." : (user?.name || "Utilisateur")}</span>
             <button onClick={handleLogout} className="logout-btn">
               🚪 Déconnexion
             </button>
