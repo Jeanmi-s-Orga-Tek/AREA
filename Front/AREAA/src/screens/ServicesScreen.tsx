@@ -7,7 +7,8 @@
 
 import React, { useState, useEffect } from "react";
 import { fetchServices, fetchMyConnectedServices, disconnectService } from "../services/api";
-import type { Service as APIService, ServiceAccount } from "../services/api";
+import { logout, getToken, fetchOAuthProviders } from "../services/auth";
+import type { OAuthProvider } from "../services/auth";
 import "./ServicesScreen.css";
 
 const API_BASE_URL = "http://localhost:8080";
@@ -23,12 +24,65 @@ interface Service {
   oauth_provider?: string | null;
 }
 
+interface UserInfo {
+  username: string;
+  email: string;
+}
+
 const ServicesScreen: React.FC = () => {
+  const [stars, setStars] = useState<Array<{ id: number; style: React.CSSProperties }>>([]);
+  const [user, setUser] = useState<UserInfo | null>(null);
   const [services, setServices] = useState<Service[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
 
   useEffect(() => {
+    const generateStars = () => {
+      const newStars = [];
+      for (let i = 0; i < 100; i++) {
+        const size = Math.random() * 3 + 1;
+        newStars.push({
+          id: i,
+          style: {
+            width: `${size}px`,
+            height: `${size}px`,
+            left: `${Math.random() * 100}%`,
+            top: `${Math.random() * 100}%`,
+            animationDelay: `${Math.random() * 5}s`,
+            animationDuration: `${Math.random() * 3 + 2}s`,
+          },
+        });
+      }
+      setStars(newStars);
+    };
+
+    const fetchUser = async () => {
+      try {
+        const token = getToken();
+        if (!token) {
+          return;
+        }
+
+        const response = await fetch("http://localhost:8080/user/me", {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        });
+
+        if (response.ok) {
+          const data = await response.json();
+          setUser(data);
+        } else if (response.status === 401) {
+          logout();
+          window.location.href = "/login";
+        }
+      } catch (error) {
+        console.error("Error fetching user:", error);
+      }
+    };
+
+    generateStars();
+    fetchUser();
     loadServices();
   }, []);
 
@@ -38,14 +92,16 @@ const ServicesScreen: React.FC = () => {
       setLoading(true);
       setError("");
       
-      console.log(" Chargement des services...");
-      const [allServices, connectedServices] = await Promise.all([
+      console.log(" Chargement des services et providers...");
+      const [allServices, connectedServices, providers] = await Promise.all([
         fetchServices(),
         fetchMyConnectedServices(),
+        fetchOAuthProviders(),
       ]);
 
       console.log(" Tous les services:", allServices);
       console.log(" Services connectés:", connectedServices);
+      console.log(" Providers OAuth:", providers);
 
       const validConnectedServices = connectedServices.filter(sa => sa.service && sa.service.id);
       console.log(" Services connectés valides:", validConnectedServices);
@@ -58,16 +114,25 @@ const ServicesScreen: React.FC = () => {
       );
       console.log(" Map service -> serviceAccount:", serviceAccountMap);
 
-      const mappedServices: Service[] = allServices.map((service) => ({
-        id: service.id,
-        name: service.display_name || service.name,
-        description: service.description || `Connectez-vous à ${service.display_name}`,
-        icon: service.icon || "📦",
-        color: service.color || "#4285f4",
-        isConnected: connectedServiceIds.has(service.id),
-        serviceAccountId: serviceAccountMap.get(service.id),
-        oauth_provider: service.oauth_provider,
-      }));
+      const providerById: Record<string, OAuthProvider> = Object.fromEntries(
+        (providers || []).map((p) => [p.id, p])
+      );
+
+      const mappedServices: Service[] = allServices.map((service) => {
+        const providerKey = service.oauth_provider || service.name;
+        const provider = providerById[providerKey];
+
+        return {
+          id: service.id,
+          name: service.display_name || service.name,
+          description: service.description || `Connectez-vous à ${service.display_name}`,
+          icon: provider?.icon ?? service.icon ?? "📦",
+          color: provider?.color ?? service.color ?? "#4285f4",
+          isConnected: connectedServiceIds.has(service.id),
+          serviceAccountId: serviceAccountMap.get(service.id),
+          oauth_provider: service.oauth_provider,
+        };
+      });
 
       console.log("Services mappés avec état de connexion:");
       mappedServices.forEach(s => {
@@ -82,6 +147,43 @@ const ServicesScreen: React.FC = () => {
     } finally {
       setLoading(false);
     }
+  };
+
+  const handleLogout = () => {
+    logout();
+    window.location.href = "/login";
+  };
+
+  const renderServiceIcon = (service: Service) => {
+    const icon = service.icon;
+
+    if (/^https?:\/\//i.test(icon)) {
+      return (
+        <img
+          src={icon}
+          alt={`${service.name} logo`}
+          style={{
+            width: "48px",
+            height: "48px",
+            objectFit: "contain",
+            display: "block",
+          }}
+        />
+      );
+    }
+
+    if (/^\s*<svg[\s>]/i.test(icon)) {
+      return (
+        <span
+          aria-label={`${service.name} logo`}
+          role="img"
+          style={{ width: "48px", height: "48px", display: "inline-block" }}
+          dangerouslySetInnerHTML={{ __html: icon }}
+        />
+      );
+    }
+
+    return <>{icon}</>;
   };
 
   const handleToggleConnection = async (serviceId: number) => {
@@ -146,86 +248,119 @@ const ServicesScreen: React.FC = () => {
   const connectedCount = services.filter((s) => s.isConnected).length;
   const totalCount = services.length;
 
-  if (loading) {
-    return (
-      <div className="services-container">
-        <div className="services-content">
-          <p>Chargement des services...</p>
-        </div>
-      </div>
-    );
-  }
-
-  if (error) {
-    return (
-      <div className="services-container">
-        <div className="services-content">
-          <div style={{ color: "red", padding: "20px" }}>
-            <h3>Erreur</h3>
-            <p>{error}</p>
-            <button onClick={loadServices}>Réessayer</button>
-          </div>
-        </div>
-      </div>
-    );
-  }
-
   return (
-    <div className="services-container">
-      <div className="services-content">
-        <div className="services-header">
-          <h1 className="services-title">Services Disponibles</h1>
-          <p className="services-subtitle">
-            Connectez vos services préférés pour automatiser vos tâches
-          </p>
-          <div className="services-stats">
-            <span className="services-stat-badge">
-              {connectedCount} / {totalCount} services connectés
-            </span>
-          </div>
-        </div>
-        <div className="services-grid">
-          {services.map((service) => (
-            <div
-              key={service.id}
-              className={`service-card ${service.isConnected ? "service-card-connected" : ""}`}
-            >
-              <div className="service-card-header">
-                <div className="service-icon">{service.icon}</div>
-                {service.isConnected && (
-                  <span className="service-badge-connected">✓ Connecté</span>
-                )}
-              </div>
-
-              <div className="service-card-body">
-                <h3 className="service-name">{service.name}</h3>
-                <p className="service-description">{service.description}</p>
-              </div>
-
-              <div className="service-card-footer">
-                <button
-                  onClick={() => handleToggleConnection(service.id)}
-                  className={`service-button ${
-                    service.isConnected
-                      ? "service-button-disconnect"
-                      : "service-button-connect"
-                  }`}
-                  style={
-                    !service.isConnected
-                      ? { backgroundColor: service.color, borderColor: service.color }
-                      : {}
-                  }
-                >
-                  {service.isConnected ? "Déconnecter" : "Connecter"}
-                </button>
-              </div>
-            </div>
+    <div className="dashboard-page">
+      <div className="server-background">
+        <div>
+          {stars.map((star) => (
+            <div key={star.id} className="star" style={star.style} />
           ))}
         </div>
-        <div className="services-actions">
-          <a href="/" className="services-back-button">
-            ← Retour à l'accueil
+      </div>
+
+      <div className="dashboard-sidebar">
+        <div className="sidebar-header">
+          <h2 className="sidebar-logo">⚡ AREA</h2>
+        </div>
+        <nav className="sidebar-nav">
+          <a href="/" className="nav-item">
+            🏠 Dashboard
           </a>
+          <a href="/areas" className="nav-item">
+            📋 Mes AREAs
+          </a>
+          <a href="/create-area" className="nav-item">
+            ➕ Créer une AREA
+          </a>
+          <a href="/services" className="nav-item active">
+            🔌 Services
+          </a>
+          <a href="/profile" className="nav-item">
+            👤 Profil
+          </a>
+          <a href="/about" className="nav-item">
+            ℹ️ À propos
+          </a>
+        </nav>
+      </div>
+
+      <div className="dashboard-content">
+        <div className="dashboard-topbar">
+          <h1 className="topbar-title">Services</h1>
+          <div className="topbar-user">
+            <span className="user-name">👋 {loading ? "Chargement..." : (user?.username || "Utilisateur")}</span>
+            <button onClick={handleLogout} className="logout-btn">
+              🚪 Déconnexion
+            </button>
+          </div>
+        </div>
+
+        <div className="dashboard-main">
+          <div className="welcome-card">
+            <h2 className="welcome-title">🔌 Services Disponibles</h2>
+            <p className="welcome-text">
+              Connectez vos services préférés pour automatiser vos tâches
+            </p>
+            <div className="services-stats">
+              <span className="stat-value">{connectedCount} / {totalCount}</span>
+              <span className="stat-label"> services connectés</span>
+            </div>
+          </div>
+
+          {loading ? (
+            <div className="card">
+              <p className="card-description">Chargement des services...</p>
+            </div>
+          ) : error ? (
+            <div className="card">
+              <h3 className="card-title" style={{ color: '#ef4444' }}>Erreur</h3>
+              <p className="card-description">{error}</p>
+              <button onClick={loadServices} className="btn-connect" style={{ marginTop: '16px' }}>
+                Réessayer
+              </button>
+            </div>
+          ) : (
+            <div className="services-grid">
+              {services.map((service) => (
+                <div
+                  key={service.id}
+                  className={`card service-card ${service.isConnected ? "service-card-connected" : ""}`}
+                >
+                  <div className="service-card-header">
+                    <div className="card-icon" style={{ color: service.color }}>
+                      {renderServiceIcon(service)}
+                    </div>
+                    {service.isConnected && (
+                      <span className="service-badge-connected">✓ Connecté</span>
+                    )}
+                  </div>
+
+                  <div className="service-card-body">
+                    <h3 className="card-title">{service.name}</h3>
+                    <p className="card-description">{service.description}</p>
+                  </div>
+
+                  <div className="service-card-footer">
+                    <button
+                      onClick={() => handleToggleConnection(service.id)}
+                      className={`service-button ${
+                        service.isConnected
+                          ? "service-button-disconnect"
+                          : "service-button-connect"
+                      }`}
+                      style={
+                        !service.isConnected
+                          ? { backgroundColor: service.color, borderColor: service.color }
+                          : {}
+                      }
+                    >
+                      {service.isConnected ? "Déconnecter" : "Connecter"}
+                    </button>
+                  </div>
+                </div>
+              ))}
+            </div>
+          )}
         </div>
       </div>
     </div>
