@@ -119,6 +119,30 @@ export const LoginScreen: React.FC<LoginScreenProps> = ({navigation}) => {
     const key = (provider.id || provider.name || '').toLowerCase();
     const fallbackUri = svgFallbacks[key];
 
+    const renderFallback = () => {
+      if (fallbackUri) {
+        if (svgFailures[fallbackUri]) {
+          return <Text style={styles.oauthIcon}>{initial}</Text>;
+        }
+        return (
+          <View style={styles.svgWrapper}>
+            <SvgUri
+              width={28}
+              height={28}
+              uri={fallbackUri}
+              onError={() =>
+                setSvgFailures(prev => ({
+                  ...prev,
+                  [fallbackUri]: true,
+                }))
+              }
+            />
+          </View>
+        );
+      }
+      return <Text style={styles.oauthIcon}>{initial}</Text>;
+    };
+
     const handleSvgError = () =>
       setSvgFailures(prev => ({
         ...prev,
@@ -126,12 +150,12 @@ export const LoginScreen: React.FC<LoginScreenProps> = ({navigation}) => {
       }));
 
     if (!icon) {
-      return <Text style={styles.oauthIcon}>{initial}</Text>;
+      return renderFallback();
     }
 
     if (/^\s*<svg/i.test(icon)) {
       if (svgFailures[icon]) {
-        return <Text style={styles.oauthIcon}>{initial}</Text>;
+        return renderFallback();
       }
       return (
         <View style={styles.svgWrapper}>
@@ -143,19 +167,7 @@ export const LoginScreen: React.FC<LoginScreenProps> = ({navigation}) => {
     if (/^https?:\/\//i.test(icon)) {
       if (/\.svg(\?|$)/i.test(icon)) {
         if (svgFailures[icon]) {
-          if (fallbackUri) {
-            return (
-              <View style={styles.svgWrapper}>
-                <SvgUri
-                  width={28}
-                  height={28}
-                  uri={fallbackUri}
-                  onError={handleSvgError}
-                />
-              </View>
-            );
-          }
-          return <Text style={styles.oauthIcon}>{initial}</Text>;
+          return renderFallback();
         }
         return (
           <View style={styles.svgWrapper}>
@@ -176,13 +188,8 @@ export const LoginScreen: React.FC<LoginScreenProps> = ({navigation}) => {
         />
       );
     }
-    if (/^\s*<svg/i.test(icon)) {
-      return <Text style={styles.oauthIcon}>🔗</Text>;
-    }
-    if (icon.length <= 4) {
-      return <Text style={styles.oauthIcon}>{icon}</Text>;
-    }
-    return <Text style={styles.oauthIcon}>{initial}</Text>;
+
+    return renderFallback();
   };
 
   return (

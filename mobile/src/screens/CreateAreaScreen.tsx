@@ -9,8 +9,10 @@ import {
   TextInput,
   TouchableOpacity,
   View,
+  Image,
 } from 'react-native';
 import {NativeStackNavigationProp} from '@react-navigation/native-stack';
+import {SvgUri, SvgXml} from 'react-native-svg';
 import {Button, StarField} from '../components';
 import {colors, spacing, typography} from '../theme';
 import {
@@ -65,6 +67,7 @@ export const CreateAreaScreen: React.FC<CreateAreaScreenProps> = ({navigation}) 
   const [services, setServices] = useState<ServiceSummary[]>([]);
   const [serviceLoading, setServiceLoading] = useState(true);
   const [error, setError] = useState('');
+  const [svgFailures, setSvgFailures] = useState<Record<string, boolean>>({});
   const [capabilitiesLoadingId, setCapabilitiesLoadingId] = useState<number | null>(
     null,
   );
@@ -263,21 +266,111 @@ export const CreateAreaScreen: React.FC<CreateAreaScreenProps> = ({navigation}) 
     service: ServiceSummary,
     isSelected: boolean,
     onPress: () => void,
-  ) => (
-    <TouchableOpacity
-      key={service.id}
-      style={[
-        styles.serviceCard,
-        isSelected && styles.serviceCardSelected,
-      ]}
-      onPress={onPress}
-      activeOpacity={0.8}>
-      <Text style={styles.serviceIcon}>{service.icon || '⚙️'}</Text>
-      <Text style={styles.serviceName} numberOfLines={1}>
-        {service.display_name || service.name}
-      </Text>
-    </TouchableOpacity>
-  );
+  ) => {
+    const key = (service.name || service.display_name || '').toLowerCase();
+    const fallbackSvgs: Record<string, string> = {
+      google: 'https://cdn.jsdelivr.net/npm/simple-icons@v11/icons/google.svg',
+      microsoft: 'https://cdn.jsdelivr.net/npm/simple-icons@v11/icons/microsoft.svg',
+      github: 'https://cdn.jsdelivr.net/npm/simple-icons@v11/icons/github.svg',
+      spotify: 'https://cdn.jsdelivr.net/npm/simple-icons@v11/icons/spotify.svg',
+      trello: 'https://cdn.jsdelivr.net/npm/simple-icons@v11/icons/trello.svg',
+      discord: 'https://cdn.jsdelivr.net/npm/simple-icons@v11/icons/discord.svg',
+      timer: 'https://cdn.jsdelivr.net/npm/simple-icons@v11/icons/timer.svg',
+    };
+
+    const renderIcon = () => {
+      const icon = service.icon;
+      const initial = (service.display_name?.[0] || service.name?.[0] || '•').toUpperCase();
+      const fallbackUri = fallbackSvgs[key];
+
+      const markFailed = (id: string) =>
+        setSvgFailures(prev => ({
+          ...prev,
+          [id]: true,
+        }));
+
+      const renderFallback = () => {
+        if (fallbackUri) {
+          if (svgFailures[fallbackUri]) {
+            return <Text style={styles.serviceIconText}>{initial}</Text>;
+          }
+          return (
+            <View style={styles.serviceSvgWrapper}>
+              <SvgUri
+                width={32}
+                height={32}
+                uri={fallbackUri}
+                onError={() => markFailed(fallbackUri)}
+              />
+            </View>
+          );
+        }
+        return <Text style={styles.serviceIconText}>{initial}</Text>;
+      };
+
+      if (icon) {
+        if (/^\s*<svg/i.test(icon)) {
+          if (svgFailures[icon]) {
+            return renderFallback();
+          }
+          return (
+            <View style={styles.serviceSvgWrapper}>
+              <SvgXml
+                width={32}
+                height={32}
+                xml={icon}
+                onError={() => markFailed(icon)}
+              />
+            </View>
+          );
+        }
+
+        if (/^https?:\/\//i.test(icon)) {
+          if (/\.svg(\?|$)/i.test(icon)) {
+            if (svgFailures[icon]) {
+              return renderFallback();
+            }
+            return (
+              <View style={styles.serviceSvgWrapper}>
+                <SvgUri
+                  width={32}
+                  height={32}
+                  uri={icon}
+                  onError={() => markFailed(icon)}
+                />
+              </View>
+            );
+          }
+          return (
+            <Image
+              source={{uri: icon}}
+              style={styles.serviceImage}
+              resizeMode="contain"
+              onError={() => markFailed(icon)}
+            />
+          );
+        }
+      }
+
+      return renderFallback();
+    };
+
+    return (
+      <TouchableOpacity
+        key={service.id}
+        style={[
+          styles.serviceCard,
+          isSelected && styles.serviceCardSelected,
+        ]}
+        onPress={onPress}
+        activeOpacity={0.8}>
+        {renderIcon()}
+        <Text style={styles.serviceName} numberOfLines={1}>
+          {service.display_name || service.name}
+        </Text>
+      </TouchableOpacity>
+    );
+  };
 
   const currentActionOptions = selectedActionService
     ? actionOptions[selectedActionService.id]
@@ -625,6 +718,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     borderWidth: 1,
     borderColor: colors.border,
+    gap: spacing.xs,
   },
   serviceCardSelected: {
     borderColor: colors.primary,
@@ -633,9 +727,19 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.35,
     shadowRadius: 12,
   },
-  serviceIcon: {
-    fontSize: 28,
-    marginBottom: spacing.xs,
+  serviceImage: {
+    width: 36,
+    height: 36,
+  },
+  serviceSvgWrapper: {
+    width: 36,
+    height: 36,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  serviceIconText: {
+    fontSize: 24,
+    color: colors.text,
   },
   serviceName: {
     ...typography.bodySmall,
