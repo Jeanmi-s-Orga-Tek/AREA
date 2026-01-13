@@ -6,17 +6,14 @@
 */
 
 import React, { useEffect, useState } from "react";
-import { logout, getToken } from "../services/auth";
+import { logout } from "../services/auth";
+import { fetchCurrentUser } from "../services/api";
+import type { User } from "../services/api";
 import "./ServerScreen.css";
-
-interface UserInfo {
-  username: string;
-  email: string;
-}
 
 const ServerScreen: React.FC = () => {
   const [stars, setStars] = useState<Array<{ id: number; style: React.CSSProperties }>>([]);
-  const [user, setUser] = useState<UserInfo | null>(null);
+  const [user, setUser] = useState<User | null>(null);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -41,25 +38,8 @@ const ServerScreen: React.FC = () => {
 
     const fetchUser = async () => {
       try {
-        const token = getToken();
-        if (!token) {
-          setLoading(false);
-          return;
-        }
-        
-        const response = await fetch("http://localhost:8080/user/me", {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        });
-        
-        if (response.ok) {
-          const data = await response.json();
-          setUser(data);
-        } else if (response.status === 401) {
-          logout();
-          window.location.href = "/login";
-        }
+        const userData = await fetchCurrentUser();
+        setUser(userData);
       } catch (error) {
         console.error("Error fetching user:", error);
       } finally {
@@ -116,7 +96,7 @@ const ServerScreen: React.FC = () => {
         <div className="dashboard-topbar">
           <h1 className="topbar-title">Dashboard</h1>
           <div className="topbar-user">
-            <span className="user-name">👋 {loading ? "Chargement..." : (user?.username || "Utilisateur")}</span>
+            <span className="user-name">👋 {loading ? "Chargement..." : (user?.name || "Utilisateur")}</span>
             <button onClick={handleLogout} className="logout-btn">
               🚪 Déconnexion
             </button>

@@ -6,9 +6,9 @@
 */
 
 import React, { useState, useEffect } from "react";
-import { fetchServices, fetchServiceCapabilities, createArea } from "../services/api";
-import type { Service as APIService } from "../services/api";
-import { fetchOAuthProviders, logout, getToken } from "../services/auth";
+import { fetchServices, fetchServiceCapabilities, createArea, fetchCurrentUser } from "../services/api";
+import type { Service as APIService, User } from "../services/api";
+import { fetchOAuthProviders, logout } from "../services/auth";
 import type { OAuthProvider } from "../services/auth";
 import "./CreateAreaScreen.css";
 
@@ -43,14 +43,9 @@ interface Parameter {
   required?: boolean;
 }
 
-interface UserInfo {
-  username: string;
-  email: string;
-}
-
 const CreateAreaScreen: React.FC = () => {
   const [stars, setStars] = useState<Array<{ id: number; style: React.CSSProperties }>>([]);
-  const [user, setUser] = useState<UserInfo | null>(null);
+  const [user, setUser] = useState<User | null>(null);
   const [userLoading, setUserLoading] = useState(true);
 
   const [currentStep, setCurrentStep] = useState(1);
@@ -89,25 +84,8 @@ const CreateAreaScreen: React.FC = () => {
 
     const fetchUser = async () => {
       try {
-        const token = getToken();
-        if (!token) {
-          setUserLoading(false);
-          return;
-        }
-
-        const response = await fetch("http://localhost:8080/user/me", {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        });
-
-        if (response.ok) {
-          const data = await response.json();
-          setUser(data);
-        } else if (response.status === 401) {
-          logout();
-          window.location.href = "/login";
-        }
+        const userData = await fetchCurrentUser();
+        setUser(userData);
       } catch (error) {
         console.error("Error fetching user:", error);
       } finally {
@@ -585,7 +563,7 @@ const CreateAreaScreen: React.FC = () => {
         <div className="dashboard-topbar">
           <h1 className="topbar-title">Créer une AREA</h1>
           <div className="topbar-user">
-            <span className="user-name">👋 {userLoading ? "Chargement..." : (user?.username || "Utilisateur")}</span>
+            <span className="user-name">👋 {userLoading ? "Chargement..." : (user?.name || "Utilisateur")}</span>
             <button onClick={handleLogout} className="logout-btn">
               🚪 Déconnexion
             </button>
