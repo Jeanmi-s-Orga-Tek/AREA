@@ -1,101 +1,182 @@
+##
+## EPITECH PROJECT, 2026
+## AREA
+## File description:
+## conftest
+##
+
 import os
+import sys
+from contextlib import asynccontextmanager
+from datetime import timedelta
 from typing import Generator
-
-TEST_DB_URL = "sqlite:///./test.db"
-IN_MEMORY_ENV = {
-    "SECRET_KEY": "test-secret-key",
-    "ALGORITHM": "HS256",
-    "ACCESS_TOKEN_EXPIRE_MINUTES": "30",
-    "POSTGRESQL_URI": TEST_DB_URL,
-    "SMTP_SERVER": "smtp.test",
-    "SMTP_PORT": "1025",
-    "EMAIL_USERNAME": "test@example.com",
-    "EMAIL_PASSWORD": "secret",
-    "STARTUPS_UPLOAD_PATH": "./uploads",
-    "USERS_IMG_PATH": "./user_images",
-    "EVENTS_IMG_PATH": "./event_images",
-    "NEWS_IMG_PATH": "./news_images",
-    "LEGACY_API_URL": "http://test",
-    "VITE_APP_API_URL": "http://test",
-    "GOOGLE_WEB_CLIENT_ID": "test",
-    "GOOGLE_WEB_CLIENT_SECRET": "test",
-    "GOOGLE_MOBILE_CLIENT_ID": "test",
-    "MICROSOFT_WEB_CLIENT_ID": "test",
-    "MICROSOFT_WEB_CLIENT_SECRET": "test",
-    "MICROSOFT_MOBILE_CLIENT_ID": "test",
-    "GITHUB_WEB_CLIENT_ID": "test",
-    "GITHUB_WEB_CLIENT_SECRET": "test",
-    "GITHUB_MOBILE_CLIENT_ID": "test",
-    "GITHUB_MOBILE_CLIENT_SECRET": "test",
-    "SPOTIFY_CLIENT_ID": "test",
-    "SPOTIFY_CLIENT_SECRET": "test",
-    "SPOTIFY_MOBILE_CLIENT_ID": "test",
-    "SPOTIFY_MOBILE_CLIENT_SECRET": "test",
-    "TRELLO_WEB_CLIENT_API_KEY": "test",
-    "TRELLO_WEB_CLIENT_API_SECRET": "test",
-}
-
-for key, value in IN_MEMORY_ENV.items():
-    os.environ[key] = value
 
 import pytest
 from fastapi.testclient import TestClient
-from sqlmodel import Session, SQLModel, create_engine
+from sqlmodel import SQLModel, Session, create_engine
+from sqlalchemy import JSON as SAJSON
+from sqlalchemy.dialects.postgresql import JSONB
+from sqlalchemy.pool import StaticPool
 
-from app import main as main_module
-from app.user import User
+os.environ["SECRET_KEY"] = "test-secret-key"
+os.environ["ALGORITHM"] = "HS256"
+os.environ["ACCESS_TOKEN_EXPIRE_MINUTES"] = "60"
+os.environ["POSTGRESQL_URI"] = "postgresql+psycopg://test:test@localhost/test"
+
+PROJECT_ROOT = os.path.abspath(os.path.join(os.path.dirname(__file__), ".."))
+if PROJECT_ROOT not in sys.path:
+    sys.path.insert(0, PROJECT_ROOT)
+
+try:
+    import sqlite3
+except ModuleNotFoundError:
+    import pysqlite3
+
+    sys.modules["sqlite3"] = pysqlite3
+    sys.modules["_sqlite3"] = pysqlite3.dbapi2
+
+try:
+    import pydantic_settings
+except ImportError:
+    import types
+
+    class _BaseSettings:  # minimal stub
+        def __init__(self, *args, **kwargs):
+            pass
+
+    class _SettingsConfigDict(dict):
+        pass
+
+    pydantic_settings = types.SimpleNamespace(  # type: ignore
+        BaseSettings=_BaseSettings,
+        SettingsConfigDict=_SettingsConfigDict,
+    )
+    sys.modules["pydantic_settings"] = pydantic_settings
+
 from app.main import app
-import app.db as db_module
-
-APP_GET_SESSION = db_module.get_session
-
-TEST_DATABASE_URL = TEST_DB_URL
-engine = create_engine(TEST_DATABASE_URL, connect_args={"check_same_thread": False})
-db_module.engine = engine
-
-
-def create_user_tables():
-    SQLModel.metadata.create_all(engine, tables=[User.__table__])
+from app.db import get_session
+from app.user import User
+from app.oauth2 import create_access_token, get_password_hash, ACCESS_TOKEN_EXPIRE_MINUTES
+from app.oauth_models import Service, UserServiceSubscription
+from app.action import Action
+from app.reaction import Reaction
 
 
-def drop_user_tables():
-    SQLModel.metadata.drop_all(engine, tables=[User.__table__])
+@pytest.fixture(scope="session")
+def test_engine():
+    """In-memory SQLite engine for isolated tests."""
+    engine = create_engine(
+        "sqlite:///:memory:",
+        connect_args={"check_same_thread": False},
+        poolclass=StaticPool,
+    )
+    for table in SQLModel.metadata.tables.values():
+        for column in table.columns:
+            if isinstance(column.type, JSONB):
+                column.type = SAJSON()
+    SQLModel.metadata.create_all(engine)
+    return engine
 
 
-def override_get_session() -> Generator[Session, None, None]:
-    with Session(engine) as session:
+@pytest.fixture
+def session(test_engine) -> Generator[Session, None, None]:
+    connection = test_engine.connect()
+    transaction = connection.begin()
+    session = Session(bind=connection)
+    try:
+        yield session
+    finally:
+        session.close()
+        transaction.rollback()
+        connection.close()
+
+
+@pytest.fixture(autouse=True)
+def override_session_dependency(session: Session):
+    def _get_test_session():
         yield session
 
-
-@pytest.fixture(scope="session", autouse=True)
-def configure_test_app():
-    main_module.create_db_tables = create_user_tables
-    db_module.create_db_tables = create_user_tables
-    create_user_tables()
-    app.dependency_overrides[APP_GET_SESSION] = override_get_session
-    db_module.get_session = override_get_session
+    app.dependency_overrides[get_session] = _get_test_session
     yield
     app.dependency_overrides.clear()
-    db_module.get_session = APP_GET_SESSION
-    drop_user_tables()
-    if os.path.exists("./test.db"):
-        os.remove("./test.db")
 
 
-@pytest.fixture
-def fresh_db():
-    drop_user_tables()
-    create_user_tables()
+@asynccontextmanager
+async def _lifespan_override(_app):
     yield
 
 
-@pytest.fixture
-def session(fresh_db) -> Generator[Session, None, None]:
-    with Session(engine) as db_session:
-        yield db_session
+@pytest.fixture(scope="session")
+def client(test_engine):
+    app.router.lifespan_context = _lifespan_override
+    with TestClient(app) as client:
+        yield client
 
 
 @pytest.fixture
-def client(fresh_db) -> TestClient:
-    with TestClient(app) as test_client:
-        yield test_client
+def user(session: Session):
+    user = User(
+        email="test@example.com",
+        name="Test User",
+        hashed_password=get_password_hash("password123"),
+    )
+    session.add(user)
+    session.commit()
+    session.refresh(user)
+    return user
+
+
+@pytest.fixture
+def auth_token(user: User):
+    expires = timedelta(minutes=ACCESS_TOKEN_EXPIRE_MINUTES)
+    return create_access_token({"sub": user.email}, expires)
+
+
+@pytest.fixture
+def sample_service(session: Session, user: User):
+    service = Service(
+        name="github",
+        display_name="GitHub",
+        description="Code hosting",
+        is_active=True,
+        icon_url="https://example.com/icon.png",
+    )
+    session.add(service)
+    session.commit()
+    session.refresh(service)
+
+    action = Action(
+        name="push",
+        description="Push events",
+        is_polling=False,
+        service_id=service.id,
+        parameters={"branch": "main"},
+    )
+    reaction = Reaction(
+        name="notify",
+        description="Send notification",
+        url="https://example.com/hook",
+        service_id=service.id,
+        parameters={"channel": "dev"},
+    )
+    session.add(action)
+    session.add(reaction)
+
+    subscription = UserServiceSubscription(
+        user_id=user.id,
+        service_id=service.id,
+        is_active=True,
+    )
+    session.add(subscription)
+    session.commit()
+
+    session.refresh(action)
+    session.refresh(reaction)
+    session.refresh(subscription)
+
+    return {
+        "service": service,
+        "action": action,
+        "reaction": reaction,
+        "subscription": subscription,
+    }
