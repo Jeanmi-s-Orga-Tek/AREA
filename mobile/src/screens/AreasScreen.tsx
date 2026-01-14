@@ -7,6 +7,7 @@ import {
   Switch,
   RefreshControl,
   ActivityIndicator,
+  Alert,
 } from 'react-native';
 import {SafeAreaView} from 'react-native-safe-area-context';
 import {useFocusEffect} from '@react-navigation/native';
@@ -14,7 +15,7 @@ import {NativeStackNavigationProp} from '@react-navigation/native-stack';
 import {Button, Card, StarField} from '../components';
 import {colors, spacing, typography} from '../theme';
 import {useAuth} from '../context/AuthContext';
-import {fetchAreas, toggleArea, AreaDetail} from '../api/areas';
+import {fetchAreas, toggleArea, deleteArea, AreaDetail} from '../api/areas';
 import {RootStackParamList} from '../navigation/types';
 
 type AreasScreenProps = {
@@ -68,6 +69,30 @@ export const AreasScreen: React.FC<AreasScreenProps> = ({navigation}) => {
     }
   };
 
+  const handleDelete = (area: AreaDetail) => {
+    Alert.alert(
+      'Supprimer cette AREA ?',
+      `“${area.name || 'AREA'}” sera supprimée définitivement.`,
+      [
+        {text: 'Annuler', style: 'cancel'},
+        {
+          text: 'Supprimer',
+          style: 'destructive',
+          onPress: async () => {
+            try {
+              await deleteArea(area.id);
+              setAreas(prev => prev.filter(a => a.id !== area.id));
+            } catch (err) {
+              setError(
+                err instanceof Error ? err.message : 'Impossible de supprimer',
+              );
+            }
+          },
+        },
+      ],
+    );
+  };
+
   const handleLogout = async () => {
     await logout();
     navigation.navigate('Login');
@@ -116,6 +141,13 @@ export const AreasScreen: React.FC<AreasScreenProps> = ({navigation}) => {
           onValueChange={() => handleToggle(item)}
           trackColor={{false: colors.borderMuted, true: colors.primary}}
           thumbColor={item.is_active ? colors.surface : colors.textSecondary}
+        />
+      </View>
+      <View style={styles.cardActions}>
+        <Button
+          title="Supprimer"
+          variant="danger"
+          onPress={() => handleDelete(item)}
         />
       </View>
     </Card>
@@ -184,9 +216,9 @@ export const AreasScreen: React.FC<AreasScreenProps> = ({navigation}) => {
           />
 
           <Button
-            title="Paramètres"
+            title="Services"
             variant="outline"
-            onPress={() => navigation.navigate('Settings')}
+            onPress={() => navigation.navigate('Services')}
             style={styles.button}
           />
 
@@ -355,5 +387,8 @@ const styles = StyleSheet.create({
   statusBadgeText: {
     ...typography.caption,
     color: colors.text,
+  },
+  cardActions: {
+    marginTop: spacing.md,
   },
 });

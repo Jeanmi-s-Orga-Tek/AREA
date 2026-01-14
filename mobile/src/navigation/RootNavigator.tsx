@@ -7,6 +7,7 @@ import {
   AreasScreen,
   CreateAreaScreen,
   SettingsScreen,
+  ServicesScreen,
 } from '../screens';
 import {useAuth} from '../context/AuthContext';
 import {
@@ -73,6 +74,11 @@ export const RootNavigator: React.FC = () => {
             name="CreateArea"
             component={CreateAreaScreen}
             options={{title: 'Créer une AREA'}}
+          />
+          <Stack.Screen
+            name="Services"
+            component={ServicesScreen}
+            options={{title: 'Services'}}
           />
           <Stack.Screen
             name="Settings"
