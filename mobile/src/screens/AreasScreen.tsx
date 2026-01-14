@@ -216,6 +216,13 @@ export const AreasScreen: React.FC<AreasScreenProps> = ({navigation}) => {
           />
 
           <Button
+            title="Services"
+            variant="outline"
+            onPress={() => navigation.navigate('Services')}
+            style={styles.button}
+          />
+
+          <Button
             title="Paramètres"
             variant="outline"
             onPress={() => navigation.navigate('Settings')}
