@@ -70,3 +70,7 @@ export const createArea = async (
 export const toggleArea = async (areaId: number): Promise<AreaDetail> => {
   return await apiClient.patch<AreaDetail>(`/areas/${areaId}/toggle`);
 };
+
+export const deleteArea = async (areaId: number): Promise<void> => {
+  await apiClient.delete<void>(`/areas/${areaId}`);
+};
