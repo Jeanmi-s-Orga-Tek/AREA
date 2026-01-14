@@ -7,7 +7,7 @@ services:
     depends_on:
       db:
         condition: service_healthy
-    restart: on-failure:5
+    restart: always
     # volumes:
     #   - ./user_images:/user_images
     #   - ./event_images:/event_images
@@ -35,10 +35,10 @@ services:
     depends_on:
       - db
 
-  # client_mobile:
-  #   build: ./mobile
-  #   volumes:
-  #     - ./mobile/apk:/apk
+  client_mobile:
+    build: ./mobile
+    volumes:
+      - ./mobile/apk:/apk
   
   client_web:
     build: ./Front/AREAA

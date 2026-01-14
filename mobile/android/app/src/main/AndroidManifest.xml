@@ -28,6 +28,21 @@
             <category android:name="android.intent.category.BROWSABLE" />
             <data android:scheme="area.app" android:pathPrefix="/auth" />
         </intent-filter>
+        <intent-filter>
+          <action android:name="android.intent.action.VIEW" />
+          <category android:name="android.intent.category.DEFAULT" />
+          <category android:name="android.intent.category.BROWSABLE" />
+          <data
+              android:host="callback"
+              android:scheme="areaapp"
+          />
+        </intent-filter>
+        <intent-filter>
+            <action android:name="android.intent.action.VIEW" />
+            <category android:name="android.intent.category.DEFAULT" />
+            <category android:name="android.intent.category.BROWSABLE" />
+            <data android:scheme="com.areaa.372630574836-44p6vplmhjhra6mnc6mfh5m36qaf0m2n" android:pathPrefix="/auth" />
+        </intent-filter>
       </activity>
     </application>
 </manifest>

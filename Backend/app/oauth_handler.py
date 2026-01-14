@@ -33,27 +33,33 @@ def normalize_client_redirect_uri(uri: Optional[str]) -> Optional[str]:
     return cleaned
 
 
-def encode_oauth_state(raw_state: Optional[str], client_redirect_uri: Optional[str]) -> str:
+def encode_oauth_state(raw_state: Optional[str], client_redirect_uri: Optional[str], platform: Optional[str] = None) -> str:
     base_state = raw_state or ""
-    if not client_redirect_uri:
+    if not client_redirect_uri and not platform:
         return base_state
 
     payload = {
         "v": 1,
         "state": base_state,
-        "client_redirect_uri": client_redirect_uri,
     }
+    
+    if client_redirect_uri:
+        payload["client_redirect_uri"] = client_redirect_uri
+    
+    if platform:
+        payload["platform"] = platform
+    
     serialized = json.dumps(payload, separators=(",", ":")).encode("utf-8")
     encoded = base64.urlsafe_b64encode(serialized).decode("utf-8").rstrip("=")
     return f"{STATE_PREFIX}{encoded}"
 
 
-def decode_oauth_state(state: Optional[str]) -> Tuple[str, Optional[str]]:
+def decode_oauth_state(state: Optional[str]) -> Tuple[str, Optional[str], Optional[str]]:
     if not state:
-        return "", None
+        return "", None, None
 
     if not state.startswith(STATE_PREFIX):
-        return state, None
+        return state, None, None
 
     encoded = state[len(STATE_PREFIX):]
     padding = len(encoded) % 4
@@ -63,10 +69,9 @@ def decode_oauth_state(state: Optional[str]) -> Tuple[str, Optional[str]]:
     try:
         decoded = base64.urlsafe_b64decode(encoded.encode("utf-8"))
         payload = json.loads(decoded)
-        return payload.get("state", ""), payload.get("client_redirect_uri")
+        return payload.get("state", ""), payload.get("client_redirect_uri"), payload.get("platform")
     except Exception:
-        # Fall back to returning an empty state if decoding fails
-        return "", None
+        return "", None, None
 
 
 def append_query_params(url: str, params: Dict[str, Optional[str]]) -> str:
@@ -117,7 +122,7 @@ def exchange_code_for_token(provider: str, flow: str, code: str) -> Dict[str, An
     
     if token_data["client_secret"] is None:
         del token_data["client_secret"]
-    
+
     try:
         response = requests.post(
             p.token_url,
@@ -127,12 +132,23 @@ def exchange_code_for_token(provider: str, flow: str, code: str) -> Dict[str, An
         )
         
         if response.status_code != 200:
+            print(f"Token exchange failed for {provider}: {response.status_code} - {response.text}")
             raise HTTPException(
                 status_code=400,
                 detail=f"Token exchange failed: {response.text}"
             )
         
-        return response.json()
+        result = response.json()
+        print(f"Token exchange response for {provider}: {list(result.keys())}")
+        
+        if "access_token" not in result:
+            print(f"Missing access_token in response: {result}")
+            raise HTTPException(
+                status_code=400,
+                detail=f"Token exchange succeeded but no access_token in response: {result}"
+            )
+        
+        return result
     
     except requests.RequestException as e:
         raise HTTPException(

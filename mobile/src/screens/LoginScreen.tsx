@@ -412,6 +412,15 @@ const styles = StyleSheet.create({
   oauthIcon: {
     fontSize: 22,
   },
+  oauthButtonContent: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: spacing.sm,
+  },
+  oauthIcon: {
+    width: 20,
+    height: 20,
+  },
   oauthButtonText: {
     ...typography.body,
     color: colors.text,
