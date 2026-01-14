@@ -162,7 +162,11 @@ async function handleResponse<T>(response: Response): Promise<T> {
     const errorData = await response.json().catch(() => ({ detail: "Request failed" }));
     throw new Error(errorData.detail || `Request failed with status ${response.status}`);
   }
-  return response.json();
+  const text = await response.text();
+  if (!text) {
+    return undefined as T;
+  }
+  return JSON.parse(text);
 }
 
 // ============================================================
@@ -294,5 +298,5 @@ export async function deleteArea(areaId: number): Promise<void> {
     method: "DELETE",
     headers: getAuthHeaders(),
   });
-  await handleResponse<void>(response);
+  await handleResponse<string>(response);
 }
