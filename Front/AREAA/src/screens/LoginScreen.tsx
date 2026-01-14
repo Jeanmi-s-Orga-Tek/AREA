@@ -7,6 +7,7 @@
 
 import React, { useState, useMemo, useEffect } from "react";
 import { login, fetchOAuthProviders, initiateOAuthLogin, OAuthProvider } from "../services/auth";
+import NotificationContainer, { NotificationItem } from "../components/NotificationContainer";
 import "./LoginScreen.css";
 
 
@@ -23,10 +24,19 @@ type Star = {
 const LoginScreen: React.FC = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [error, setError] = useState("");
+  const [notifications, setNotifications] = useState<NotificationItem[]>([]);
   const [loading, setLoading] = useState(false);
   const [oauthProviders, setOauthProviders] = useState<OAuthProvider[]>([]);
   const [loadingProviders, setLoadingProviders] = useState(true);
+
+  const addNotification = (message: string, type: "success" | "error") => {
+    const id = `notif-${Date.now()}-${Math.random().toString(16).slice(2)}`;
+    setNotifications((prev) => [...prev, { id, message, type }]);
+  };
+
+  const removeNotification = (id: string) => {
+    setNotifications((prev) => prev.filter((n) => n.id !== id));
+  };
 
   useEffect(() => {
     const loadProviders = async () => {
@@ -60,10 +70,9 @@ const LoginScreen: React.FC = () => {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    setError("");
 
     if (!email || !password) {
-      setError("Tous les champs sont requis");
+      addNotification("Tous les champs sont requis", "error");
       return;
     }
 
@@ -71,22 +80,22 @@ const LoginScreen: React.FC = () => {
 
     try {
       await login({ email, password });
-      window.location.href = "/";
+      addNotification("Connexion réussie !", "success");
+      setTimeout(() => window.location.href = "/", 1000);
     } catch (err) {
-      setError(err instanceof Error ? err.message : "Une erreur est survenue");
+      addNotification(err instanceof Error ? err.message : "Une erreur est survenue", "error");
     } finally {
       setLoading(false);
     }
   };
 
   const handleOAuthLogin = async (providerId: string) => {
-    setError("");
     setLoading(true);
 
     try {
       await initiateOAuthLogin(providerId);
     } catch (err) {
-      setError(err instanceof Error ? err.message : `Erreur lors de la connexion OAuth`);
+      addNotification(err instanceof Error ? err.message : `Erreur lors de la connexion OAuth`, "error");
       setLoading(false);
     }
   };
@@ -131,6 +140,10 @@ const LoginScreen: React.FC = () => {
 
   return (
     <div className="login-container">
+      <NotificationContainer
+        notifications={notifications}
+        onRemove={removeNotification}
+      />
       <div className="login-background" aria-hidden="true">
         {stars.map((s) => (
             <span
@@ -152,7 +165,6 @@ const LoginScreen: React.FC = () => {
         <h1 className="login-title">Connexion</h1>
         <p className="login-subtitle">Connectez-vous à votre compte AREA</p>
 
-        {error && <div className="login-error-box">{error}</div>}
 
         <form onSubmit={handleSubmit} className="login-form">
           <div className="login-form-group">

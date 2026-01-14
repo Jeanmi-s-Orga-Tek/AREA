@@ -9,6 +9,7 @@ import React, { useState, useEffect } from "react";
 import { fetchMyAreas, toggleAreaStatus, deleteArea } from "../services/api";
 import type { AreaDetail } from "../services/api";
 import { logout } from "../services/auth";
+import NotificationContainer, { NotificationItem } from "../components/NotificationContainer";
 import "./AreasScreen.css";
 
 interface Action {
@@ -37,8 +38,17 @@ interface Area {
 const AreasScreen: React.FC = () => {
   const [areas, setAreas] = useState<Area[]>([]);
   const [loading, setLoading] = useState(true);
-  const [error, setError] = useState("");
+  const [notifications, setNotifications] = useState<NotificationItem[]>([]);
   const [stars, setStars] = useState<Array<{ id: number; style: React.CSSProperties }>>([]);
+
+  const addNotification = (message: string, type: "success" | "error") => {
+    const id = `notif-${Date.now()}-${Math.random().toString(16).slice(2)}`;
+    setNotifications((prev) => [...prev, { id, message, type }]);
+  };
+
+  const removeNotification = (id: string) => {
+    setNotifications((prev) => prev.filter((n) => n.id !== id));
+  };
 
   useEffect(() => {
     const generateStars = () => {
@@ -67,8 +77,7 @@ const AreasScreen: React.FC = () => {
   const loadAreas = async () => {
     try {
       setLoading(true);
-      setError("");
-      
+
       const apiAreas = await fetchMyAreas();
       
       const mappedAreas: Area[] = apiAreas.map((area) => ({
@@ -96,7 +105,7 @@ const AreasScreen: React.FC = () => {
 
       setAreas(mappedAreas);
     } catch (err) {
-      setError(err instanceof Error ? err.message : "Erreur lors du chargement des AREAs");
+      addNotification(err instanceof Error ? err.message : "Erreur lors du chargement des AREAs", "error");
       console.error("Error loading areas:", err);
     } finally {
       setLoading(false);
@@ -109,10 +118,10 @@ const AreasScreen: React.FC = () => {
 
     try {
       await toggleAreaStatus(id, !area.isActive);
-      alert(`AREA "${area.name}" ${area.isActive ? "désactivée" : "activée"} avec succès !`);
+      addNotification(`AREA "${area.name}" ${area.isActive ? "désactivée" : "activée"} avec succès !`, "success");
       await loadAreas();
     } catch (err) {
-      alert(`Erreur: ${err instanceof Error ? err.message : "Erreur inconnue"}`);
+      addNotification(`Erreur: ${err instanceof Error ? err.message : "Erreur inconnue"}`, "error");
     }
   };
 
@@ -123,10 +132,10 @@ const AreasScreen: React.FC = () => {
     if (window.confirm(`Voulez-vous vraiment supprimer "${area.name}" ?`)) {
       try {
         await deleteArea(id);
-        alert(`AREA "${area.name}" supprimée avec succès !`);
+        addNotification(`AREA "${area.name}" supprimée avec succès !`, "success");
         await loadAreas();
       } catch (err) {
-        alert(`Erreur: ${err instanceof Error ? err.message : "Erreur inconnue"}`);
+        addNotification(`Erreur: ${err instanceof Error ? err.message : "Erreur inconnue"}`, "error");
       }
     }
   };
@@ -155,27 +164,12 @@ const AreasScreen: React.FC = () => {
     );
   }
 
-  if (error) {
-    return (
-      <div className="areas-container">
-        <div className="areas-background">
-          {stars.map((star) => (
-            <div key={star.id} className="star" style={star.style} />
-          ))}
-        </div>
-        <div className="areas-content">
-          <div className="error-card">
-            <h3>Erreur</h3>
-            <p>{error}</p>
-            <button onClick={loadAreas} className="retry-button">Réessayer</button>
-          </div>
-        </div>
-      </div>
-    );
-  }
-
   return (
     <div className="areas-container">
+      <NotificationContainer
+        notifications={notifications}
+        onRemove={removeNotification}
+      />
       <div className="areas-background">
         {stars.map((star) => (
           <div key={star.id} className="star" style={star.style} />

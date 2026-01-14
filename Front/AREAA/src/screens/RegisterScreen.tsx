@@ -7,6 +7,7 @@
 
 import React, { useState, useEffect, useMemo } from "react";
 import { register, fetchOAuthProviders, initiateOAuthLogin, OAuthProvider } from "../services/auth";
+import NotificationContainer, { NotificationItem } from "../components/NotificationContainer";
 import "./RegisterScreen.css";
 
 type Star = {
@@ -24,11 +25,19 @@ const RegisterScreen: React.FC = () => {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
-  const [error, setError] = useState("");
-  const [success, setSuccess] = useState(false);
+  const [notifications, setNotifications] = useState<NotificationItem[]>([]);
   const [loading, setLoading] = useState(false);
   const [oauthProviders, setOauthProviders] = useState<OAuthProvider[]>([]);
   const [loadingProviders, setLoadingProviders] = useState(true);
+
+  const addNotification = (message: string, type: "success" | "error") => {
+    const id = `notif-${Date.now()}-${Math.random().toString(16).slice(2)}`;
+    setNotifications((prev) => [...prev, { id, message, type }]);
+  };
+
+  const removeNotification = (id: string) => {
+    setNotifications((prev) => prev.filter((n) => n.id !== id));
+  };
 
   const stars = useMemo<Star[]>(() => {
     const count = 120;
@@ -63,21 +72,19 @@ const RegisterScreen: React.FC = () => {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    setError("");
-    setSuccess(false);
 
     if (!email || !username || !password || !confirmPassword) {
-      setError("Tous les champs sont requis");
+      addNotification("Tous les champs sont requis", "error");
       return;
     }
 
     if (password !== confirmPassword) {
-      setError("Les mots de passe ne correspondent pas");
+      addNotification("Les mots de passe ne correspondent pas", "error");
       return;
     }
 
     if (password.length < 6) {
-      setError("Le mot de passe doit contenir au moins 6 caractères");
+      addNotification("Le mot de passe doit contenir au moins 6 caractères", "error");
       return;
     }
 
@@ -85,7 +92,7 @@ const RegisterScreen: React.FC = () => {
 
     try {
       await register({ email, name: username, new_password: password });
-      setSuccess(true);
+      addNotification("Inscription réussie ! Redirection vers la page de connexion...", "success");
       setEmail("");
       setUsername("");
       setPassword("");
@@ -94,20 +101,19 @@ const RegisterScreen: React.FC = () => {
         window.location.href = "/login";
       }, 2000);
     } catch (err) {
-      setError(err instanceof Error ? err.message : "Une erreur est survenue");
+      addNotification(err instanceof Error ? err.message : "Une erreur est survenue", "error");
     } finally {
       setLoading(false);
     }
   };
 
   const handleOAuthLogin = async (providerId: string) => {
-    setError("");
     setLoading(true);
     
     try {
       await initiateOAuthLogin(providerId);
     } catch (err) {
-      setError(err instanceof Error ? err.message : `Erreur lors de l'inscription OAuth`);
+      addNotification(err instanceof Error ? err.message : `Erreur lors de l'inscription OAuth`, "error");
       setLoading(false);
     }
   };
@@ -152,6 +158,10 @@ const RegisterScreen: React.FC = () => {
 
   return (
     <div className="register-container">
+      <NotificationContainer
+        notifications={notifications}
+        onRemove={removeNotification}
+      />
       <div className="register-background" aria-hidden="true">
         {stars.map((s) => (
             <span
@@ -173,12 +183,6 @@ const RegisterScreen: React.FC = () => {
         <h1 className="register-title">Inscription</h1>
         <p className="register-subtitle">Créez votre compte AREA</p>
 
-        {error && <div className="register-error-box">{error}</div>}
-        {success && (
-          <div className="register-success-box">
-            Inscription réussie ! Redirection vers la page de connexion...
-          </div>
-        )}
 
         <form onSubmit={handleSubmit} className="register-form">
           <div className="register-form-group">

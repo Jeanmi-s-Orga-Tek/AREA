@@ -8,10 +8,20 @@
 
 import React, { useEffect, useState } from "react";
 import { connectService } from "../services/api";
+import NotificationContainer, { NotificationItem } from "../components/NotificationContainer";
 
 const ServiceCallbackScreen: React.FC = () => {
-  const [error, setError] = useState<string | null>(null);
+  const [notifications, setNotifications] = useState<NotificationItem[]>([]);
   const [loading, setLoading] = useState(true);
+
+  const addNotification = (message: string, type: "success" | "error") => {
+    const id = `notif-${Date.now()}-${Math.random().toString(16).slice(2)}`;
+    setNotifications((prev) => [...prev, { id, message, type }]);
+  };
+
+  const removeNotification = (id: string) => {
+    setNotifications((prev) => prev.filter((n) => n.id !== id));
+  };
 
   useEffect(() => {
     const processServiceCallback = async () => {
@@ -49,7 +59,7 @@ const ServiceCallbackScreen: React.FC = () => {
         window.location.href = "/services";
       } catch (err) {
         console.error("Service callback error:", err);
-        setError(err instanceof Error ? err.message : "Une erreur est survenue");
+        addNotification(err instanceof Error ? err.message : "Une erreur est survenue", "error");
         setLoading(false);
 
         setTimeout(() => {
@@ -64,6 +74,10 @@ const ServiceCallbackScreen: React.FC = () => {
   if (loading) {
     return (
       <div style={styles.container}>
+        <NotificationContainer
+          notifications={notifications}
+          onRemove={removeNotification}
+        />
         <div style={styles.card}>
           <div style={styles.spinner}></div>
           <h2 style={styles.title}>Connexion du service en cours...</h2>
@@ -73,20 +87,14 @@ const ServiceCallbackScreen: React.FC = () => {
     );
   }
 
-  if (error) {
-    return (
-      <div style={styles.container}>
-        <div style={styles.card}>
-          <div style={styles.errorIcon}>❌</div>
-          <h2 style={styles.title}>Erreur de connexion</h2>
-          <p style={styles.errorMessage}>{error}</p>
-          <p style={styles.message}>Vous allez être redirigé vers la page des services...</p>
-        </div>
-      </div>
-    );
-  }
-
-  return null;
+  return (
+    <div style={styles.container}>
+      <NotificationContainer
+        notifications={notifications}
+        onRemove={removeNotification}
+      />
+    </div>
+  );
 };
 
 const styles: { [key: string]: React.CSSProperties } = {

@@ -7,14 +7,24 @@
 
 import React, { useEffect, useState } from "react";
 import { fetchAbout, AboutResponse } from "../services/api";
+import NotificationContainer, { NotificationItem } from "../components/NotificationContainer";
 import "./AboutScreen.css";
 
 const AboutScreen: React.FC = () => {
   const [loading, setLoading] = useState<boolean>(true);
-  const [error, setError] = useState<string | null>(null);
+  const [notifications, setNotifications] = useState<NotificationItem[]>([]);
   const [about, setAbout] = useState<AboutResponse | null>(null);
   const [stars, setStars] = useState<Array<{ id: number; style: React.CSSProperties }>>([]);
   const [currentTime, setCurrentTime] = useState<Date>(new Date());
+
+  const addNotification = (message: string, type: "success" | "error") => {
+    const id = `notif-${Date.now()}-${Math.random().toString(16).slice(2)}`;
+    setNotifications((prev) => [...prev, { id, message, type }]);
+  };
+
+  const removeNotification = (id: string) => {
+    setNotifications((prev) => prev.filter((n) => n.id !== id));
+  };
 
   useEffect(() => {
     const generateStars = () => {
@@ -52,7 +62,6 @@ const AboutScreen: React.FC = () => {
 
     const loadAbout = async () => {
       setLoading(true);
-      setError(null);
 
       try {
         const response = await fetchAbout();
@@ -67,7 +76,7 @@ const AboutScreen: React.FC = () => {
         }
         const message =
           err instanceof Error ? err.message : "Unknown error while fetching /about";
-        setError(message);
+        addNotification(message, "error");
         setLoading(false);
       }
     };
@@ -96,26 +105,6 @@ const AboutScreen: React.FC = () => {
     );
   }
 
-  if (error) {
-    return (
-      <div className="about-container">
-        <div className="about-background">
-          {stars.map((star) => (
-            <div key={star.id} className="star" style={star.style} />
-          ))}
-        </div>
-        <div className="about-content">
-          <div className="error-card">
-            <p>Erreur: {error}</p>
-            <button onClick={() => window.location.reload()} className="retry-button">
-              Réessayer
-            </button>
-          </div>
-        </div>
-      </div>
-    );
-  }
-
   if (!about || about.server.services.length === 0) {
     return (
       <div className="about-container">
@@ -135,6 +124,10 @@ const AboutScreen: React.FC = () => {
 
   return (
     <div className="about-container">
+      <NotificationContainer
+        notifications={notifications}
+        onRemove={removeNotification}
+      />
       <div className="about-background">
         {stars.map((star) => (
           <div key={star.id} className="star" style={star.style} />

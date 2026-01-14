@@ -10,6 +10,7 @@ import { fetchServices, fetchServiceCapabilities, createArea, fetchCurrentUser }
 import type { Service as APIService, User } from "../services/api";
 import { fetchOAuthProviders, logout } from "../services/auth";
 import type { OAuthProvider } from "../services/auth";
+import NotificationContainer, { NotificationItem } from "../components/NotificationContainer";
 import "./CreateAreaScreen.css";
 
 interface Service {
@@ -47,6 +48,7 @@ const CreateAreaScreen: React.FC = () => {
   const [stars, setStars] = useState<Array<{ id: number; style: React.CSSProperties }>>([]);
   const [user, setUser] = useState<User | null>(null);
   const [userLoading, setUserLoading] = useState(true);
+  const [notifications, setNotifications] = useState<NotificationItem[]>([]);
 
   const [currentStep, setCurrentStep] = useState(1);
   const [selectedActionService, setSelectedActionService] = useState<Service | null>(null);
@@ -61,6 +63,15 @@ const CreateAreaScreen: React.FC = () => {
   const [actionTypes, setActionTypes] = useState<Record<number, ActionType[]>>({});
   const [reactionTypes, setReactionTypes] = useState<Record<number, ReactionType[]>>({});
   const [loading, setLoading] = useState(true);
+
+  const addNotification = (message: string, type: "success" | "error") => {
+    const id = `notif-${Date.now()}-${Math.random().toString(16).slice(2)}`;
+    setNotifications((prev) => [...prev, { id, message, type }]);
+  };
+
+  const removeNotification = (id: string) => {
+    setNotifications((prev) => prev.filter((n) => n.id !== id));
+  };
 
   useEffect(() => {
     const generateStars = () => {
@@ -127,7 +138,6 @@ const CreateAreaScreen: React.FC = () => {
           id: service.id,
           name: service.display_name || service.name,
           oauthProvider: service.oauth_provider,
-          // Prefer providers.yaml icon/color if available
           icon: provider?.icon ?? service.icon ?? "🔵",
           color: provider?.color ?? service.color ?? "#4285f4",
         };
@@ -463,7 +473,7 @@ const CreateAreaScreen: React.FC = () => {
 
   const handleSubmit = async () => {
     if (!selectedActionService || !selectedActionType || !selectedReactionService || !selectedReactionType) {
-      alert("Veuillez sélectionner tous les éléments requis");
+      addNotification("Veuillez sélectionner tous les éléments requis", "error");
       return;
     }
 
@@ -478,10 +488,10 @@ const CreateAreaScreen: React.FC = () => {
         reaction_parameters: reactionParameters,
       });
 
-      alert(`AREA "${areaName}" créée avec succès !`);
-      window.location.href = "/areas";
+      addNotification(`AREA "${areaName}" créée avec succès !`, "success");
+      setTimeout(() => window.location.href = "/areas", 2000);
     } catch (err) {
-      alert(`Erreur: ${err instanceof Error ? err.message : "Erreur inconnue"}`);
+      addNotification(err instanceof Error ? err.message : "Erreur inconnue", "error");
     }
   };
 
@@ -525,6 +535,10 @@ const CreateAreaScreen: React.FC = () => {
 
   return (
     <div className="dashboard-page">
+      <NotificationContainer
+        notifications={notifications}
+        onRemove={removeNotification}
+      />
       <div className="server-background">
         <div>
           {stars.map((star) => (

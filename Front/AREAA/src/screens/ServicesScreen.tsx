@@ -10,6 +10,7 @@ import { fetchServices, fetchMyConnectedServices, disconnectService, fetchCurren
 import type { User } from "../services/api";
 import { logout, fetchOAuthProviders } from "../services/auth";
 import type { OAuthProvider } from "../services/auth";
+import NotificationContainer, { NotificationItem } from "../components/NotificationContainer";
 import "./ServicesScreen.css";
 
 const API_BASE_URL = "http://localhost:8080";
@@ -30,7 +31,16 @@ const ServicesScreen: React.FC = () => {
   const [user, setUser] = useState<User | null>(null);
   const [services, setServices] = useState<Service[]>([]);
   const [loading, setLoading] = useState(true);
-  const [error, setError] = useState("");
+  const [notifications, setNotifications] = useState<NotificationItem[]>([]);
+
+  const addNotification = (message: string, type: "success" | "error") => {
+    const id = `notif-${Date.now()}-${Math.random().toString(16).slice(2)}`;
+    setNotifications((prev) => [...prev, { id, message, type }]);
+  };
+
+  const removeNotification = (id: string) => {
+    setNotifications((prev) => prev.filter((n) => n.id !== id));
+  };
 
   useEffect(() => {
     const generateStars = () => {
@@ -70,8 +80,7 @@ const ServicesScreen: React.FC = () => {
     try {
       console.log("=== loadServices START ===");
       setLoading(true);
-      setError("");
-      
+
       console.log(" Chargement des services et providers...");
       const [allServices, connectedServices, providers] = await Promise.all([
         fetchServices(),
@@ -122,7 +131,7 @@ const ServicesScreen: React.FC = () => {
       setServices(mappedServices);
       console.log("=== loadServices END ===");
     } catch (err) {
-      setError(err instanceof Error ? err.message : "Erreur lors du chargement des services");
+      addNotification(err instanceof Error ? err.message : "Erreur lors du chargement des services", "error");
       console.error("Error loading services:", err);
     } finally {
       setLoading(false);
@@ -180,11 +189,11 @@ const ServicesScreen: React.FC = () => {
       if (service.serviceAccountId) {
         try {
           await disconnectService(service.serviceAccountId);
-          alert(`Service ${service.name} déconnecté avec succès !`);
+          addNotification(`Service ${service.name} déconnecté avec succès !`, "success");
           await loadServices();
         } catch (err) {
           console.error("Erreur déconnexion:", err);
-          alert(`Erreur lors de la déconnexion: ${err instanceof Error ? err.message : "Erreur inconnue"}`);
+          addNotification(`Erreur lors de la déconnexion: ${err instanceof Error ? err.message : "Erreur inconnue"}`, "error");
         }
       }
     } else {
@@ -193,7 +202,7 @@ const ServicesScreen: React.FC = () => {
       console.log("OAuth Provider:", service.oauth_provider);
       
       if (!service.oauth_provider) {
-        alert(`Ce service ne supporte pas encore l'OAuth automatique`);
+        addNotification(`Ce service ne supporte pas encore l'OAuth automatique`, "error");
         return;
       }
 
@@ -220,7 +229,7 @@ const ServicesScreen: React.FC = () => {
         window.location.href = data.authorization_url;
       } catch (err) {
         console.error("Erreur lors de la connexion:", err);
-        alert(`Erreur lors de la connexion: ${err instanceof Error ? err.message : "Erreur inconnue"}`);
+        addNotification(`Erreur lors de la connexion: ${err instanceof Error ? err.message : "Erreur inconnue"}`, "error");
       }
     }
   };
@@ -230,6 +239,10 @@ const ServicesScreen: React.FC = () => {
 
   return (
     <div className="dashboard-page">
+      <NotificationContainer
+        notifications={notifications}
+        onRemove={removeNotification}
+      />
       <div className="server-background">
         <div>
           {stars.map((star) => (
@@ -290,14 +303,6 @@ const ServicesScreen: React.FC = () => {
           {loading ? (
             <div className="card">
               <p className="card-description">Chargement des services...</p>
-            </div>
-          ) : error ? (
-            <div className="card">
-              <h3 className="card-title" style={{ color: '#ef4444' }}>Erreur</h3>
-              <p className="card-description">{error}</p>
-              <button onClick={loadServices} className="btn-connect" style={{ marginTop: '16px' }}>
-                Réessayer
-              </button>
             </div>
           ) : (
             <div className="services-grid">
