@@ -67,6 +67,17 @@ class AreaCreate(SQLModel):
     is_active: bool = True
 
 
+class AreaUpdate(SQLModel):
+    name: Optional[str] = None
+    action_service_id: int
+    action_id: int
+    action_parameters: Dict[str, Any] = Field(default_factory=dict)
+    reaction_service_id: int
+    reaction_id: int
+    reaction_parameters: Dict[str, Any] = Field(default_factory=dict)
+    is_active: bool = True
+
+
 class AreaRead(AreaBase):
     id: int
     user_id: int

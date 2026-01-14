@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from 'react';
+import React, {useCallback, useEffect, useState} from 'react';
 import {
   ActivityIndicator,
   Alert,
@@ -11,7 +11,7 @@ import {
   Image,
 } from 'react-native';
 import {SafeAreaView} from 'react-native-safe-area-context';
-import {NativeStackNavigationProp} from '@react-navigation/native-stack';
+import {NativeStackScreenProps} from '@react-navigation/native-stack';
 import {SvgUri, SvgXml} from 'react-native-svg';
 import {Button, StarField} from '../components';
 import {colors, spacing, typography} from '../theme';
@@ -22,7 +22,7 @@ import {
   ServiceReactionSummary,
   ServiceSummary,
 } from '../api/services';
-import {createArea} from '../api/areas';
+import {createArea, updateArea, AreaDetail} from '../api/areas';
 import {RootStackParamList} from '../navigation/types';
 
 interface ParameterDefinition {
@@ -39,9 +39,10 @@ interface ReactionOption extends ServiceReactionSummary {
   parameterDefs: ParameterDefinition[];
 }
 
-type CreateAreaScreenProps = {
-  navigation: NativeStackNavigationProp<RootStackParamList, 'CreateArea'>;
-};
+type CreateAreaScreenProps = NativeStackScreenProps<
+  RootStackParamList,
+  'CreateArea'
+>;
 
 const formatLabel = (key: string): string => {
   return key
@@ -62,7 +63,12 @@ const parseParameters = (params?: Record<string, any>): ParameterDefinition[] =>
   }));
 };
 
-export const CreateAreaScreen: React.FC<CreateAreaScreenProps> = ({navigation}) => {
+export const CreateAreaScreen: React.FC<CreateAreaScreenProps> = ({
+  navigation,
+  route,
+}) => {
+  const editingArea: AreaDetail | undefined = route.params?.area;
+  const isEditing = Boolean(editingArea);
   const [currentStep, setCurrentStep] = useState(1);
   const [services, setServices] = useState<ServiceSummary[]>([]);
   const [serviceLoading, setServiceLoading] = useState(true);
@@ -87,6 +93,15 @@ export const CreateAreaScreen: React.FC<CreateAreaScreenProps> = ({navigation}) 
 
   const [areaName, setAreaName] = useState('');
   const [submitting, setSubmitting] = useState(false);
+  const [hasPrefilled, setHasPrefilled] = useState(false);
+  const headerTitle = isEditing ? 'Modifier une AREA' : 'Créer une AREA';
+  const finalButtonLabel = isEditing
+    ? submitting
+      ? 'Mise à jour…'
+      : 'Mettre à jour'
+    : submitting
+      ? 'Création…'
+      : 'Créer l’AREA';
 
   useEffect(() => {
     let isMounted = true;
@@ -116,39 +131,51 @@ export const CreateAreaScreen: React.FC<CreateAreaScreenProps> = ({navigation}) 
     };
   }, []);
 
-  const ensureCapabilities = async (serviceId: number) => {
-    if (actionOptions[serviceId] || reactionOptions[serviceId]) {
-      return;
-    }
+  const ensureCapabilities = useCallback(
+    async (serviceId: number) => {
+      if (actionOptions[serviceId] || reactionOptions[serviceId]) {
+        return {
+          actions: actionOptions[serviceId],
+          reactions: reactionOptions[serviceId],
+        };
+      }
 
-    setCapabilitiesLoadingId(serviceId);
-    setError('');
-    try {
-      const capabilities = await fetchServiceCapabilities(serviceId);
-      setActionOptions(prev => ({
-        ...prev,
-        [serviceId]: capabilities.actions.map(action => ({
+      setCapabilitiesLoadingId(serviceId);
+      setError('');
+      try {
+        const capabilities = await fetchServiceCapabilities(serviceId);
+        const mappedActions = capabilities.actions.map(action => ({
           ...action,
           parameterDefs: parseParameters(action.parameters),
-        })),
-      }));
-      setReactionOptions(prev => ({
-        ...prev,
-        [serviceId]: capabilities.reactions.map(reaction => ({
+        }));
+        const mappedReactions = capabilities.reactions.map(reaction => ({
           ...reaction,
           parameterDefs: parseParameters(reaction.parameters),
-        })),
-      }));
-    } catch (err) {
-      const message =
-        err instanceof Error
-          ? err.message
-          : 'Unable to load service capabilities';
-      setError(message);
-    } finally {
-      setCapabilitiesLoadingId(null);
-    }
-  };
+        }));
+
+        setActionOptions(prev => ({
+          ...prev,
+          [serviceId]: mappedActions,
+        }));
+        setReactionOptions(prev => ({
+          ...prev,
+          [serviceId]: mappedReactions,
+        }));
+
+        return {actions: mappedActions, reactions: mappedReactions};
+      } catch (err) {
+        const message =
+          err instanceof Error
+            ? err.message
+            : 'Unable to load service capabilities';
+        setError(message);
+        return {actions: undefined, reactions: undefined};
+      } finally {
+        setCapabilitiesLoadingId(null);
+      }
+    },
+    [actionOptions, reactionOptions],
+  );
 
   const handleSelectActionService = async (service: ServiceSummary) => {
     setSelectedActionService(service);
@@ -163,6 +190,79 @@ export const CreateAreaScreen: React.FC<CreateAreaScreenProps> = ({navigation}) 
     setReactionParameters({});
     await ensureCapabilities(service.id);
   };
+
+  useEffect(() => {
+    const prefillFromArea = async () => {
+      if (!editingArea || serviceLoading || hasPrefilled) {
+        return;
+      }
+
+      const actionService = services.find(
+        service => service.id === editingArea.action.service.id,
+      );
+      const reactionService = services.find(
+        service => service.id === editingArea.reaction.service.id,
+      );
+
+      if (!actionService || !reactionService) {
+        return;
+      }
+
+      setSelectedActionService(actionService);
+      setSelectedReactionService(reactionService);
+
+      const actionCaps = await ensureCapabilities(actionService.id);
+      const reactionCaps = await ensureCapabilities(reactionService.id);
+
+      const actionOptionsForService =
+        actionCaps?.actions || actionOptions[actionService.id] || [];
+      const reactionOptionsForService =
+        reactionCaps?.reactions || reactionOptions[reactionService.id] || [];
+
+      const actionMatch =
+        actionOptionsForService.find(
+          action => action.id === editingArea.action.action.id,
+        ) || null;
+      const reactionMatch =
+        reactionOptionsForService.find(
+          reaction => reaction.id === editingArea.reaction.reaction.id,
+        ) || null;
+
+      if (actionMatch) {
+        setSelectedAction(actionMatch);
+        setActionParameters(
+          hydrateParameters(
+            actionMatch.parameterDefs,
+            editingArea.action_parameters,
+          ),
+        );
+      }
+
+      if (reactionMatch) {
+        setSelectedReaction(reactionMatch);
+        setReactionParameters(
+          hydrateParameters(
+            reactionMatch.parameterDefs,
+            editingArea.reaction_parameters,
+          ),
+        );
+      }
+
+      setAreaName(editingArea.name || '');
+      setCurrentStep(5);
+      setHasPrefilled(true);
+    };
+
+    prefillFromArea();
+  }, [
+    editingArea,
+    serviceLoading,
+    hasPrefilled,
+    services,
+    ensureCapabilities,
+    actionOptions,
+    reactionOptions,
+  ]);
 
   const hydrateParameters = (
     parameterDefs: ParameterDefinition[],
@@ -219,26 +319,43 @@ export const CreateAreaScreen: React.FC<CreateAreaScreenProps> = ({navigation}) 
     setSubmitting(true);
     setError('');
 
-    try {
-      await createArea({
-        name: areaName.trim(),
-        action_service_id: selectedActionService.id,
-        action_id: selectedAction.id,
-        action_parameters: actionParameters,
-        reaction_service_id: selectedReactionService.id,
-        reaction_id: selectedReaction.id,
-        reaction_parameters: reactionParameters,
-      });
+    const payload = {
+      name: areaName.trim(),
+      action_service_id: selectedActionService.id,
+      action_id: selectedAction.id,
+      action_parameters: actionParameters,
+      reaction_service_id: selectedReactionService.id,
+      reaction_id: selectedReaction.id,
+      reaction_parameters: reactionParameters,
+      is_active: editingArea?.is_active ?? true,
+    };
 
-      Alert.alert('AREA created', 'Your automation is now active.', [
-        {
-          text: 'OK',
-          onPress: () => navigation.navigate('Areas'),
-        },
-      ]);
+    try {
+      if (isEditing && editingArea) {
+        await updateArea(editingArea.id, payload);
+        Alert.alert('AREA mise à jour', 'Vos modifications ont été enregistrées.', [
+          {
+            text: 'OK',
+            onPress: () => navigation.navigate('Areas'),
+          },
+        ]);
+      } else {
+        await createArea(payload);
+
+        Alert.alert('AREA créée', 'Votre automatisation est prête.', [
+          {
+            text: 'OK',
+            onPress: () => navigation.navigate('Areas'),
+          },
+        ]);
+      }
     } catch (err) {
       const message =
-        err instanceof Error ? err.message : 'Unable to create AREA.';
+        err instanceof Error
+          ? err.message
+          : isEditing
+            ? 'Impossible de mettre à jour cette AREA.'
+            : 'Unable to create AREA.';
       setError(message);
     } finally {
       setSubmitting(false);
@@ -387,7 +504,7 @@ export const CreateAreaScreen: React.FC<CreateAreaScreenProps> = ({navigation}) 
       <SafeAreaView style={styles.safeArea}>
         <ScrollView contentContainerStyle={styles.content}>
           <View style={styles.headerCard}>
-            <Text style={styles.title}>Créer une AREA</Text>
+            <Text style={styles.title}>{headerTitle}</Text>
           </View>
 
           {error ? <Text style={styles.error}>{error}</Text> : null}
@@ -629,7 +746,7 @@ export const CreateAreaScreen: React.FC<CreateAreaScreenProps> = ({navigation}) 
           )}
           {currentStep === 5 && (
             <Button
-              title={submitting ? 'Création…' : 'Créer l’AREA'}
+              title={finalButtonLabel}
               onPress={handleSubmit}
               loading={submitting}
               disabled={!isStepValid(5) || submitting}

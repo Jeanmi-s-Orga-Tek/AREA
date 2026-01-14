@@ -16,7 +16,7 @@ from app.oauth_models import Area, Service, UserServiceSubscription
 from app.action import Action
 from app.reaction import Reaction
 from app.oauth2 import oauth2_scheme
-from app.schemas.services import AreaCreate, AreaRead, AreaDetailRead, AreaActionDetail, AreaReactionDetail, ServiceBasicRead, ActionRead, ReactionRead
+from app.schemas.services import AreaCreate, AreaRead, AreaDetailRead, AreaActionDetail, AreaReactionDetail, ServiceBasicRead, ActionRead, ReactionRead, AreaUpdate
 from app.user import get_user_from_token
 
 areas_router = APIRouter(
@@ -187,6 +187,50 @@ def toggle_area(area_id: int, session: SessionDep, token: TokenDep):
     session.add(area)
     session.commit()
     session.refresh(area)
+    return AreaRead.model_validate(area)
+
+
+@areas_router.put("/{area_id}", response_model=AreaRead)
+@areas_router.patch("/{area_id}", response_model=AreaRead)
+async def update_area(area_id: int, area_data: AreaUpdate, session: SessionDep, token: TokenDep):
+    user = get_user_from_token(token, session)
+    if user is None:
+        raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="Invalid token")
+
+    area = require_area(session, area_id, user.id)
+
+    require_service(session, area_data.action_service_id)
+    require_service(session, area_data.reaction_service_id)
+    require_action(session, area_data.action_id, area_data.action_service_id)
+    require_reaction(session, area_data.reaction_id, area_data.reaction_service_id)
+    require_subscription(session, user.id, area_data.action_service_id)
+    require_subscription(session, user.id, area_data.reaction_service_id)
+
+    action = session.get(Action, area_data.action_id)
+    reaction = session.get(Reaction, area_data.reaction_id)
+    default_name = f"{action.name} → {reaction.name}" if action and reaction else (area.name or "Unnamed AREA")
+
+    area.name = area_data.name or default_name
+    area.action_service_id = area_data.action_service_id
+    area.action_id = area_data.action_id
+    area.reaction_service_id = area_data.reaction_service_id
+    area.reaction_id = area_data.reaction_id
+    area.params_action = area_data.action_parameters
+    area.params_reaction = area_data.reaction_parameters
+    area.is_active = area_data.is_active
+    area.updated_at = datetime.utcnow()
+
+    session.add(area)
+    session.commit()
+    session.refresh(area)
+
+    from app.webhook_manager import WebhookManager
+    try:
+        await WebhookManager.cleanup_webhooks_for_area(session, area)
+        await WebhookManager.setup_webhooks_for_area(session, area)
+    except Exception as e:
+        print(f"Webhook refresh warning for AREA {area.id}: {str(e)}")
+
     return AreaRead.model_validate(area)
 
 

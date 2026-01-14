@@ -57,6 +57,8 @@ export interface CreateAreaRequest {
   is_active?: boolean;
 }
 
+export interface UpdateAreaRequest extends CreateAreaRequest {}
+
 export const fetchAreas = async (): Promise<AreaDetail[]> => {
   return await apiClient.get<AreaDetail[]>('/areas');
 };
@@ -69,4 +71,11 @@ export const createArea = async (
 
 export const toggleArea = async (areaId: number): Promise<AreaDetail> => {
   return await apiClient.patch<AreaDetail>(`/areas/${areaId}/toggle`);
+};
+
+export const updateArea = async (
+  areaId: number,
+  payload: UpdateAreaRequest,
+): Promise<AreaDetail> => {
+  return await apiClient.put<AreaDetail>(`/areas/${areaId}`, payload);
 };

@@ -70,7 +70,6 @@ export const AreasScreen: React.FC<AreasScreenProps> = ({navigation}) => {
 
   const handleLogout = async () => {
     await logout();
-    navigation.navigate('Login');
   };
 
   if (loading) {
@@ -118,6 +117,16 @@ export const AreasScreen: React.FC<AreasScreenProps> = ({navigation}) => {
           thumbColor={item.is_active ? colors.surface : colors.textSecondary}
         />
       </View>
+      {item.is_active ? (
+        <View style={styles.cardActions}>
+          <Button
+            title="Modifier"
+            variant="secondary"
+            onPress={() => navigation.navigate('CreateArea', {area: item})}
+            style={styles.editButton}
+          />
+        </View>
+      ) : null}
     </Card>
   );
 
@@ -355,5 +364,12 @@ const styles = StyleSheet.create({
   statusBadgeText: {
     ...typography.caption,
     color: colors.text,
+  },
+  cardActions: {
+    marginTop: spacing.md,
+    alignItems: 'flex-end',
+  },
+  editButton: {
+    alignSelf: 'stretch',
   },
 });
