@@ -1,5 +1,5 @@
 import React, {createContext, useContext, useState, useEffect} from 'react';
-import {getAuthToken, logout as logoutApi} from '../api/auth';
+import {getAuthToken, logout as logoutApi, storeAuthToken} from '../api/auth';
 
 interface AuthContextType {
   isLoggedIn: boolean;
@@ -37,6 +37,7 @@ export const AuthProvider: React.FC<{children: React.ReactNode}> = ({
   };
 
   const login = (newToken: string) => {
+    void storeAuthToken(newToken);
     setToken(newToken);
     setIsLoggedIn(true);
   };
