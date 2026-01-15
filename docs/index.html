@@ -6,7 +6,7 @@
     <title>AREA — Action REAction</title>
     <meta
       name="description"
-      content="AREA (Action REAction) — Connect services, automate actions. Academic automation platform inspired by IFTTT/Zapier."
+      content="AREA (Action REAction) — Plateforme d'automatisation multi-services avec API FastAPI, clients web/mobile et connecteurs OAuth."
     />
     <link rel="stylesheet" href="styles.css" />
   </head>
@@ -16,9 +16,12 @@
         <a class="logo" href="#overview">AREA</a>
         <nav class="nav">
           <a href="#overview">Overview</a>
-          <a href="#architecture">Architecture</a>
-          <a href="#stack">Tech stack</a>
-          <a href="#docs">Documentation</a>
+          <a href="#highlights">Nouveautés</a>
+          <a href="#catalog">Services</a>
+          <a href="#run">Run</a>
+          <a href="#api">API</a>
+          <a href="#clients">Clients</a>
+          <a href="#resources">Docs</a>
         </nav>
       </div>
     </header>
@@ -26,108 +29,467 @@
     <main>
       <section id="overview" class="hero">
         <div class="container hero-grid">
-          <div>
-            <p class="eyebrow">Action REAction • Academic automation</p>
+          <div class="hero-copy">
+            <p class="eyebrow">Action REAction · Automation</p>
             <h1>AREA</h1>
             <p class="lead">
-              Connect services, automate actions – an academic automation platform inspired by
-              IFTTT and Zapier.
+              Plateforme d'automatisation académique inspirée d'IFTTT/Zapier. FastAPI orchestre les actions/réactions,
+              les clients web et mobile permettent de créer et suivre vos AREAs, et les connecteurs OAuth relient vos comptes.
             </p>
-            <p>
-              Automations orchestrate triggers, FastAPI exposes the public API, and web/mobile clients
-              keep students in the loop with real-time workflows.
-            </p>
+            <div class="pill-row">
+              <span class="pill">7 services</span>
+              <span class="pill">17 actions</span>
+              <span class="pill">17 REActions</span>
+              <span class="pill">Web + Mobile</span>
+            </div>
             <div class="hero-actions">
-              <a class="btn btn-primary" href="api/index.html">Voir la documentation Doxygen</a>
-              <a class="btn btn-ghost" href="#architecture">Explorer l'architecture</a>
+              <a class="btn btn-primary" href="api/index.html">Voir la documentation API</a>
+              <a class="btn btn-ghost" href="#run">Démarrer en local</a>
+              <a class="btn btn-text" href="#catalog">Explorer les connecteurs</a>
             </div>
           </div>
           <div class="hero-card">
-            <p class="card-title">Plateforme AREA</p>
-            <ul>
-              <li>Application server FastAPI</li>
-              <li>PostgreSQL + Docker orchestration</li>
-              <li>React/Vite web client</li>
-              <li>Mobile client (Android, WIP)</li>
+            <p class="card-title">Ce que contient la stack</p>
+            <ul class="stack-list">
+              <li>
+                <strong>Backend FastAPI</strong> (JWT + OAuth, YAML actions/réactions, handlers webhook/polling, interpolation
+                de payload)
+              </li>
+              <li><strong>Moteur AREA</strong> qui relie actions → REActions via <code>area_engine</code> et exécuteurs dédiés</li>
+              <li><strong>Front React/Vite</strong> + <strong>mobile React Native</strong> pour connecter des services et créer des AREAs</li>
+              <li><strong>Docker Compose</strong> : API 8080 · Web 8081 · Adminer 8123 · PostgreSQL</li>
             </ul>
           </div>
         </div>
       </section>
 
-      <section id="architecture" class="section">
+      <section id="highlights" class="section">
         <div class="container">
-          <p class="eyebrow">Architecture</p>
-          <h2>Composants principaux</h2>
+          <p class="eyebrow">Mises à jour 2025</p>
+          <h2>Ce qui est nouveau</h2>
           <div class="card-grid">
             <article class="card">
-              <h3>Application server</h3>
+              <h3>Connecteurs OAuth</h3>
               <p>
-                FastAPI expose les routes publiques (dont <code>/about.json</code>), gère les déclencheurs et orchestre
-                les actions sur plusieurs services.
+                Google, Microsoft, GitHub, Spotify, Trello, Discord et Timer sont préconfigurés avec scopes, icons et couleurs
+                (<code>Backend/config/providers.yaml</code>).
               </p>
+              <ul class="mini-list">
+                <li>Connexion/déconnexion de comptes via <code>/services/{service}/connect</code></li>
+                <li>Renouvellement de tokens (<code>/services/.../refresh</code>)</li>
+                <li>Plusieurs flows : web et mobile</li>
+              </ul>
             </article>
             <article class="card">
-              <h3>Web client</h3>
+              <h3>Handlers webhook & polling</h3>
               <p>
-                Interface React/Vite/TypeScript déployée via Docker, consommant <code>/about.json</code> pour afficher
-                l'état des services et déclencheurs AREA.
+                Nouvelle architecture d'actions gérée par <code>app/handlers</code> : mapping des events, validation de signature,
+                et polling périodique.
               </p>
+              <ul class="mini-list">
+                <li>GitHub/Trello via webhooks (<code>/webhooks/github</code>, <code>/webhooks/trello</code>)</li>
+                <li>Polling worker (<code>python -m app.polling_worker</code>) pour Gmail, Drive, Outlook, Spotify, Timer…</li>
+                <li>Payloads aplatis prêts pour l'interpolation des REActions</li>
+              </ul>
             </article>
             <article class="card">
-              <h3>Mobile client</h3>
+              <h3>UI web & mobile complètes</h3>
               <p>
-                Client mobile / Android (WIP) pour gérer les automatisations en mobilité et recevoir les notifications
-                critiques.
+                Le client React/Vite (Nginx) et l'app React Native couvrent authentification, connexion de services et création
+                d'AREAs.
               </p>
+              <ul class="mini-list">
+                <li>Routes protégées par JWT, callback OAuth, gestion de profil</li>
+                <li>Builder AREA (choix action/réaction + paramètres dynamiques)</li>
+                <li>APK générée dans <code>mobile/apk</code> (exposée par l'image web)</li>
+              </ul>
+            </article>
+            <article class="card">
+              <h3>Provisionning automatique</h3>
+              <p>
+                Les YAML de <code>Backend/services</code>, <code>actions</code> et <code>reactions</code> sont injectés en base au
+                démarrage via <code>db.create_db_tables()</code>.
+              </p>
+              <ul class="mini-list">
+                <li>Synchronisation des champs (description, icône, scopes, paramètres)</li>
+                <li>Actions/REActions ordonnées par service</li>
+                <li>Prêt pour ajouter de nouveaux connecteurs en éditant un seul fichier</li>
+              </ul>
             </article>
           </div>
         </div>
       </section>
 
-      <section id="stack" class="section muted">
+      <section id="architecture" class="section muted">
         <div class="container">
-          <p class="eyebrow">Tech stack</p>
-          <h2>Technologies utilisées</h2>
-          <div class="stack-grid">
-            <div class="stack-card">
-              <h3>Backend</h3>
-              <ul>
-                <li>FastAPI (Python)</li>
-                <li>PostgreSQL</li>
-                <li>Docker &amp; Docker Compose</li>
-              </ul>
-            </div>
-            <div class="stack-card">
-              <h3>Web client</h3>
-              <ul>
-                <li>React 18</li>
-                <li>Vite + TypeScript</li>
-                <li>Custom Nginx deployment</li>
-              </ul>
-            </div>
-            <div class="stack-card">
-              <h3>Mobile</h3>
-              <ul>
-                <li>Android client (planned)</li>
-                <li>APK distribution via web</li>
-                <li>Shared API contracts</li>
-              </ul>
-            </div>
+          <p class="eyebrow">Pipeline</p>
+          <h2>Architecture d'exécution</h2>
+          <div class="architecture-grid">
+            <article class="card">
+              <h3>API & Auth</h3>
+              <p>FastAPI sert <code>/user</code>, <code>/services</code>, <code>/areas</code>, <code>/oauth</code> et <code>/about.json</code>.</p>
+              <p class="text-muted">JWT (password) + OAuth 2.0 (code flow) pour les providers listés.</p>
+            </article>
+            <article class="card">
+              <h3>Moteur AREA</h3>
+              <p>
+                <code>area_engine</code> transforme une Action en REAction : vérification des conditions, interpolation des
+                variables et exécution via les exécuteurs de <code>app/executors</code>.
+              </p>
+            </article>
+            <article class="card">
+              <h3>Handlers</h3>
+              <p>
+                <code>app/handlers</code> mappe chaque évènement (<em>push</em>, <em>new_card</em>…) aux AREAs concernées.
+                Webhook Manager gère la création/cleanup des webhooks côté services.
+              </p>
+            </article>
+            <article class="card">
+              <h3>Persistance & outils</h3>
+              <p>PostgreSQL stocke utilisateurs, services connectés, AREAs. Adminer accessible en 8123 pour inspecter la base.</p>
+            </article>
+          </div>
+          <div class="flow">
+            <div class="flow-step"><span>1</span> Connectez un service via OAuth (web ou mobile).</div>
+            <div class="flow-step"><span>2</span> Créez une AREA (Action + REAction + paramètres).</div>
+            <div class="flow-step"><span>3</span> Un handler reçoit l'évènement (webhook ou polling).</div>
+            <div class="flow-step"><span>4</span> Le moteur exécute la REAction en interpolant le payload.</div>
+            <div class="flow-step"><span>5</span> Suivez l'exécution dans les clients ou via les logs.</div>
           </div>
         </div>
       </section>
 
-      <section id="docs" class="section">
-        <div class="container docs">
-          <div>
-            <p class="eyebrow">Documentation</p>
-            <h2>Consultez l'API Doxygen</h2>
-            <p>
-              La référence complète des endpoints, modèles et schémas est générée avec Doxygen et disponible sous
-              <code>docs/api/</code>. Utilisez la documentation pour explorer chaque service ACTION/REACTION.
-            </p>
+      <section id="catalog" class="section">
+        <div class="container">
+          <p class="eyebrow">Catalogue</p>
+          <h2>Services, actions et REActions disponibles</h2>
+          <div class="catalog-grid">
+            <article class="service-card">
+              <div class="service-head">
+                <span class="service-dot" style="background:#24292e"></span>
+                <div>
+                  <h3>GitHub</h3>
+                  <p class="service-meta">4 actions · 3 REActions</p>
+                </div>
+              </div>
+              <div class="service-columns">
+                <div>
+                  <p class="subtle">Actions</p>
+                  <ul class="tag-list">
+                    <li class="tag">Nouveau commit</li>
+                    <li class="tag">Nouvelle issue</li>
+                    <li class="tag">Nouvelle pull request</li>
+                    <li class="tag">Nouvelle étoile</li>
+                  </ul>
+                </div>
+                <div>
+                  <p class="subtle">REActions</p>
+                  <ul class="tag-list">
+                    <li class="tag">Créer une issue</li>
+                    <li class="tag">Créer une branche</li>
+                    <li class="tag">Ajouter un commentaire</li>
+                  </ul>
+                </div>
+              </div>
+            </article>
+            <article class="service-card">
+              <div class="service-head">
+                <span class="service-dot" style="background:#4285F4"></span>
+                <div>
+                  <h3>Google</h3>
+                  <p class="service-meta">3 actions · 4 REActions</p>
+                </div>
+              </div>
+              <div class="service-columns">
+                <div>
+                  <p class="subtle">Actions</p>
+                  <ul class="tag-list">
+                    <li class="tag">Gmail : nouvel email</li>
+                    <li class="tag">Drive : nouveau fichier</li>
+                    <li class="tag">YouTube : nouvel upload</li>
+                  </ul>
+                </div>
+                <div>
+                  <p class="subtle">REActions</p>
+                  <ul class="tag-list">
+                    <li class="tag">Envoyer un email (Gmail)</li>
+                    <li class="tag">Créer un dossier (Drive)</li>
+                    <li class="tag">Créer un évènement (Calendar)</li>
+                    <li class="tag">Mettre à jour une cellule (Sheets)</li>
+                  </ul>
+                </div>
+              </div>
+            </article>
+            <article class="service-card">
+              <div class="service-head">
+                <span class="service-dot" style="background:#00A4EF"></span>
+                <div>
+                  <h3>Microsoft</h3>
+                  <p class="service-meta">2 actions · 3 REActions</p>
+                </div>
+              </div>
+              <div class="service-columns">
+                <div>
+                  <p class="subtle">Actions</p>
+                  <ul class="tag-list">
+                    <li class="tag">Outlook : nouvel email</li>
+                    <li class="tag">Outlook Calendar : nouvel évènement</li>
+                  </ul>
+                </div>
+                <div>
+                  <p class="subtle">REActions</p>
+                  <ul class="tag-list">
+                    <li class="tag">Envoyer un email (Outlook)</li>
+                    <li class="tag">Message Teams</li>
+                    <li class="tag">Uploader sur OneDrive</li>
+                  </ul>
+                </div>
+              </div>
+            </article>
+            <article class="service-card">
+              <div class="service-head">
+                <span class="service-dot" style="background:#1DB954"></span>
+                <div>
+                  <h3>Spotify</h3>
+                  <p class="service-meta">2 actions · 2 REActions</p>
+                </div>
+              </div>
+              <div class="service-columns">
+                <div>
+                  <p class="subtle">Actions</p>
+                  <ul class="tag-list">
+                    <li class="tag">Nouvelle playlist créée</li>
+                    <li class="tag">Nouveau track ajouté</li>
+                  </ul>
+                </div>
+                <div>
+                  <p class="subtle">REActions</p>
+                  <ul class="tag-list">
+                    <li class="tag">Créer une playlist</li>
+                    <li class="tag">Ajouter un track à une playlist</li>
+                  </ul>
+                </div>
+              </div>
+            </article>
+            <article class="service-card">
+              <div class="service-head">
+                <span class="service-dot" style="background:#0079BF"></span>
+                <div>
+                  <h3>Trello</h3>
+                  <p class="service-meta">3 actions · 4 REActions</p>
+                </div>
+              </div>
+              <div class="service-columns">
+                <div>
+                  <p class="subtle">Actions</p>
+                  <ul class="tag-list">
+                    <li class="tag">Nouvelle carte</li>
+                    <li class="tag">Carte déplacée</li>
+                    <li class="tag">Échéance proche</li>
+                  </ul>
+                </div>
+                <div>
+                  <p class="subtle">REActions</p>
+                  <ul class="tag-list">
+                    <li class="tag">Créer une carte</li>
+                    <li class="tag">Déplacer une carte</li>
+                    <li class="tag">Ajouter un commentaire</li>
+                    <li class="tag">Mettre à jour un board</li>
+                  </ul>
+                </div>
+              </div>
+            </article>
+            <article class="service-card">
+              <div class="service-head">
+                <span class="service-dot" style="background:#5865F2"></span>
+                <div>
+                  <h3>Discord</h3>
+                  <p class="service-meta">1 action · 1 REAction</p>
+                </div>
+              </div>
+              <div class="service-columns">
+                <div>
+                  <p class="subtle">Action</p>
+                  <ul class="tag-list">
+                    <li class="tag">Changement de profil</li>
+                  </ul>
+                </div>
+                <div>
+                  <p class="subtle">REAction</p>
+                  <ul class="tag-list">
+                    <li class="tag">Envoyer un message webhook</li>
+                  </ul>
+                </div>
+              </div>
+            </article>
+            <article class="service-card">
+              <div class="service-head">
+                <span class="service-dot" style="background:#f59e0b"></span>
+                <div>
+                  <h3>Timer</h3>
+                  <p class="service-meta">2 actions · 0 REActions</p>
+                </div>
+              </div>
+              <div class="service-columns">
+                <div>
+                  <p class="subtle">Actions</p>
+                  <ul class="tag-list">
+                    <li class="tag">Daily</li>
+                    <li class="tag">Schedule</li>
+                  </ul>
+                </div>
+                <div>
+                  <p class="subtle">Usage</p>
+                  <p class="text-muted">Déclencheur temporel pour toute REAction d'un autre service.</p>
+                </div>
+              </div>
+            </article>
           </div>
-          <a class="btn btn-primary" href="api/index.html">Ouvrir la documentation API</a>
+          <p class="caption">
+            Les actions/REActions sont décrites en YAML puis importées automatiquement en base au démarrage du backend.
+          </p>
+        </div>
+      </section>
+
+      <section id="run" class="section muted">
+        <div class="container">
+          <p class="eyebrow">Déploiement</p>
+          <h2>Démarrer la stack</h2>
+          <div class="card-grid">
+            <article class="card">
+              <h3>Docker Compose (full stack)</h3>
+              <ol class="step-list">
+                <li>Créer un <code>.env</code> avec <code>POSTGRESQL_URI</code>, <code>SMTP_*</code>, <code>API_BASE_URL</code> et les clés OAuth.</li>
+                <li>Depuis la racine : <code>docker compose up --build</code></li>
+                <li>Accès : API <code>http://localhost:8080</code> · Web <code>http://localhost:8081</code> · Adminer <code>http://localhost:8123</code></li>
+              </ol>
+              <p class="text-muted">Les APK mobiles générées sont servies via le conteneur web (<code>/client.apk</code>).</p>
+            </article>
+            <article class="card">
+              <h3>Backend seul</h3>
+              <ol class="step-list">
+                <li>Python 3.9 · <code>cd Backend && python -m venv .venv && source .venv/bin/activate</code></li>
+                <li><code>pip install -r requirements.txt</code></li>
+                <li>
+                  Exposer les variables :
+                  <code>POSTGRESQL_URI</code>, <code>SMTP_SERVER</code>, <code>SMTP_PORT</code>, <code>EMAIL_USERNAME</code>,
+                  <code>EMAIL_PASSWORD</code>, <code>API_BASE_URL</code>, secrets OAuth (voir <code>config/providers.yaml</code>).
+                </li>
+                <li><code>uvicorn app.main:app --reload --port 8080</code></li>
+                <li>Optionnel : lancer le worker polling <code>python -m app.polling_worker</code></li>
+              </ol>
+            </article>
+            <article class="card">
+              <h3>Configurations clés</h3>
+              <ul class="mini-list">
+                <li><code>PROVIDERS_CONFIG</code> pointe par défaut sur <code>Backend/config/providers.yaml</code>.</li>
+                <li>Secrets webhook : <code>GITHUB_WEBHOOK_SECRET</code>, <code>TRELLO_WEBHOOK_SECRET</code>.</li>
+                <li>OAuth web callbacks : <code>http://localhost:8081/auth/callback/&lt;provider&gt;</code> (web) ou <code>${API_BASE_URL}/auth/callback/&lt;provider&gt;</code> (mobile).</li>
+                <li>Base de données : Postgres (pool configuré dans <code>app/db.py</code>).</li>
+              </ul>
+            </article>
+          </div>
+        </div>
+      </section>
+
+      <section id="api" class="section">
+        <div class="container">
+          <p class="eyebrow">API</p>
+          <h2>Points d'entrée utiles</h2>
+          <div class="card-grid">
+            <article class="card">
+              <h3>Découverte</h3>
+              <p><code>GET /about.json</code> retourne l'heure serveur, l'IP appelante et la liste des services/actions.</p>
+              <p class="text-muted">Utile pour les clients web/mobile pour construire l'UI dynamiquement.</p>
+            </article>
+            <article class="card">
+              <h3>OAuth & services</h3>
+              <p>
+                <code>GET /oauth/providers</code>, <code>/oauth/authorize/{provider}/{flow}</code>, <code>/oauth/callback/{provider}</code><br />
+                <code>GET /services</code> (catalogue), <code>/services/my</code> (comptes connectés)
+              </p>
+            </article>
+            <article class="card">
+              <h3>AREAs</h3>
+              <p>
+                <code>POST /areas</code> (création), <code>GET /areas</code> (liste), <code>PATCH /areas/{id}/toggle</code>,
+                <code>DELETE /areas/{id}</code>.
+              </p>
+              <p class="text-muted">Les paramètres Action/REAction sont validés selon les YAML chargés.</p>
+            </article>
+            <article class="card">
+              <h3>Webhooks</h3>
+              <p><code>POST /webhooks/github</code> et <code>/webhooks/trello</code> traitent les évènements entrants et déclenchent les AREAs correspondantes.</p>
+              <p class="text-muted">Les signatures peuvent être vérifiées via les secrets d'env.</p>
+            </article>
+          </div>
+          <pre class="code-block"><code>curl -X GET http://localhost:8080/about.json | jq
+curl -X POST http://localhost:8080/areas \
+  -H "Authorization: Bearer &lt;token&gt;" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "name": "GitHub PR → Trello carte",
+    "action_service_id": 2,
+    "action_id": &lt;id_action_pr&gt;,
+    "reaction_service_id": 6,
+    "reaction_id": &lt;id_reaction_create_card&gt;,
+    "action_parameters": {"repository.full_name": "owner/repo"},
+    "reaction_parameters": {"name": "PR {{pull_request.title}}", "desc": "{{pull_request.body}}"},
+    "is_active": true
+  }'</code></pre>
+          <div class="docs-cta">
+            <a class="btn btn-primary" href="api/index.html">Ouvrir la référence Doxygen</a>
+          </div>
+        </div>
+      </section>
+
+      <section id="clients" class="section muted">
+        <div class="container">
+          <p class="eyebrow">Interfaces</p>
+          <h2>Clients web & mobile</h2>
+          <div class="card-grid">
+            <article class="card">
+              <h3>Web (Front/AREAA)</h3>
+              <p>React 18 + Vite + TypeScript, servi par Nginx dans Docker.</p>
+              <ul class="mini-list">
+                <li>Pages : login/register, services connectés, profil, liste et création d'AREAs</li>
+                <li>Scripts : <code>npm run dev</code>, <code>npm run build</code>, <code>npm run test</code></li>
+                <li>Callback OAuth web : <code>/auth/callback/&lt;provider&gt;</code></li>
+              </ul>
+            </article>
+            <article class="card">
+              <h3>Mobile (React Native)</h3>
+              <p>Navigation native, context API, écrans login/services/AREAs/settings.</p>
+              <ul class="mini-list">
+                <li>Scripts : <code>npm run android</code>, <code>npm run ios</code>, <code>npm test</code></li>
+                <li>APK générée dans <code>mobile/apk</code> (montée dans l'image web)</li>
+                <li>PKCE supporté via le flow mobile des providers</li>
+              </ul>
+            </article>
+            <article class="card">
+              <h3>Outils</h3>
+              <ul class="mini-list">
+                <li>Adminer sur <code>http://localhost:8123</code> pour inspecter Postgres</li>
+                <li>Doxygen dans <code>docs/api</code> (généré via <code>docs/update_docs.sh</code>)</li>
+                <li>Diagrams et guides supplémentaires dans <code>docs/</code></li>
+              </ul>
+            </article>
+          </div>
+        </div>
+      </section>
+
+      <section id="resources" class="section">
+        <div class="container">
+          <p class="eyebrow">Ressources</p>
+          <h2>Documentation locale</h2>
+          <div class="link-grid">
+            <a class="link-card" href="api/index.html">Référence API Doxygen</a>
+            <a class="link-card" href="action_handler_architecture.md">Action handler architecture</a>
+            <a class="link-card" href="Scheduler_and_hook.md">Tests Scheduler & Hook</a>
+            <a class="link-card" href="diagrams.md">Diagrammes UML</a>
+            <a class="link-card" href="scenario_user.md">Scénario utilisateur E2E</a>
+            <a class="link-card" href="https://github.com/Jeanmi-s-Orga-Tek/AREA">README racine</a>
+          </div>
         </div>
       </section>
     </main>
@@ -135,7 +497,7 @@
     <footer class="site-footer">
       <div class="container footer-grid">
         <p>Academic project — Epitech</p>
-        <a href="#">GitHub repository</a>
+        <a href="https://github.com/Jeanmi-s-Orga-Tek/AREA">GitHub repository</a>
       </div>
     </footer>
   </body>
