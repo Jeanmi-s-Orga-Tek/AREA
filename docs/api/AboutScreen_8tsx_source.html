@@ -109,89 +109,224 @@ $(function(){initNavTree('AboutScreen_8tsx_source.html',''); initResizable(true)
 <div class="line"><a id="l00007" name="l00007"></a><span class="lineno">    7</span> </div>
 <div class="line"><a id="l00008" name="l00008"></a><span class="lineno"><a class="line" href="AboutScreen_8tsx.html#a8e6a862a904cf8b07c69fae7c44a1a04">    8</a></span><span class="keyword">import</span> <a class="code hl_variable" href="AboutScreen_8tsx.html#a8e6a862a904cf8b07c69fae7c44a1a04">React</a>, { useEffect, useState } from <span class="stringliteral">&quot;react&quot;</span>;</div>
 <div class="line"><a id="l00009" name="l00009"></a><span class="lineno"><a class="line" href="AboutScreen_8tsx.html#a953be46b94f595d839e88a6d3d270309">    9</a></span><span class="keyword">import</span> { fetchAbout, <a class="code hl_variable" href="api_8ts.html#a298b7892ded309eec08992d5f15d58f2">AboutResponse</a> } from <span class="stringliteral">&quot;../services/api&quot;</span>;</div>
-<div class="line"><a id="l00010" name="l00010"></a><span class="lineno">   10</span> </div>
-<div class="line"><a id="l00011" name="l00011"></a><span class="lineno"><a class="line" href="AboutScreen_8tsx.html#a6310ddd0f573f1d449bbec6581bfb05b">   11</a></span><span class="keyword">const</span> <a class="code hl_variable" href="AboutScreen_8tsx.html#a6310ddd0f573f1d449bbec6581bfb05b">AboutScreen</a>: <a class="code hl_variable" href="AboutScreen_8tsx.html#a8e6a862a904cf8b07c69fae7c44a1a04">React</a>.FC = () =&gt; {</div>
-<div class="line"><a id="l00012" name="l00012"></a><span class="lineno"><a class="line" href="AboutScreen_8tsx.html#a76189ac497f2ab0eca5d91f2e6160594">   12</a></span>  <span class="keyword">const</span> [loading, <a class="code hl_variable" href="AboutScreen_8tsx.html#a76189ac497f2ab0eca5d91f2e6160594">setLoading</a>] = useState&lt;boolean&gt;(<span class="keyword">true</span>);</div>
-<div class="line"><a id="l00013" name="l00013"></a><span class="lineno"><a class="line" href="AboutScreen_8tsx.html#a7f65da55410993f49f5c84ed6e75609f">   13</a></span>  <span class="keyword">const</span> [error, <a class="code hl_variable" href="OAuthCallbackScreen_8tsx.html#aa5509c7ae512f6a856dc2164932bf900">setError</a>] = useState&lt;string | null&gt;(<span class="keyword">null</span>);</div>
-<div class="line"><a id="l00014" name="l00014"></a><span class="lineno">   14</span>  <span class="keyword">const</span> [about, setAbout] = useState&lt;AboutResponse | null&gt;(<span class="keyword">null</span>);</div>
-<div class="line"><a id="l00015" name="l00015"></a><span class="lineno">   15</span> </div>
-<div class="line"><a id="l00016" name="l00016"></a><span class="lineno">   16</span>  useEffect(() =&gt; {</div>
-<div class="line"><a id="l00017" name="l00017"></a><span class="lineno">   17</span>    let isMounted = <span class="keyword">true</span>;</div>
-<div class="line"><a id="l00018" name="l00018"></a><span class="lineno">   18</span> </div>
-<div class="line"><a id="l00019" name="l00019"></a><span class="lineno">   19</span>    <span class="keyword">const</span> loadAbout = async () =&gt; {</div>
-<div class="line"><a id="l00020" name="l00020"></a><span class="lineno">   20</span>      <a class="code hl_variable" href="AboutScreen_8tsx.html#a76189ac497f2ab0eca5d91f2e6160594">setLoading</a>(<span class="keyword">true</span>);</div>
-<div class="line"><a id="l00021" name="l00021"></a><span class="lineno">   21</span>      <a class="code hl_variable" href="OAuthCallbackScreen_8tsx.html#aa5509c7ae512f6a856dc2164932bf900">setError</a>(<span class="keyword">null</span>);</div>
-<div class="line"><a id="l00022" name="l00022"></a><span class="lineno">   22</span> </div>
-<div class="line"><a id="l00023" name="l00023"></a><span class="lineno">   23</span>      <span class="keywordflow">try</span> {</div>
-<div class="line"><a id="l00024" name="l00024"></a><span class="lineno">   24</span>        <span class="keyword">const</span> response = await fetchAbout();</div>
-<div class="line"><a id="l00025" name="l00025"></a><span class="lineno">   25</span>        <span class="keywordflow">if</span> (!isMounted) {</div>
-<div class="line"><a id="l00026" name="l00026"></a><span class="lineno">   26</span>          <span class="keywordflow">return</span>;</div>
-<div class="line"><a id="l00027" name="l00027"></a><span class="lineno">   27</span>        }</div>
-<div class="line"><a id="l00028" name="l00028"></a><span class="lineno">   28</span>        setAbout(response);</div>
-<div class="line"><a id="l00029" name="l00029"></a><span class="lineno">   29</span>        <a class="code hl_variable" href="AboutScreen_8tsx.html#a76189ac497f2ab0eca5d91f2e6160594">setLoading</a>(<span class="keyword">false</span>);</div>
-<div class="line"><a id="l00030" name="l00030"></a><span class="lineno">   30</span>      } <span class="keywordflow">catch</span> (err) {</div>
-<div class="line"><a id="l00031" name="l00031"></a><span class="lineno">   31</span>        <span class="keywordflow">if</span> (!isMounted) {</div>
-<div class="line"><a id="l00032" name="l00032"></a><span class="lineno">   32</span>          <span class="keywordflow">return</span>;</div>
-<div class="line"><a id="l00033" name="l00033"></a><span class="lineno">   33</span>        }</div>
-<div class="line"><a id="l00034" name="l00034"></a><span class="lineno">   34</span>        <span class="keyword">const</span> <a class="code hl_variable" href="OAuthCallbackScreen_8tsx.html#a301ac1a72ba468d3ae1dca8e5f1eb743">message</a> =</div>
-<div class="line"><a id="l00035" name="l00035"></a><span class="lineno">   35</span>          err instanceof Error ? err.message : <span class="stringliteral">&quot;Unknown error while fetching /about&quot;</span>;</div>
-<div class="line"><a id="l00036" name="l00036"></a><span class="lineno">   36</span>        <a class="code hl_variable" href="OAuthCallbackScreen_8tsx.html#aa5509c7ae512f6a856dc2164932bf900">setError</a>(<a class="code hl_variable" href="OAuthCallbackScreen_8tsx.html#a301ac1a72ba468d3ae1dca8e5f1eb743">message</a>);</div>
-<div class="line"><a id="l00037" name="l00037"></a><span class="lineno">   37</span>        <a class="code hl_variable" href="AboutScreen_8tsx.html#a76189ac497f2ab0eca5d91f2e6160594">setLoading</a>(<span class="keyword">false</span>);</div>
-<div class="line"><a id="l00038" name="l00038"></a><span class="lineno">   38</span>      }</div>
-<div class="line"><a id="l00039" name="l00039"></a><span class="lineno">   39</span>    };</div>
-<div class="line"><a id="l00040" name="l00040"></a><span class="lineno">   40</span> </div>
-<div class="line"><a id="l00041" name="l00041"></a><span class="lineno">   41</span>    <span class="keywordtype">void</span> loadAbout();</div>
-<div class="line"><a id="l00042" name="l00042"></a><span class="lineno">   42</span> </div>
-<div class="line"><a id="l00043" name="l00043"></a><span class="lineno">   43</span>    <span class="keywordflow">return</span> () =&gt; {</div>
-<div class="line"><a id="l00044" name="l00044"></a><span class="lineno">   44</span>      isMounted = <span class="keyword">false</span>;</div>
-<div class="line"><a id="l00045" name="l00045"></a><span class="lineno">   45</span>    };</div>
-<div class="line"><a id="l00046" name="l00046"></a><span class="lineno">   46</span>  }, []);</div>
-<div class="line"><a id="l00047" name="l00047"></a><span class="lineno">   47</span> </div>
-<div class="foldopen" id="foldopen00048" data-start="{" data-end="}">
-<div class="line"><a id="l00048" name="l00048"></a><span class="lineno"><a class="line" href="AboutScreen_8tsx.html#a1d0c446bffcf465615c5aabdb98b34f9">   48</a></span>  <span class="keywordflow">if</span> (loading) {</div>
-<div class="line"><a id="l00049" name="l00049"></a><span class="lineno">   49</span>    <span class="keywordflow">return</span> (</div>
-<div class="line"><a id="l00050" name="l00050"></a><span class="lineno">   50</span>      &lt;main&gt;</div>
-<div class="line"><a id="l00051" name="l00051"></a><span class="lineno">   51</span>        &lt;p&gt;Loading /about.json...&lt;/p&gt;</div>
-<div class="line"><a id="l00052" name="l00052"></a><span class="lineno">   52</span>      &lt;/main&gt;</div>
-<div class="line"><a id="l00053" name="l00053"></a><span class="lineno">   53</span>    );</div>
-<div class="line"><a id="l00054" name="l00054"></a><span class="lineno">   54</span>  }</div>
+<div class="line"><a id="l00010" name="l00010"></a><span class="lineno"><a class="line" href="AboutScreen_8tsx.html#a8fa31aca9f6e85b246caa934a29a0653">   10</a></span><span class="keyword">import</span> <a class="code hl_variable" href="AboutScreen_8tsx.html#a8fa31aca9f6e85b246caa934a29a0653">NotificationContainer</a>, { <a class="code hl_variable" href="NotificationContainer_8tsx.html#a97b1c0e79a38c5147c384825b2068ca2">NotificationItem</a> } from <span class="stringliteral">&quot;../components/NotificationContainer&quot;</span>;</div>
+<div class="foldopen" id="foldopen00011" data-start="{" data-end="};">
+<div class="line"><a id="l00011" name="l00011"></a><span class="lineno"><a class="line" href="AboutScreen_8tsx.html#a86e8ae36fb0ccc3b14a7d47a1e0b40e2">   11</a></span><span class="keyword">import</span> <span class="stringliteral">&quot;./AboutScreen.css&quot;</span>;</div>
+<div class="line"><a id="l00012" name="l00012"></a><span class="lineno">   12</span> </div>
+<div class="line"><a id="l00013" name="l00013"></a><span class="lineno"><a class="line" href="AboutScreen_8tsx.html#a6310ddd0f573f1d449bbec6581bfb05b">   13</a></span><span class="keyword">const</span> <a class="code hl_variable" href="AboutScreen_8tsx.html#a6310ddd0f573f1d449bbec6581bfb05b">AboutScreen</a>: <a class="code hl_variable" href="AboutScreen_8tsx.html#a8e6a862a904cf8b07c69fae7c44a1a04">React</a>.FC = () =&gt; {</div>
+<div class="line"><a id="l00014" name="l00014"></a><span class="lineno"><a class="line" href="AboutScreen_8tsx.html#a76189ac497f2ab0eca5d91f2e6160594">   14</a></span>  <span class="keyword">const</span> [loading, <a class="code hl_variable" href="AboutScreen_8tsx.html#a76189ac497f2ab0eca5d91f2e6160594">setLoading</a>] = useState&lt;boolean&gt;(<span class="keyword">true</span>);</div>
+<div class="line"><a id="l00015" name="l00015"></a><span class="lineno"><a class="line" href="AboutScreen_8tsx.html#a62ebf890b9eeb8a1a037f352dabf975a">   15</a></span>  <span class="keyword">const</span> [notifications, <a class="code hl_variable" href="ServiceCallbackScreen_8tsx.html#ae9a287a261ed44cf54e161648dc5b308">setNotifications</a>] = useState&lt;NotificationItem[]&gt;([]);</div>
+<div class="line"><a id="l00016" name="l00016"></a><span class="lineno">   16</span>  <span class="keyword">const</span> [about, setAbout] = useState&lt;AboutResponse | null&gt;(<span class="keyword">null</span>);</div>
+<div class="line"><a id="l00017" name="l00017"></a><span class="lineno">   17</span>  <span class="keyword">const</span> [<a class="code hl_variable" href="LoginScreen_8tsx.html#a2eabe27bf94a92ad8fa06e736741b9ac">stars</a>, <a class="code hl_variable" href="CreateAreaScreen_8tsx.html#af8a87ea8c6a0396937232f91d00f4b36">setStars</a>] = useState&lt;Array&lt;{ id: number; style: <a class="code hl_variable" href="AboutScreen_8tsx.html#a8e6a862a904cf8b07c69fae7c44a1a04">React</a>.CSSProperties }&gt;&gt;([]);</div>
+<div class="line"><a id="l00018" name="l00018"></a><span class="lineno">   18</span>  <span class="keyword">const</span> [currentTime, setCurrentTime] = useState&lt;Date&gt;(<span class="keyword">new</span> Date());</div>
+<div class="line"><a id="l00019" name="l00019"></a><span class="lineno">   19</span> </div>
+<div class="foldopen" id="foldopen00020" data-start="{" data-end="};">
+<div class="line"><a id="l00020" name="l00020"></a><span class="lineno"><a class="line" href="AboutScreen_8tsx.html#a045c8134156d24611e3c41c542046cd1">   20</a></span>  <span class="keyword">const</span> <a class="code hl_variable" href="AboutScreen_8tsx.html#a045c8134156d24611e3c41c542046cd1">addNotification</a> = (<a class="code hl_variable" href="ServiceCallbackScreen_8tsx.html#a301ac1a72ba468d3ae1dca8e5f1eb743">message</a>: string, <a class="code hl_variable" href="Notification_8tsx.html#a0fc6c254ef91d3c8d5918bba369d35b6">type</a>: <span class="stringliteral">&quot;success&quot;</span> | <span class="stringliteral">&quot;error&quot;</span>) =&gt; {</div>
+<div class="line"><a id="l00021" name="l00021"></a><span class="lineno">   21</span>    <span class="keyword">const</span> <span class="keywordtype">id</span> = `notif-${Date.now()}-${Math.random().toString(16).slice(2)}`;</div>
+<div class="line"><a id="l00022" name="l00022"></a><span class="lineno">   22</span>    <a class="code hl_variable" href="ServiceCallbackScreen_8tsx.html#ae9a287a261ed44cf54e161648dc5b308">setNotifications</a>((prev) =&gt; [...prev, { id, <a class="code hl_variable" href="ServiceCallbackScreen_8tsx.html#a301ac1a72ba468d3ae1dca8e5f1eb743">message</a>, <a class="code hl_variable" href="Notification_8tsx.html#a0fc6c254ef91d3c8d5918bba369d35b6">type</a> }]);</div>
+<div class="line"><a id="l00023" name="l00023"></a><span class="lineno">   23</span>  };</div>
 </div>
-<div class="line"><a id="l00055" name="l00055"></a><span class="lineno">   55</span> </div>
-<div class="line"><a id="l00056" name="l00056"></a><span class="lineno">   56</span>  <span class="keywordflow">if</span> (error) {</div>
-<div class="line"><a id="l00057" name="l00057"></a><span class="lineno">   57</span>    <span class="keywordflow">return</span> (</div>
-<div class="line"><a id="l00058" name="l00058"></a><span class="lineno">   58</span>      &lt;main&gt;</div>
-<div class="line"><a id="l00059" name="l00059"></a><span class="lineno">   59</span>        &lt;p&gt;Error: {error}&lt;/p&gt;</div>
-<div class="line"><a id="l00060" name="l00060"></a><span class="lineno">   60</span>      &lt;/main&gt;</div>
-<div class="line"><a id="l00061" name="l00061"></a><span class="lineno">   61</span>    );</div>
-<div class="line"><a id="l00062" name="l00062"></a><span class="lineno">   62</span>  }</div>
-<div class="line"><a id="l00063" name="l00063"></a><span class="lineno">   63</span> </div>
-<div class="foldopen" id="foldopen00064" data-start="{" data-end="}">
-<div class="line"><a id="l00064" name="l00064"></a><span class="lineno"><a class="line" href="AboutScreen_8tsx.html#a2d1e7e27d0ce3d87412698f7ac5bfea3">   64</a></span>  <span class="keywordflow">if</span> (!about || about.server.services.length === 0) {</div>
-<div class="line"><a id="l00065" name="l00065"></a><span class="lineno">   65</span>    <span class="keywordflow">return</span> (</div>
-<div class="line"><a id="l00066" name="l00066"></a><span class="lineno">   66</span>      &lt;main&gt;</div>
-<div class="line"><a id="l00067" name="l00067"></a><span class="lineno">   67</span>        &lt;p&gt;No services available.&lt;/p&gt;</div>
-<div class="line"><a id="l00068" name="l00068"></a><span class="lineno">   68</span>      &lt;/main&gt;</div>
-<div class="line"><a id="l00069" name="l00069"></a><span class="lineno">   69</span>    );</div>
-<div class="line"><a id="l00070" name="l00070"></a><span class="lineno">   70</span>  }</div>
+<div class="line"><a id="l00024" name="l00024"></a><span class="lineno">   24</span> </div>
+<div class="foldopen" id="foldopen00025" data-start="{" data-end="};">
+<div class="line"><a id="l00025" name="l00025"></a><span class="lineno"><a class="line" href="AboutScreen_8tsx.html#a86be4d74fb6a72bb259a35c9b6b3bd61">   25</a></span>  <span class="keyword">const</span> <a class="code hl_variable" href="AboutScreen_8tsx.html#a86be4d74fb6a72bb259a35c9b6b3bd61">removeNotification</a> = (id: string) =&gt; {</div>
+<div class="line"><a id="l00026" name="l00026"></a><span class="lineno">   26</span>    <a class="code hl_variable" href="ServiceCallbackScreen_8tsx.html#ae9a287a261ed44cf54e161648dc5b308">setNotifications</a>((prev) =&gt; prev.filter((n) =&gt; n.id !== <span class="keywordtype">id</span>));</div>
+<div class="line"><a id="l00027" name="l00027"></a><span class="lineno">   27</span>  };</div>
 </div>
-<div class="line"><a id="l00071" name="l00071"></a><span class="lineno">   71</span> </div>
-<div class="line"><a id="l00072" name="l00072"></a><span class="lineno"><a class="line" href="AboutScreen_8tsx.html#a3b353b62b72acc6071d64d03ce8da8d6">   72</a></span>  <span class="keyword">const</span> <a class="code hl_variable" href="AboutScreen_8tsx.html#a3b353b62b72acc6071d64d03ce8da8d6">firstService</a> = about.server.services[0];</div>
-<div class="line"><a id="l00073" name="l00073"></a><span class="lineno">   73</span> </div>
-<div class="line"><a id="l00074" name="l00074"></a><span class="lineno">   74</span>  <span class="keywordflow">return</span> (</div>
-<div class="line"><a id="l00075" name="l00075"></a><span class="lineno">   75</span>    &lt;main&gt;</div>
-<div class="line"><a id="l00076" name="l00076"></a><span class="lineno">   76</span>      &lt;h1&gt;/about&lt;/h1&gt;</div>
-<div class="line"><a id="l00077" name="l00077"></a><span class="lineno">   77</span>      &lt;p&gt;First service: {<a class="code hl_variable" href="AboutScreen_8tsx.html#a3b353b62b72acc6071d64d03ce8da8d6">firstService</a>.name}&lt;/p&gt;</div>
-<div class="line"><a id="l00078" name="l00078"></a><span class="lineno">   78</span>    &lt;/main&gt;</div>
-<div class="line"><a id="l00079" name="l00079"></a><span class="lineno">   79</span>  );</div>
-<div class="line"><a id="l00080" name="l00080"></a><span class="lineno">   80</span>};</div>
-<div class="line"><a id="l00081" name="l00081"></a><span class="lineno">   81</span> </div>
-<div class="line"><a id="l00082" name="l00082"></a><span class="lineno">   82</span>export <span class="keywordflow">default</span> <a class="code hl_variable" href="AboutScreen_8tsx.html#a6310ddd0f573f1d449bbec6581bfb05b">AboutScreen</a>;</div>
-<div class="ttc" id="aAboutScreen_8tsx_html_a3b353b62b72acc6071d64d03ce8da8d6"><div class="ttname"><a href="AboutScreen_8tsx.html#a3b353b62b72acc6071d64d03ce8da8d6">firstService</a></div><div class="ttdeci">const firstService</div><div class="ttdef"><b>Definition</b> <a href="#l00072">AboutScreen.tsx:72</a></div></div>
-<div class="ttc" id="aAboutScreen_8tsx_html_a6310ddd0f573f1d449bbec6581bfb05b"><div class="ttname"><a href="AboutScreen_8tsx.html#a6310ddd0f573f1d449bbec6581bfb05b">AboutScreen</a></div><div class="ttdeci">const AboutScreen</div><div class="ttdef"><b>Definition</b> <a href="#l00011">AboutScreen.tsx:12</a></div></div>
-<div class="ttc" id="aAboutScreen_8tsx_html_a76189ac497f2ab0eca5d91f2e6160594"><div class="ttname"><a href="AboutScreen_8tsx.html#a76189ac497f2ab0eca5d91f2e6160594">setLoading</a></div><div class="ttdeci">const setLoading</div><div class="ttdef"><b>Definition</b> <a href="#l00012">AboutScreen.tsx:12</a></div></div>
+<div class="line"><a id="l00028" name="l00028"></a><span class="lineno">   28</span> </div>
+<div class="line"><a id="l00029" name="l00029"></a><span class="lineno">   29</span>  useEffect(() =&gt; {</div>
+<div class="line"><a id="l00030" name="l00030"></a><span class="lineno">   30</span>    <span class="keyword">const</span> generateStars = () =&gt; {</div>
+<div class="line"><a id="l00031" name="l00031"></a><span class="lineno">   31</span>      <span class="keyword">const</span> newStars = [];</div>
+<div class="line"><a id="l00032" name="l00032"></a><span class="lineno">   32</span>      <span class="keywordflow">for</span> (let i = 0; i &lt; 100; i++) {</div>
+<div class="line"><a id="l00033" name="l00033"></a><span class="lineno">   33</span>        <span class="keyword">const</span> size = Math.random() * 3 + 1;</div>
+<div class="line"><a id="l00034" name="l00034"></a><span class="lineno">   34</span>        newStars.push({</div>
+<div class="line"><a id="l00035" name="l00035"></a><span class="lineno">   35</span>          id: i,</div>
+<div class="line"><a id="l00036" name="l00036"></a><span class="lineno">   36</span>          style: {</div>
+<div class="line"><a id="l00037" name="l00037"></a><span class="lineno">   37</span>            <a class="code hl_variable" href="ServiceCallbackScreen_8tsx.html#a43606f79b4ff81aa86c46e9e1586eb6d">width</a>: `${size}px`,</div>
+<div class="line"><a id="l00038" name="l00038"></a><span class="lineno">   38</span>            <a class="code hl_variable" href="ServiceCallbackScreen_8tsx.html#a08d8002e875bd3ad4386829684a75668">height</a>: `${size}px`,</div>
+<div class="line"><a id="l00039" name="l00039"></a><span class="lineno">   39</span>            left: `${Math.random() * 100}%`,</div>
+<div class="line"><a id="l00040" name="l00040"></a><span class="lineno">   40</span>            top: `${Math.random() * 100}%`,</div>
+<div class="line"><a id="l00041" name="l00041"></a><span class="lineno">   41</span>            animationDelay: `${Math.random() * 5}s`,</div>
+<div class="line"><a id="l00042" name="l00042"></a><span class="lineno">   42</span>            animationDuration: `${Math.random() * 3 + 2}s`,</div>
+<div class="line"><a id="l00043" name="l00043"></a><span class="lineno">   43</span>          },</div>
+<div class="line"><a id="l00044" name="l00044"></a><span class="lineno">   44</span>        });</div>
+<div class="line"><a id="l00045" name="l00045"></a><span class="lineno">   45</span>      }</div>
+<div class="line"><a id="l00046" name="l00046"></a><span class="lineno">   46</span>      <a class="code hl_variable" href="CreateAreaScreen_8tsx.html#af8a87ea8c6a0396937232f91d00f4b36">setStars</a>(newStars);</div>
+<div class="line"><a id="l00047" name="l00047"></a><span class="lineno">   47</span>    };</div>
+<div class="line"><a id="l00048" name="l00048"></a><span class="lineno">   48</span> </div>
+<div class="line"><a id="l00049" name="l00049"></a><span class="lineno">   49</span>    generateStars();</div>
+<div class="line"><a id="l00050" name="l00050"></a><span class="lineno">   50</span>    <span class="keyword">const</span> timeInterval = setInterval(() =&gt; {</div>
+<div class="line"><a id="l00051" name="l00051"></a><span class="lineno">   51</span>      setCurrentTime(<span class="keyword">new</span> Date());</div>
+<div class="line"><a id="l00052" name="l00052"></a><span class="lineno">   52</span>    }, 1000);</div>
+<div class="line"><a id="l00053" name="l00053"></a><span class="lineno">   53</span> </div>
+<div class="line"><a id="l00054" name="l00054"></a><span class="lineno">   54</span>    <span class="keywordflow">return</span> () =&gt; {</div>
+<div class="line"><a id="l00055" name="l00055"></a><span class="lineno">   55</span>      clearInterval(timeInterval);</div>
+<div class="line"><a id="l00056" name="l00056"></a><span class="lineno">   56</span>    };</div>
+<div class="line"><a id="l00057" name="l00057"></a><span class="lineno">   57</span>  }, []);</div>
+<div class="line"><a id="l00058" name="l00058"></a><span class="lineno">   58</span> </div>
+<div class="line"><a id="l00059" name="l00059"></a><span class="lineno">   59</span>  useEffect(() =&gt; {</div>
+<div class="line"><a id="l00060" name="l00060"></a><span class="lineno">   60</span> </div>
+<div class="line"><a id="l00061" name="l00061"></a><span class="lineno">   61</span>    let isMounted = <span class="keyword">true</span>;</div>
+<div class="line"><a id="l00062" name="l00062"></a><span class="lineno">   62</span> </div>
+<div class="line"><a id="l00063" name="l00063"></a><span class="lineno">   63</span>    <span class="keyword">const</span> loadAbout = async () =&gt; {</div>
+<div class="line"><a id="l00064" name="l00064"></a><span class="lineno">   64</span>      <a class="code hl_variable" href="AboutScreen_8tsx.html#a76189ac497f2ab0eca5d91f2e6160594">setLoading</a>(<span class="keyword">true</span>);</div>
+<div class="line"><a id="l00065" name="l00065"></a><span class="lineno">   65</span> </div>
+<div class="line"><a id="l00066" name="l00066"></a><span class="lineno">   66</span>      <span class="keywordflow">try</span> {</div>
+<div class="line"><a id="l00067" name="l00067"></a><span class="lineno">   67</span>        <span class="keyword">const</span> response = await fetchAbout();</div>
+<div class="line"><a id="l00068" name="l00068"></a><span class="lineno">   68</span>        <span class="keywordflow">if</span> (!isMounted) {</div>
+<div class="line"><a id="l00069" name="l00069"></a><span class="lineno">   69</span>          <span class="keywordflow">return</span>;</div>
+<div class="line"><a id="l00070" name="l00070"></a><span class="lineno">   70</span>        }</div>
+<div class="line"><a id="l00071" name="l00071"></a><span class="lineno">   71</span>        setAbout(response);</div>
+<div class="line"><a id="l00072" name="l00072"></a><span class="lineno">   72</span>        <a class="code hl_variable" href="AboutScreen_8tsx.html#a76189ac497f2ab0eca5d91f2e6160594">setLoading</a>(<span class="keyword">false</span>);</div>
+<div class="line"><a id="l00073" name="l00073"></a><span class="lineno">   73</span>      } <span class="keywordflow">catch</span> (err) {</div>
+<div class="line"><a id="l00074" name="l00074"></a><span class="lineno">   74</span>        <span class="keywordflow">if</span> (!isMounted) {</div>
+<div class="line"><a id="l00075" name="l00075"></a><span class="lineno">   75</span>          <span class="keywordflow">return</span>;</div>
+<div class="line"><a id="l00076" name="l00076"></a><span class="lineno">   76</span>        }</div>
+<div class="line"><a id="l00077" name="l00077"></a><span class="lineno">   77</span>        <span class="keyword">const</span> <a class="code hl_variable" href="ServiceCallbackScreen_8tsx.html#a301ac1a72ba468d3ae1dca8e5f1eb743">message</a> =</div>
+<div class="line"><a id="l00078" name="l00078"></a><span class="lineno">   78</span>          err instanceof Error ? err.message : <span class="stringliteral">&quot;Unknown error while fetching /about&quot;</span>;</div>
+<div class="line"><a id="l00079" name="l00079"></a><span class="lineno">   79</span>        <a class="code hl_variable" href="AboutScreen_8tsx.html#a045c8134156d24611e3c41c542046cd1">addNotification</a>(<a class="code hl_variable" href="ServiceCallbackScreen_8tsx.html#a301ac1a72ba468d3ae1dca8e5f1eb743">message</a>, <span class="stringliteral">&quot;error&quot;</span>);</div>
+<div class="line"><a id="l00080" name="l00080"></a><span class="lineno">   80</span>        <a class="code hl_variable" href="AboutScreen_8tsx.html#a76189ac497f2ab0eca5d91f2e6160594">setLoading</a>(<span class="keyword">false</span>);</div>
+<div class="line"><a id="l00081" name="l00081"></a><span class="lineno">   81</span>      }</div>
+<div class="line"><a id="l00082" name="l00082"></a><span class="lineno">   82</span>    };</div>
+<div class="line"><a id="l00083" name="l00083"></a><span class="lineno">   83</span> </div>
+<div class="line"><a id="l00084" name="l00084"></a><span class="lineno">   84</span>    <span class="keywordtype">void</span> loadAbout();</div>
+<div class="line"><a id="l00085" name="l00085"></a><span class="lineno">   85</span> </div>
+<div class="line"><a id="l00086" name="l00086"></a><span class="lineno">   86</span>    <span class="keywordflow">return</span> () =&gt; {</div>
+<div class="line"><a id="l00087" name="l00087"></a><span class="lineno">   87</span>      isMounted = <span class="keyword">false</span>;</div>
+<div class="line"><a id="l00088" name="l00088"></a><span class="lineno">   88</span>    };</div>
+<div class="line"><a id="l00089" name="l00089"></a><span class="lineno">   89</span>  }, []);</div>
+<div class="line"><a id="l00090" name="l00090"></a><span class="lineno">   90</span> </div>
+<div class="foldopen" id="foldopen00091" data-start="{" data-end="}">
+<div class="line"><a id="l00091" name="l00091"></a><span class="lineno"><a class="line" href="AboutScreen_8tsx.html#a1d0c446bffcf465615c5aabdb98b34f9">   91</a></span>  <span class="keywordflow">if</span> (loading) {</div>
+<div class="line"><a id="l00092" name="l00092"></a><span class="lineno">   92</span>    <span class="keywordflow">return</span> (</div>
+<div class="line"><a id="l00093" name="l00093"></a><span class="lineno">   93</span>      &lt;div className=<span class="stringliteral">&quot;about-container&quot;</span>&gt;</div>
+<div class="line"><a id="l00094" name="l00094"></a><span class="lineno">   94</span>        &lt;div className=<span class="stringliteral">&quot;about-background&quot;</span>&gt;</div>
+<div class="line"><a id="l00095" name="l00095"></a><span class="lineno">   95</span>          {<a class="code hl_variable" href="LoginScreen_8tsx.html#a2eabe27bf94a92ad8fa06e736741b9ac">stars</a>.map((star) =&gt; (</div>
+<div class="line"><a id="l00096" name="l00096"></a><span class="lineno">   96</span>            &lt;div key={star.id} className=<span class="stringliteral">&quot;star&quot;</span> style={star.style} /&gt;</div>
+<div class="line"><a id="l00097" name="l00097"></a><span class="lineno">   97</span>          ))}</div>
+<div class="line"><a id="l00098" name="l00098"></a><span class="lineno">   98</span>        &lt;/div&gt;</div>
+<div class="line"><a id="l00099" name="l00099"></a><span class="lineno">   99</span>        &lt;div className=<span class="stringliteral">&quot;about-content&quot;</span>&gt;</div>
+<div class="line"><a id="l00100" name="l00100"></a><span class="lineno">  100</span>          &lt;div className=<span class="stringliteral">&quot;loading-card&quot;</span>&gt;</div>
+<div class="line"><a id="l00101" name="l00101"></a><span class="lineno">  101</span>            &lt;p&gt;Chargement des informations...&lt;/p&gt;</div>
+<div class="line"><a id="l00102" name="l00102"></a><span class="lineno">  102</span>          &lt;/div&gt;</div>
+<div class="line"><a id="l00103" name="l00103"></a><span class="lineno">  103</span>        &lt;/div&gt;</div>
+<div class="line"><a id="l00104" name="l00104"></a><span class="lineno">  104</span>      &lt;/div&gt;</div>
+<div class="line"><a id="l00105" name="l00105"></a><span class="lineno">  105</span>    );</div>
+<div class="line"><a id="l00106" name="l00106"></a><span class="lineno">  106</span>  }</div>
+</div>
+<div class="line"><a id="l00107" name="l00107"></a><span class="lineno">  107</span> </div>
+<div class="foldopen" id="foldopen00108" data-start="{" data-end="}">
+<div class="line"><a id="l00108" name="l00108"></a><span class="lineno"><a class="line" href="AboutScreen_8tsx.html#a2d1e7e27d0ce3d87412698f7ac5bfea3">  108</a></span>  <span class="keywordflow">if</span> (!about || about.server.services.length === 0) {</div>
+<div class="line"><a id="l00109" name="l00109"></a><span class="lineno">  109</span>    <span class="keywordflow">return</span> (</div>
+<div class="line"><a id="l00110" name="l00110"></a><span class="lineno">  110</span>      &lt;div className=<span class="stringliteral">&quot;about-container&quot;</span>&gt;</div>
+<div class="line"><a id="l00111" name="l00111"></a><span class="lineno">  111</span>        &lt;div className=<span class="stringliteral">&quot;about-background&quot;</span>&gt;</div>
+<div class="line"><a id="l00112" name="l00112"></a><span class="lineno">  112</span>          {<a class="code hl_variable" href="LoginScreen_8tsx.html#a2eabe27bf94a92ad8fa06e736741b9ac">stars</a>.map((star) =&gt; (</div>
+<div class="line"><a id="l00113" name="l00113"></a><span class="lineno">  113</span>            &lt;div key={star.id} className=<span class="stringliteral">&quot;star&quot;</span> style={star.style} /&gt;</div>
+<div class="line"><a id="l00114" name="l00114"></a><span class="lineno">  114</span>          ))}</div>
+<div class="line"><a id="l00115" name="l00115"></a><span class="lineno">  115</span>        &lt;/div&gt;</div>
+<div class="line"><a id="l00116" name="l00116"></a><span class="lineno">  116</span>        &lt;div className=<span class="stringliteral">&quot;about-content&quot;</span>&gt;</div>
+<div class="line"><a id="l00117" name="l00117"></a><span class="lineno">  117</span>          &lt;div className=<span class="stringliteral">&quot;error-card&quot;</span>&gt;</div>
+<div class="line"><a id="l00118" name="l00118"></a><span class="lineno">  118</span>            &lt;p&gt;Aucun service disponible.&lt;/p&gt;</div>
+<div class="line"><a id="l00119" name="l00119"></a><span class="lineno">  119</span>          &lt;/div&gt;</div>
+<div class="line"><a id="l00120" name="l00120"></a><span class="lineno">  120</span>        &lt;/div&gt;</div>
+<div class="line"><a id="l00121" name="l00121"></a><span class="lineno">  121</span>      &lt;/div&gt;</div>
+<div class="line"><a id="l00122" name="l00122"></a><span class="lineno">  122</span>    );</div>
+<div class="line"><a id="l00123" name="l00123"></a><span class="lineno">  123</span>  }</div>
+</div>
+<div class="line"><a id="l00124" name="l00124"></a><span class="lineno">  124</span> </div>
+<div class="line"><a id="l00125" name="l00125"></a><span class="lineno">  125</span>  <span class="keywordflow">return</span> (</div>
+<div class="line"><a id="l00126" name="l00126"></a><span class="lineno">  126</span>    &lt;div className=<span class="stringliteral">&quot;about-container&quot;</span>&gt;</div>
+<div class="line"><a id="l00127" name="l00127"></a><span class="lineno">  127</span>      &lt;<a class="code hl_variable" href="AboutScreen_8tsx.html#a8fa31aca9f6e85b246caa934a29a0653">NotificationContainer</a></div>
+<div class="line"><a id="l00128" name="l00128"></a><span class="lineno">  128</span>        notifications={notifications}</div>
+<div class="line"><a id="l00129" name="l00129"></a><span class="lineno">  129</span>        <a class="code hl_variable" href="NotificationContainer_8tsx.html#adc99c9bce62cb2f82673c93b64dd75e1">onRemove</a>={<a class="code hl_variable" href="AboutScreen_8tsx.html#a86be4d74fb6a72bb259a35c9b6b3bd61">removeNotification</a>}</div>
+<div class="line"><a id="l00130" name="l00130"></a><span class="lineno">  130</span>      /&gt;</div>
+<div class="line"><a id="l00131" name="l00131"></a><span class="lineno">  131</span>      &lt;div className=<span class="stringliteral">&quot;about-background&quot;</span>&gt;</div>
+<div class="line"><a id="l00132" name="l00132"></a><span class="lineno">  132</span>        {<a class="code hl_variable" href="LoginScreen_8tsx.html#a2eabe27bf94a92ad8fa06e736741b9ac">stars</a>.map((star) =&gt; (</div>
+<div class="line"><a id="l00133" name="l00133"></a><span class="lineno">  133</span>          &lt;div key={star.id} className=<span class="stringliteral">&quot;star&quot;</span> style={star.style} /&gt;</div>
+<div class="line"><a id="l00134" name="l00134"></a><span class="lineno">  134</span>        ))}</div>
+<div class="line"><a id="l00135" name="l00135"></a><span class="lineno">  135</span>      &lt;/div&gt;</div>
+<div class="line"><a id="l00136" name="l00136"></a><span class="lineno">  136</span>      &lt;div className=<span class="stringliteral">&quot;about-content&quot;</span>&gt;</div>
+<div class="line"><a id="l00137" name="l00137"></a><span class="lineno">  137</span>        &lt;div className=<span class="stringliteral">&quot;about-topbar&quot;</span>&gt;</div>
+<div class="line"><a id="l00138" name="l00138"></a><span class="lineno">  138</span>          &lt;h1 className=<span class="stringliteral">&quot;topbar-title&quot;</span>&gt;À propos&lt;/h1&gt;</div>
+<div class="line"><a id="l00139" name="l00139"></a><span class="lineno">  139</span>          &lt;a href=<span class="stringliteral">&quot;/&quot;</span> className=<span class="stringliteral">&quot;back-btn&quot;</span>&gt;</div>
+<div class="line"><a id="l00140" name="l00140"></a><span class="lineno">  140</span>            ← Retour</div>
+<div class="line"><a id="l00141" name="l00141"></a><span class="lineno">  141</span>          &lt;/a&gt;</div>
+<div class="line"><a id="l00142" name="l00142"></a><span class="lineno">  142</span>        &lt;/div&gt;</div>
+<div class="line"><a id="l00143" name="l00143"></a><span class="lineno">  143</span> </div>
+<div class="line"><a id="l00144" name="l00144"></a><span class="lineno">  144</span>        &lt;div className=<span class="stringliteral">&quot;about-header&quot;</span>&gt;</div>
+<div class="line"><a id="l00145" name="l00145"></a><span class="lineno">  145</span>          &lt;h1&gt;⚡ AREA Platform&lt;/h1&gt;</div>
+<div class="line"><a id="l00146" name="l00146"></a><span class="lineno">  146</span>          &lt;p&gt;Action REAction - Plateforme d<span class="stringliteral">&#39;automatisation multi-services&lt;/p&gt;</span></div>
+<div class="line"><a id="l00147" name="l00147"></a><span class="lineno">  147</span><span class="stringliteral">        &lt;/div&gt;</span></div>
+<div class="line"><a id="l00148" name="l00148"></a><span class="lineno">  148</span><span class="stringliteral"></span> </div>
+<div class="line"><a id="l00149" name="l00149"></a><span class="lineno">  149</span><span class="stringliteral">        &lt;div className=&quot;about-info-card&quot;&gt;</span></div>
+<div class="line"><a id="l00150" name="l00150"></a><span class="lineno">  150</span><span class="stringliteral">          &lt;h2&gt;📊 Informations du serveur&lt;/h2&gt;</span></div>
+<div class="line"><a id="l00151" name="l00151"></a><span class="lineno">  151</span><span class="stringliteral">          &lt;div className=&quot;info-grid&quot;&gt;</span></div>
+<div class="line"><a id="l00152" name="l00152"></a><span class="lineno">  152</span><span class="stringliteral">            &lt;div className=&quot;info-item&quot;&gt;</span></div>
+<div class="line"><a id="l00153" name="l00153"></a><span class="lineno">  153</span><span class="stringliteral">              &lt;div className=&quot;info-label&quot;&gt;Adresse IP Client&lt;/div&gt;</span></div>
+<div class="line"><a id="l00154" name="l00154"></a><span class="lineno">  154</span><span class="stringliteral">              &lt;div className=&quot;info-value&quot;&gt;{about.client.host}&lt;/div&gt;</span></div>
+<div class="line"><a id="l00155" name="l00155"></a><span class="lineno">  155</span><span class="stringliteral">            &lt;/div&gt;</span></div>
+<div class="line"><a id="l00156" name="l00156"></a><span class="lineno">  156</span><span class="stringliteral">            &lt;div className=&quot;info-item&quot;&gt;</span></div>
+<div class="line"><a id="l00157" name="l00157"></a><span class="lineno">  157</span><span class="stringliteral">              &lt;div className=&quot;info-label&quot;&gt;Heure actuelle&lt;/div&gt;</span></div>
+<div class="line"><a id="l00158" name="l00158"></a><span class="lineno">  158</span><span class="stringliteral">              &lt;div className=&quot;info-value&quot;&gt;</span></div>
+<div class="line"><a id="l00159" name="l00159"></a><span class="lineno">  159</span><span class="stringliteral">                {currentTime.toLocaleString(&quot;fr-FR&quot;)}</span></div>
+<div class="line"><a id="l00160" name="l00160"></a><span class="lineno">  160</span><span class="stringliteral">              &lt;/div&gt;</span></div>
+<div class="line"><a id="l00161" name="l00161"></a><span class="lineno">  161</span><span class="stringliteral">            &lt;/div&gt;</span></div>
+<div class="line"><a id="l00162" name="l00162"></a><span class="lineno">  162</span><span class="stringliteral">            &lt;div className=&quot;info-item&quot;&gt;</span></div>
+<div class="line"><a id="l00163" name="l00163"></a><span class="lineno">  163</span><span class="stringliteral">              &lt;div className=&quot;info-label&quot;&gt;Services disponibles&lt;/div&gt;</span></div>
+<div class="line"><a id="l00164" name="l00164"></a><span class="lineno">  164</span><span class="stringliteral">              &lt;div className=&quot;info-value&quot;&gt;{about.server.services.length}&lt;/div&gt;</span></div>
+<div class="line"><a id="l00165" name="l00165"></a><span class="lineno">  165</span><span class="stringliteral">            &lt;/div&gt;</span></div>
+<div class="line"><a id="l00166" name="l00166"></a><span class="lineno">  166</span><span class="stringliteral">          &lt;/div&gt;</span></div>
+<div class="line"><a id="l00167" name="l00167"></a><span class="lineno">  167</span><span class="stringliteral">        &lt;/div&gt;</span></div>
+<div class="line"><a id="l00168" name="l00168"></a><span class="lineno">  168</span><span class="stringliteral"></span> </div>
+<div class="line"><a id="l00169" name="l00169"></a><span class="lineno">  169</span><span class="stringliteral">        &lt;div className=&quot;about-info-card&quot;&gt;</span></div>
+<div class="line"><a id="l00170" name="l00170"></a><span class="lineno">  170</span><span class="stringliteral">          &lt;h2&gt;ℹ️ À propos de la plateforme&lt;/h2&gt;</span></div>
+<div class="line"><a id="l00171" name="l00171"></a><span class="lineno">  171</span><span class="stringliteral">          &lt;div className=&quot;about-description&quot;&gt;</span></div>
+<div class="line"><a id="l00172" name="l00172"></a><span class="lineno">  172</span><span class="stringliteral">            &lt;p&gt;</span></div>
+<div class="line"><a id="l00173" name="l00173"></a><span class="lineno">  173</span><span class="stringliteral">              &lt;strong&gt;AREA&lt;/strong&gt; (Action REAction) est une plateforme d&#39;</span>automatisation qui vous permet de </div>
+<div class="line"><a id="l00174" name="l00174"></a><span class="lineno">  174</span>              connecter différents services entre eux pour créer des automatisations personnalisées.</div>
+<div class="line"><a id="l00175" name="l00175"></a><span class="lineno">  175</span>            &lt;/p&gt;</div>
+<div class="line"><a id="l00176" name="l00176"></a><span class="lineno">  176</span>            &lt;p&gt;</div>
+<div class="line"><a id="l00177" name="l00177"></a><span class="lineno">  177</span>              Le principe est simple : définissez une &lt;strong&gt;action&lt;/strong&gt; (événement déclencheur) sur un service, </div>
+<div class="line"><a id="l00178" name="l00178"></a><span class="lineno">  178</span>              puis choisissez une &lt;strong&gt;réaction&lt;/strong&gt; (action à effectuer) sur le même service ou un autre. </div>
+<div class="line"><a id="l00179" name="l00179"></a><span class="lineno">  179</span>              Lorsque l<span class="stringliteral">&#39;action se produit, la réaction est automatiquement exécutée.</span></div>
+<div class="line"><a id="l00180" name="l00180"></a><span class="lineno">  180</span><span class="stringliteral">            &lt;/p&gt;</span></div>
+<div class="line"><a id="l00181" name="l00181"></a><span class="lineno">  181</span><span class="stringliteral">            &lt;p&gt;</span></div>
+<div class="line"><a id="l00182" name="l00182"></a><span class="lineno">  182</span><span class="stringliteral">              Par exemple, vous pouvez :</span></div>
+<div class="line"><a id="l00183" name="l00183"></a><span class="lineno">  183</span><span class="stringliteral">            &lt;/p&gt;</span></div>
+<div class="line"><a id="l00184" name="l00184"></a><span class="lineno">  184</span><span class="stringliteral">            &lt;ul className=&quot;feature-list&quot;&gt;</span></div>
+<div class="line"><a id="l00185" name="l00185"></a><span class="lineno">  185</span><span class="stringliteral">              &lt;li&gt;📧 Recevoir un email lorsqu&#39;</span>un nouveau commit est poussé sur GitHub&lt;/li&gt;</div>
+<div class="line"><a id="l00186" name="l00186"></a><span class="lineno">  186</span>              &lt;li&gt;💬 Envoyer un <a class="code hl_variable" href="ServiceCallbackScreen_8tsx.html#a301ac1a72ba468d3ae1dca8e5f1eb743">message</a> Discord quand vous recevez un email important&lt;/li&gt;</div>
+<div class="line"><a id="l00187" name="l00187"></a><span class="lineno">  187</span>              &lt;li&gt;🎵 Ajouter automatiquement des chansons à une playlist Spotify&lt;/li&gt;</div>
+<div class="line"><a id="l00188" name="l00188"></a><span class="lineno">  188</span>              &lt;li&gt;📋 Créer des cartes Trello depuis vos emails Gmail&lt;/li&gt;</div>
+<div class="line"><a id="l00189" name="l00189"></a><span class="lineno">  189</span>              &lt;li&gt;⏰ Déclencher des actions à des heures précises avec le Timer&lt;/li&gt;</div>
+<div class="line"><a id="l00190" name="l00190"></a><span class="lineno">  190</span>            &lt;/ul&gt;</div>
+<div class="line"><a id="l00191" name="l00191"></a><span class="lineno">  191</span>            &lt;p&gt;</div>
+<div class="line"><a id="l00192" name="l00192"></a><span class="lineno">  192</span>              Créez, activez et gérez vos automatisations en quelques clics pour gagner du temps </div>
+<div class="line"><a id="l00193" name="l00193"></a><span class="lineno">  193</span>              et améliorer votre productivité !</div>
+<div class="line"><a id="l00194" name="l00194"></a><span class="lineno">  194</span>            &lt;/p&gt;</div>
+<div class="line"><a id="l00195" name="l00195"></a><span class="lineno">  195</span>          &lt;/div&gt;</div>
+<div class="line"><a id="l00196" name="l00196"></a><span class="lineno">  196</span>        &lt;/div&gt;</div>
+<div class="line"><a id="l00197" name="l00197"></a><span class="lineno">  197</span>      &lt;/div&gt;</div>
+<div class="line"><a id="l00198" name="l00198"></a><span class="lineno">  198</span>    &lt;/div&gt;</div>
+<div class="line"><a id="l00199" name="l00199"></a><span class="lineno">  199</span>  );</div>
+<div class="line"><a id="l00200" name="l00200"></a><span class="lineno">  200</span>};</div>
+<div class="line"><a id="l00201" name="l00201"></a><span class="lineno">  201</span> </div>
+<div class="line"><a id="l00202" name="l00202"></a><span class="lineno">  202</span>export <span class="keywordflow">default</span> <a class="code hl_variable" href="AboutScreen_8tsx.html#a6310ddd0f573f1d449bbec6581bfb05b">AboutScreen</a>;</div>
+</div>
+<div class="ttc" id="aAboutScreen_8tsx_html_a045c8134156d24611e3c41c542046cd1"><div class="ttname"><a href="AboutScreen_8tsx.html#a045c8134156d24611e3c41c542046cd1">addNotification</a></div><div class="ttdeci">const addNotification</div><div class="ttdef"><b>Definition</b> <a href="#l00020">AboutScreen.tsx:20</a></div></div>
+<div class="ttc" id="aAboutScreen_8tsx_html_a6310ddd0f573f1d449bbec6581bfb05b"><div class="ttname"><a href="AboutScreen_8tsx.html#a6310ddd0f573f1d449bbec6581bfb05b">AboutScreen</a></div><div class="ttdeci">const AboutScreen</div><div class="ttdef"><b>Definition</b> <a href="#l00013">AboutScreen.tsx:14</a></div></div>
+<div class="ttc" id="aAboutScreen_8tsx_html_a76189ac497f2ab0eca5d91f2e6160594"><div class="ttname"><a href="AboutScreen_8tsx.html#a76189ac497f2ab0eca5d91f2e6160594">setLoading</a></div><div class="ttdeci">const setLoading</div><div class="ttdef"><b>Definition</b> <a href="#l00014">AboutScreen.tsx:14</a></div></div>
+<div class="ttc" id="aAboutScreen_8tsx_html_a86be4d74fb6a72bb259a35c9b6b3bd61"><div class="ttname"><a href="AboutScreen_8tsx.html#a86be4d74fb6a72bb259a35c9b6b3bd61">removeNotification</a></div><div class="ttdeci">const removeNotification</div><div class="ttdef"><b>Definition</b> <a href="#l00025">AboutScreen.tsx:25</a></div></div>
 <div class="ttc" id="aAboutScreen_8tsx_html_a8e6a862a904cf8b07c69fae7c44a1a04"><div class="ttname"><a href="AboutScreen_8tsx.html#a8e6a862a904cf8b07c69fae7c44a1a04">React</a></div><div class="ttdeci">import React</div><div class="ttdef"><b>Definition</b> <a href="#l00008">AboutScreen.tsx:8</a></div></div>
-<div class="ttc" id="aOAuthCallbackScreen_8tsx_html_a301ac1a72ba468d3ae1dca8e5f1eb743"><div class="ttname"><a href="OAuthCallbackScreen_8tsx.html#a301ac1a72ba468d3ae1dca8e5f1eb743">message</a></div><div class="ttdeci">const message</div><div class="ttdef"><b>Definition</b> <a href="OAuthCallbackScreen_8tsx_source.html#l00140">OAuthCallbackScreen.tsx:139</a></div></div>
-<div class="ttc" id="aOAuthCallbackScreen_8tsx_html_aa5509c7ae512f6a856dc2164932bf900"><div class="ttname"><a href="OAuthCallbackScreen_8tsx.html#aa5509c7ae512f6a856dc2164932bf900">setError</a></div><div class="ttdeci">const setError</div><div class="ttdef"><b>Definition</b> <a href="OAuthCallbackScreen_8tsx_source.html#l00012">OAuthCallbackScreen.tsx:12</a></div></div>
+<div class="ttc" id="aAboutScreen_8tsx_html_a8fa31aca9f6e85b246caa934a29a0653"><div class="ttname"><a href="AboutScreen_8tsx.html#a8fa31aca9f6e85b246caa934a29a0653">NotificationContainer</a></div><div class="ttdeci">import NotificationContainer</div><div class="ttdef"><b>Definition</b> <a href="#l00010">AboutScreen.tsx:10</a></div></div>
+<div class="ttc" id="aCreateAreaScreen_8tsx_html_af8a87ea8c6a0396937232f91d00f4b36"><div class="ttname"><a href="CreateAreaScreen_8tsx.html#af8a87ea8c6a0396937232f91d00f4b36">setStars</a></div><div class="ttdeci">const setStars</div><div class="ttdef"><b>Definition</b> <a href="CreateAreaScreen_8tsx_source.html#l00048">CreateAreaScreen.tsx:48</a></div></div>
+<div class="ttc" id="aLoginScreen_8tsx_html_a2eabe27bf94a92ad8fa06e736741b9ac"><div class="ttname"><a href="LoginScreen_8tsx.html#a2eabe27bf94a92ad8fa06e736741b9ac">stars</a></div><div class="ttdeci">const stars</div><div class="ttdef"><b>Definition</b> <a href="LoginScreen_8tsx_source.html#l00056">LoginScreen.tsx:56</a></div></div>
+<div class="ttc" id="aNotificationContainer_8tsx_html_a97b1c0e79a38c5147c384825b2068ca2"><div class="ttname"><a href="NotificationContainer_8tsx.html#a97b1c0e79a38c5147c384825b2068ca2">NotificationItem</a></div><div class="ttdeci">import export interface NotificationItem</div><div class="ttdef"><b>Definition</b> <a href="NotificationContainer_8tsx_source.html#l00011">NotificationContainer.tsx:11</a></div></div>
+<div class="ttc" id="aNotificationContainer_8tsx_html_adc99c9bce62cb2f82673c93b64dd75e1"><div class="ttname"><a href="NotificationContainer_8tsx.html#adc99c9bce62cb2f82673c93b64dd75e1">onRemove</a></div><div class="ttdeci">const onRemove</div><div class="ttdef"><b>Definition</b> <a href="NotificationContainer_8tsx_source.html#l00024">NotificationContainer.tsx:24</a></div></div>
+<div class="ttc" id="aNotification_8tsx_html_a0fc6c254ef91d3c8d5918bba369d35b6"><div class="ttname"><a href="Notification_8tsx.html#a0fc6c254ef91d3c8d5918bba369d35b6">type</a></div><div class="ttdeci">const type</div><div class="ttdef"><b>Definition</b> <a href="Notification_8tsx_source.html#l00022">Notification.tsx:22</a></div></div>
+<div class="ttc" id="aServiceCallbackScreen_8tsx_html_a08d8002e875bd3ad4386829684a75668"><div class="ttname"><a href="ServiceCallbackScreen_8tsx.html#a08d8002e875bd3ad4386829684a75668">height</a></div><div class="ttdeci">const height</div><div class="ttdef"><b>Definition</b> <a href="ServiceCallbackScreen_8tsx_source.html#l00123">ServiceCallbackScreen.tsx:123</a></div></div>
+<div class="ttc" id="aServiceCallbackScreen_8tsx_html_a301ac1a72ba468d3ae1dca8e5f1eb743"><div class="ttname"><a href="ServiceCallbackScreen_8tsx.html#a301ac1a72ba468d3ae1dca8e5f1eb743">message</a></div><div class="ttdeci">const message</div><div class="ttdef"><b>Definition</b> <a href="ServiceCallbackScreen_8tsx_source.html#l00133">ServiceCallbackScreen.tsx:132</a></div></div>
+<div class="ttc" id="aServiceCallbackScreen_8tsx_html_a43606f79b4ff81aa86c46e9e1586eb6d"><div class="ttname"><a href="ServiceCallbackScreen_8tsx.html#a43606f79b4ff81aa86c46e9e1586eb6d">width</a></div><div class="ttdeci">const width</div><div class="ttdef"><b>Definition</b> <a href="ServiceCallbackScreen_8tsx_source.html#l00114">ServiceCallbackScreen.tsx:114</a></div></div>
+<div class="ttc" id="aServiceCallbackScreen_8tsx_html_ae9a287a261ed44cf54e161648dc5b308"><div class="ttname"><a href="ServiceCallbackScreen_8tsx.html#ae9a287a261ed44cf54e161648dc5b308">setNotifications</a></div><div class="ttdeci">import const setNotifications</div><div class="ttdef"><b>Definition</b> <a href="ServiceCallbackScreen_8tsx_source.html#l00014">ServiceCallbackScreen.tsx:14</a></div></div>
 <div class="ttc" id="aapi_8ts_html_a298b7892ded309eec08992d5f15d58f2"><div class="ttname"><a href="api_8ts.html#a298b7892ded309eec08992d5f15d58f2">AboutResponse</a></div><div class="ttdeci">export interface AboutResponse</div><div class="ttdef"><b>Definition</b> <a href="api_8ts_source.html#l00042">api.ts:42</a></div></div>
 </div><!-- fragment --></div><!-- contents -->
 </div><!-- doc-content -->

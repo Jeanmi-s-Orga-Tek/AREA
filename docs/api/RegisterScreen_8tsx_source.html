@@ -107,229 +107,329 @@ $(function(){initNavTree('RegisterScreen_8tsx_source.html',''); initResizable(tr
 <div class="line"><a id="l00005" name="l00005"></a><span class="lineno">    5</span><span class="comment">** RegisterScreen</span></div>
 <div class="line"><a id="l00006" name="l00006"></a><span class="lineno">    6</span><span class="comment">*/</span></div>
 <div class="line"><a id="l00007" name="l00007"></a><span class="lineno">    7</span> </div>
-<div class="line"><a id="l00008" name="l00008"></a><span class="lineno"><a class="line" href="RegisterScreen_8tsx.html#a8e6a862a904cf8b07c69fae7c44a1a04">    8</a></span><span class="keyword">import</span> <a class="code hl_variable" href="RegisterScreen_8tsx.html#a8e6a862a904cf8b07c69fae7c44a1a04">React</a>, { useState, useEffect } from <span class="stringliteral">&quot;react&quot;</span>;</div>
+<div class="line"><a id="l00008" name="l00008"></a><span class="lineno"><a class="line" href="RegisterScreen_8tsx.html#a8e6a862a904cf8b07c69fae7c44a1a04">    8</a></span><span class="keyword">import</span> <a class="code hl_variable" href="RegisterScreen_8tsx.html#a8e6a862a904cf8b07c69fae7c44a1a04">React</a>, { useState, useEffect, useMemo } from <span class="stringliteral">&quot;react&quot;</span>;</div>
 <div class="line"><a id="l00009" name="l00009"></a><span class="lineno"><a class="line" href="RegisterScreen_8tsx.html#a953be46b94f595d839e88a6d3d270309">    9</a></span><span class="keyword">import</span> { <span class="keyword">register</span>, fetchOAuthProviders, initiateOAuthLogin, <a class="code hl_variable" href="auth_8ts.html#ae59c822c79f19deee143070b9b81fcae">OAuthProvider</a> } from <span class="stringliteral">&quot;../services/auth&quot;</span>;</div>
-<div class="line"><a id="l00010" name="l00010"></a><span class="lineno"><a class="line" href="RegisterScreen_8tsx.html#a8c8e5ac6d4b171a56db99f2495b9defe">   10</a></span><span class="keyword">import</span> <span class="stringliteral">&quot;./RegisterScreen.css&quot;</span>;</div>
-<div class="line"><a id="l00011" name="l00011"></a><span class="lineno">   11</span> </div>
-<div class="line"><a id="l00012" name="l00012"></a><span class="lineno"><a class="line" href="RegisterScreen_8tsx.html#acaf621141d56a3f9e70a4365c6e05af9">   12</a></span><span class="keyword">const</span> <a class="code hl_variable" href="RegisterScreen_8tsx.html#acaf621141d56a3f9e70a4365c6e05af9">RegisterScreen</a>: <a class="code hl_variable" href="RegisterScreen_8tsx.html#a8e6a862a904cf8b07c69fae7c44a1a04">React</a>.FC = () =&gt; {</div>
-<div class="line"><a id="l00013" name="l00013"></a><span class="lineno"><a class="line" href="RegisterScreen_8tsx.html#aa791b68f3e32647249faf045fe1367eb">   13</a></span>  <span class="keyword">const</span> [email, <a class="code hl_variable" href="RegisterScreen_8tsx.html#aa791b68f3e32647249faf045fe1367eb">setEmail</a>] = useState(<span class="stringliteral">&quot;&quot;</span>);</div>
-<div class="line"><a id="l00014" name="l00014"></a><span class="lineno"><a class="line" href="RegisterScreen_8tsx.html#a69599860c050421668955e37ca8caa74">   14</a></span>  <span class="keyword">const</span> [username, setUsername] = useState(<span class="stringliteral">&quot;&quot;</span>);</div>
-<div class="line"><a id="l00015" name="l00015"></a><span class="lineno">   15</span>  <span class="keyword">const</span> [password, setPassword] = useState(<span class="stringliteral">&quot;&quot;</span>);</div>
-<div class="line"><a id="l00016" name="l00016"></a><span class="lineno">   16</span>  <span class="keyword">const</span> [confirmPassword, setConfirmPassword] = useState(<span class="stringliteral">&quot;&quot;</span>);</div>
-<div class="line"><a id="l00017" name="l00017"></a><span class="lineno">   17</span>  <span class="keyword">const</span> [error, <a class="code hl_variable" href="OAuthCallbackScreen_8tsx.html#aa5509c7ae512f6a856dc2164932bf900">setError</a>] = useState(<span class="stringliteral">&quot;&quot;</span>);</div>
-<div class="line"><a id="l00018" name="l00018"></a><span class="lineno">   18</span>  <span class="keyword">const</span> [success, setSuccess] = useState(<span class="keyword">false</span>);</div>
-<div class="line"><a id="l00019" name="l00019"></a><span class="lineno">   19</span>  <span class="keyword">const</span> [loading, <a class="code hl_variable" href="AboutScreen_8tsx.html#a76189ac497f2ab0eca5d91f2e6160594">setLoading</a>] = useState(<span class="keyword">false</span>);</div>
-<div class="line"><a id="l00020" name="l00020"></a><span class="lineno">   20</span>  <span class="keyword">const</span> [oauthProviders, setOauthProviders] = useState&lt;OAuthProvider[]&gt;([]);</div>
-<div class="line"><a id="l00021" name="l00021"></a><span class="lineno">   21</span>  <span class="keyword">const</span> [loadingProviders, setLoadingProviders] = useState(<span class="keyword">true</span>);</div>
+<div class="line"><a id="l00010" name="l00010"></a><span class="lineno"><a class="line" href="RegisterScreen_8tsx.html#a8fa31aca9f6e85b246caa934a29a0653">   10</a></span><span class="keyword">import</span> <a class="code hl_variable" href="RegisterScreen_8tsx.html#a8fa31aca9f6e85b246caa934a29a0653">NotificationContainer</a>, { <a class="code hl_variable" href="NotificationContainer_8tsx.html#a97b1c0e79a38c5147c384825b2068ca2">NotificationItem</a> } from <span class="stringliteral">&quot;../components/NotificationContainer&quot;</span>;</div>
+<div class="foldopen" id="foldopen00011" data-start="{" data-end="};">
+<div class="line"><a id="l00011" name="l00011"></a><span class="lineno"><a class="line" href="RegisterScreen_8tsx.html#a6ca15b641f7d07a40fcb4e872fb199b1">   11</a></span><span class="keyword">import</span> <span class="stringliteral">&quot;./RegisterScreen.css&quot;</span>;</div>
+<div class="line"><a id="l00012" name="l00012"></a><span class="lineno">   12</span> </div>
+<div class="foldopen" id="foldopen00013" data-start="{" data-end="};">
+<div class="line"><a id="l00013" name="l00013"></a><span class="lineno"><a class="line" href="RegisterScreen_8tsx.html#a551e563cfe2de2a1c64c1df40572f1e4">   13</a></span><a class="code hl_variable" href="Notification_8tsx.html#a0fc6c254ef91d3c8d5918bba369d35b6">type</a> <a class="code hl_variable" href="RegisterScreen_8tsx.html#a551e563cfe2de2a1c64c1df40572f1e4">Star</a> = {</div>
+<div class="line"><a id="l00014" name="l00014"></a><span class="lineno">   14</span>  id: string;</div>
+<div class="line"><a id="l00015" name="l00015"></a><span class="lineno">   15</span>  top: number;</div>
+<div class="line"><a id="l00016" name="l00016"></a><span class="lineno">   16</span>  left: number;</div>
+<div class="line"><a id="l00017" name="l00017"></a><span class="lineno">   17</span>  size: number;</div>
+<div class="line"><a id="l00018" name="l00018"></a><span class="lineno">   18</span>  delay: number;</div>
+<div class="line"><a id="l00019" name="l00019"></a><span class="lineno">   19</span>  dur: number;</div>
+<div class="line"><a id="l00020" name="l00020"></a><span class="lineno">   20</span>  alpha: number;</div>
+<div class="line"><a id="l00021" name="l00021"></a><span class="lineno">   21</span>};</div>
+</div>
 <div class="line"><a id="l00022" name="l00022"></a><span class="lineno">   22</span> </div>
-<div class="line"><a id="l00023" name="l00023"></a><span class="lineno">   23</span>  useEffect(() =&gt; {</div>
-<div class="line"><a id="l00024" name="l00024"></a><span class="lineno">   24</span>    <span class="keyword">const</span> loadProviders = async () =&gt; {</div>
-<div class="line"><a id="l00025" name="l00025"></a><span class="lineno">   25</span>      <span class="keywordflow">try</span> {</div>
-<div class="line"><a id="l00026" name="l00026"></a><span class="lineno">   26</span>        <span class="keyword">const</span> providers = await fetchOAuthProviders();</div>
-<div class="line"><a id="l00027" name="l00027"></a><span class="lineno">   27</span>        setOauthProviders(providers.filter(p =&gt; p.available &amp;&amp; p.flows.web));</div>
-<div class="line"><a id="l00028" name="l00028"></a><span class="lineno">   28</span>      } <span class="keywordflow">catch</span> (err) {</div>
-<div class="line"><a id="l00029" name="l00029"></a><span class="lineno">   29</span>        console.error(<span class="stringliteral">&quot;Failed to load OAuth providers:&quot;</span>, err);</div>
-<div class="line"><a id="l00030" name="l00030"></a><span class="lineno">   30</span>      } <span class="keywordflow">finally</span> {</div>
-<div class="line"><a id="l00031" name="l00031"></a><span class="lineno">   31</span>        setLoadingProviders(<span class="keyword">false</span>);</div>
-<div class="line"><a id="l00032" name="l00032"></a><span class="lineno">   32</span>      }</div>
-<div class="line"><a id="l00033" name="l00033"></a><span class="lineno">   33</span>    };</div>
-<div class="line"><a id="l00034" name="l00034"></a><span class="lineno">   34</span>    </div>
-<div class="line"><a id="l00035" name="l00035"></a><span class="lineno">   35</span>    loadProviders();</div>
-<div class="line"><a id="l00036" name="l00036"></a><span class="lineno">   36</span>  }, []);</div>
+<div class="line"><a id="l00023" name="l00023"></a><span class="lineno"><a class="line" href="RegisterScreen_8tsx.html#acaf621141d56a3f9e70a4365c6e05af9">   23</a></span><span class="keyword">const</span> <a class="code hl_variable" href="RegisterScreen_8tsx.html#acaf621141d56a3f9e70a4365c6e05af9">RegisterScreen</a>: <a class="code hl_variable" href="RegisterScreen_8tsx.html#a8e6a862a904cf8b07c69fae7c44a1a04">React</a>.FC = () =&gt; {</div>
+<div class="line"><a id="l00024" name="l00024"></a><span class="lineno"><a class="line" href="RegisterScreen_8tsx.html#aa791b68f3e32647249faf045fe1367eb">   24</a></span>  <span class="keyword">const</span> [email, <a class="code hl_variable" href="RegisterScreen_8tsx.html#aa791b68f3e32647249faf045fe1367eb">setEmail</a>] = useState(<span class="stringliteral">&quot;&quot;</span>);</div>
+<div class="line"><a id="l00025" name="l00025"></a><span class="lineno"><a class="line" href="RegisterScreen_8tsx.html#a69599860c050421668955e37ca8caa74">   25</a></span>  <span class="keyword">const</span> [username, setUsername] = useState(<span class="stringliteral">&quot;&quot;</span>);</div>
+<div class="line"><a id="l00026" name="l00026"></a><span class="lineno">   26</span>  <span class="keyword">const</span> [password, setPassword] = useState(<span class="stringliteral">&quot;&quot;</span>);</div>
+<div class="line"><a id="l00027" name="l00027"></a><span class="lineno">   27</span>  <span class="keyword">const</span> [confirmPassword, setConfirmPassword] = useState(<span class="stringliteral">&quot;&quot;</span>);</div>
+<div class="line"><a id="l00028" name="l00028"></a><span class="lineno">   28</span>  <span class="keyword">const</span> [notifications, <a class="code hl_variable" href="ServiceCallbackScreen_8tsx.html#ae9a287a261ed44cf54e161648dc5b308">setNotifications</a>] = useState&lt;NotificationItem[]&gt;([]);</div>
+<div class="line"><a id="l00029" name="l00029"></a><span class="lineno">   29</span>  <span class="keyword">const</span> [loading, <a class="code hl_variable" href="AboutScreen_8tsx.html#a76189ac497f2ab0eca5d91f2e6160594">setLoading</a>] = useState(<span class="keyword">false</span>);</div>
+<div class="line"><a id="l00030" name="l00030"></a><span class="lineno">   30</span>  <span class="keyword">const</span> [oauthProviders, setOauthProviders] = useState&lt;OAuthProvider[]&gt;([]);</div>
+<div class="line"><a id="l00031" name="l00031"></a><span class="lineno">   31</span>  <span class="keyword">const</span> [loadingProviders, setLoadingProviders] = useState(<span class="keyword">true</span>);</div>
+<div class="line"><a id="l00032" name="l00032"></a><span class="lineno">   32</span> </div>
+<div class="foldopen" id="foldopen00033" data-start="{" data-end="};">
+<div class="line"><a id="l00033" name="l00033"></a><span class="lineno"><a class="line" href="RegisterScreen_8tsx.html#a045c8134156d24611e3c41c542046cd1">   33</a></span>  <span class="keyword">const</span> <a class="code hl_variable" href="RegisterScreen_8tsx.html#a045c8134156d24611e3c41c542046cd1">addNotification</a> = (<a class="code hl_variable" href="ServiceCallbackScreen_8tsx.html#a301ac1a72ba468d3ae1dca8e5f1eb743">message</a>: string, <a class="code hl_variable" href="Notification_8tsx.html#a0fc6c254ef91d3c8d5918bba369d35b6">type</a>: <span class="stringliteral">&quot;success&quot;</span> | <span class="stringliteral">&quot;error&quot;</span>) =&gt; {</div>
+<div class="line"><a id="l00034" name="l00034"></a><span class="lineno">   34</span>    <span class="keyword">const</span> <span class="keywordtype">id</span> = `notif-${Date.now()}-${Math.random().toString(16).slice(2)}`;</div>
+<div class="line"><a id="l00035" name="l00035"></a><span class="lineno">   35</span>    <a class="code hl_variable" href="ServiceCallbackScreen_8tsx.html#ae9a287a261ed44cf54e161648dc5b308">setNotifications</a>((prev) =&gt; [...prev, { id, <a class="code hl_variable" href="ServiceCallbackScreen_8tsx.html#a301ac1a72ba468d3ae1dca8e5f1eb743">message</a>, <a class="code hl_variable" href="Notification_8tsx.html#a0fc6c254ef91d3c8d5918bba369d35b6">type</a> }]);</div>
+<div class="line"><a id="l00036" name="l00036"></a><span class="lineno">   36</span>  };</div>
+</div>
 <div class="line"><a id="l00037" name="l00037"></a><span class="lineno">   37</span> </div>
-<div class="line"><a id="l00038" name="l00038"></a><span class="lineno"><a class="line" href="RegisterScreen_8tsx.html#a428f760b2c0a14a1212f3f05c031f04d">   38</a></span>  <span class="keyword">const</span> <a class="code hl_variable" href="RegisterScreen_8tsx.html#a428f760b2c0a14a1212f3f05c031f04d">demoProviders</a> = [<span class="stringliteral">&quot;Google&quot;</span>, <span class="stringliteral">&quot;GitHub&quot;</span>, <span class="stringliteral">&quot;Discord&quot;</span>, <span class="stringliteral">&quot;Spotify&quot;</span>, <span class="stringliteral">&quot;Microsoft&quot;</span>, <span class="stringliteral">&quot;Trello&quot;</span>];</div>
-<div class="line"><a id="l00039" name="l00039"></a><span class="lineno">   39</span> </div>
-<div class="foldopen" id="foldopen00040" data-start="{" data-end="};">
-<div class="line"><a id="l00040" name="l00040"></a><span class="lineno"><a class="line" href="RegisterScreen_8tsx.html#a39ea56a25db188cbabb252c367c3347c">   40</a></span>  <span class="keyword">const</span> <a class="code hl_variable" href="RegisterScreen_8tsx.html#a39ea56a25db188cbabb252c367c3347c">handleSubmit</a> = async (e: <a class="code hl_variable" href="RegisterScreen_8tsx.html#a8e6a862a904cf8b07c69fae7c44a1a04">React</a>.FormEvent) =&gt; {</div>
-<div class="line"><a id="l00041" name="l00041"></a><span class="lineno">   41</span>    e.preventDefault();</div>
-<div class="line"><a id="l00042" name="l00042"></a><span class="lineno">   42</span>    <a class="code hl_variable" href="OAuthCallbackScreen_8tsx.html#aa5509c7ae512f6a856dc2164932bf900">setError</a>(<span class="stringliteral">&quot;&quot;</span>);</div>
-<div class="line"><a id="l00043" name="l00043"></a><span class="lineno">   43</span>    setSuccess(<span class="keyword">false</span>);</div>
-<div class="line"><a id="l00044" name="l00044"></a><span class="lineno">   44</span> </div>
-<div class="line"><a id="l00045" name="l00045"></a><span class="lineno">   45</span>    <span class="keywordflow">if</span> (!email || !username || !password || !confirmPassword) {</div>
-<div class="line"><a id="l00046" name="l00046"></a><span class="lineno">   46</span>      <a class="code hl_variable" href="OAuthCallbackScreen_8tsx.html#aa5509c7ae512f6a856dc2164932bf900">setError</a>(<span class="stringliteral">&quot;Tous les champs sont requis&quot;</span>);</div>
-<div class="line"><a id="l00047" name="l00047"></a><span class="lineno">   47</span>      <span class="keywordflow">return</span>;</div>
-<div class="line"><a id="l00048" name="l00048"></a><span class="lineno">   48</span>    }</div>
-<div class="line"><a id="l00049" name="l00049"></a><span class="lineno">   49</span> </div>
-<div class="line"><a id="l00050" name="l00050"></a><span class="lineno">   50</span>    <span class="keywordflow">if</span> (password !== confirmPassword) {</div>
-<div class="line"><a id="l00051" name="l00051"></a><span class="lineno">   51</span>      <a class="code hl_variable" href="OAuthCallbackScreen_8tsx.html#aa5509c7ae512f6a856dc2164932bf900">setError</a>(<span class="stringliteral">&quot;Les mots de passe ne correspondent pas&quot;</span>);</div>
-<div class="line"><a id="l00052" name="l00052"></a><span class="lineno">   52</span>      <span class="keywordflow">return</span>;</div>
-<div class="line"><a id="l00053" name="l00053"></a><span class="lineno">   53</span>    }</div>
-<div class="line"><a id="l00054" name="l00054"></a><span class="lineno">   54</span> </div>
-<div class="line"><a id="l00055" name="l00055"></a><span class="lineno">   55</span>    <span class="keywordflow">if</span> (password.length &lt; 6) {</div>
-<div class="line"><a id="l00056" name="l00056"></a><span class="lineno">   56</span>      <a class="code hl_variable" href="OAuthCallbackScreen_8tsx.html#aa5509c7ae512f6a856dc2164932bf900">setError</a>(<span class="stringliteral">&quot;Le mot de passe doit contenir au moins 6 caractères&quot;</span>);</div>
-<div class="line"><a id="l00057" name="l00057"></a><span class="lineno">   57</span>      <span class="keywordflow">return</span>;</div>
-<div class="line"><a id="l00058" name="l00058"></a><span class="lineno">   58</span>    }</div>
-<div class="line"><a id="l00059" name="l00059"></a><span class="lineno">   59</span> </div>
-<div class="line"><a id="l00060" name="l00060"></a><span class="lineno">   60</span>    <a class="code hl_variable" href="AboutScreen_8tsx.html#a76189ac497f2ab0eca5d91f2e6160594">setLoading</a>(<span class="keyword">true</span>);</div>
-<div class="line"><a id="l00061" name="l00061"></a><span class="lineno">   61</span> </div>
-<div class="line"><a id="l00062" name="l00062"></a><span class="lineno">   62</span>    <span class="keywordflow">try</span> {</div>
-<div class="line"><a id="l00063" name="l00063"></a><span class="lineno">   63</span>      await <span class="keyword">register</span>({ email, name: username, new_password: password });</div>
-<div class="line"><a id="l00064" name="l00064"></a><span class="lineno">   64</span>      setSuccess(<span class="keyword">true</span>);</div>
-<div class="line"><a id="l00065" name="l00065"></a><span class="lineno">   65</span>      <a class="code hl_variable" href="RegisterScreen_8tsx.html#aa791b68f3e32647249faf045fe1367eb">setEmail</a>(<span class="stringliteral">&quot;&quot;</span>);</div>
-<div class="line"><a id="l00066" name="l00066"></a><span class="lineno">   66</span>      setUsername(<span class="stringliteral">&quot;&quot;</span>);</div>
-<div class="line"><a id="l00067" name="l00067"></a><span class="lineno">   67</span>      setPassword(<span class="stringliteral">&quot;&quot;</span>);</div>
-<div class="line"><a id="l00068" name="l00068"></a><span class="lineno">   68</span>      setConfirmPassword(<span class="stringliteral">&quot;&quot;</span>);</div>
-<div class="line"><a id="l00069" name="l00069"></a><span class="lineno">   69</span>      setTimeout(() =&gt; {</div>
-<div class="line"><a id="l00070" name="l00070"></a><span class="lineno">   70</span>        window.location.href = <span class="stringliteral">&quot;/login&quot;</span>;</div>
-<div class="line"><a id="l00071" name="l00071"></a><span class="lineno">   71</span>      }, 2000);</div>
-<div class="line"><a id="l00072" name="l00072"></a><span class="lineno">   72</span>    } <span class="keywordflow">catch</span> (err) {</div>
-<div class="line"><a id="l00073" name="l00073"></a><span class="lineno">   73</span>      <a class="code hl_variable" href="OAuthCallbackScreen_8tsx.html#aa5509c7ae512f6a856dc2164932bf900">setError</a>(err instanceof Error ? err.message : <span class="stringliteral">&quot;Une erreur est survenue&quot;</span>);</div>
-<div class="line"><a id="l00074" name="l00074"></a><span class="lineno">   74</span>    } <span class="keywordflow">finally</span> {</div>
-<div class="line"><a id="l00075" name="l00075"></a><span class="lineno">   75</span>      <a class="code hl_variable" href="AboutScreen_8tsx.html#a76189ac497f2ab0eca5d91f2e6160594">setLoading</a>(<span class="keyword">false</span>);</div>
-<div class="line"><a id="l00076" name="l00076"></a><span class="lineno">   76</span>    }</div>
-<div class="line"><a id="l00077" name="l00077"></a><span class="lineno">   77</span>  };</div>
+<div class="foldopen" id="foldopen00038" data-start="{" data-end="};">
+<div class="line"><a id="l00038" name="l00038"></a><span class="lineno"><a class="line" href="RegisterScreen_8tsx.html#a86be4d74fb6a72bb259a35c9b6b3bd61">   38</a></span>  <span class="keyword">const</span> <a class="code hl_variable" href="RegisterScreen_8tsx.html#a86be4d74fb6a72bb259a35c9b6b3bd61">removeNotification</a> = (id: string) =&gt; {</div>
+<div class="line"><a id="l00039" name="l00039"></a><span class="lineno">   39</span>    <a class="code hl_variable" href="ServiceCallbackScreen_8tsx.html#ae9a287a261ed44cf54e161648dc5b308">setNotifications</a>((prev) =&gt; prev.filter((n) =&gt; n.id !== <span class="keywordtype">id</span>));</div>
+<div class="line"><a id="l00040" name="l00040"></a><span class="lineno">   40</span>  };</div>
 </div>
-<div class="line"><a id="l00078" name="l00078"></a><span class="lineno">   78</span> </div>
-<div class="foldopen" id="foldopen00079" data-start="{" data-end="};">
-<div class="line"><a id="l00079" name="l00079"></a><span class="lineno"><a class="line" href="RegisterScreen_8tsx.html#a9278bbb1a04ec6ee77e4e746888fc8e9">   79</a></span>  <span class="keyword">const</span> <a class="code hl_variable" href="RegisterScreen_8tsx.html#a9278bbb1a04ec6ee77e4e746888fc8e9">handleOAuthLogin</a> = async (providerId: <span class="keywordtype">string</span>) =&gt; {</div>
-<div class="line"><a id="l00080" name="l00080"></a><span class="lineno">   80</span>    <a class="code hl_variable" href="OAuthCallbackScreen_8tsx.html#aa5509c7ae512f6a856dc2164932bf900">setError</a>(<span class="stringliteral">&quot;&quot;</span>);</div>
-<div class="line"><a id="l00081" name="l00081"></a><span class="lineno">   81</span>    <a class="code hl_variable" href="AboutScreen_8tsx.html#a76189ac497f2ab0eca5d91f2e6160594">setLoading</a>(<span class="keyword">true</span>);</div>
-<div class="line"><a id="l00082" name="l00082"></a><span class="lineno">   82</span>    </div>
-<div class="line"><a id="l00083" name="l00083"></a><span class="lineno">   83</span>    <span class="keywordflow">try</span> {</div>
-<div class="line"><a id="l00084" name="l00084"></a><span class="lineno">   84</span>      await initiateOAuthLogin(providerId);</div>
-<div class="line"><a id="l00085" name="l00085"></a><span class="lineno">   85</span>    } <span class="keywordflow">catch</span> (err) {</div>
-<div class="line"><a id="l00086" name="l00086"></a><span class="lineno">   86</span>      <a class="code hl_variable" href="OAuthCallbackScreen_8tsx.html#aa5509c7ae512f6a856dc2164932bf900">setError</a>(err instanceof Error ? err.message : `Erreur lors de l<span class="stringliteral">&#39;inscription OAuth`);</span></div>
-<div class="line"><a id="l00087" name="l00087"></a><span class="lineno">   87</span><span class="stringliteral">      setLoading(false);</span></div>
-<div class="line"><a id="l00088" name="l00088"></a><span class="lineno">   88</span><span class="stringliteral">    }</span></div>
-<div class="line"><a id="l00089" name="l00089"></a><span class="lineno">   89</span><span class="stringliteral">  };</span></div>
+<div class="line"><a id="l00041" name="l00041"></a><span class="lineno">   41</span> </div>
+<div class="line"><a id="l00042" name="l00042"></a><span class="lineno"><a class="line" href="RegisterScreen_8tsx.html#a2eabe27bf94a92ad8fa06e736741b9ac">   42</a></span>  <span class="keyword">const</span> <a class="code hl_variable" href="RegisterScreen_8tsx.html#a2eabe27bf94a92ad8fa06e736741b9ac">stars</a> = useMemo&lt;Star[]&gt;(() =&gt; {</div>
+<div class="line"><a id="l00043" name="l00043"></a><span class="lineno">   43</span>    <span class="keyword">const</span> count = 120;</div>
+<div class="line"><a id="l00044" name="l00044"></a><span class="lineno">   44</span>    <span class="keyword">const</span> rnd = (min: number, max: number) =&gt; min + Math.random() * (max - min);</div>
+<div class="line"><a id="l00045" name="l00045"></a><span class="lineno">   45</span> </div>
+<div class="line"><a id="l00046" name="l00046"></a><span class="lineno">   46</span>    <span class="keywordflow">return</span> Array.from({ length: count }, (_, i) =&gt; ({</div>
+<div class="line"><a id="l00047" name="l00047"></a><span class="lineno">   47</span>      id: `s-${i}-${Math.random().toString(16).slice(2)}`,</div>
+<div class="line"><a id="l00048" name="l00048"></a><span class="lineno">   48</span>      top: rnd(0, 100),</div>
+<div class="line"><a id="l00049" name="l00049"></a><span class="lineno">   49</span>      left: rnd(0, 100),</div>
+<div class="line"><a id="l00050" name="l00050"></a><span class="lineno">   50</span>      size: rnd(1, 2.5),</div>
+<div class="line"><a id="l00051" name="l00051"></a><span class="lineno">   51</span>      delay: rnd(0, 6),</div>
+<div class="line"><a id="l00052" name="l00052"></a><span class="lineno">   52</span>      dur: rnd(1.2, 4.5),</div>
+<div class="line"><a id="l00053" name="l00053"></a><span class="lineno">   53</span>      alpha: rnd(0.25, 0.9),</div>
+<div class="line"><a id="l00054" name="l00054"></a><span class="lineno">   54</span>    }));</div>
+<div class="line"><a id="l00055" name="l00055"></a><span class="lineno">   55</span>  }, []);</div>
+<div class="line"><a id="l00056" name="l00056"></a><span class="lineno">   56</span> </div>
+<div class="line"><a id="l00057" name="l00057"></a><span class="lineno">   57</span>  useEffect(() =&gt; {</div>
+<div class="line"><a id="l00058" name="l00058"></a><span class="lineno">   58</span>    <span class="keyword">const</span> loadProviders = async () =&gt; {</div>
+<div class="line"><a id="l00059" name="l00059"></a><span class="lineno">   59</span>      <span class="keywordflow">try</span> {</div>
+<div class="line"><a id="l00060" name="l00060"></a><span class="lineno">   60</span>        <span class="keyword">const</span> providers = await fetchOAuthProviders();</div>
+<div class="line"><a id="l00061" name="l00061"></a><span class="lineno">   61</span>        setOauthProviders(providers.filter(p =&gt; p.available &amp;&amp; p.flows.web));</div>
+<div class="line"><a id="l00062" name="l00062"></a><span class="lineno">   62</span>      } <span class="keywordflow">catch</span> (err) {</div>
+<div class="line"><a id="l00063" name="l00063"></a><span class="lineno">   63</span>        console.error(<span class="stringliteral">&quot;Failed to load OAuth providers:&quot;</span>, err);</div>
+<div class="line"><a id="l00064" name="l00064"></a><span class="lineno">   64</span>      } <span class="keywordflow">finally</span> {</div>
+<div class="line"><a id="l00065" name="l00065"></a><span class="lineno">   65</span>        setLoadingProviders(<span class="keyword">false</span>);</div>
+<div class="line"><a id="l00066" name="l00066"></a><span class="lineno">   66</span>      }</div>
+<div class="line"><a id="l00067" name="l00067"></a><span class="lineno">   67</span>    };</div>
+<div class="line"><a id="l00068" name="l00068"></a><span class="lineno">   68</span>    </div>
+<div class="line"><a id="l00069" name="l00069"></a><span class="lineno">   69</span>    loadProviders();</div>
+<div class="line"><a id="l00070" name="l00070"></a><span class="lineno">   70</span>  }, []);</div>
+<div class="line"><a id="l00071" name="l00071"></a><span class="lineno">   71</span> </div>
+<div class="line"><a id="l00072" name="l00072"></a><span class="lineno">   72</span> </div>
+<div class="foldopen" id="foldopen00073" data-start="{" data-end="};">
+<div class="line"><a id="l00073" name="l00073"></a><span class="lineno"><a class="line" href="RegisterScreen_8tsx.html#a39ea56a25db188cbabb252c367c3347c">   73</a></span>  <span class="keyword">const</span> <a class="code hl_variable" href="RegisterScreen_8tsx.html#a39ea56a25db188cbabb252c367c3347c">handleSubmit</a> = async (e: <a class="code hl_variable" href="RegisterScreen_8tsx.html#a8e6a862a904cf8b07c69fae7c44a1a04">React</a>.FormEvent) =&gt; {</div>
+<div class="line"><a id="l00074" name="l00074"></a><span class="lineno">   74</span>    e.preventDefault();</div>
+<div class="line"><a id="l00075" name="l00075"></a><span class="lineno">   75</span> </div>
+<div class="line"><a id="l00076" name="l00076"></a><span class="lineno">   76</span>    <span class="keywordflow">if</span> (!email || !username || !password || !confirmPassword) {</div>
+<div class="line"><a id="l00077" name="l00077"></a><span class="lineno">   77</span>      <a class="code hl_variable" href="RegisterScreen_8tsx.html#a045c8134156d24611e3c41c542046cd1">addNotification</a>(<span class="stringliteral">&quot;Tous les champs sont requis&quot;</span>, <span class="stringliteral">&quot;error&quot;</span>);</div>
+<div class="line"><a id="l00078" name="l00078"></a><span class="lineno">   78</span>      <span class="keywordflow">return</span>;</div>
+<div class="line"><a id="l00079" name="l00079"></a><span class="lineno">   79</span>    }</div>
+<div class="line"><a id="l00080" name="l00080"></a><span class="lineno">   80</span> </div>
+<div class="line"><a id="l00081" name="l00081"></a><span class="lineno">   81</span>    <span class="keywordflow">if</span> (password !== confirmPassword) {</div>
+<div class="line"><a id="l00082" name="l00082"></a><span class="lineno">   82</span>      <a class="code hl_variable" href="RegisterScreen_8tsx.html#a045c8134156d24611e3c41c542046cd1">addNotification</a>(<span class="stringliteral">&quot;Les mots de passe ne correspondent pas&quot;</span>, <span class="stringliteral">&quot;error&quot;</span>);</div>
+<div class="line"><a id="l00083" name="l00083"></a><span class="lineno">   83</span>      <span class="keywordflow">return</span>;</div>
+<div class="line"><a id="l00084" name="l00084"></a><span class="lineno">   84</span>    }</div>
+<div class="line"><a id="l00085" name="l00085"></a><span class="lineno">   85</span> </div>
+<div class="line"><a id="l00086" name="l00086"></a><span class="lineno">   86</span>    <span class="keywordflow">if</span> (password.length &lt; 6) {</div>
+<div class="line"><a id="l00087" name="l00087"></a><span class="lineno">   87</span>      <a class="code hl_variable" href="RegisterScreen_8tsx.html#a045c8134156d24611e3c41c542046cd1">addNotification</a>(<span class="stringliteral">&quot;Le mot de passe doit contenir au moins 6 caractères&quot;</span>, <span class="stringliteral">&quot;error&quot;</span>);</div>
+<div class="line"><a id="l00088" name="l00088"></a><span class="lineno">   88</span>      <span class="keywordflow">return</span>;</div>
+<div class="line"><a id="l00089" name="l00089"></a><span class="lineno">   89</span>    }</div>
+<div class="line"><a id="l00090" name="l00090"></a><span class="lineno">   90</span> </div>
+<div class="line"><a id="l00091" name="l00091"></a><span class="lineno">   91</span>    <a class="code hl_variable" href="AboutScreen_8tsx.html#a76189ac497f2ab0eca5d91f2e6160594">setLoading</a>(<span class="keyword">true</span>);</div>
+<div class="line"><a id="l00092" name="l00092"></a><span class="lineno">   92</span> </div>
+<div class="line"><a id="l00093" name="l00093"></a><span class="lineno">   93</span>    <span class="keywordflow">try</span> {</div>
+<div class="line"><a id="l00094" name="l00094"></a><span class="lineno">   94</span>      await <span class="keyword">register</span>({ email, name: username, new_password: password });</div>
+<div class="line"><a id="l00095" name="l00095"></a><span class="lineno">   95</span>      <a class="code hl_variable" href="RegisterScreen_8tsx.html#a045c8134156d24611e3c41c542046cd1">addNotification</a>(<span class="stringliteral">&quot;Inscription réussie ! Redirection vers la page de connexion...&quot;</span>, <span class="stringliteral">&quot;success&quot;</span>);</div>
+<div class="line"><a id="l00096" name="l00096"></a><span class="lineno">   96</span>      <a class="code hl_variable" href="RegisterScreen_8tsx.html#aa791b68f3e32647249faf045fe1367eb">setEmail</a>(<span class="stringliteral">&quot;&quot;</span>);</div>
+<div class="line"><a id="l00097" name="l00097"></a><span class="lineno">   97</span>      setUsername(<span class="stringliteral">&quot;&quot;</span>);</div>
+<div class="line"><a id="l00098" name="l00098"></a><span class="lineno">   98</span>      setPassword(<span class="stringliteral">&quot;&quot;</span>);</div>
+<div class="line"><a id="l00099" name="l00099"></a><span class="lineno">   99</span>      setConfirmPassword(<span class="stringliteral">&quot;&quot;</span>);</div>
+<div class="line"><a id="l00100" name="l00100"></a><span class="lineno">  100</span>      setTimeout(() =&gt; {</div>
+<div class="line"><a id="l00101" name="l00101"></a><span class="lineno">  101</span>        window.location.href = <span class="stringliteral">&quot;/login&quot;</span>;</div>
+<div class="line"><a id="l00102" name="l00102"></a><span class="lineno">  102</span>      }, 2000);</div>
+<div class="line"><a id="l00103" name="l00103"></a><span class="lineno">  103</span>    } <span class="keywordflow">catch</span> (err) {</div>
+<div class="line"><a id="l00104" name="l00104"></a><span class="lineno">  104</span>      <a class="code hl_variable" href="RegisterScreen_8tsx.html#a045c8134156d24611e3c41c542046cd1">addNotification</a>(err instanceof Error ? err.message : <span class="stringliteral">&quot;Une erreur est survenue&quot;</span>, <span class="stringliteral">&quot;error&quot;</span>);</div>
+<div class="line"><a id="l00105" name="l00105"></a><span class="lineno">  105</span>    } <span class="keywordflow">finally</span> {</div>
+<div class="line"><a id="l00106" name="l00106"></a><span class="lineno">  106</span>      <a class="code hl_variable" href="AboutScreen_8tsx.html#a76189ac497f2ab0eca5d91f2e6160594">setLoading</a>(<span class="keyword">false</span>);</div>
+<div class="line"><a id="l00107" name="l00107"></a><span class="lineno">  107</span>    }</div>
+<div class="line"><a id="l00108" name="l00108"></a><span class="lineno">  108</span>  };</div>
 </div>
-<div class="line"><a id="l00090" name="l00090"></a><span class="lineno">   90</span><span class="stringliteral"></span> </div>
-<div class="line"><a id="l00091" name="l00091"></a><span class="lineno">   91</span><span class="stringliteral">  return (</span></div>
-<div class="line"><a id="l00092" name="l00092"></a><span class="lineno">   92</span><span class="stringliteral">    &lt;div className=&quot;register-container&quot;&gt;</span></div>
-<div class="line"><a id="l00093" name="l00093"></a><span class="lineno">   93</span><span class="stringliteral">      &lt;div className=&quot;register-form-card&quot;&gt;</span></div>
-<div class="line"><a id="l00094" name="l00094"></a><span class="lineno">   94</span><span class="stringliteral">        &lt;h1 className=&quot;register-title&quot;&gt;Inscription&lt;/h1&gt;</span></div>
-<div class="line"><a id="l00095" name="l00095"></a><span class="lineno">   95</span><span class="stringliteral">        &lt;p className=&quot;register-subtitle&quot;&gt;Créez votre compte AREA&lt;/p&gt;</span></div>
-<div class="line"><a id="l00096" name="l00096"></a><span class="lineno">   96</span><span class="stringliteral"></span> </div>
-<div class="line"><a id="l00097" name="l00097"></a><span class="lineno">   97</span><span class="stringliteral">        {error &amp;&amp; &lt;div className=&quot;register-error-box&quot;&gt;{error}&lt;/div&gt;}</span></div>
-<div class="line"><a id="l00098" name="l00098"></a><span class="lineno">   98</span><span class="stringliteral">        {success &amp;&amp; (</span></div>
-<div class="line"><a id="l00099" name="l00099"></a><span class="lineno">   99</span><span class="stringliteral">          &lt;div className=&quot;register-success-box&quot;&gt;</span></div>
-<div class="line"><a id="l00100" name="l00100"></a><span class="lineno">  100</span><span class="stringliteral">            Inscription réussie ! Redirection vers la page de connexion...</span></div>
-<div class="line"><a id="l00101" name="l00101"></a><span class="lineno">  101</span><span class="stringliteral">          &lt;/div&gt;</span></div>
-<div class="line"><a id="l00102" name="l00102"></a><span class="lineno">  102</span><span class="stringliteral">        )}</span></div>
-<div class="line"><a id="l00103" name="l00103"></a><span class="lineno">  103</span><span class="stringliteral"></span> </div>
-<div class="line"><a id="l00104" name="l00104"></a><span class="lineno">  104</span><span class="stringliteral">        &lt;form onSubmit={handleSubmit} className=&quot;register-form&quot;&gt;</span></div>
-<div class="line"><a id="l00105" name="l00105"></a><span class="lineno">  105</span><span class="stringliteral">          &lt;div className=&quot;register-form-group&quot;&gt;</span></div>
-<div class="line"><a id="l00106" name="l00106"></a><span class="lineno">  106</span><span class="stringliteral">            &lt;label htmlFor=&quot;email&quot; className=&quot;register-label&quot;&gt;</span></div>
-<div class="line"><a id="l00107" name="l00107"></a><span class="lineno">  107</span><span class="stringliteral">              Email</span></div>
-<div class="line"><a id="l00108" name="l00108"></a><span class="lineno">  108</span><span class="stringliteral">            &lt;/label&gt;</span></div>
-<div class="line"><a id="l00109" name="l00109"></a><span class="lineno">  109</span><span class="stringliteral">            &lt;input</span></div>
-<div class="line"><a id="l00110" name="l00110"></a><span class="lineno">  110</span><span class="stringliteral">              type=&quot;email&quot;</span></div>
-<div class="line"><a id="l00111" name="l00111"></a><span class="lineno">  111</span><span class="stringliteral">              id=&quot;email&quot;</span></div>
-<div class="line"><a id="l00112" name="l00112"></a><span class="lineno">  112</span><span class="stringliteral">              value={email}</span></div>
-<div class="line"><a id="l00113" name="l00113"></a><span class="lineno">  113</span><span class="stringliteral">              onChange={(e) =&gt; setEmail(e.target.value)}</span></div>
-<div class="line"><a id="l00114" name="l00114"></a><span class="lineno">  114</span><span class="stringliteral">              className=&quot;register-input&quot;</span></div>
-<div class="line"><a id="l00115" name="l00115"></a><span class="lineno">  115</span><span class="stringliteral">              placeholder=&quot;votre@email.com&quot;</span></div>
-<div class="line"><a id="l00116" name="l00116"></a><span class="lineno">  116</span><span class="stringliteral">              disabled={loading}</span></div>
-<div class="line"><a id="l00117" name="l00117"></a><span class="lineno">  117</span><span class="stringliteral">            /&gt;</span></div>
-<div class="line"><a id="l00118" name="l00118"></a><span class="lineno">  118</span><span class="stringliteral">          &lt;/div&gt;</span></div>
-<div class="line"><a id="l00119" name="l00119"></a><span class="lineno">  119</span><span class="stringliteral"></span> </div>
-<div class="line"><a id="l00120" name="l00120"></a><span class="lineno">  120</span><span class="stringliteral">          &lt;div className=&quot;register-form-group&quot;&gt;</span></div>
-<div class="line"><a id="l00121" name="l00121"></a><span class="lineno">  121</span><span class="stringliteral">            &lt;label htmlFor=&quot;username&quot; className=&quot;register-label&quot;&gt;</span></div>
-<div class="line"><a id="l00122" name="l00122"></a><span class="lineno">  122</span><span class="stringliteral">              Nom d&#39;</span>utilisateur</div>
-<div class="line"><a id="l00123" name="l00123"></a><span class="lineno">  123</span>            &lt;/label&gt;</div>
-<div class="line"><a id="l00124" name="l00124"></a><span class="lineno">  124</span>            &lt;input</div>
-<div class="line"><a id="l00125" name="l00125"></a><span class="lineno">  125</span>              <a class="code hl_variable" href="AreasScreen_8tsx.html#a0fc6c254ef91d3c8d5918bba369d35b6">type</a>=<span class="stringliteral">&quot;text&quot;</span></div>
-<div class="line"><a id="l00126" name="l00126"></a><span class="lineno">  126</span>              <span class="keywordtype">id</span>=<span class="stringliteral">&quot;username&quot;</span></div>
-<div class="line"><a id="l00127" name="l00127"></a><span class="lineno">  127</span>              value={username}</div>
-<div class="line"><a id="l00128" name="l00128"></a><span class="lineno">  128</span>              onChange={(e) =&gt; setUsername(e.target.value)}</div>
-<div class="line"><a id="l00129" name="l00129"></a><span class="lineno">  129</span>              className=<span class="stringliteral">&quot;register-input&quot;</span></div>
-<div class="line"><a id="l00130" name="l00130"></a><span class="lineno">  130</span>              placeholder=<span class="stringliteral">&quot;John Doe&quot;</span></div>
-<div class="line"><a id="l00131" name="l00131"></a><span class="lineno">  131</span>              disabled={loading}</div>
-<div class="line"><a id="l00132" name="l00132"></a><span class="lineno">  132</span>            /&gt;</div>
-<div class="line"><a id="l00133" name="l00133"></a><span class="lineno">  133</span>          &lt;/div&gt;</div>
-<div class="line"><a id="l00134" name="l00134"></a><span class="lineno">  134</span> </div>
-<div class="line"><a id="l00135" name="l00135"></a><span class="lineno">  135</span>          &lt;div className=<span class="stringliteral">&quot;register-form-group&quot;</span>&gt;</div>
-<div class="line"><a id="l00136" name="l00136"></a><span class="lineno">  136</span>            &lt;label htmlFor=<span class="stringliteral">&quot;password&quot;</span> className=<span class="stringliteral">&quot;register-label&quot;</span>&gt;</div>
-<div class="line"><a id="l00137" name="l00137"></a><span class="lineno">  137</span>              Mot de passe</div>
-<div class="line"><a id="l00138" name="l00138"></a><span class="lineno">  138</span>            &lt;/label&gt;</div>
-<div class="line"><a id="l00139" name="l00139"></a><span class="lineno">  139</span>            &lt;input</div>
-<div class="line"><a id="l00140" name="l00140"></a><span class="lineno">  140</span>              <a class="code hl_variable" href="AreasScreen_8tsx.html#a0fc6c254ef91d3c8d5918bba369d35b6">type</a>=<span class="stringliteral">&quot;password&quot;</span></div>
-<div class="line"><a id="l00141" name="l00141"></a><span class="lineno">  141</span>              <span class="keywordtype">id</span>=<span class="stringliteral">&quot;password&quot;</span></div>
-<div class="line"><a id="l00142" name="l00142"></a><span class="lineno">  142</span>              value={password}</div>
-<div class="line"><a id="l00143" name="l00143"></a><span class="lineno">  143</span>              onChange={(e) =&gt; setPassword(e.target.value)}</div>
-<div class="line"><a id="l00144" name="l00144"></a><span class="lineno">  144</span>              className=<span class="stringliteral">&quot;register-input&quot;</span></div>
-<div class="line"><a id="l00145" name="l00145"></a><span class="lineno">  145</span>              placeholder=<span class="stringliteral">&quot;••••••••&quot;</span></div>
-<div class="line"><a id="l00146" name="l00146"></a><span class="lineno">  146</span>              disabled={loading}</div>
-<div class="line"><a id="l00147" name="l00147"></a><span class="lineno">  147</span>            /&gt;</div>
-<div class="line"><a id="l00148" name="l00148"></a><span class="lineno">  148</span>          &lt;/div&gt;</div>
-<div class="line"><a id="l00149" name="l00149"></a><span class="lineno">  149</span> </div>
-<div class="line"><a id="l00150" name="l00150"></a><span class="lineno">  150</span>          &lt;div className=<span class="stringliteral">&quot;register-form-group&quot;</span>&gt;</div>
-<div class="line"><a id="l00151" name="l00151"></a><span class="lineno">  151</span>            &lt;label htmlFor=<span class="stringliteral">&quot;confirmPassword&quot;</span> className=<span class="stringliteral">&quot;register-label&quot;</span>&gt;</div>
-<div class="line"><a id="l00152" name="l00152"></a><span class="lineno">  152</span>              Confirmer le mot de passe</div>
-<div class="line"><a id="l00153" name="l00153"></a><span class="lineno">  153</span>            &lt;/label&gt;</div>
-<div class="line"><a id="l00154" name="l00154"></a><span class="lineno">  154</span>            &lt;input</div>
-<div class="line"><a id="l00155" name="l00155"></a><span class="lineno">  155</span>              <a class="code hl_variable" href="AreasScreen_8tsx.html#a0fc6c254ef91d3c8d5918bba369d35b6">type</a>=<span class="stringliteral">&quot;password&quot;</span></div>
-<div class="line"><a id="l00156" name="l00156"></a><span class="lineno">  156</span>              <span class="keywordtype">id</span>=<span class="stringliteral">&quot;confirmPassword&quot;</span></div>
-<div class="line"><a id="l00157" name="l00157"></a><span class="lineno">  157</span>              value={confirmPassword}</div>
-<div class="line"><a id="l00158" name="l00158"></a><span class="lineno">  158</span>              onChange={(e) =&gt; setConfirmPassword(e.target.value)}</div>
-<div class="line"><a id="l00159" name="l00159"></a><span class="lineno">  159</span>              className=<span class="stringliteral">&quot;register-input&quot;</span></div>
-<div class="line"><a id="l00160" name="l00160"></a><span class="lineno">  160</span>              placeholder=<span class="stringliteral">&quot;••••••••&quot;</span></div>
-<div class="line"><a id="l00161" name="l00161"></a><span class="lineno">  161</span>              disabled={loading}</div>
-<div class="line"><a id="l00162" name="l00162"></a><span class="lineno">  162</span>            /&gt;</div>
-<div class="line"><a id="l00163" name="l00163"></a><span class="lineno">  163</span>          &lt;/div&gt;</div>
-<div class="line"><a id="l00164" name="l00164"></a><span class="lineno">  164</span> </div>
-<div class="line"><a id="l00165" name="l00165"></a><span class="lineno">  165</span>          &lt;button</div>
-<div class="line"><a id="l00166" name="l00166"></a><span class="lineno">  166</span>            <a class="code hl_variable" href="AreasScreen_8tsx.html#a0fc6c254ef91d3c8d5918bba369d35b6">type</a>=<span class="stringliteral">&quot;submit&quot;</span></div>
-<div class="line"><a id="l00167" name="l00167"></a><span class="lineno">  167</span>            className=<span class="stringliteral">&quot;register-button&quot;</span></div>
-<div class="line"><a id="l00168" name="l00168"></a><span class="lineno">  168</span>            disabled={loading}</div>
-<div class="line"><a id="l00169" name="l00169"></a><span class="lineno">  169</span>          &gt;</div>
-<div class="line"><a id="l00170" name="l00170"></a><span class="lineno">  170</span>            {loading ? <span class="stringliteral">&quot;Inscription en cours...&quot;</span> : <span class="stringliteral">&quot;S&#39;inscrire&quot;</span>}</div>
-<div class="line"><a id="l00171" name="l00171"></a><span class="lineno">  171</span>          &lt;/button&gt;</div>
-<div class="line"><a id="l00172" name="l00172"></a><span class="lineno">  172</span>        &lt;/form&gt;</div>
-<div class="line"><a id="l00173" name="l00173"></a><span class="lineno">  173</span> </div>
-<div class="line"><a id="l00174" name="l00174"></a><span class="lineno">  174</span>        &lt;div className=<span class="stringliteral">&quot;register-divider&quot;</span>&gt;</div>
-<div class="line"><a id="l00175" name="l00175"></a><span class="lineno">  175</span>          &lt;span&gt;OU&lt;/span&gt;</div>
-<div class="line"><a id="l00176" name="l00176"></a><span class="lineno">  176</span>        &lt;/div&gt;</div>
-<div class="line"><a id="l00177" name="l00177"></a><span class="lineno">  177</span> </div>
-<div class="line"><a id="l00178" name="l00178"></a><span class="lineno">  178</span>        &lt;div className=<span class="stringliteral">&quot;register-oauth-buttons&quot;</span>&gt;</div>
-<div class="line"><a id="l00179" name="l00179"></a><span class="lineno">  179</span>          {loadingProviders ? (</div>
-<div class="line"><a id="l00180" name="l00180"></a><span class="lineno">  180</span>            &lt;p style={{ textAlign: <span class="stringliteral">&quot;center&quot;</span>, color: <span class="stringliteral">&quot;#999&quot;</span> }}&gt;Chargement des providers...&lt;/p&gt;</div>
-<div class="line"><a id="l00181" name="l00181"></a><span class="lineno">  181</span>          ) : oauthProviders.length === 0 ? (</div>
-<div class="line"><a id="l00182" name="l00182"></a><span class="lineno">  182</span>            &lt;p style={{ <a class="code hl_variable" href="OAuthCallbackScreen_8tsx.html#a4b3d59f6ca6a2b6d4586c9d6182e4986">textAlign</a>: <span class="stringliteral">&quot;center&quot;</span>, <a class="code hl_variable" href="OAuthCallbackScreen_8tsx.html#aca361ce58ecf5032c746fb79b4084620">color</a>: <span class="stringliteral">&quot;#999&quot;</span> }}&gt;Aucun provider OAuth2 disponible&lt;/p&gt;</div>
-<div class="line"><a id="l00183" name="l00183"></a><span class="lineno">  183</span>          ) : (</div>
-<div class="line"><a id="l00184" name="l00184"></a><span class="lineno">  184</span>            oauthProviders.map((provider) =&gt; (</div>
-<div class="line"><a id="l00185" name="l00185"></a><span class="lineno">  185</span>              &lt;button</div>
-<div class="line"><a id="l00186" name="l00186"></a><span class="lineno">  186</span>                key={provider.id}</div>
-<div class="line"><a id="l00187" name="l00187"></a><span class="lineno">  187</span>                onClick={() =&gt; <a class="code hl_variable" href="RegisterScreen_8tsx.html#a9278bbb1a04ec6ee77e4e746888fc8e9">handleOAuthLogin</a>(provider.id)}</div>
-<div class="line"><a id="l00188" name="l00188"></a><span class="lineno">  188</span>                className=<span class="stringliteral">&quot;register-oauth-button&quot;</span></div>
-<div class="line"><a id="l00189" name="l00189"></a><span class="lineno">  189</span>                disabled={loading}</div>
-<div class="line"><a id="l00190" name="l00190"></a><span class="lineno">  190</span>                style={{</div>
-<div class="line"><a id="l00191" name="l00191"></a><span class="lineno">  191</span>                  borderLeft: `4px solid ${provider.color}`,</div>
-<div class="line"><a id="l00192" name="l00192"></a><span class="lineno">  192</span>                }}</div>
-<div class="line"><a id="l00193" name="l00193"></a><span class="lineno">  193</span>              &gt;</div>
-<div class="line"><a id="l00194" name="l00194"></a><span class="lineno">  194</span>                &lt;span style={{ marginRight: <span class="stringliteral">&quot;8px&quot;</span> }}&gt;{provider.icon}&lt;/span&gt;</div>
-<div class="line"><a id="l00195" name="l00195"></a><span class="lineno">  195</span>                S<span class="stringliteral">&#39;inscrire avec {provider.name}</span></div>
-<div class="line"><a id="l00196" name="l00196"></a><span class="lineno">  196</span><span class="stringliteral">              &lt;/button&gt;</span></div>
-<div class="line"><a id="l00197" name="l00197"></a><span class="lineno">  197</span><span class="stringliteral">            ))</span></div>
-<div class="line"><a id="l00198" name="l00198"></a><span class="lineno">  198</span><span class="stringliteral">          )}</span></div>
-<div class="line"><a id="l00199" name="l00199"></a><span class="lineno">  199</span><span class="stringliteral">        &lt;/div&gt;</span></div>
-<div class="line"><a id="l00200" name="l00200"></a><span class="lineno">  200</span><span class="stringliteral"></span> </div>
-<div class="line"><a id="l00201" name="l00201"></a><span class="lineno">  201</span><span class="stringliteral">        &lt;div className=&quot;register-footer&quot;&gt;</span></div>
-<div class="line"><a id="l00202" name="l00202"></a><span class="lineno">  202</span><span class="stringliteral">          &lt;p className=&quot;register-footer-text&quot;&gt;</span></div>
-<div class="line"><a id="l00203" name="l00203"></a><span class="lineno">  203</span><span class="stringliteral">            Vous avez déjà un compte ?{&quot; &quot;}</span></div>
-<div class="line"><a id="l00204" name="l00204"></a><span class="lineno">  204</span><span class="stringliteral">            &lt;a href=&quot;/login&quot; className=&quot;register-link&quot;&gt;</span></div>
-<div class="line"><a id="l00205" name="l00205"></a><span class="lineno">  205</span><span class="stringliteral">              Se connecter</span></div>
-<div class="line"><a id="l00206" name="l00206"></a><span class="lineno">  206</span><span class="stringliteral">            &lt;/a&gt;</span></div>
-<div class="line"><a id="l00207" name="l00207"></a><span class="lineno">  207</span><span class="stringliteral">          &lt;/p&gt;</span></div>
-<div class="line"><a id="l00208" name="l00208"></a><span class="lineno">  208</span><span class="stringliteral">        &lt;/div&gt;</span></div>
-<div class="line"><a id="l00209" name="l00209"></a><span class="lineno">  209</span><span class="stringliteral">      &lt;/div&gt;</span></div>
-<div class="line"><a id="l00210" name="l00210"></a><span class="lineno">  210</span><span class="stringliteral">    &lt;/div&gt;</span></div>
-<div class="line"><a id="l00211" name="l00211"></a><span class="lineno">  211</span><span class="stringliteral">  );</span></div>
-<div class="line"><a id="l00212" name="l00212"></a><span class="lineno">  212</span><span class="stringliteral">};</span></div>
-<div class="line"><a id="l00213" name="l00213"></a><span class="lineno">  213</span><span class="stringliteral"></span> </div>
-<div class="line"><a id="l00214" name="l00214"></a><span class="lineno">  214</span><span class="stringliteral">export default RegisterScreen;</span></div>
-<div class="line"><a id="l00215" name="l00215"></a><span class="lineno">  215</span><span class="stringliteral"></span> </div>
-<div class="ttc" id="aAboutScreen_8tsx_html_a76189ac497f2ab0eca5d91f2e6160594"><div class="ttname"><a href="AboutScreen_8tsx.html#a76189ac497f2ab0eca5d91f2e6160594">setLoading</a></div><div class="ttdeci">const setLoading</div><div class="ttdef"><b>Definition</b> <a href="AboutScreen_8tsx_source.html#l00012">AboutScreen.tsx:12</a></div></div>
-<div class="ttc" id="aAreasScreen_8tsx_html_a0fc6c254ef91d3c8d5918bba369d35b6"><div class="ttname"><a href="AreasScreen_8tsx.html#a0fc6c254ef91d3c8d5918bba369d35b6">type</a></div><div class="ttdeci">import type</div><div class="ttdef"><b>Definition</b> <a href="AreasScreen_8tsx_source.html#l00010">AreasScreen.tsx:10</a></div></div>
-<div class="ttc" id="aOAuthCallbackScreen_8tsx_html_a4b3d59f6ca6a2b6d4586c9d6182e4986"><div class="ttname"><a href="OAuthCallbackScreen_8tsx.html#a4b3d59f6ca6a2b6d4586c9d6182e4986">textAlign</a></div><div class="ttdeci">const textAlign</div><div class="ttdef"><b>Definition</b> <a href="OAuthCallbackScreen_8tsx_source.html#l00122">OAuthCallbackScreen.tsx:122</a></div></div>
-<div class="ttc" id="aOAuthCallbackScreen_8tsx_html_aa5509c7ae512f6a856dc2164932bf900"><div class="ttname"><a href="OAuthCallbackScreen_8tsx.html#aa5509c7ae512f6a856dc2164932bf900">setError</a></div><div class="ttdeci">const setError</div><div class="ttdef"><b>Definition</b> <a href="OAuthCallbackScreen_8tsx_source.html#l00012">OAuthCallbackScreen.tsx:12</a></div></div>
-<div class="ttc" id="aOAuthCallbackScreen_8tsx_html_aca361ce58ecf5032c746fb79b4084620"><div class="ttname"><a href="OAuthCallbackScreen_8tsx.html#aca361ce58ecf5032c746fb79b4084620">color</a></div><div class="ttdeci">const color</div><div class="ttdef"><b>Definition</b> <a href="OAuthCallbackScreen_8tsx_source.html#l00137">OAuthCallbackScreen.tsx:137</a></div></div>
-<div class="ttc" id="aRegisterScreen_8tsx_html_a39ea56a25db188cbabb252c367c3347c"><div class="ttname"><a href="RegisterScreen_8tsx.html#a39ea56a25db188cbabb252c367c3347c">handleSubmit</a></div><div class="ttdeci">const handleSubmit</div><div class="ttdef"><b>Definition</b> <a href="#l00040">RegisterScreen.tsx:40</a></div></div>
-<div class="ttc" id="aRegisterScreen_8tsx_html_a428f760b2c0a14a1212f3f05c031f04d"><div class="ttname"><a href="RegisterScreen_8tsx.html#a428f760b2c0a14a1212f3f05c031f04d">demoProviders</a></div><div class="ttdeci">const demoProviders</div><div class="ttdef"><b>Definition</b> <a href="#l00038">RegisterScreen.tsx:38</a></div></div>
+<div class="line"><a id="l00109" name="l00109"></a><span class="lineno">  109</span> </div>
+<div class="foldopen" id="foldopen00110" data-start="{" data-end="};">
+<div class="line"><a id="l00110" name="l00110"></a><span class="lineno"><a class="line" href="RegisterScreen_8tsx.html#a9278bbb1a04ec6ee77e4e746888fc8e9">  110</a></span>  <span class="keyword">const</span> <a class="code hl_variable" href="RegisterScreen_8tsx.html#a9278bbb1a04ec6ee77e4e746888fc8e9">handleOAuthLogin</a> = async (providerId: <span class="keywordtype">string</span>) =&gt; {</div>
+<div class="line"><a id="l00111" name="l00111"></a><span class="lineno">  111</span>    <a class="code hl_variable" href="AboutScreen_8tsx.html#a76189ac497f2ab0eca5d91f2e6160594">setLoading</a>(<span class="keyword">true</span>);</div>
+<div class="line"><a id="l00112" name="l00112"></a><span class="lineno">  112</span>    </div>
+<div class="line"><a id="l00113" name="l00113"></a><span class="lineno">  113</span>    <span class="keywordflow">try</span> {</div>
+<div class="line"><a id="l00114" name="l00114"></a><span class="lineno">  114</span>      await initiateOAuthLogin(providerId);</div>
+<div class="line"><a id="l00115" name="l00115"></a><span class="lineno">  115</span>    } <span class="keywordflow">catch</span> (err) {</div>
+<div class="line"><a id="l00116" name="l00116"></a><span class="lineno">  116</span>      <a class="code hl_variable" href="RegisterScreen_8tsx.html#a045c8134156d24611e3c41c542046cd1">addNotification</a>(err instanceof Error ? err.message : `Erreur lors de l<span class="stringliteral">&#39;inscription OAuth`, &quot;error&quot;);</span></div>
+<div class="line"><a id="l00117" name="l00117"></a><span class="lineno">  117</span><span class="stringliteral">      setLoading(false);</span></div>
+<div class="line"><a id="l00118" name="l00118"></a><span class="lineno">  118</span><span class="stringliteral">    }</span></div>
+<div class="line"><a id="l00119" name="l00119"></a><span class="lineno">  119</span><span class="stringliteral">  };</span></div>
+</div>
+<div class="line"><a id="l00120" name="l00120"></a><span class="lineno">  120</span><span class="stringliteral"></span> </div>
+<div class="foldopen" id="foldopen00121" data-start="{" data-end="};">
+<div class="line"><a id="l00121" name="l00121"></a><span class="lineno"><a class="line" href="RegisterScreen_8tsx.html#a81a3fede2d8766ae162422436ea18b05">  121</a></span><span class="stringliteral">  const renderProviderIcon = (provider: OAuthProvider) =&gt; {</span></div>
+<div class="line"><a id="l00122" name="l00122"></a><span class="lineno">  122</span><span class="stringliteral">    const icon = provider.icon;</span></div>
+<div class="line"><a id="l00123" name="l00123"></a><span class="lineno">  123</span><span class="stringliteral"></span> </div>
+<div class="line"><a id="l00124" name="l00124"></a><span class="lineno">  124</span><span class="stringliteral">    if (/^https?:\/\//i.test(icon)) {</span></div>
+<div class="line"><a id="l00125" name="l00125"></a><span class="lineno">  125</span><span class="stringliteral">      return (</span></div>
+<div class="line"><a id="l00126" name="l00126"></a><span class="lineno">  126</span><span class="stringliteral">        &lt;img</span></div>
+<div class="line"><a id="l00127" name="l00127"></a><span class="lineno">  127</span><span class="stringliteral">          src={icon}</span></div>
+<div class="line"><a id="l00128" name="l00128"></a><span class="lineno">  128</span><span class="stringliteral">          alt={`${provider.name} logo`}</span></div>
+<div class="line"><a id="l00129" name="l00129"></a><span class="lineno">  129</span><span class="stringliteral">          style={{</span></div>
+<div class="line"><a id="l00130" name="l00130"></a><span class="lineno">  130</span><span class="stringliteral">            width: &quot;24px&quot;,</span></div>
+<div class="line"><a id="l00131" name="l00131"></a><span class="lineno">  131</span><span class="stringliteral">            height: &quot;24px&quot;,</span></div>
+<div class="line"><a id="l00132" name="l00132"></a><span class="lineno">  132</span><span class="stringliteral">            objectFit: &quot;contain&quot;,</span></div>
+<div class="line"><a id="l00133" name="l00133"></a><span class="lineno">  133</span><span class="stringliteral">            display: &quot;inline-block&quot;,</span></div>
+<div class="line"><a id="l00134" name="l00134"></a><span class="lineno">  134</span><span class="stringliteral">            marginRight: &quot;8px&quot;,</span></div>
+<div class="line"><a id="l00135" name="l00135"></a><span class="lineno">  135</span><span class="stringliteral">          }}</span></div>
+<div class="line"><a id="l00136" name="l00136"></a><span class="lineno">  136</span><span class="stringliteral">        /&gt;</span></div>
+<div class="line"><a id="l00137" name="l00137"></a><span class="lineno">  137</span><span class="stringliteral">      );</span></div>
+<div class="line"><a id="l00138" name="l00138"></a><span class="lineno">  138</span><span class="stringliteral">    }</span></div>
+<div class="line"><a id="l00139" name="l00139"></a><span class="lineno">  139</span><span class="stringliteral"></span> </div>
+<div class="line"><a id="l00140" name="l00140"></a><span class="lineno">  140</span><span class="stringliteral">    if (/^\s*&lt;svg[\s&gt;]/i.test(icon)) {</span></div>
+<div class="line"><a id="l00141" name="l00141"></a><span class="lineno">  141</span><span class="stringliteral">      return (</span></div>
+<div class="line"><a id="l00142" name="l00142"></a><span class="lineno">  142</span><span class="stringliteral">        &lt;span</span></div>
+<div class="line"><a id="l00143" name="l00143"></a><span class="lineno">  143</span><span class="stringliteral">          aria-label={`${provider.name} logo`}</span></div>
+<div class="line"><a id="l00144" name="l00144"></a><span class="lineno">  144</span><span class="stringliteral">          role=&quot;img&quot;</span></div>
+<div class="line"><a id="l00145" name="l00145"></a><span class="lineno">  145</span><span class="stringliteral">          style={{</span></div>
+<div class="line"><a id="l00146" name="l00146"></a><span class="lineno">  146</span><span class="stringliteral">            width: &quot;24px&quot;,</span></div>
+<div class="line"><a id="l00147" name="l00147"></a><span class="lineno">  147</span><span class="stringliteral">            height: &quot;24px&quot;,</span></div>
+<div class="line"><a id="l00148" name="l00148"></a><span class="lineno">  148</span><span class="stringliteral">            display: &quot;inline-block&quot;,</span></div>
+<div class="line"><a id="l00149" name="l00149"></a><span class="lineno">  149</span><span class="stringliteral">            marginRight: &quot;8px&quot;,</span></div>
+<div class="line"><a id="l00150" name="l00150"></a><span class="lineno">  150</span><span class="stringliteral">          }}</span></div>
+<div class="line"><a id="l00151" name="l00151"></a><span class="lineno">  151</span><span class="stringliteral">          dangerouslySetInnerHTML={{ __html: icon }}</span></div>
+<div class="line"><a id="l00152" name="l00152"></a><span class="lineno">  152</span><span class="stringliteral">        /&gt;</span></div>
+<div class="line"><a id="l00153" name="l00153"></a><span class="lineno">  153</span><span class="stringliteral">      );</span></div>
+<div class="line"><a id="l00154" name="l00154"></a><span class="lineno">  154</span><span class="stringliteral">    }</span></div>
+<div class="line"><a id="l00155" name="l00155"></a><span class="lineno">  155</span><span class="stringliteral"></span> </div>
+<div class="line"><a id="l00156" name="l00156"></a><span class="lineno">  156</span><span class="stringliteral">    return &lt;span style={{ marginRight: &quot;8px&quot; }}&gt;{icon}&lt;/span&gt;;</span></div>
+</div>
+<div class="line"><a id="l00157" name="l00157"></a><span class="lineno">  157</span><span class="stringliteral">  };</span></div>
+<div class="line"><a id="l00158" name="l00158"></a><span class="lineno">  158</span><span class="stringliteral"></span> </div>
+<div class="line"><a id="l00159" name="l00159"></a><span class="lineno">  159</span><span class="stringliteral">  return (</span></div>
+<div class="line"><a id="l00160" name="l00160"></a><span class="lineno">  160</span><span class="stringliteral">    &lt;div className=&quot;register-container&quot;&gt;</span></div>
+<div class="line"><a id="l00161" name="l00161"></a><span class="lineno">  161</span><span class="stringliteral">      &lt;NotificationContainer</span></div>
+<div class="line"><a id="l00162" name="l00162"></a><span class="lineno">  162</span><span class="stringliteral">        notifications={notifications}</span></div>
+<div class="line"><a id="l00163" name="l00163"></a><span class="lineno">  163</span><span class="stringliteral">        onRemove={removeNotification}</span></div>
+<div class="line"><a id="l00164" name="l00164"></a><span class="lineno">  164</span><span class="stringliteral">      /&gt;</span></div>
+<div class="line"><a id="l00165" name="l00165"></a><span class="lineno">  165</span><span class="stringliteral">      &lt;div className=&quot;register-background&quot; aria-hidden=&quot;true&quot;&gt;</span></div>
+<div class="line"><a id="l00166" name="l00166"></a><span class="lineno">  166</span><span class="stringliteral">        {stars.map((s) =&gt; (</span></div>
+<div class="line"><a id="l00167" name="l00167"></a><span class="lineno">  167</span><span class="stringliteral">            &lt;span</span></div>
+<div class="line"><a id="l00168" name="l00168"></a><span class="lineno">  168</span><span class="stringliteral">                key={s.id}</span></div>
+<div class="line"><a id="l00169" name="l00169"></a><span class="lineno">  169</span><span class="stringliteral">                className=&quot;star&quot;</span></div>
+<div class="line"><a id="l00170" name="l00170"></a><span class="lineno">  170</span><span class="stringliteral">                style={{</span></div>
+<div class="line"><a id="l00171" name="l00171"></a><span class="lineno">  171</span><span class="stringliteral">                  top: `${s.top}%`,</span></div>
+<div class="line"><a id="l00172" name="l00172"></a><span class="lineno">  172</span><span class="stringliteral">                  left: `${s.left}%`,</span></div>
+<div class="line"><a id="l00173" name="l00173"></a><span class="lineno">  173</span><span class="stringliteral">                  width: `${s.size}px`,</span></div>
+<div class="line"><a id="l00174" name="l00174"></a><span class="lineno">  174</span><span class="stringliteral">                  height: `${s.size}px`,</span></div>
+<div class="line"><a id="l00175" name="l00175"></a><span class="lineno">  175</span><span class="stringliteral">                  opacity: s.alpha,</span></div>
+<div class="line"><a id="l00176" name="l00176"></a><span class="lineno">  176</span><span class="stringliteral">                  animationDelay: `${s.delay}s`,</span></div>
+<div class="line"><a id="l00177" name="l00177"></a><span class="lineno">  177</span><span class="stringliteral">                  animationDuration: `${s.dur}s`,</span></div>
+<div class="line"><a id="l00178" name="l00178"></a><span class="lineno">  178</span><span class="stringliteral">                }}</span></div>
+<div class="line"><a id="l00179" name="l00179"></a><span class="lineno">  179</span><span class="stringliteral">            /&gt;</span></div>
+<div class="line"><a id="l00180" name="l00180"></a><span class="lineno">  180</span><span class="stringliteral">        ))}</span></div>
+<div class="line"><a id="l00181" name="l00181"></a><span class="lineno">  181</span><span class="stringliteral">      &lt;/div&gt;</span></div>
+<div class="line"><a id="l00182" name="l00182"></a><span class="lineno">  182</span><span class="stringliteral">      &lt;div className=&quot;register-form-card&quot;&gt;</span></div>
+<div class="line"><a id="l00183" name="l00183"></a><span class="lineno">  183</span><span class="stringliteral">        &lt;h1 className=&quot;register-title&quot;&gt;Inscription&lt;/h1&gt;</span></div>
+<div class="line"><a id="l00184" name="l00184"></a><span class="lineno">  184</span><span class="stringliteral">        &lt;p className=&quot;register-subtitle&quot;&gt;Créez votre compte AREA&lt;/p&gt;</span></div>
+<div class="line"><a id="l00185" name="l00185"></a><span class="lineno">  185</span><span class="stringliteral"></span> </div>
+<div class="line"><a id="l00186" name="l00186"></a><span class="lineno">  186</span><span class="stringliteral"></span> </div>
+<div class="line"><a id="l00187" name="l00187"></a><span class="lineno">  187</span><span class="stringliteral">        &lt;form onSubmit={handleSubmit} className=&quot;register-form&quot;&gt;</span></div>
+<div class="line"><a id="l00188" name="l00188"></a><span class="lineno">  188</span><span class="stringliteral">          &lt;div className=&quot;register-form-group&quot;&gt;</span></div>
+<div class="line"><a id="l00189" name="l00189"></a><span class="lineno">  189</span><span class="stringliteral">            &lt;label htmlFor=&quot;email&quot; className=&quot;register-label&quot;&gt;</span></div>
+<div class="line"><a id="l00190" name="l00190"></a><span class="lineno">  190</span><span class="stringliteral">              Email</span></div>
+<div class="line"><a id="l00191" name="l00191"></a><span class="lineno">  191</span><span class="stringliteral">            &lt;/label&gt;</span></div>
+<div class="line"><a id="l00192" name="l00192"></a><span class="lineno">  192</span><span class="stringliteral">            &lt;input</span></div>
+<div class="line"><a id="l00193" name="l00193"></a><span class="lineno">  193</span><span class="stringliteral">              type=&quot;email&quot;</span></div>
+<div class="line"><a id="l00194" name="l00194"></a><span class="lineno">  194</span><span class="stringliteral">              id=&quot;email&quot;</span></div>
+<div class="line"><a id="l00195" name="l00195"></a><span class="lineno">  195</span><span class="stringliteral">              value={email}</span></div>
+<div class="line"><a id="l00196" name="l00196"></a><span class="lineno">  196</span><span class="stringliteral">              onChange={(e) =&gt; setEmail(e.target.value)}</span></div>
+<div class="line"><a id="l00197" name="l00197"></a><span class="lineno">  197</span><span class="stringliteral">              className=&quot;register-input&quot;</span></div>
+<div class="line"><a id="l00198" name="l00198"></a><span class="lineno">  198</span><span class="stringliteral">              placeholder=&quot;votre@email.com&quot;</span></div>
+<div class="line"><a id="l00199" name="l00199"></a><span class="lineno">  199</span><span class="stringliteral">              disabled={loading}</span></div>
+<div class="line"><a id="l00200" name="l00200"></a><span class="lineno">  200</span><span class="stringliteral">            /&gt;</span></div>
+<div class="line"><a id="l00201" name="l00201"></a><span class="lineno">  201</span><span class="stringliteral">          &lt;/div&gt;</span></div>
+<div class="line"><a id="l00202" name="l00202"></a><span class="lineno">  202</span><span class="stringliteral"></span> </div>
+<div class="line"><a id="l00203" name="l00203"></a><span class="lineno">  203</span><span class="stringliteral">          &lt;div className=&quot;register-form-group&quot;&gt;</span></div>
+<div class="line"><a id="l00204" name="l00204"></a><span class="lineno">  204</span><span class="stringliteral">            &lt;label htmlFor=&quot;username&quot; className=&quot;register-label&quot;&gt;</span></div>
+<div class="line"><a id="l00205" name="l00205"></a><span class="lineno">  205</span><span class="stringliteral">              Nom d&#39;</span>utilisateur</div>
+<div class="line"><a id="l00206" name="l00206"></a><span class="lineno">  206</span>            &lt;/label&gt;</div>
+<div class="line"><a id="l00207" name="l00207"></a><span class="lineno">  207</span>            &lt;input</div>
+<div class="line"><a id="l00208" name="l00208"></a><span class="lineno">  208</span>              <a class="code hl_variable" href="Notification_8tsx.html#a0fc6c254ef91d3c8d5918bba369d35b6">type</a>=<span class="stringliteral">&quot;text&quot;</span></div>
+<div class="line"><a id="l00209" name="l00209"></a><span class="lineno">  209</span>              <span class="keywordtype">id</span>=<span class="stringliteral">&quot;username&quot;</span></div>
+<div class="line"><a id="l00210" name="l00210"></a><span class="lineno">  210</span>              value={username}</div>
+<div class="line"><a id="l00211" name="l00211"></a><span class="lineno">  211</span>              onChange={(e) =&gt; setUsername(e.target.value)}</div>
+<div class="line"><a id="l00212" name="l00212"></a><span class="lineno">  212</span>              className=<span class="stringliteral">&quot;register-input&quot;</span></div>
+<div class="line"><a id="l00213" name="l00213"></a><span class="lineno">  213</span>              placeholder=<span class="stringliteral">&quot;John Doe&quot;</span></div>
+<div class="line"><a id="l00214" name="l00214"></a><span class="lineno">  214</span>              disabled={loading}</div>
+<div class="line"><a id="l00215" name="l00215"></a><span class="lineno">  215</span>            /&gt;</div>
+<div class="line"><a id="l00216" name="l00216"></a><span class="lineno">  216</span>          &lt;/div&gt;</div>
+<div class="line"><a id="l00217" name="l00217"></a><span class="lineno">  217</span> </div>
+<div class="line"><a id="l00218" name="l00218"></a><span class="lineno">  218</span>          &lt;div className=<span class="stringliteral">&quot;register-form-group&quot;</span>&gt;</div>
+<div class="line"><a id="l00219" name="l00219"></a><span class="lineno">  219</span>            &lt;label htmlFor=<span class="stringliteral">&quot;password&quot;</span> className=<span class="stringliteral">&quot;register-label&quot;</span>&gt;</div>
+<div class="line"><a id="l00220" name="l00220"></a><span class="lineno">  220</span>              Mot de passe</div>
+<div class="line"><a id="l00221" name="l00221"></a><span class="lineno">  221</span>            &lt;/label&gt;</div>
+<div class="line"><a id="l00222" name="l00222"></a><span class="lineno">  222</span>            &lt;input</div>
+<div class="line"><a id="l00223" name="l00223"></a><span class="lineno">  223</span>              <a class="code hl_variable" href="Notification_8tsx.html#a0fc6c254ef91d3c8d5918bba369d35b6">type</a>=<span class="stringliteral">&quot;password&quot;</span></div>
+<div class="line"><a id="l00224" name="l00224"></a><span class="lineno">  224</span>              <span class="keywordtype">id</span>=<span class="stringliteral">&quot;password&quot;</span></div>
+<div class="line"><a id="l00225" name="l00225"></a><span class="lineno">  225</span>              value={password}</div>
+<div class="line"><a id="l00226" name="l00226"></a><span class="lineno">  226</span>              onChange={(e) =&gt; setPassword(e.target.value)}</div>
+<div class="line"><a id="l00227" name="l00227"></a><span class="lineno">  227</span>              className=<span class="stringliteral">&quot;register-input&quot;</span></div>
+<div class="line"><a id="l00228" name="l00228"></a><span class="lineno">  228</span>              placeholder=<span class="stringliteral">&quot;••••••••&quot;</span></div>
+<div class="line"><a id="l00229" name="l00229"></a><span class="lineno">  229</span>              disabled={loading}</div>
+<div class="line"><a id="l00230" name="l00230"></a><span class="lineno">  230</span>            /&gt;</div>
+<div class="line"><a id="l00231" name="l00231"></a><span class="lineno">  231</span>          &lt;/div&gt;</div>
+<div class="line"><a id="l00232" name="l00232"></a><span class="lineno">  232</span> </div>
+<div class="line"><a id="l00233" name="l00233"></a><span class="lineno">  233</span>          &lt;div className=<span class="stringliteral">&quot;register-form-group&quot;</span>&gt;</div>
+<div class="line"><a id="l00234" name="l00234"></a><span class="lineno">  234</span>            &lt;label htmlFor=<span class="stringliteral">&quot;confirmPassword&quot;</span> className=<span class="stringliteral">&quot;register-label&quot;</span>&gt;</div>
+<div class="line"><a id="l00235" name="l00235"></a><span class="lineno">  235</span>              Confirmer le mot de passe</div>
+<div class="line"><a id="l00236" name="l00236"></a><span class="lineno">  236</span>            &lt;/label&gt;</div>
+<div class="line"><a id="l00237" name="l00237"></a><span class="lineno">  237</span>            &lt;input</div>
+<div class="line"><a id="l00238" name="l00238"></a><span class="lineno">  238</span>              <a class="code hl_variable" href="Notification_8tsx.html#a0fc6c254ef91d3c8d5918bba369d35b6">type</a>=<span class="stringliteral">&quot;password&quot;</span></div>
+<div class="line"><a id="l00239" name="l00239"></a><span class="lineno">  239</span>              <span class="keywordtype">id</span>=<span class="stringliteral">&quot;confirmPassword&quot;</span></div>
+<div class="line"><a id="l00240" name="l00240"></a><span class="lineno">  240</span>              value={confirmPassword}</div>
+<div class="line"><a id="l00241" name="l00241"></a><span class="lineno">  241</span>              onChange={(e) =&gt; setConfirmPassword(e.target.value)}</div>
+<div class="line"><a id="l00242" name="l00242"></a><span class="lineno">  242</span>              className=<span class="stringliteral">&quot;register-input&quot;</span></div>
+<div class="line"><a id="l00243" name="l00243"></a><span class="lineno">  243</span>              placeholder=<span class="stringliteral">&quot;••••••••&quot;</span></div>
+<div class="line"><a id="l00244" name="l00244"></a><span class="lineno">  244</span>              disabled={loading}</div>
+<div class="line"><a id="l00245" name="l00245"></a><span class="lineno">  245</span>            /&gt;</div>
+<div class="line"><a id="l00246" name="l00246"></a><span class="lineno">  246</span>          &lt;/div&gt;</div>
+<div class="line"><a id="l00247" name="l00247"></a><span class="lineno">  247</span> </div>
+<div class="line"><a id="l00248" name="l00248"></a><span class="lineno">  248</span>          &lt;button</div>
+<div class="line"><a id="l00249" name="l00249"></a><span class="lineno">  249</span>            <a class="code hl_variable" href="Notification_8tsx.html#a0fc6c254ef91d3c8d5918bba369d35b6">type</a>=<span class="stringliteral">&quot;submit&quot;</span></div>
+<div class="line"><a id="l00250" name="l00250"></a><span class="lineno">  250</span>            className=<span class="stringliteral">&quot;register-button&quot;</span></div>
+<div class="line"><a id="l00251" name="l00251"></a><span class="lineno">  251</span>            disabled={loading}</div>
+<div class="line"><a id="l00252" name="l00252"></a><span class="lineno">  252</span>          &gt;</div>
+<div class="line"><a id="l00253" name="l00253"></a><span class="lineno">  253</span>            {loading ? <span class="stringliteral">&quot;Inscription en cours...&quot;</span> : <span class="stringliteral">&quot;S&#39;inscrire&quot;</span>}</div>
+<div class="line"><a id="l00254" name="l00254"></a><span class="lineno">  254</span>          &lt;/button&gt;</div>
+<div class="line"><a id="l00255" name="l00255"></a><span class="lineno">  255</span>        &lt;/form&gt;</div>
+<div class="line"><a id="l00256" name="l00256"></a><span class="lineno">  256</span> </div>
+<div class="line"><a id="l00257" name="l00257"></a><span class="lineno">  257</span>        &lt;div className=<span class="stringliteral">&quot;register-divider&quot;</span>&gt;</div>
+<div class="line"><a id="l00258" name="l00258"></a><span class="lineno">  258</span>          &lt;span&gt;OU&lt;/span&gt;</div>
+<div class="line"><a id="l00259" name="l00259"></a><span class="lineno">  259</span>        &lt;/div&gt;</div>
+<div class="line"><a id="l00260" name="l00260"></a><span class="lineno">  260</span> </div>
+<div class="line"><a id="l00261" name="l00261"></a><span class="lineno">  261</span>        &lt;div className=<span class="stringliteral">&quot;register-oauth-buttons&quot;</span>&gt;</div>
+<div class="line"><a id="l00262" name="l00262"></a><span class="lineno">  262</span>          {loadingProviders ? (</div>
+<div class="line"><a id="l00263" name="l00263"></a><span class="lineno">  263</span>            &lt;p style={{ textAlign: <span class="stringliteral">&quot;center&quot;</span>, color: <span class="stringliteral">&quot;#999&quot;</span> }}&gt;Chargement des providers...&lt;/p&gt;</div>
+<div class="line"><a id="l00264" name="l00264"></a><span class="lineno">  264</span>          ) : oauthProviders.length === 0 ? (</div>
+<div class="line"><a id="l00265" name="l00265"></a><span class="lineno">  265</span>            &lt;p style={{ <a class="code hl_variable" href="ServiceCallbackScreen_8tsx.html#a4b3d59f6ca6a2b6d4586c9d6182e4986">textAlign</a>: <span class="stringliteral">&quot;center&quot;</span>, <a class="code hl_variable" href="ServiceCallbackScreen_8tsx.html#aca361ce58ecf5032c746fb79b4084620">color</a>: <span class="stringliteral">&quot;#999&quot;</span> }}&gt;Aucun provider OAuth2 disponible&lt;/p&gt;</div>
+<div class="line"><a id="l00266" name="l00266"></a><span class="lineno">  266</span>          ) : (</div>
+<div class="line"><a id="l00267" name="l00267"></a><span class="lineno">  267</span>            oauthProviders.map((provider) =&gt; (</div>
+<div class="line"><a id="l00268" name="l00268"></a><span class="lineno">  268</span>              &lt;button</div>
+<div class="line"><a id="l00269" name="l00269"></a><span class="lineno">  269</span>                key={provider.id}</div>
+<div class="line"><a id="l00270" name="l00270"></a><span class="lineno">  270</span>                onClick={() =&gt; <a class="code hl_variable" href="RegisterScreen_8tsx.html#a9278bbb1a04ec6ee77e4e746888fc8e9">handleOAuthLogin</a>(provider.id)}</div>
+<div class="line"><a id="l00271" name="l00271"></a><span class="lineno">  271</span>                className=<span class="stringliteral">&quot;register-oauth-button&quot;</span></div>
+<div class="line"><a id="l00272" name="l00272"></a><span class="lineno">  272</span>                disabled={loading}</div>
+<div class="line"><a id="l00273" name="l00273"></a><span class="lineno">  273</span>                style={{</div>
+<div class="line"><a id="l00274" name="l00274"></a><span class="lineno">  274</span>                  borderLeft: `4px solid ${provider.color}`,</div>
+<div class="line"><a id="l00275" name="l00275"></a><span class="lineno">  275</span>                }}</div>
+<div class="line"><a id="l00276" name="l00276"></a><span class="lineno">  276</span>              &gt;</div>
+<div class="line"><a id="l00277" name="l00277"></a><span class="lineno">  277</span>                {<a class="code hl_variable" href="RegisterScreen_8tsx.html#a81a3fede2d8766ae162422436ea18b05">renderProviderIcon</a>(provider)}</div>
+<div class="line"><a id="l00278" name="l00278"></a><span class="lineno">  278</span>                S<span class="stringliteral">&#39;inscrire avec {provider.name}</span></div>
+<div class="line"><a id="l00279" name="l00279"></a><span class="lineno">  279</span><span class="stringliteral">              &lt;/button&gt;</span></div>
+<div class="line"><a id="l00280" name="l00280"></a><span class="lineno">  280</span><span class="stringliteral">            ))</span></div>
+<div class="line"><a id="l00281" name="l00281"></a><span class="lineno">  281</span><span class="stringliteral">          )}</span></div>
+<div class="line"><a id="l00282" name="l00282"></a><span class="lineno">  282</span><span class="stringliteral">        &lt;/div&gt;</span></div>
+<div class="line"><a id="l00283" name="l00283"></a><span class="lineno">  283</span><span class="stringliteral"></span> </div>
+<div class="line"><a id="l00284" name="l00284"></a><span class="lineno">  284</span><span class="stringliteral">        &lt;div className=&quot;register-footer&quot;&gt;</span></div>
+<div class="line"><a id="l00285" name="l00285"></a><span class="lineno">  285</span><span class="stringliteral">          &lt;p className=&quot;register-footer-text&quot;&gt;</span></div>
+<div class="line"><a id="l00286" name="l00286"></a><span class="lineno">  286</span><span class="stringliteral">            Vous avez déjà un compte ?{&quot; &quot;}</span></div>
+<div class="line"><a id="l00287" name="l00287"></a><span class="lineno">  287</span><span class="stringliteral">            &lt;a href=&quot;/login&quot; className=&quot;register-link&quot;&gt;</span></div>
+<div class="line"><a id="l00288" name="l00288"></a><span class="lineno">  288</span><span class="stringliteral">              Se connecter</span></div>
+<div class="line"><a id="l00289" name="l00289"></a><span class="lineno">  289</span><span class="stringliteral">            &lt;/a&gt;</span></div>
+<div class="line"><a id="l00290" name="l00290"></a><span class="lineno">  290</span><span class="stringliteral">          &lt;/p&gt;</span></div>
+<div class="line"><a id="l00291" name="l00291"></a><span class="lineno">  291</span><span class="stringliteral">        &lt;/div&gt;</span></div>
+<div class="line"><a id="l00292" name="l00292"></a><span class="lineno">  292</span><span class="stringliteral">      &lt;/div&gt;</span></div>
+<div class="line"><a id="l00293" name="l00293"></a><span class="lineno">  293</span><span class="stringliteral">    &lt;/div&gt;</span></div>
+<div class="line"><a id="l00294" name="l00294"></a><span class="lineno">  294</span><span class="stringliteral">  );</span></div>
+<div class="line"><a id="l00295" name="l00295"></a><span class="lineno">  295</span><span class="stringliteral">};</span></div>
+<div class="line"><a id="l00296" name="l00296"></a><span class="lineno">  296</span><span class="stringliteral"></span> </div>
+<div class="line"><a id="l00297" name="l00297"></a><span class="lineno">  297</span><span class="stringliteral">export default RegisterScreen;</span></div>
+<div class="line"><a id="l00298" name="l00298"></a><span class="lineno">  298</span><span class="stringliteral"></span> </div>
+</div>
+<div class="ttc" id="aAboutScreen_8tsx_html_a76189ac497f2ab0eca5d91f2e6160594"><div class="ttname"><a href="AboutScreen_8tsx.html#a76189ac497f2ab0eca5d91f2e6160594">setLoading</a></div><div class="ttdeci">const setLoading</div><div class="ttdef"><b>Definition</b> <a href="AboutScreen_8tsx_source.html#l00014">AboutScreen.tsx:14</a></div></div>
+<div class="ttc" id="aNotificationContainer_8tsx_html_a97b1c0e79a38c5147c384825b2068ca2"><div class="ttname"><a href="NotificationContainer_8tsx.html#a97b1c0e79a38c5147c384825b2068ca2">NotificationItem</a></div><div class="ttdeci">import export interface NotificationItem</div><div class="ttdef"><b>Definition</b> <a href="NotificationContainer_8tsx_source.html#l00011">NotificationContainer.tsx:11</a></div></div>
+<div class="ttc" id="aNotification_8tsx_html_a0fc6c254ef91d3c8d5918bba369d35b6"><div class="ttname"><a href="Notification_8tsx.html#a0fc6c254ef91d3c8d5918bba369d35b6">type</a></div><div class="ttdeci">const type</div><div class="ttdef"><b>Definition</b> <a href="Notification_8tsx_source.html#l00022">Notification.tsx:22</a></div></div>
+<div class="ttc" id="aRegisterScreen_8tsx_html_a045c8134156d24611e3c41c542046cd1"><div class="ttname"><a href="RegisterScreen_8tsx.html#a045c8134156d24611e3c41c542046cd1">addNotification</a></div><div class="ttdeci">const addNotification</div><div class="ttdef"><b>Definition</b> <a href="#l00033">RegisterScreen.tsx:33</a></div></div>
+<div class="ttc" id="aRegisterScreen_8tsx_html_a2eabe27bf94a92ad8fa06e736741b9ac"><div class="ttname"><a href="RegisterScreen_8tsx.html#a2eabe27bf94a92ad8fa06e736741b9ac">stars</a></div><div class="ttdeci">const stars</div><div class="ttdef"><b>Definition</b> <a href="#l00042">RegisterScreen.tsx:42</a></div></div>
+<div class="ttc" id="aRegisterScreen_8tsx_html_a39ea56a25db188cbabb252c367c3347c"><div class="ttname"><a href="RegisterScreen_8tsx.html#a39ea56a25db188cbabb252c367c3347c">handleSubmit</a></div><div class="ttdeci">const handleSubmit</div><div class="ttdef"><b>Definition</b> <a href="#l00073">RegisterScreen.tsx:73</a></div></div>
+<div class="ttc" id="aRegisterScreen_8tsx_html_a551e563cfe2de2a1c64c1df40572f1e4"><div class="ttname"><a href="RegisterScreen_8tsx.html#a551e563cfe2de2a1c64c1df40572f1e4">Star</a></div><div class="ttdeci">type Star</div><div class="ttdef"><b>Definition</b> <a href="#l00013">RegisterScreen.tsx:13</a></div></div>
+<div class="ttc" id="aRegisterScreen_8tsx_html_a81a3fede2d8766ae162422436ea18b05"><div class="ttname"><a href="RegisterScreen_8tsx.html#a81a3fede2d8766ae162422436ea18b05">renderProviderIcon</a></div><div class="ttdeci">const renderProviderIcon</div><div class="ttdef"><b>Definition</b> <a href="#l00121">RegisterScreen.tsx:121</a></div></div>
+<div class="ttc" id="aRegisterScreen_8tsx_html_a86be4d74fb6a72bb259a35c9b6b3bd61"><div class="ttname"><a href="RegisterScreen_8tsx.html#a86be4d74fb6a72bb259a35c9b6b3bd61">removeNotification</a></div><div class="ttdeci">const removeNotification</div><div class="ttdef"><b>Definition</b> <a href="#l00038">RegisterScreen.tsx:38</a></div></div>
 <div class="ttc" id="aRegisterScreen_8tsx_html_a8e6a862a904cf8b07c69fae7c44a1a04"><div class="ttname"><a href="RegisterScreen_8tsx.html#a8e6a862a904cf8b07c69fae7c44a1a04">React</a></div><div class="ttdeci">import React</div><div class="ttdef"><b>Definition</b> <a href="#l00008">RegisterScreen.tsx:8</a></div></div>
-<div class="ttc" id="aRegisterScreen_8tsx_html_a9278bbb1a04ec6ee77e4e746888fc8e9"><div class="ttname"><a href="RegisterScreen_8tsx.html#a9278bbb1a04ec6ee77e4e746888fc8e9">handleOAuthLogin</a></div><div class="ttdeci">const handleOAuthLogin</div><div class="ttdef"><b>Definition</b> <a href="#l00079">RegisterScreen.tsx:79</a></div></div>
-<div class="ttc" id="aRegisterScreen_8tsx_html_aa791b68f3e32647249faf045fe1367eb"><div class="ttname"><a href="RegisterScreen_8tsx.html#aa791b68f3e32647249faf045fe1367eb">setEmail</a></div><div class="ttdeci">const setEmail</div><div class="ttdef"><b>Definition</b> <a href="#l00013">RegisterScreen.tsx:13</a></div></div>
-<div class="ttc" id="aRegisterScreen_8tsx_html_acaf621141d56a3f9e70a4365c6e05af9"><div class="ttname"><a href="RegisterScreen_8tsx.html#acaf621141d56a3f9e70a4365c6e05af9">RegisterScreen</a></div><div class="ttdeci">const RegisterScreen</div><div class="ttdef"><b>Definition</b> <a href="#l00012">RegisterScreen.tsx:13</a></div></div>
+<div class="ttc" id="aRegisterScreen_8tsx_html_a8fa31aca9f6e85b246caa934a29a0653"><div class="ttname"><a href="RegisterScreen_8tsx.html#a8fa31aca9f6e85b246caa934a29a0653">NotificationContainer</a></div><div class="ttdeci">import NotificationContainer</div><div class="ttdef"><b>Definition</b> <a href="#l00010">RegisterScreen.tsx:10</a></div></div>
+<div class="ttc" id="aRegisterScreen_8tsx_html_a9278bbb1a04ec6ee77e4e746888fc8e9"><div class="ttname"><a href="RegisterScreen_8tsx.html#a9278bbb1a04ec6ee77e4e746888fc8e9">handleOAuthLogin</a></div><div class="ttdeci">const handleOAuthLogin</div><div class="ttdef"><b>Definition</b> <a href="#l00110">RegisterScreen.tsx:110</a></div></div>
+<div class="ttc" id="aRegisterScreen_8tsx_html_aa791b68f3e32647249faf045fe1367eb"><div class="ttname"><a href="RegisterScreen_8tsx.html#aa791b68f3e32647249faf045fe1367eb">setEmail</a></div><div class="ttdeci">const setEmail</div><div class="ttdef"><b>Definition</b> <a href="#l00024">RegisterScreen.tsx:24</a></div></div>
+<div class="ttc" id="aRegisterScreen_8tsx_html_acaf621141d56a3f9e70a4365c6e05af9"><div class="ttname"><a href="RegisterScreen_8tsx.html#acaf621141d56a3f9e70a4365c6e05af9">RegisterScreen</a></div><div class="ttdeci">const RegisterScreen</div><div class="ttdef"><b>Definition</b> <a href="#l00023">RegisterScreen.tsx:24</a></div></div>
+<div class="ttc" id="aServiceCallbackScreen_8tsx_html_a301ac1a72ba468d3ae1dca8e5f1eb743"><div class="ttname"><a href="ServiceCallbackScreen_8tsx.html#a301ac1a72ba468d3ae1dca8e5f1eb743">message</a></div><div class="ttdeci">const message</div><div class="ttdef"><b>Definition</b> <a href="ServiceCallbackScreen_8tsx_source.html#l00133">ServiceCallbackScreen.tsx:132</a></div></div>
+<div class="ttc" id="aServiceCallbackScreen_8tsx_html_a4b3d59f6ca6a2b6d4586c9d6182e4986"><div class="ttname"><a href="ServiceCallbackScreen_8tsx.html#a4b3d59f6ca6a2b6d4586c9d6182e4986">textAlign</a></div><div class="ttdeci">const textAlign</div><div class="ttdef"><b>Definition</b> <a href="ServiceCallbackScreen_8tsx_source.html#l00115">ServiceCallbackScreen.tsx:115</a></div></div>
+<div class="ttc" id="aServiceCallbackScreen_8tsx_html_aca361ce58ecf5032c746fb79b4084620"><div class="ttname"><a href="ServiceCallbackScreen_8tsx.html#aca361ce58ecf5032c746fb79b4084620">color</a></div><div class="ttdeci">const color</div><div class="ttdef"><b>Definition</b> <a href="ServiceCallbackScreen_8tsx_source.html#l00130">ServiceCallbackScreen.tsx:130</a></div></div>
+<div class="ttc" id="aServiceCallbackScreen_8tsx_html_ae9a287a261ed44cf54e161648dc5b308"><div class="ttname"><a href="ServiceCallbackScreen_8tsx.html#ae9a287a261ed44cf54e161648dc5b308">setNotifications</a></div><div class="ttdeci">import const setNotifications</div><div class="ttdef"><b>Definition</b> <a href="ServiceCallbackScreen_8tsx_source.html#l00014">ServiceCallbackScreen.tsx:14</a></div></div>
 <div class="ttc" id="aauth_8ts_html_ae59c822c79f19deee143070b9b81fcae"><div class="ttname"><a href="auth_8ts.html#ae59c822c79f19deee143070b9b81fcae">OAuthProvider</a></div><div class="ttdeci">export interface OAuthProvider</div><div class="ttdef"><b>Definition</b> <a href="auth_8ts_source.html#l00031">auth.ts:31</a></div></div>
 </div><!-- fragment --></div><!-- contents -->
 </div><!-- doc-content -->

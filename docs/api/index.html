@@ -105,9 +105,9 @@ $(function(){initNavTree('index.html',''); initResizable(true); });
  This repository currently contains only the <b>backend server</b> (FastAPI + PostgreSQL). <br  />
  Web client, mobile client and docker‑compose root setup are <b>not implemented yet</b>.</p>
 <hr  />
-<h1><a class="anchor" id="autotoc_md2"></a>
+<h1><a class="anchor" id="autotoc_md55"></a>
 What we have now</h1>
-<h2><a class="anchor" id="autotoc_md3"></a>
+<h2><a class="anchor" id="autotoc_md56"></a>
 Tech stack</h2>
 <ul>
 <li>Backend: <b>FastAPI</b> (Python 3.9)</li>
@@ -116,7 +116,7 @@ Tech stack</h2>
 <li>Email helper: SMTP (env‑based config)</li>
 <li>Container: Docker image for the backend only</li>
 </ul>
-<h2><a class="anchor" id="autotoc_md4"></a>
+<h2><a class="anchor" id="autotoc_md57"></a>
 Implemented features</h2>
 <ul>
 <li><b>Health check</b><ul>
@@ -162,18 +162,18 @@ Implemented features</h2>
 <p>&zwj;Note: There is <b>no</b> service/AREA/hook logic yet. <br  />
  Only a stub <code>timer</code> service is exposed through <code>/about.json</code>. </p>
 </blockquote>
-<h1><a class="anchor" id="autotoc_md5"></a>
+<h1><a class="anchor" id="autotoc_md58"></a>
 </h1>
-<h1><a class="anchor" id="autotoc_md6"></a>
+<h1><a class="anchor" id="autotoc_md59"></a>
 How to launch the project</h1>
-<h2><a class="anchor" id="autotoc_md7"></a>
+<h2><a class="anchor" id="autotoc_md60"></a>
 1. Requirements</h2>
 <ul>
 <li>Python <b>3.9</b></li>
 <li>PostgreSQL running locally or reachable (create an empty DB, e.g. <code>area</code>)</li>
 <li>Optionally Docker (to run the backend in a container)</li>
 </ul>
-<h2><a class="anchor" id="autotoc_md8"></a>
+<h2><a class="anchor" id="autotoc_md61"></a>
 2. Environment variables</h2>
 <p>Backend needs at least:</p>
 <div class="fragment"><div class="line">POSTGRESQL_URI=postgresql+psycopg://&lt;user&gt;:&lt;password&gt;@&lt;host&gt;:&lt;port&gt;/&lt;dbname&gt;</div>
@@ -187,7 +187,7 @@ How to launch the project</h1>
 <div class="line">export SMTP_PORT=&quot;465&quot;</div>
 <div class="line">export EMAIL_USERNAME=&quot;area@example.com&quot;</div>
 <div class="line">export EMAIL_PASSWORD=&quot;supersecret&quot;</div>
-</div><!-- fragment --><h2><a class="anchor" id="autotoc_md9"></a>
+</div><!-- fragment --><h2><a class="anchor" id="autotoc_md62"></a>
 3. Install dependencies (local)</h2>
 <p>From project root:</p>
 <div class="fragment"><div class="line">cd Backend</div>
@@ -196,7 +196,7 @@ How to launch the project</h1>
 <div class="line"> </div>
 <div class="line">pip install --upgrade pip</div>
 <div class="line">pip install -r requirements.txt</div>
-</div><!-- fragment --><h2><a class="anchor" id="autotoc_md10"></a>
+</div><!-- fragment --><h2><a class="anchor" id="autotoc_md63"></a>
 4. Run the backend without Docker</h2>
 <p>Still in <code>Backend/</code>:</p>
 <div class="fragment"><div class="line">export POSTGRESQL_URI=&quot;postgresql+psycopg://area:area@localhost:5432/area&quot;</div>
@@ -209,7 +209,7 @@ How to launch the project</h1>
 <li><code><a href="http://localhost:8080/about.json">http://localhost:8080/about.json</a></code></li>
 <li><code><a href="http://localhost:8080/docs">http://localhost:8080/docs</a></code></li>
 </ul>
-<h2><a class="anchor" id="autotoc_md11"></a>
+<h2><a class="anchor" id="autotoc_md64"></a>
 5. Build and run the backend with Docker</h2>
 <p>From <code>Backend/</code>:</p>
 <div class="fragment"><div class="line">./build_fastapi_docker_image.sh</div>
@@ -228,7 +228,7 @@ How to launch the project</h1>
 <li><code><a href="http://localhost:8080/about.json">http://localhost:8080/about.json</a></code></li>
 </ul>
 <hr  />
-<h1><a class="anchor" id="autotoc_md13"></a>
+<h1><a class="anchor" id="autotoc_md66"></a>
 Current limitations</h1>
 <ul>
 <li>No AREA / hook engine.</li>

@@ -1,0 +1,27 @@
+<map id="app.handlers.base.BaseWebhookHandler" name="app.handlers.base.BaseWebhookHandler">
+<area shape="rect" id="Node000001" title=" " alt="" coords="861,363,1067,491"/>
+<area shape="rect" id="Node000004" href="$classapp_1_1handlers_1_1github_1_1GitHubWebhookHandler.html" title=" " alt="" coords="589,539,760,688"/>
+<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="854,501,761,560,758,556,852,496"/>
+<area shape="rect" id="Node000011" href="$classapp_1_1handlers_1_1trello_1_1TrelloWebhookHandler.html" title=" " alt="" coords="1176,549,1331,677"/>
+<area shape="poly" id="edge10_Node000001_Node000011" title=" " alt="" coords="1077,496,1178,561,1175,565,1074,501"/>
+<area shape="rect" id="Node000002" href="$classapp_1_1handlers_1_1base_1_1BaseActionHandler.html" title=" " alt="" coords="869,123,1059,315"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="967,329,967,363,961,363,961,329"/>
+<area shape="rect" id="Node000003" title=" " alt="" coords="943,5,985,75"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="967,90,967,123,961,123,961,90"/>
+<area shape="rect" id="Node000005" href="$classapp_1_1handlers_1_1github_1_1GitHubIssueCommentHandler.html" title=" " alt="" coords="5,736,176,864"/>
+<area shape="poly" id="edge4_Node000004_Node000005" title=" " alt="" coords="575,632,490,648,392,671,289,701,189,738,177,744,175,739,187,734,287,696,391,666,489,643,574,627"/>
+<area shape="rect" id="Node000006" href="$classapp_1_1handlers_1_1github_1_1GitHubNewIssueHandler.html" title=" " alt="" coords="200,736,371,864"/>
+<area shape="poly" id="edge5_Node000004_Node000006" title=" " alt="" coords="577,653,482,692,384,738,372,745,369,740,381,734,480,687,575,648"/>
+<area shape="rect" id="Node000007" href="$classapp_1_1handlers_1_1github_1_1GitHubNewPullRequestHandler.html" title=" " alt="" coords="395,736,565,864"/>
+<area shape="poly" id="edge6_Node000004_Node000007" title=" " alt="" coords="588,700,548,738,544,734,585,696"/>
+<area shape="rect" id="Node000008" href="$classapp_1_1handlers_1_1github_1_1GitHubNewStarHandler.html" title=" " alt="" coords="589,736,760,864"/>
+<area shape="poly" id="edge7_Node000004_Node000008" title=" " alt="" coords="677,703,677,736,672,736,672,703"/>
+<area shape="rect" id="Node000009" href="$classapp_1_1handlers_1_1github_1_1GitHubPullRequestReviewHandler.html" title=" " alt="" coords="784,736,957,864"/>
+<area shape="poly" id="edge8_Node000004_Node000009" title=" " alt="" coords="765,696,806,734,802,738,762,700"/>
+<area shape="rect" id="Node000010" href="$classapp_1_1handlers_1_1github_1_1GitHubPushHandler.html" title=" " alt="" coords="981,736,1152,864"/>
+<area shape="poly" id="edge9_Node000004_Node000010" title=" " alt="" coords="775,648,871,687,971,734,983,740,980,745,968,738,869,692,773,653"/>
+<area shape="rect" id="Node000012" href="$classapp_1_1handlers_1_1trello_1_1TrelloCardMovedHandler.html" title=" " alt="" coords="1176,736,1331,864"/>
+<area shape="poly" id="edge11_Node000011_Node000012" title=" " alt="" coords="1256,692,1256,736,1251,736,1251,692"/>
+<area shape="rect" id="Node000013" href="$classapp_1_1handlers_1_1trello_1_1TrelloNewCardHandler.html" title=" " alt="" coords="1355,736,1509,864"/>
+<area shape="poly" id="edge12_Node000011_Node000013" title=" " alt="" coords="1326,686,1373,735,1370,738,1323,690"/>
+</map>

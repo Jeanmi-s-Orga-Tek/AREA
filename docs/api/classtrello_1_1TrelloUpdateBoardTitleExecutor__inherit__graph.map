@@ -1,0 +1,7 @@
+<map id="trello.TrelloUpdateBoardTitleExecutor" name="trello.TrelloUpdateBoardTitleExecutor">
+<area shape="rect" id="Node000001" title=" " alt="" coords="9,261,162,347"/>
+<area shape="rect" id="Node000002" href="$classtrello_1_1BaseTrelloExecutor.html" title=" " alt="" coords="5,123,165,213"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="88,228,88,262,83,262,83,228"/>
+<area shape="rect" id="Node000003" title=" " alt="" coords="38,5,133,75"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="88,89,88,123,83,123,83,89"/>
+</map>

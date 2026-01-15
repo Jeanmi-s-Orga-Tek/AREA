@@ -1,0 +1,23 @@
+<map id="app.handlers.google.GoogleGmailNewEmailHandler.poll" name="app.handlers.google.GoogleGmailNewEmailHandler.poll">
+<area shape="rect" id="Node000001" title=" " alt="" coords="5,369,190,412"/>
+<area shape="rect" id="Node000002" href="$classapp_1_1handlers_1_1base_1_1BasePollingHandler.html#a9fd89f3a609964c9c04d2fcf2deb6bec" title=" " alt="" coords="255,5,455,48"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="99,368,110,307,134,224,152,179,175,135,202,94,236,58,240,55,243,59,239,62,207,97,179,138,157,181,139,225,115,308,104,369"/>
+<area shape="rect" id="Node000003" href="$classapp_1_1handlers_1_1discord_1_1DiscordUserProfileChangeHandler.html#ab2aa2d1362baec887c51b37ed712648d" title=" " alt="" coords="246,72,464,131"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="103,368,119,321,147,260,185,196,209,167,236,141,240,137,243,142,239,145,213,170,190,200,151,263,124,323,108,370"/>
+<area shape="rect" id="Node000004" href="$classapp_1_1handlers_1_1google_1_1GoogleDriveNewFileHandler.html#ada1d655ec0d560a0fa980b7092cfe04a" title=" " alt="" coords="262,155,448,213"/>
+<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="110,367,159,297,195,258,236,223,247,216,249,221,239,227,199,261,164,300,114,370"/>
+<area shape="rect" id="Node000005" href="$classapp_1_1handlers_1_1google_1_1GoogleGmailNewEmailHandler.html#aba0e482f36d107be49b1f0d4304952eb" title=" " alt="" coords="254,237,456,296"/>
+<area shape="poly" id="edge4_Node000001_Node000005" title=" " alt="" coords="130,366,179,336,236,306,249,300,251,305,239,310,182,341,133,371"/>
+<area shape="rect" id="Node000006" href="$classapp_1_1handlers_1_1google_1_1GoogleYoutubeNewUploadHandler.html#a4c4d124613b6c471c1ffb24b1970ca21" title=" " alt="" coords="244,320,466,379"/>
+<area shape="poly" id="edge5_Node000001_Node000006" title=" " alt="" coords="190,373,228,367,229,372,190,378"/>
+<area shape="rect" id="Node000007" href="$classapp_1_1handlers_1_1spotify_1_1SpotifyNewPlaylistCreatedHandler.html#aba3ea4793c261c156b5f3622aa4806a5" title=" " alt="" coords="243,403,466,461"/>
+<area shape="poly" id="edge6_Node000001_Node000007" title=" " alt="" coords="190,403,228,409,228,414,190,408"/>
+<area shape="rect" id="Node000008" href="$classapp_1_1handlers_1_1spotify_1_1SpotifyTrackAddedToPlaylistHandler.html#a2d8c182f7e669c25f1fb1a336900b670" title=" " alt="" coords="238,485,472,544"/>
+<area shape="poly" id="edge7_Node000001_Node000008" title=" " alt="" coords="133,410,182,441,239,471,251,477,249,481,236,476,179,445,130,415"/>
+<area shape="rect" id="Node000009" href="$classapp_1_1handlers_1_1timer_1_1TimerDailyHandler.html#a7fef6de5539642e5def2b23e842ae31c" title=" " alt="" coords="262,568,448,611"/>
+<area shape="poly" id="edge8_Node000001_Node000009" title=" " alt="" coords="113,411,163,482,198,521,239,554,249,560,246,564,236,558,194,524,158,485,109,414"/>
+<area shape="rect" id="Node000010" href="$classapp_1_1handlers_1_1timer_1_1TimerScheduleHandler.html#a084d9e5e04c25aa0a3b84f22dd7e2080" title=" " alt="" coords="272,635,438,693"/>
+<area shape="poly" id="edge9_Node000001_Node000010" title=" " alt="" coords="109,412,126,455,154,511,191,570,214,597,239,621,260,634,257,639,236,625,210,601,187,573,149,514,121,458,104,414"/>
+<area shape="rect" id="Node000011" href="$classapp_1_1handlers_1_1trello_1_1TrelloCardDueSoonHandler.html#a78e3033dd52af8663ad63631a5c43016" title=" " alt="" coords="260,717,450,776"/>
+<area shape="poly" id="edge10_Node000001_Node000011" title=" " alt="" coords="105,412,118,470,143,548,160,590,182,631,209,669,240,703,249,711,245,715,236,707,204,673,178,634,156,592,138,550,113,471,100,413"/>
+</map>

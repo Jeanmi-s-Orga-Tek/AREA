@@ -1,8 +1,6 @@
 var searchData=
 [
-  ['oauth2_2epy_0',['oauth2.py',['../oauth2_8py.html',1,'']]],
-  ['oauth_5fconfig_2epy_1',['oauth_config.py',['../oauth__config_8py.html',1,'']]],
-  ['oauth_5fhandler_2epy_2',['oauth_handler.py',['../oauth__handler_8py.html',1,'']]],
-  ['oauth_5fmodels_2epy_3',['oauth_models.py',['../oauth__models_8py.html',1,'']]],
-  ['oauthcallbackscreen_2etsx_4',['OAuthCallbackScreen.tsx',['../OAuthCallbackScreen_8tsx.html',1,'']]]
+  ['launch_5fdocker_2esh_0',['launch_docker.sh',['../launch__docker_8sh.html',1,'']]],
+  ['loginscreen_2etsx_1',['LoginScreen.tsx',['../LoginScreen_8tsx.html',1,'']]],
+  ['loginscreen_5f8tsx_2ejs_2',['LoginScreen_8tsx.js',['../LoginScreen__8tsx_8js.html',1,'']]]
 ];

@@ -1,25 +1,5 @@
 var searchData=
 [
-  ['last_5ferror_0',['last_error',['../classapp_1_1oauth__models_1_1ServiceAccount.html#a0c77c83b3d15985c66ceb11df5134d6f',1,'app::oauth_models::ServiceAccount']]],
-  ['last_5fused_5fat_1',['last_used_at',['../classapp_1_1oauth__models_1_1ServiceAccount.html#afdbff5ed93a69593258e4e1d34c5e44c',1,'app::oauth_models::ServiceAccount']]],
-  ['launch_20the_20project_2',['How to launch the project',['../index.html#autotoc_md6',1,'']]],
-  ['launch_5fdocker_2esh_3',['launch_docker.sh',['../launch__docker_8sh.html',1,'']]],
-  ['lifespan_4',['lifespan',['../namespaceapp_1_1main.html#a1f22a2bdb69722841cc52c377e2ef10d',1,'app::main']]],
-  ['limitations_5',['Current limitations',['../index.html#autotoc_md13',1,'']]],
-  ['linked_5faction_6',['linked_action',['../classapp_1_1user__reaction_1_1UserReaction.html#ab0c49b732d06263829e2f6d34a33074f',1,'app.user_reaction.UserReaction.linked_action'],['../classapp_1_1user__reaction_1_1UserReactionCreate.html#a311547514ee471313cd90245bb211b97',1,'app.user_reaction.UserReactionCreate.linked_action']]],
-  ['linked_5fbase_5faction_7',['linked_base_action',['../classapp_1_1user__action_1_1UserAction.html#a0f11dee6f0eb4cc627eb419797227700',1,'app::user_action::UserAction']]],
-  ['linked_5fbase_5freaction_8',['linked_base_reaction',['../classapp_1_1user__reaction_1_1UserReaction.html#a958df481d5531db5ade9d83e6da55211',1,'app::user_reaction::UserReaction']]],
-  ['list_5fareas_9',['list_areas',['../namespaceapp_1_1routers_1_1areas.html#a0ab59f1af5f1390fb83eaf5577475fc6',1,'app::routers::areas']]],
-  ['list_5favailable_5fservices_10',['list_available_services',['../namespaceapp_1_1routers_1_1service__accounts.html#a20b28767fb091f43712311c36e026ead',1,'app::routers::service_accounts']]],
-  ['list_5fproviders_5ffor_5ffrontend_11',['list_providers_for_frontend',['../namespaceapp_1_1core_1_1oauth__config.html#aa3cc21103c047b9249c7be883f692138',1,'app::core::oauth_config']]],
-  ['load_5fyaml_5ffile_12',['load_yaml_file',['../namespaceapp_1_1db.html#a38000937adf31bedee700ba19a1187da',1,'app::db']]],
-  ['loadareas_13',['loadAreas',['../AreasScreen_8tsx.html#a3dc565c81b8503277f57071de03ed3b9',1,'AreasScreen.tsx']]],
-  ['loadprofiledata_14',['loadProfileData',['../ProfileScreen_8tsx.html#ae44dd30a47c4e17dfdf4565552d12004',1,'ProfileScreen.tsx']]],
-  ['loadservicecapabilities_15',['loadServiceCapabilities',['../CreateAreaScreen_8tsx.html#a81470381e4ae4f1a97852ef31ba46b66',1,'CreateAreaScreen.tsx']]],
-  ['loadservices_16',['loadServices',['../CreateAreaScreen_8tsx.html#a6365894624cf249c9736279eddce90ca',1,'loadServices:&#160;CreateAreaScreen.tsx'],['../ServicesScreen_8tsx.html#a6365894624cf249c9736279eddce90ca',1,'loadServices:&#160;ServicesScreen.tsx']]],
-  ['local_17',['3. Install dependencies (local)',['../index.html#autotoc_md9',1,'']]],
-  ['login_18',['login',['../namespaceapp_1_1user.html#a3897a3bab9fda1ce2c4892d5631d5283',1,'app::user']]],
-  ['logindata_19',['LoginData',['../auth_8ts.html#a91a7d94d48b64f9ee3689be9288767a9',1,'auth.ts']]],
-  ['loginscreen_20',['LoginScreen',['../App_8tsx.html#a15f9f58ae84ce3d70ce0f3e50baa9b33',1,'LoginScreen:&#160;App.tsx'],['../LoginScreen_8tsx.html#a15f9f58ae84ce3d70ce0f3e50baa9b33',1,'LoginScreen:&#160;LoginScreen.tsx']]],
-  ['loginscreen_2etsx_21',['LoginScreen.tsx',['../LoginScreen_8tsx.html',1,'']]]
+  ['jquery_2ejs_0',['jquery.js',['../jquery_8js.html',1,'']]],
+  ['justifycontent_1',['justifyContent',['../ServiceCallbackScreen_8tsx.html#afc1eccac961c8e3525f89ae3180dab40',1,'ServiceCallbackScreen.tsx']]]
 ];

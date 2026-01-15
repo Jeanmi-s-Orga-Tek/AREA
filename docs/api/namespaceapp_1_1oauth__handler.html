@@ -98,13 +98,22 @@ $(function(){initNavTree('namespaceapp_1_1oauth__handler.html',''); initResizabl
 
 <div class="header">
   <div class="summary">
-<a href="#func-members">Functions</a>  </div>
+<a href="#func-members">Functions</a> &#124;
+<a href="#var-members">Variables</a>  </div>
   <div class="headertitle"><div class="title">app.oauth_handler Namespace Reference</div></div>
 </div><!--header-->
 <div class="contents">
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="func-members" name="func-members"></a>
 Functions</h2></td></tr>
+<tr class="memitem:a66316cb934023d31075a919b48d8fd5d" id="r_a66316cb934023d31075a919b48d8fd5d"><td class="memItemLeft" align="right" valign="top">Optional[str]&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a66316cb934023d31075a919b48d8fd5d">normalize_client_redirect_uri</a> (Optional[str] uri)</td></tr>
+<tr class="separator:a66316cb934023d31075a919b48d8fd5d"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ac46502331eee4f898bbfddb4b4b058fe" id="r_ac46502331eee4f898bbfddb4b4b058fe"><td class="memItemLeft" align="right" valign="top">str&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ac46502331eee4f898bbfddb4b4b058fe">encode_oauth_state</a> (Optional[str] raw_state, Optional[str] client_redirect_uri, Optional[str] platform=None)</td></tr>
+<tr class="separator:ac46502331eee4f898bbfddb4b4b058fe"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ac99045ef8c6101396dc1d27cd6a20a9e" id="r_ac99045ef8c6101396dc1d27cd6a20a9e"><td class="memItemLeft" align="right" valign="top">Tuple[str, Optional[str], Optional[str]]&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ac99045ef8c6101396dc1d27cd6a20a9e">decode_oauth_state</a> (Optional[str] state)</td></tr>
+<tr class="separator:ac99045ef8c6101396dc1d27cd6a20a9e"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a1a6f66af0be55db664ae1faab0859329" id="r_a1a6f66af0be55db664ae1faab0859329"><td class="memItemLeft" align="right" valign="top">str&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a1a6f66af0be55db664ae1faab0859329">append_query_params</a> (str url, Dict[str, Optional[str]] params)</td></tr>
+<tr class="separator:a1a6f66af0be55db664ae1faab0859329"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a12ff2c078ce3674732086f84a4121fb2" id="r_a12ff2c078ce3674732086f84a4121fb2"><td class="memItemLeft" align="right" valign="top">str&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a12ff2c078ce3674732086f84a4121fb2">generate_oauth_state</a> (str provider, str flow, Optional[str] redirect_uri=None)</td></tr>
 <tr class="separator:a12ff2c078ce3674732086f84a4121fb2"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ad200491ca5b4584178b2cd0fefd5fd72" id="r_ad200491ca5b4584178b2cd0fefd5fd72"><td class="memItemLeft" align="right" valign="top">Dict[str, Any]&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ad200491ca5b4584178b2cd0fefd5fd72">exchange_code_for_token</a> (str provider, str flow, str code)</td></tr>
@@ -113,8 +122,83 @@ Functions</h2></td></tr>
 <tr class="separator:a6a10426c57a38388cb0690b87b5850b3"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:abae7da772a6aeaa549a8a59da3b9b891" id="r_abae7da772a6aeaa549a8a59da3b9b891"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classapp_1_1user_1_1User.html">User</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#abae7da772a6aeaa549a8a59da3b9b891">find_or_create_user_from_oauth</a> (Session session, str provider, str provider_user_id, Dict[str, Any] user_info, Dict[str, Any] token_data)</td></tr>
 <tr class="separator:abae7da772a6aeaa549a8a59da3b9b891"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="var-members" name="var-members"></a>
+Variables</h2></td></tr>
+<tr class="memitem:a8fd67daca44754a6493aae0abb02409b" id="r_a8fd67daca44754a6493aae0abb02409b"><td class="memItemLeft" align="right" valign="top">str&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a8fd67daca44754a6493aae0abb02409b">STATE_PREFIX</a> = &quot;area::v1::&quot;</td></tr>
+<tr class="separator:a8fd67daca44754a6493aae0abb02409b"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <h2 class="groupheader">Function Documentation</h2>
+<a id="a1a6f66af0be55db664ae1faab0859329" name="a1a6f66af0be55db664ae1faab0859329"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a1a6f66af0be55db664ae1faab0859329">&#9670;&#160;</a></span>append_query_params()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"> str app.oauth_handler.append_query_params </td>
+          <td>(</td>
+          <td class="paramtype">str</td>          <td class="paramname"><span class="paramname"><em>url</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">Dict[str, Optional[str]]</td>          <td class="paramname"><span class="paramname"><em>params</em></span>&#160;)</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="oauth__handler_8py_source.html#l00077">77</a> of file <a class="el" href="oauth__handler_8py_source.html">oauth_handler.py</a>.</p>
+
+</div>
+</div>
+<a id="ac99045ef8c6101396dc1d27cd6a20a9e" name="ac99045ef8c6101396dc1d27cd6a20a9e"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ac99045ef8c6101396dc1d27cd6a20a9e">&#9670;&#160;</a></span>decode_oauth_state()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"> Tuple[str, Optional[str], Optional[str]] app.oauth_handler.decode_oauth_state </td>
+          <td>(</td>
+          <td class="paramtype">Optional[str]</td>          <td class="paramname"><span class="paramname"><em>state</em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="oauth__handler_8py_source.html#l00057">57</a> of file <a class="el" href="oauth__handler_8py_source.html">oauth_handler.py</a>.</p>
+
+</div>
+</div>
+<a id="ac46502331eee4f898bbfddb4b4b058fe" name="ac46502331eee4f898bbfddb4b4b058fe"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ac46502331eee4f898bbfddb4b4b058fe">&#9670;&#160;</a></span>encode_oauth_state()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"> str app.oauth_handler.encode_oauth_state </td>
+          <td>(</td>
+          <td class="paramtype">Optional[str]</td>          <td class="paramname"><span class="paramname"><em>raw_state</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">Optional[str]</td>          <td class="paramname"><span class="paramname"><em>client_redirect_uri</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">Optional[str] </td>          <td class="paramname"><span class="paramname"><em>platform</em></span><span class="paramdefsep"> = </span><span class="paramdefval">None</span>&#160;)</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="oauth__handler_8py_source.html#l00036">36</a> of file <a class="el" href="oauth__handler_8py_source.html">oauth_handler.py</a>.</p>
+
+</div>
+</div>
 <a id="ad200491ca5b4584178b2cd0fefd5fd72" name="ad200491ca5b4584178b2cd0fefd5fd72"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#ad200491ca5b4584178b2cd0fefd5fd72">&#9670;&#160;</a></span>exchange_code_for_token()</h2>
 
@@ -139,7 +223,7 @@ Functions</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="oauth__handler_8py_source.html#l00019">19</a> of file <a class="el" href="oauth__handler_8py_source.html">oauth_handler.py</a>.</p>
+<p class="definition">Definition at line <a class="el" href="oauth__handler_8py_source.html#l00093">93</a> of file <a class="el" href="oauth__handler_8py_source.html">oauth_handler.py</a>.</p>
 
 </div>
 </div>
@@ -178,7 +262,7 @@ Functions</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="oauth__handler_8py_source.html#l00158">158</a> of file <a class="el" href="oauth__handler_8py_source.html">oauth_handler.py</a>.</p>
+<p class="definition">Definition at line <a class="el" href="oauth__handler_8py_source.html#l00243">243</a> of file <a class="el" href="oauth__handler_8py_source.html">oauth_handler.py</a>.</p>
 
 </div>
 </div>
@@ -206,7 +290,7 @@ Functions</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="oauth__handler_8py_source.html#l00013">13</a> of file <a class="el" href="oauth__handler_8py_source.html">oauth_handler.py</a>.</p>
+<p class="definition">Definition at line <a class="el" href="oauth__handler_8py_source.html#l00087">87</a> of file <a class="el" href="oauth__handler_8py_source.html">oauth_handler.py</a>.</p>
 
 </div>
 </div>
@@ -229,7 +313,43 @@ Functions</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="oauth__handler_8py_source.html#l00075">75</a> of file <a class="el" href="oauth__handler_8py_source.html">oauth_handler.py</a>.</p>
+<p class="definition">Definition at line <a class="el" href="oauth__handler_8py_source.html#l00160">160</a> of file <a class="el" href="oauth__handler_8py_source.html">oauth_handler.py</a>.</p>
+
+</div>
+</div>
+<a id="a66316cb934023d31075a919b48d8fd5d" name="a66316cb934023d31075a919b48d8fd5d"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a66316cb934023d31075a919b48d8fd5d">&#9670;&#160;</a></span>normalize_client_redirect_uri()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"> Optional[str] app.oauth_handler.normalize_client_redirect_uri </td>
+          <td>(</td>
+          <td class="paramtype">Optional[str]</td>          <td class="paramname"><span class="paramname"><em>uri</em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="oauth__handler_8py_source.html#l00019">19</a> of file <a class="el" href="oauth__handler_8py_source.html">oauth_handler.py</a>.</p>
+
+</div>
+</div>
+<h2 class="groupheader">Variable Documentation</h2>
+<a id="a8fd67daca44754a6493aae0abb02409b" name="a8fd67daca44754a6493aae0abb02409b"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a8fd67daca44754a6493aae0abb02409b">&#9670;&#160;</a></span>STATE_PREFIX</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">str app.oauth_handler.STATE_PREFIX = &quot;area::v1::&quot;</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="oauth__handler_8py_source.html#l00016">16</a> of file <a class="el" href="oauth__handler_8py_source.html">oauth_handler.py</a>.</p>
 
 </div>
 </div>

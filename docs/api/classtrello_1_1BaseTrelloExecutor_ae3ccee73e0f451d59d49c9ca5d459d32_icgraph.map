@@ -1,0 +1,11 @@
+<map id="trello.BaseTrelloExecutor._get_trello_credentials" name="trello.BaseTrelloExecutor._get_trello_credentials">
+<area shape="rect" id="Node000001" title=" " alt="" coords="321,73,492,116"/>
+<area shape="rect" id="Node000002" href="$classtrello_1_1TrelloAddCommentExecutor.html#a5d852d358ff4a2f91a5b8ccf1347423a" title=" " alt="" coords="5,5,273,32"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="339,70,272,47,225,35,226,30,273,41,341,65"/>
+<area shape="rect" id="Node000003" href="$classtrello_1_1TrelloCreateCardExecutor.html#a3ffd2f5cf2cf6463a1c3f56bfea10c96" title=" " alt="" coords="12,56,266,83"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="305,88,266,84,267,79,305,82"/>
+<area shape="rect" id="Node000004" href="$classtrello_1_1TrelloMoveCardExecutor.html#a44e633902f3d346b3fd1f0178559b840" title=" " alt="" coords="15,107,263,133"/>
+<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="305,107,264,111,263,106,305,102"/>
+<area shape="rect" id="Node000005" href="$classtrello_1_1TrelloUpdateBoardTitleExecutor.html#a9b4e1f18fb1c06768465497ae3b03aa3" title=" " alt="" coords="58,157,220,200"/>
+<area shape="poly" id="edge4_Node000001_Node000005" title=" " alt="" coords="339,125,273,148,221,163,219,158,272,143,337,120"/>
+</map>

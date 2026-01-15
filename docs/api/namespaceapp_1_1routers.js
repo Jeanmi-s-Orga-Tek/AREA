@@ -33,5 +33,11 @@ var namespaceapp_1_1routers =
       [ "unsubscribe_service", "namespaceapp_1_1routers_1_1services.html#a167ba2b51d4577fae998f431a62c7825", null ],
       [ "services_router", "namespaceapp_1_1routers_1_1services.html#a607dae59f937b44c2fc8ede0d4d2ad85", null ],
       [ "TokenDep", "namespaceapp_1_1routers_1_1services.html#af9664f90151fae9057fe6aae923f566c", null ]
+    ] ],
+    [ "webhooks", "namespaceapp_1_1routers_1_1webhooks.html", [
+      [ "github_webhook", "namespaceapp_1_1routers_1_1webhooks.html#a9513be1507d0880139b679ca633ac7b8", null ],
+      [ "github_webhook_verify", "namespaceapp_1_1routers_1_1webhooks.html#adcfe39d558eed9462878fe821a3a0f1e", null ],
+      [ "trello_webhook", "namespaceapp_1_1routers_1_1webhooks.html#a8606000a327b7fcfe5c9ecf0bcd56288", null ],
+      [ "webhooks_router", "namespaceapp_1_1routers_1_1webhooks.html#a7ff124fe70b11cddee7979e1e7dc938b", null ]
     ] ]
 ];

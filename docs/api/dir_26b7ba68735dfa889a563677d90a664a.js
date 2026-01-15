@@ -4,5 +4,7 @@ var dir_26b7ba68735dfa889a563677d90a664a =
     [ "GitHub.yaml", "GitHub_8yaml.html", null ],
     [ "Google.yaml", "Google_8yaml.html", null ],
     [ "Microsoft.yaml", "Microsoft_8yaml.html", null ],
+    [ "Spotify.yaml", "Spotify_8yaml.html", null ],
+    [ "Timer.yaml", "Timer_8yaml.html", null ],
     [ "Trello.yaml", "Trello_8yaml.html", null ]
 ];

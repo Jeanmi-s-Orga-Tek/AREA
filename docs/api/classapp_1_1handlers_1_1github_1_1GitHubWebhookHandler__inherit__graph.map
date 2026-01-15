@@ -1,0 +1,21 @@
+<map id="app.handlers.github.GitHubWebhookHandler" name="app.handlers.github.GitHubWebhookHandler">
+<area shape="rect" id="Node000001" title=" " alt="" coords="492,539,663,688"/>
+<area shape="rect" id="Node000005" href="$classapp_1_1handlers_1_1github_1_1GitHubIssueCommentHandler.html" title=" " alt="" coords="5,736,176,864"/>
+<area shape="poly" id="edge4_Node000001_Node000005" title=" " alt="" coords="478,640,339,681,263,707,189,738,177,744,175,740,187,734,261,702,337,676,477,635"/>
+<area shape="rect" id="Node000006" href="$classapp_1_1handlers_1_1github_1_1GitHubNewIssueHandler.html" title=" " alt="" coords="200,736,371,864"/>
+<area shape="poly" id="edge5_Node000001_Node000006" title=" " alt="" coords="481,677,384,738,372,746,369,742,381,734,478,673"/>
+<area shape="rect" id="Node000007" href="$classapp_1_1handlers_1_1github_1_1GitHubNewPullRequestHandler.html" title=" " alt="" coords="395,736,565,864"/>
+<area shape="poly" id="edge6_Node000001_Node000007" title=" " alt="" coords="534,702,515,738,511,735,529,700"/>
+<area shape="rect" id="Node000008" href="$classapp_1_1handlers_1_1github_1_1GitHubNewStarHandler.html" title=" " alt="" coords="589,736,760,864"/>
+<area shape="poly" id="edge7_Node000001_Node000008" title=" " alt="" coords="625,700,644,735,639,738,621,702"/>
+<area shape="rect" id="Node000009" href="$classapp_1_1handlers_1_1github_1_1GitHubPullRequestReviewHandler.html" title=" " alt="" coords="784,736,957,864"/>
+<area shape="poly" id="edge8_Node000001_Node000009" title=" " alt="" coords="676,673,773,734,785,741,783,746,771,738,673,677"/>
+<area shape="rect" id="Node000010" href="$classapp_1_1handlers_1_1github_1_1GitHubPushHandler.html" title=" " alt="" coords="981,736,1152,864"/>
+<area shape="poly" id="edge9_Node000001_Node000010" title=" " alt="" coords="678,635,819,675,896,702,970,734,983,740,980,744,968,738,894,707,817,680,676,640"/>
+<area shape="rect" id="Node000002" href="$classapp_1_1handlers_1_1base_1_1BaseWebhookHandler.html" title=" " alt="" coords="474,363,681,491"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="580,505,580,539,575,539,575,505"/>
+<area shape="rect" id="Node000003" href="$classapp_1_1handlers_1_1base_1_1BaseActionHandler.html" title=" " alt="" coords="483,123,672,315"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="580,329,580,363,575,363,575,329"/>
+<area shape="rect" id="Node000004" title=" " alt="" coords="557,5,598,75"/>
+<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="580,90,580,123,575,123,575,90"/>
+</map>

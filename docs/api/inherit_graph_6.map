@@ -1,5 +1,37 @@
 <map id="Graphical Class Hierarchy" name="Graphical Class Hierarchy">
-<area shape="rect" id="Node000000" title=" " alt="" coords="5,13,71,40"/>
-<area shape="rect" id="Node000001" href="$classapp_1_1oauth2_1_1OAuth2PasswordBearerWithCookie.html" title=" " alt="" coords="119,5,310,48"/>
-<area shape="poly" id="edge7_Node000000_Node000001" title=" " alt="" coords="86,24,118,24,118,29,86,29"/>
+<area shape="rect" id="Node000000" title=" " alt="" coords="5,293,109,320"/>
+<area shape="rect" id="Node000001" href="$classdiscord_1_1DiscordSendWebhookMessageExecutor.html" title=" " alt="" coords="157,64,353,107"/>
+<area shape="poly" id="edge24_Node000000_Node000001" title=" " alt="" coords="63,278,75,242,94,199,121,155,155,117,172,105,175,109,158,121,125,158,99,201,80,244,68,280"/>
+<area shape="rect" id="Node000002" href="$classgithub_1_1BaseGitHubExecutor.html" title=" " alt="" coords="163,131,346,157"/>
+<area shape="poly" id="edge25_Node000000_Node000002" title=" " alt="" coords="85,281,235,156,239,160,88,285"/>
+<area shape="rect" id="Node000006" href="$classgoogle_1_1BaseGoogleExecutor.html" title=" " alt="" coords="162,264,348,291"/>
+<area shape="poly" id="edge29_Node000000_Node000006" title=" " alt="" coords="124,294,161,289,161,294,125,299"/>
+<area shape="rect" id="Node000011" href="$classspotify_1_1SpotifyAddTrackToPlaylistExecutor.html" title=" " alt="" coords="168,315,342,357"/>
+<area shape="poly" id="edge34_Node000000_Node000011" title=" " alt="" coords="125,314,167,320,167,326,124,319"/>
+<area shape="rect" id="Node000012" href="$classspotify_1_1SpotifyCreatePlaylistExecutor.html" title=" " alt="" coords="162,381,348,424"/>
+<area shape="poly" id="edge35_Node000000_Node000012" title=" " alt="" coords="91,327,158,367,184,378,182,383,155,372,88,332"/>
+<area shape="rect" id="Node000013" href="$classtrello_1_1BaseTrelloExecutor.html" title=" " alt="" coords="171,475,338,501"/>
+<area shape="poly" id="edge36_Node000000_Node000013" title=" " alt="" coords="76,332,111,382,133,409,158,434,189,455,221,472,218,476,186,460,155,438,129,413,106,386,72,335"/>
+<area shape="rect" id="Node000003" href="$classgithub_1_1GitHubAddCommentExecutor.html" title=" " alt="" coords="401,5,634,32"/>
+<area shape="poly" id="edge26_Node000002_Node000003" title=" " alt="" coords="344,121,351,117,367,99,374,80,382,60,399,42,421,30,424,35,403,46,387,63,379,82,372,102,355,121,347,126"/>
+<area shape="rect" id="Node000004" href="$classgithub_1_1GitHubCreateBranchExecutor.html" title=" " alt="" coords="427,56,608,99"/>
+<area shape="poly" id="edge27_Node000002_Node000004" title=" " alt="" coords="325,124,430,97,431,102,326,129"/>
+<area shape="rect" id="Node000005" href="$classgithub_1_1GitHubCreateIssueExecutor.html" title=" " alt="" coords="432,123,604,165"/>
+<area shape="poly" id="edge28_Node000002_Node000005" title=" " alt="" coords="362,141,431,141,431,147,362,147"/>
+<area shape="rect" id="Node000007" href="$classgoogle_1_1GoogleCreateEventExecutor.html" title=" " alt="" coords="429,189,606,232"/>
+<area shape="poly" id="edge30_Node000006_Node000007" title=" " alt="" coords="325,257,430,230,431,235,326,262"/>
+<area shape="rect" id="Node000008" href="$classgoogle_1_1GoogleCreateFolderExecutor.html" title=" " alt="" coords="428,256,607,299"/>
+<area shape="poly" id="edge31_Node000006_Node000008" title=" " alt="" coords="364,275,428,275,428,280,364,280"/>
+<area shape="rect" id="Node000009" href="$classgoogle_1_1GoogleSendEmailExecutor.html" title=" " alt="" coords="408,323,627,349"/>
+<area shape="poly" id="edge32_Node000006_Node000009" title=" " alt="" coords="331,292,402,308,453,319,452,325,400,313,330,297"/>
+<area shape="rect" id="Node000010" href="$classgoogle_1_1GoogleUpdateCellExecutor.html" title=" " alt="" coords="407,373,628,400"/>
+<area shape="poly" id="edge33_Node000006_Node000010" title=" " alt="" coords="345,295,355,301,371,315,379,331,387,346,402,359,426,370,424,375,400,364,383,349,375,334,366,319,351,305,342,300"/>
+<area shape="rect" id="Node000014" href="$classtrello_1_1TrelloAddCommentExecutor.html" title=" " alt="" coords="409,424,626,451"/>
+<area shape="poly" id="edge37_Node000013_Node000014" title=" " alt="" coords="342,469,444,449,445,454,343,474"/>
+<area shape="rect" id="Node000015" href="$classtrello_1_1TrelloCreateCardExecutor.html" title=" " alt="" coords="416,475,620,501"/>
+<area shape="poly" id="edge38_Node000013_Node000015" title=" " alt="" coords="354,485,415,485,415,491,354,491"/>
+<area shape="rect" id="Node000016" href="$classtrello_1_1TrelloMoveCardExecutor.html" title=" " alt="" coords="419,525,616,552"/>
+<area shape="poly" id="edge39_Node000013_Node000016" title=" " alt="" coords="343,502,445,522,444,527,342,507"/>
+<area shape="rect" id="Node000017" href="$classtrello_1_1TrelloUpdateBoardTitleExecutor.html" title=" " alt="" coords="437,576,598,619"/>
+<area shape="poly" id="edge40_Node000013_Node000017" title=" " alt="" coords="293,507,344,535,402,562,438,574,436,579,400,566,342,539,291,512"/>
 </map>

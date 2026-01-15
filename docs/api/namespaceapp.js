@@ -1,6 +1,17 @@
 var namespaceapp =
 [
     [ "action", "namespaceapp_1_1action.html", "namespaceapp_1_1action" ],
+    [ "area_engine", "namespaceapp_1_1area__engine.html", [
+      [ "action_name_to_key", "namespaceapp_1_1area__engine.html#aaf66e19874e1e10e971a904d631c41ab", null ],
+      [ "check_action_conditions", "namespaceapp_1_1area__engine.html#abfe3b0a96a5e0558e981db240f066d39", null ],
+      [ "execute_area", "namespaceapp_1_1area__engine.html#ab28d3f75a9d7a8b20d0a5e219a16b7fe", null ],
+      [ "get_nested_value", "namespaceapp_1_1area__engine.html#a6d272313d230efaad9eade58b221745e", null ],
+      [ "interpolate_parameters", "namespaceapp_1_1area__engine.html#a5aa9be97ce9a830bf00bade2e77f5d51", null ],
+      [ "interpolate_single_value", "namespaceapp_1_1area__engine.html#a343570afddea12486de42ff53ee9c060", null ],
+      [ "reaction_name_to_key", "namespaceapp_1_1area__engine.html#ab8d65d7a5fcb78515462dba22d4f6d4a", null ],
+      [ "trigger_areas", "namespaceapp_1_1area__engine.html#ae53477596d69e4222be1d276a1a63262", null ],
+      [ "trigger_areas_with_handlers", "namespaceapp_1_1area__engine.html#a9ca07a447e39d915cf5dd8801e838344", null ]
+    ] ],
     [ "core", "namespaceapp_1_1core.html", "namespaceapp_1_1core" ],
     [ "db", "namespaceapp_1_1db.html", [
       [ "create_db_tables", "namespaceapp_1_1db.html#ac8810a496f6c3ecc6275f5c0f02c64e7", null ],
@@ -13,14 +24,15 @@ var namespaceapp =
       [ "POSTGRESQL_URI", "namespaceapp_1_1db.html#a57a87457f75c9dd132760398d7eed913", null ],
       [ "SessionDep", "namespaceapp_1_1db.html#a1c504bb4c8a21c405caee8453a4cc747", null ]
     ] ],
+    [ "handlers", "namespaceapp_1_1handlers.html", "namespaceapp_1_1handlers" ],
     [ "main", "namespaceapp_1_1main.html", [
       [ "about", "namespaceapp_1_1main.html#a219a9db619de87a960254b24e006e20e", null ],
-      [ "auth_get_authorization_url_alias", "namespaceapp_1_1main.html#a14958015c121493afd39e5bb1fa0c196", null ],
+      [ "auth_get_authorization_url_alias", "namespaceapp_1_1main.html#a8fb48a7c216aeb7a8816964f56d268b0", null ],
       [ "get_client_ip", "namespaceapp_1_1main.html#a7766109be06158d145f0b1a0e229aca5", null ],
       [ "health", "namespaceapp_1_1main.html#ab0a77f1ada0e808c98e4f7bac6ed7b90", null ],
       [ "lifespan", "namespaceapp_1_1main.html#a1f22a2bdb69722841cc52c377e2ef10d", null ],
       [ "oauth_callback", "namespaceapp_1_1main.html#a633b419d9ae85a95434625da682a3890", null ],
-      [ "oauth_get_authorization_url", "namespaceapp_1_1main.html#a28e0c388887f6f91b41e5f83eeb7e26e", null ],
+      [ "oauth_get_authorization_url", "namespaceapp_1_1main.html#aa7a910a4fc3a03d24c325d81e4bcc522", null ],
       [ "oauth_list_providers", "namespaceapp_1_1main.html#a40bd7525f4634966cfa26850b5468ba3", null ],
       [ "oauth_public_config", "namespaceapp_1_1main.html#a51c8b718bf026d21f80e544443fed9b7", null ],
       [ "oauth_reload", "namespaceapp_1_1main.html#ad4afbc5612b8d0598dc4062a73c50763", null ],
@@ -37,12 +49,21 @@ var namespaceapp =
     ] ],
     [ "oauth2", "namespaceapp_1_1oauth2.html", "namespaceapp_1_1oauth2" ],
     [ "oauth_handler", "namespaceapp_1_1oauth__handler.html", [
+      [ "append_query_params", "namespaceapp_1_1oauth__handler.html#a1a6f66af0be55db664ae1faab0859329", null ],
+      [ "decode_oauth_state", "namespaceapp_1_1oauth__handler.html#ac99045ef8c6101396dc1d27cd6a20a9e", null ],
+      [ "encode_oauth_state", "namespaceapp_1_1oauth__handler.html#ac46502331eee4f898bbfddb4b4b058fe", null ],
       [ "exchange_code_for_token", "namespaceapp_1_1oauth__handler.html#ad200491ca5b4584178b2cd0fefd5fd72", null ],
       [ "find_or_create_user_from_oauth", "namespaceapp_1_1oauth__handler.html#abae7da772a6aeaa549a8a59da3b9b891", null ],
       [ "generate_oauth_state", "namespaceapp_1_1oauth__handler.html#a12ff2c078ce3674732086f84a4121fb2", null ],
-      [ "get_user_info_from_provider", "namespaceapp_1_1oauth__handler.html#a6a10426c57a38388cb0690b87b5850b3", null ]
+      [ "get_user_info_from_provider", "namespaceapp_1_1oauth__handler.html#a6a10426c57a38388cb0690b87b5850b3", null ],
+      [ "normalize_client_redirect_uri", "namespaceapp_1_1oauth__handler.html#a66316cb934023d31075a919b48d8fd5d", null ],
+      [ "STATE_PREFIX", "namespaceapp_1_1oauth__handler.html#a8fd67daca44754a6493aae0abb02409b", null ]
     ] ],
     [ "oauth_models", "namespaceapp_1_1oauth__models.html", "namespaceapp_1_1oauth__models" ],
+    [ "polling_worker", "namespaceapp_1_1polling__worker.html", [
+      [ "poll_action", "namespaceapp_1_1polling__worker.html#a63e2545e8a41c78cb53d31f191c66654", null ],
+      [ "polling_worker", "namespaceapp_1_1polling__worker.html#a804c7f1cdcca198e79d165a2501186b4", null ]
+    ] ],
     [ "reaction", "namespaceapp_1_1reaction.html", "namespaceapp_1_1reaction" ],
     [ "routers", "namespaceapp_1_1routers.html", "namespaceapp_1_1routers" ],
     [ "schemas", "namespaceapp_1_1schemas.html", "namespaceapp_1_1schemas" ],
@@ -75,5 +96,6 @@ var namespaceapp =
     ] ],
     [ "user", "namespaceapp_1_1user.html", "namespaceapp_1_1user" ],
     [ "user_action", "namespaceapp_1_1user__action.html", "namespaceapp_1_1user__action" ],
-    [ "user_reaction", "namespaceapp_1_1user__reaction.html", "namespaceapp_1_1user__reaction" ]
+    [ "user_reaction", "namespaceapp_1_1user__reaction.html", "namespaceapp_1_1user__reaction" ],
+    [ "webhook_manager", "namespaceapp_1_1webhook__manager.html", "namespaceapp_1_1webhook__manager" ]
 ];

@@ -1,0 +1,5 @@
+<map id="app.handlers.trello.TrelloCardMovedHandler.webhook_events" name="app.handlers.trello.TrelloCardMovedHandler.webhook_events">
+<area shape="rect" id="Node000001" title=" " alt="" coords="269,5,504,48"/>
+<area shape="rect" id="Node000002" href="$classapp_1_1handlers_1_1github_1_1GitHubWebhookHandler.html#a7816a4abf27634f53a48f3c269aaf7d0" title=" " alt="" coords="5,5,221,48"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="253,29,221,29,221,24,253,24"/>
+</map>

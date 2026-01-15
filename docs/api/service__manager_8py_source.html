@@ -102,7 +102,7 @@ $(function(){initNavTree('service__manager_8py_source.html',''); initResizable(t
 <div class="contents">
 <a href="service__manager_8py.html">Go to the documentation of this file.</a><div class="fragment"><div class="line"><a id="l00001" name="l00001"></a><span class="lineno"><a class="line" href="namespaceapp_1_1service__manager.html">    1</a></span><span class="keyword">from</span> datetime <span class="keyword">import</span> datetime, timedelta</div>
 <div class="line"><a id="l00002" name="l00002"></a><span class="lineno">    2</span><span class="keyword">from</span> typing <span class="keyword">import</span> Optional, List, Dict, Any</div>
-<div class="line"><a id="l00003" name="l00003"></a><span class="lineno">    3</span><span class="keyword">from</span> sqlmodel <span class="keyword">import</span> Session, select</div>
+<div class="line"><a id="l00003" name="l00003"></a><span class="lineno">    3</span><span class="keyword">from</span> sqlmodel <span class="keyword">import</span> Session, select, func</div>
 <div class="line"><a id="l00004" name="l00004"></a><span class="lineno">    4</span><span class="keyword">from</span> fastapi <span class="keyword">import</span> HTTPException</div>
 <div class="line"><a id="l00005" name="l00005"></a><span class="lineno">    5</span> </div>
 <div class="line"><a id="l00006" name="l00006"></a><span class="lineno">    6</span><span class="keyword">from</span> <a class="code hl_namespace" href="namespaceapp_1_1oauth__models.html">app.oauth_models</a> <span class="keyword">import</span> Service, ServiceAccount</div>
@@ -112,7 +112,7 @@ $(function(){initNavTree('service__manager_8py_source.html',''); initResizable(t
 <div class="line"><a id="l00010" name="l00010"></a><span class="lineno">   10</span> </div>
 <div class="foldopen" id="foldopen00011" data-start="" data-end="">
 <div class="line"><a id="l00011" name="l00011"></a><span class="lineno"><a class="line" href="namespaceapp_1_1service__manager.html#a6fcd7e9490d972e6e58803f7f60a7c50">   11</a></span><span class="keyword">def </span><a class="code hl_function" href="namespaceapp_1_1service__manager.html#a6fcd7e9490d972e6e58803f7f60a7c50">get_service_by_name</a>(session: Session, service_name: str) -&gt; Optional[Service]:</div>
-<div class="line"><a id="l00012" name="l00012"></a><span class="lineno">   12</span>    statement = select(Service).where(Service.name == service_name)</div>
+<div class="line"><a id="l00012" name="l00012"></a><span class="lineno">   12</span>    statement = select(Service).where(func.lower(Service.name) == service_name.lower())</div>
 <div class="line"><a id="l00013" name="l00013"></a><span class="lineno">   13</span>    <span class="keywordflow">return</span> session.exec(statement).first()</div>
 <div class="line"><a id="l00014" name="l00014"></a><span class="lineno">   14</span> </div>
 <div class="line"><a id="l00015" name="l00015"></a><span class="lineno">   15</span> </div>

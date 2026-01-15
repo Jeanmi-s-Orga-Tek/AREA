@@ -1,0 +1,9 @@
+<map id="app.handlers.spotify.SpotifyTrackAddedToPlaylistHandler.polling_interval" name="app.handlers.spotify.SpotifyTrackAddedToPlaylistHandler.polling_interval">
+<area shape="rect" id="Node000001" title=" " alt="" coords="259,64,493,123"/>
+<area shape="rect" id="Node000002" href="$classapp_1_1handlers_1_1google_1_1GoogleDriveNewFileHandler.html#ac56dc89674a6dacda18c3c0047aa8884" title=" " alt="" coords="17,5,199,48"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="243,63,196,51,197,46,244,58"/>
+<area shape="rect" id="Node000003" href="$classapp_1_1handlers_1_1google_1_1GoogleGmailNewEmailHandler.html#a65c6077f23685810d0f8deac4b10dea4" title=" " alt="" coords="16,72,200,115"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="243,96,200,96,200,91,243,91"/>
+<area shape="rect" id="Node000004" href="$classapp_1_1handlers_1_1google_1_1GoogleYoutubeNewUploadHandler.html#ab991f620e294d1d223fb8306626e86ba" title=" " alt="" coords="5,139,211,181"/>
+<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="244,129,197,141,196,136,243,124"/>
+</map>

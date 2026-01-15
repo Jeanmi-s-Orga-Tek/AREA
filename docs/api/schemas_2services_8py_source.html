@@ -200,65 +200,66 @@ $(function(){initNavTree('schemas_2services_8py_source.html',''); initResizable(
 <div class="line"><a id="l00081" name="l00081"></a><span class="lineno"><a class="line" href="classapp_1_1schemas_1_1services_1_1ActionRead.html#a33a2d9ec10fc5b4f2054ba11d4eb4c73">   81</a></span>    description: Optional[str] = <span class="keywordtype">None</span></div>
 <div class="line"><a id="l00082" name="l00082"></a><span class="lineno"><a class="line" href="classapp_1_1schemas_1_1services_1_1ActionRead.html#a6cae1bcc30f46093034e8795764db62c">   82</a></span>    is_polling: bool = <span class="keyword">False</span></div>
 <div class="line"><a id="l00083" name="l00083"></a><span class="lineno">   83</span>    service_id: int</div>
-<div class="line"><a id="l00084" name="l00084"></a><span class="lineno">   84</span> </div>
+<div class="line"><a id="l00084" name="l00084"></a><span class="lineno"><a class="line" href="classapp_1_1schemas_1_1services_1_1ActionRead.html#a3a4d0829b23bbbe37ccb19e0bbc68aac">   84</a></span>    trigger_data: Optional[Dict[str, Any]] = <span class="keywordtype">None</span></div>
 <div class="line"><a id="l00085" name="l00085"></a><span class="lineno">   85</span> </div>
+<div class="line"><a id="l00086" name="l00086"></a><span class="lineno">   86</span> </div>
 </div>
-<div class="foldopen" id="foldopen00086" data-start="" data-end="">
-<div class="line"><a id="l00086" name="l00086"></a><span class="lineno"><a class="line" href="classapp_1_1schemas_1_1services_1_1ReactionRead.html">   86</a></span><span class="keyword">class </span><a class="code hl_class" href="classapp_1_1schemas_1_1services_1_1ReactionRead.html">ReactionRead</a>(SQLModel):</div>
-<div class="line"><a id="l00087" name="l00087"></a><span class="lineno">   87</span>    id: int</div>
-<div class="line"><a id="l00088" name="l00088"></a><span class="lineno">   88</span>    name: str</div>
-<div class="line"><a id="l00089" name="l00089"></a><span class="lineno"><a class="line" href="classapp_1_1schemas_1_1services_1_1ReactionRead.html#a9fe054ad52e1d51c158952f0088da160">   89</a></span>    description: Optional[str] = <span class="keywordtype">None</span></div>
-<div class="line"><a id="l00090" name="l00090"></a><span class="lineno"><a class="line" href="classapp_1_1schemas_1_1services_1_1ReactionRead.html#a624936a8fc9f6686a01e82332c02248d">   90</a></span>    url: Optional[str] = <span class="keywordtype">None</span></div>
-<div class="line"><a id="l00091" name="l00091"></a><span class="lineno">   91</span>    service_id: int</div>
-<div class="line"><a id="l00092" name="l00092"></a><span class="lineno">   92</span> </div>
+<div class="foldopen" id="foldopen00087" data-start="" data-end="">
+<div class="line"><a id="l00087" name="l00087"></a><span class="lineno"><a class="line" href="classapp_1_1schemas_1_1services_1_1ReactionRead.html">   87</a></span><span class="keyword">class </span><a class="code hl_class" href="classapp_1_1schemas_1_1services_1_1ReactionRead.html">ReactionRead</a>(SQLModel):</div>
+<div class="line"><a id="l00088" name="l00088"></a><span class="lineno">   88</span>    id: int</div>
+<div class="line"><a id="l00089" name="l00089"></a><span class="lineno">   89</span>    name: str</div>
+<div class="line"><a id="l00090" name="l00090"></a><span class="lineno"><a class="line" href="classapp_1_1schemas_1_1services_1_1ReactionRead.html#a9fe054ad52e1d51c158952f0088da160">   90</a></span>    description: Optional[str] = <span class="keywordtype">None</span></div>
+<div class="line"><a id="l00091" name="l00091"></a><span class="lineno"><a class="line" href="classapp_1_1schemas_1_1services_1_1ReactionRead.html#a624936a8fc9f6686a01e82332c02248d">   91</a></span>    url: Optional[str] = <span class="keywordtype">None</span></div>
+<div class="line"><a id="l00092" name="l00092"></a><span class="lineno">   92</span>    service_id: int</div>
 <div class="line"><a id="l00093" name="l00093"></a><span class="lineno">   93</span> </div>
+<div class="line"><a id="l00094" name="l00094"></a><span class="lineno">   94</span> </div>
 </div>
-<div class="foldopen" id="foldopen00094" data-start="" data-end="">
-<div class="line"><a id="l00094" name="l00094"></a><span class="lineno"><a class="line" href="classapp_1_1schemas_1_1services_1_1ServiceBasicRead.html">   94</a></span><span class="keyword">class </span><a class="code hl_class" href="classapp_1_1schemas_1_1services_1_1ServiceBasicRead.html">ServiceBasicRead</a>(SQLModel):</div>
-<div class="line"><a id="l00095" name="l00095"></a><span class="lineno">   95</span>    id: int</div>
-<div class="line"><a id="l00096" name="l00096"></a><span class="lineno">   96</span>    name: str</div>
-<div class="line"><a id="l00097" name="l00097"></a><span class="lineno">   97</span>    display_name: str</div>
-<div class="line"><a id="l00098" name="l00098"></a><span class="lineno"><a class="line" href="classapp_1_1schemas_1_1services_1_1ServiceBasicRead.html#ab145ab58990543443e5c87875ad17e91">   98</a></span>    description: Optional[str] = <span class="keywordtype">None</span></div>
-<div class="line"><a id="l00099" name="l00099"></a><span class="lineno"><a class="line" href="classapp_1_1schemas_1_1services_1_1ServiceBasicRead.html#aed4675f428ad7f8adae9481ceb05c3df">   99</a></span>    icon_url: Optional[str] = <span class="keywordtype">None</span></div>
-<div class="line"><a id="l00100" name="l00100"></a><span class="lineno">  100</span> </div>
+<div class="foldopen" id="foldopen00095" data-start="" data-end="">
+<div class="line"><a id="l00095" name="l00095"></a><span class="lineno"><a class="line" href="classapp_1_1schemas_1_1services_1_1ServiceBasicRead.html">   95</a></span><span class="keyword">class </span><a class="code hl_class" href="classapp_1_1schemas_1_1services_1_1ServiceBasicRead.html">ServiceBasicRead</a>(SQLModel):</div>
+<div class="line"><a id="l00096" name="l00096"></a><span class="lineno">   96</span>    id: int</div>
+<div class="line"><a id="l00097" name="l00097"></a><span class="lineno">   97</span>    name: str</div>
+<div class="line"><a id="l00098" name="l00098"></a><span class="lineno">   98</span>    display_name: str</div>
+<div class="line"><a id="l00099" name="l00099"></a><span class="lineno"><a class="line" href="classapp_1_1schemas_1_1services_1_1ServiceBasicRead.html#ab145ab58990543443e5c87875ad17e91">   99</a></span>    description: Optional[str] = <span class="keywordtype">None</span></div>
+<div class="line"><a id="l00100" name="l00100"></a><span class="lineno"><a class="line" href="classapp_1_1schemas_1_1services_1_1ServiceBasicRead.html#aed4675f428ad7f8adae9481ceb05c3df">  100</a></span>    icon_url: Optional[str] = <span class="keywordtype">None</span></div>
 <div class="line"><a id="l00101" name="l00101"></a><span class="lineno">  101</span> </div>
+<div class="line"><a id="l00102" name="l00102"></a><span class="lineno">  102</span> </div>
 </div>
-<div class="foldopen" id="foldopen00102" data-start="" data-end="">
-<div class="line"><a id="l00102" name="l00102"></a><span class="lineno"><a class="line" href="classapp_1_1schemas_1_1services_1_1AreaActionDetail.html">  102</a></span><span class="keyword">class </span><a class="code hl_class" href="classapp_1_1schemas_1_1services_1_1AreaActionDetail.html">AreaActionDetail</a>(SQLModel):</div>
-<div class="line"><a id="l00103" name="l00103"></a><span class="lineno">  103</span>    service: ServiceBasicRead</div>
-<div class="line"><a id="l00104" name="l00104"></a><span class="lineno">  104</span>    action: ActionRead</div>
-<div class="line"><a id="l00105" name="l00105"></a><span class="lineno">  105</span> </div>
+<div class="foldopen" id="foldopen00103" data-start="" data-end="">
+<div class="line"><a id="l00103" name="l00103"></a><span class="lineno"><a class="line" href="classapp_1_1schemas_1_1services_1_1AreaActionDetail.html">  103</a></span><span class="keyword">class </span><a class="code hl_class" href="classapp_1_1schemas_1_1services_1_1AreaActionDetail.html">AreaActionDetail</a>(SQLModel):</div>
+<div class="line"><a id="l00104" name="l00104"></a><span class="lineno">  104</span>    service: ServiceBasicRead</div>
+<div class="line"><a id="l00105" name="l00105"></a><span class="lineno">  105</span>    action: ActionRead</div>
 <div class="line"><a id="l00106" name="l00106"></a><span class="lineno">  106</span> </div>
+<div class="line"><a id="l00107" name="l00107"></a><span class="lineno">  107</span> </div>
 </div>
-<div class="foldopen" id="foldopen00107" data-start="" data-end="">
-<div class="line"><a id="l00107" name="l00107"></a><span class="lineno"><a class="line" href="classapp_1_1schemas_1_1services_1_1AreaReactionDetail.html">  107</a></span><span class="keyword">class </span><a class="code hl_class" href="classapp_1_1schemas_1_1services_1_1AreaReactionDetail.html">AreaReactionDetail</a>(SQLModel):</div>
-<div class="line"><a id="l00108" name="l00108"></a><span class="lineno">  108</span>    service: ServiceBasicRead</div>
-<div class="line"><a id="l00109" name="l00109"></a><span class="lineno">  109</span>    reaction: ReactionRead</div>
-<div class="line"><a id="l00110" name="l00110"></a><span class="lineno">  110</span> </div>
+<div class="foldopen" id="foldopen00108" data-start="" data-end="">
+<div class="line"><a id="l00108" name="l00108"></a><span class="lineno"><a class="line" href="classapp_1_1schemas_1_1services_1_1AreaReactionDetail.html">  108</a></span><span class="keyword">class </span><a class="code hl_class" href="classapp_1_1schemas_1_1services_1_1AreaReactionDetail.html">AreaReactionDetail</a>(SQLModel):</div>
+<div class="line"><a id="l00109" name="l00109"></a><span class="lineno">  109</span>    service: ServiceBasicRead</div>
+<div class="line"><a id="l00110" name="l00110"></a><span class="lineno">  110</span>    reaction: ReactionRead</div>
 <div class="line"><a id="l00111" name="l00111"></a><span class="lineno">  111</span> </div>
+<div class="line"><a id="l00112" name="l00112"></a><span class="lineno">  112</span> </div>
 </div>
-<div class="foldopen" id="foldopen00112" data-start="" data-end="">
-<div class="line"><a id="l00112" name="l00112"></a><span class="lineno"><a class="line" href="classapp_1_1schemas_1_1services_1_1AreaDetailRead.html">  112</a></span><span class="keyword">class </span><a class="code hl_class" href="classapp_1_1schemas_1_1services_1_1AreaDetailRead.html">AreaDetailRead</a>(SQLModel):</div>
-<div class="line"><a id="l00113" name="l00113"></a><span class="lineno">  113</span>    id: int</div>
-<div class="line"><a id="l00114" name="l00114"></a><span class="lineno">  114</span>    name: str</div>
-<div class="line"><a id="l00115" name="l00115"></a><span class="lineno">  115</span>    action: AreaActionDetail</div>
-<div class="line"><a id="l00116" name="l00116"></a><span class="lineno">  116</span>    reaction: AreaReactionDetail</div>
-<div class="line"><a id="l00117" name="l00117"></a><span class="lineno"><a class="line" href="classapp_1_1schemas_1_1services_1_1AreaDetailRead.html#a3cf11a5a15c86df8ab97171ea82cba29">  117</a></span>    action_parameters: Dict[str, Any] = Field(default_factory=dict)</div>
-<div class="line"><a id="l00118" name="l00118"></a><span class="lineno"><a class="line" href="classapp_1_1schemas_1_1services_1_1AreaDetailRead.html#a96fdabb2e41f701ee058a84c20859f11">  118</a></span>    reaction_parameters: Dict[str, Any] = Field(default_factory=dict)</div>
-<div class="line"><a id="l00119" name="l00119"></a><span class="lineno">  119</span>    is_active: bool</div>
-<div class="line"><a id="l00120" name="l00120"></a><span class="lineno">  120</span>    created_at: datetime</div>
-<div class="line"><a id="l00121" name="l00121"></a><span class="lineno">  121</span>    updated_at: datetime</div>
+<div class="foldopen" id="foldopen00113" data-start="" data-end="">
+<div class="line"><a id="l00113" name="l00113"></a><span class="lineno"><a class="line" href="classapp_1_1schemas_1_1services_1_1AreaDetailRead.html">  113</a></span><span class="keyword">class </span><a class="code hl_class" href="classapp_1_1schemas_1_1services_1_1AreaDetailRead.html">AreaDetailRead</a>(SQLModel):</div>
+<div class="line"><a id="l00114" name="l00114"></a><span class="lineno">  114</span>    id: int</div>
+<div class="line"><a id="l00115" name="l00115"></a><span class="lineno">  115</span>    name: str</div>
+<div class="line"><a id="l00116" name="l00116"></a><span class="lineno">  116</span>    action: AreaActionDetail</div>
+<div class="line"><a id="l00117" name="l00117"></a><span class="lineno">  117</span>    reaction: AreaReactionDetail</div>
+<div class="line"><a id="l00118" name="l00118"></a><span class="lineno"><a class="line" href="classapp_1_1schemas_1_1services_1_1AreaDetailRead.html#a3cf11a5a15c86df8ab97171ea82cba29">  118</a></span>    action_parameters: Dict[str, Any] = Field(default_factory=dict)</div>
+<div class="line"><a id="l00119" name="l00119"></a><span class="lineno"><a class="line" href="classapp_1_1schemas_1_1services_1_1AreaDetailRead.html#a96fdabb2e41f701ee058a84c20859f11">  119</a></span>    reaction_parameters: Dict[str, Any] = Field(default_factory=dict)</div>
+<div class="line"><a id="l00120" name="l00120"></a><span class="lineno">  120</span>    is_active: bool</div>
+<div class="line"><a id="l00121" name="l00121"></a><span class="lineno">  121</span>    created_at: datetime</div>
+<div class="line"><a id="l00122" name="l00122"></a><span class="lineno">  122</span>    updated_at: datetime</div>
 </div>
 <div class="ttc" id="aclassapp_1_1schemas_1_1services_1_1ActionRead_html"><div class="ttname"><a href="classapp_1_1schemas_1_1services_1_1ActionRead.html">app.schemas.services.ActionRead</a></div><div class="ttdef"><b>Definition</b> <a href="#l00078">schemas/services.py:78</a></div></div>
-<div class="ttc" id="aclassapp_1_1schemas_1_1services_1_1AreaActionDetail_html"><div class="ttname"><a href="classapp_1_1schemas_1_1services_1_1AreaActionDetail.html">app.schemas.services.AreaActionDetail</a></div><div class="ttdef"><b>Definition</b> <a href="#l00102">schemas/services.py:102</a></div></div>
+<div class="ttc" id="aclassapp_1_1schemas_1_1services_1_1AreaActionDetail_html"><div class="ttname"><a href="classapp_1_1schemas_1_1services_1_1AreaActionDetail.html">app.schemas.services.AreaActionDetail</a></div><div class="ttdef"><b>Definition</b> <a href="#l00103">schemas/services.py:103</a></div></div>
 <div class="ttc" id="aclassapp_1_1schemas_1_1services_1_1AreaBase_html"><div class="ttname"><a href="classapp_1_1schemas_1_1services_1_1AreaBase.html">app.schemas.services.AreaBase</a></div><div class="ttdef"><b>Definition</b> <a href="#l00049">schemas/services.py:49</a></div></div>
 <div class="ttc" id="aclassapp_1_1schemas_1_1services_1_1AreaCreate_html"><div class="ttname"><a href="classapp_1_1schemas_1_1services_1_1AreaCreate.html">app.schemas.services.AreaCreate</a></div><div class="ttdef"><b>Definition</b> <a href="#l00059">schemas/services.py:59</a></div></div>
-<div class="ttc" id="aclassapp_1_1schemas_1_1services_1_1AreaDetailRead_html"><div class="ttname"><a href="classapp_1_1schemas_1_1services_1_1AreaDetailRead.html">app.schemas.services.AreaDetailRead</a></div><div class="ttdef"><b>Definition</b> <a href="#l00112">schemas/services.py:112</a></div></div>
-<div class="ttc" id="aclassapp_1_1schemas_1_1services_1_1AreaReactionDetail_html"><div class="ttname"><a href="classapp_1_1schemas_1_1services_1_1AreaReactionDetail.html">app.schemas.services.AreaReactionDetail</a></div><div class="ttdef"><b>Definition</b> <a href="#l00107">schemas/services.py:107</a></div></div>
+<div class="ttc" id="aclassapp_1_1schemas_1_1services_1_1AreaDetailRead_html"><div class="ttname"><a href="classapp_1_1schemas_1_1services_1_1AreaDetailRead.html">app.schemas.services.AreaDetailRead</a></div><div class="ttdef"><b>Definition</b> <a href="#l00113">schemas/services.py:113</a></div></div>
+<div class="ttc" id="aclassapp_1_1schemas_1_1services_1_1AreaReactionDetail_html"><div class="ttname"><a href="classapp_1_1schemas_1_1services_1_1AreaReactionDetail.html">app.schemas.services.AreaReactionDetail</a></div><div class="ttdef"><b>Definition</b> <a href="#l00108">schemas/services.py:108</a></div></div>
 <div class="ttc" id="aclassapp_1_1schemas_1_1services_1_1AreaRead_html"><div class="ttname"><a href="classapp_1_1schemas_1_1services_1_1AreaRead.html">app.schemas.services.AreaRead</a></div><div class="ttdef"><b>Definition</b> <a href="#l00070">schemas/services.py:70</a></div></div>
-<div class="ttc" id="aclassapp_1_1schemas_1_1services_1_1ReactionRead_html"><div class="ttname"><a href="classapp_1_1schemas_1_1services_1_1ReactionRead.html">app.schemas.services.ReactionRead</a></div><div class="ttdef"><b>Definition</b> <a href="#l00086">schemas/services.py:86</a></div></div>
+<div class="ttc" id="aclassapp_1_1schemas_1_1services_1_1ReactionRead_html"><div class="ttname"><a href="classapp_1_1schemas_1_1services_1_1ReactionRead.html">app.schemas.services.ReactionRead</a></div><div class="ttdef"><b>Definition</b> <a href="#l00087">schemas/services.py:87</a></div></div>
 <div class="ttc" id="aclassapp_1_1schemas_1_1services_1_1ServiceActionRead_html"><div class="ttname"><a href="classapp_1_1schemas_1_1services_1_1ServiceActionRead.html">app.schemas.services.ServiceActionRead</a></div><div class="ttdef"><b>Definition</b> <a href="#l00029">schemas/services.py:29</a></div></div>
-<div class="ttc" id="aclassapp_1_1schemas_1_1services_1_1ServiceBasicRead_html"><div class="ttname"><a href="classapp_1_1schemas_1_1services_1_1ServiceBasicRead.html">app.schemas.services.ServiceBasicRead</a></div><div class="ttdef"><b>Definition</b> <a href="#l00094">schemas/services.py:94</a></div></div>
+<div class="ttc" id="aclassapp_1_1schemas_1_1services_1_1ServiceBasicRead_html"><div class="ttname"><a href="classapp_1_1schemas_1_1services_1_1ServiceBasicRead.html">app.schemas.services.ServiceBasicRead</a></div><div class="ttdef"><b>Definition</b> <a href="#l00095">schemas/services.py:95</a></div></div>
 <div class="ttc" id="aclassapp_1_1schemas_1_1services_1_1ServiceCapabilitiesRead_html"><div class="ttname"><a href="classapp_1_1schemas_1_1services_1_1ServiceCapabilitiesRead.html">app.schemas.services.ServiceCapabilitiesRead</a></div><div class="ttdef"><b>Definition</b> <a href="#l00043">schemas/services.py:43</a></div></div>
 <div class="ttc" id="aclassapp_1_1schemas_1_1services_1_1ServiceReactionRead_html"><div class="ttname"><a href="classapp_1_1schemas_1_1services_1_1ServiceReactionRead.html">app.schemas.services.ServiceReactionRead</a></div><div class="ttdef"><b>Definition</b> <a href="#l00036">schemas/services.py:36</a></div></div>
 <div class="ttc" id="aclassapp_1_1schemas_1_1services_1_1ServiceRead_html"><div class="ttname"><a href="classapp_1_1schemas_1_1services_1_1ServiceRead.html">app.schemas.services.ServiceRead</a></div><div class="ttdef"><b>Definition</b> <a href="#l00014">schemas/services.py:14</a></div></div>

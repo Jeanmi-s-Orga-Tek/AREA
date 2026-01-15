@@ -1,0 +1,13 @@
+<map id="app.handlers.trello.TrelloWebhookHandler" name="app.handlers.trello.TrelloWebhookHandler">
+<area shape="rect" id="Node000001" title=" " alt="" coords="95,539,249,667"/>
+<area shape="rect" id="Node000005" href="$classapp_1_1handlers_1_1trello_1_1TrelloCardMovedHandler.html" title=" " alt="" coords="5,715,160,843"/>
+<area shape="poly" id="edge4_Node000001_Node000005" title=" " alt="" coords="135,681,117,716,113,714,130,679"/>
+<area shape="rect" id="Node000006" href="$classapp_1_1handlers_1_1trello_1_1TrelloNewCardHandler.html" title=" " alt="" coords="184,715,339,843"/>
+<area shape="poly" id="edge5_Node000001_Node000006" title=" " alt="" coords="214,679,231,714,227,716,209,681"/>
+<area shape="rect" id="Node000002" href="$classapp_1_1handlers_1_1base_1_1BaseWebhookHandler.html" title=" " alt="" coords="69,363,275,491"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="175,506,175,539,169,539,169,506"/>
+<area shape="rect" id="Node000003" href="$classapp_1_1handlers_1_1base_1_1BaseActionHandler.html" title=" " alt="" coords="77,123,267,315"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="175,329,175,363,169,363,169,329"/>
+<area shape="rect" id="Node000004" title=" " alt="" coords="151,5,193,75"/>
+<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="175,90,175,123,169,123,169,90"/>
+</map>

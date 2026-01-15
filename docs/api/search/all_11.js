@@ -1,20 +1,4 @@
 var searchData=
 [
-  ['main_2epy_0',['main.py',['../main_8py.html',1,'']]],
-  ['main_2etsx_1',['main.tsx',['../main_8tsx.html',1,'']]],
-  ['main_5f8py_2ejs_2',['main_8py.js',['../main__8py_8js.html',1,'']]],
-  ['main_5f8tsx_2ejs_3',['main_8tsx.js',['../main__8tsx_8js.html',1,'']]],
-  ['margin_4',['margin',['../OAuthCallbackScreen_8tsx.html#afd39b5b5c78ad39cdddce356753256d3',1,'OAuthCallbackScreen.tsx']]],
-  ['marginbottom_5',['marginBottom',['../OAuthCallbackScreen_8tsx.html#a2f9b703734f023957cd2371ad324c2c1',1,'OAuthCallbackScreen.tsx']]],
-  ['maxwidth_6',['maxWidth',['../OAuthCallbackScreen_8tsx.html#a17d3cc389ca5aae8884e6ecc6e2e3e34',1,'OAuthCallbackScreen.tsx']]],
-  ['menu_2ejs_7',['menu.js',['../menu_8js.html',1,'']]],
-  ['menudata_2ejs_8',['menudata.js',['../menudata_8js.html',1,'']]],
-  ['message_9',['message',['../OAuthCallbackScreen_8tsx.html#a301ac1a72ba468d3ae1dca8e5f1eb743',1,'OAuthCallbackScreen.tsx']]],
-  ['microsoft_2eyaml_10',['Microsoft.yaml',['../Microsoft_8yaml.html',1,'']]],
-  ['microsoft_2fnew_5femail_2eyaml_11',['new_email.yaml',['../Microsoft_2new__email_8yaml.html',1,'']]],
-  ['microsoft_2fsend_5femail_2eyaml_12',['send_email.yaml',['../Microsoft_2send__email_8yaml.html',1,'']]],
-  ['minheight_13',['minHeight',['../OAuthCallbackScreen_8tsx.html#ac51183b2a62e413281ee6b23d0355d33',1,'OAuthCallbackScreen.tsx']]],
-  ['mobile_14',['mobile',['../classapp_1_1core_1_1oauth__config_1_1ProviderConfig.html#a86402158ad8acaa486f85c405ea316dc',1,'app::core::oauth_config::ProviderConfig']]],
-  ['mobileoauthconfig_15',['MobileOAuthConfig',['../classapp_1_1core_1_1oauth__config_1_1MobileOAuthConfig.html',1,'app::core::oauth_config']]],
-  ['move_5fcard_2eyaml_16',['move_card.yaml',['../move__card_8yaml.html',1,'']]]
+  ['key_20benefits_0',['Key Benefits',['../md_docs_2action__handler__architecture.html#autotoc_md13',1,'']]]
 ];

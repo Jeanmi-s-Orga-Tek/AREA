@@ -1,8 +1,14 @@
 var searchData=
 [
-  ['package_2dlock_2ejson_0',['package-lock.json',['../package-lock_8json.html',1,'']]],
-  ['package_2ejson_1',['package.json',['../package_8json.html',1,'']]],
-  ['pages_5f0_2ejs_2',['pages_0.js',['../pages__0_8js.html',1,'']]],
-  ['profilescreen_2etsx_3',['ProfileScreen.tsx',['../ProfileScreen_8tsx.html',1,'']]],
-  ['providers_2eyaml_4',['providers.yaml',['../providers_8yaml.html',1,'']]]
+  ['main_2epy_0',['main.py',['../main_8py.html',1,'']]],
+  ['main_2etsx_1',['main.tsx',['../main_8tsx.html',1,'']]],
+  ['main_5f8py_2ejs_2',['main_8py.js',['../main__8py_8js.html',1,'']]],
+  ['main_5f8tsx_2ejs_3',['main_8tsx.js',['../main__8tsx_8js.html',1,'']]],
+  ['menu_2ejs_4',['menu.js',['../menu_8js.html',1,'']]],
+  ['menudata_2ejs_5',['menudata.js',['../menudata_8js.html',1,'']]],
+  ['microsoft_2epy_6',['microsoft.py',['../microsoft_8py.html',1,'']]],
+  ['microsoft_2eyaml_7',['Microsoft.yaml',['../Microsoft_8yaml.html',1,'']]],
+  ['microsoft_2fnew_5femail_2eyaml_8',['new_email.yaml',['../Microsoft_2new__email_8yaml.html',1,'']]],
+  ['microsoft_2fsend_5femail_2eyaml_9',['send_email.yaml',['../Microsoft_2send__email_8yaml.html',1,'']]],
+  ['move_5fcard_2eyaml_10',['move_card.yaml',['../move__card_8yaml.html',1,'']]]
 ];

@@ -4,6 +4,7 @@ var dir_5165a1bbd385fe74f618026d608f9201 =
     [ "GitHub", "dir_58c9bfc292798d0f9b0d4d8faa7003de.html", "dir_58c9bfc292798d0f9b0d4d8faa7003de" ],
     [ "Google", "dir_686a7b468f2ee4ebf9dbdc94828e0d7a.html", "dir_686a7b468f2ee4ebf9dbdc94828e0d7a" ],
     [ "Microsoft", "dir_d85925f448ffa1286736d9890139116b.html", "dir_d85925f448ffa1286736d9890139116b" ],
+    [ "Spotify", "dir_c4d1f9477e795b690462ec27fb2500f4.html", "dir_c4d1f9477e795b690462ec27fb2500f4" ],
     [ "Trello", "dir_3584d6ffb44e49cec8fd05e19522f77b.html", "dir_3584d6ffb44e49cec8fd05e19522f77b" ],
     [ "__init__.py", "reactions_2____init_____8py.html", null ]
 ];

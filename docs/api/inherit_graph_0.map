@@ -1,3 +1,49 @@
 <map id="Graphical Class Hierarchy" name="Graphical Class Hierarchy">
-<area shape="rect" id="Node000000" href="$classapp_1_1core_1_1oauth__config_1_1MobileOAuthConfig.html" title=" " alt="" coords="5,5,197,48"/>
+<area shape="rect" id="Node000000" title=" " alt="" coords="5,492,55,519"/>
+<area shape="rect" id="Node000001" href="$classapp_1_1handlers_1_1base_1_1BaseActionHandler.html" title=" " alt="" coords="103,455,301,497"/>
+<area shape="poly" id="edge1_Node000000_Node000001" title=" " alt="" coords="70,496,102,490,103,496,71,501"/>
+<area shape="rect" id="Node000023" href="$classbase_1_1BaseExecutor.html" title=" " alt="" coords="134,521,270,548"/>
+<area shape="poly" id="edge23_Node000000_Node000023" title=" " alt="" coords="70,509,134,520,133,526,69,515"/>
+<area shape="rect" id="Node000002" href="$classapp_1_1handlers_1_1base_1_1BasePollingHandler.html" title=" " alt="" coords="356,305,557,348"/>
+<area shape="poly" id="edge2_Node000001_Node000002" title=" " alt="" coords="251,444,417,346,420,351,254,449"/>
+<area shape="rect" id="Node000012" href="$classapp_1_1handlers_1_1base_1_1BaseWebhookHandler.html" title=" " alt="" coords="349,605,564,648"/>
+<area shape="poly" id="edge12_Node000001_Node000012" title=" " alt="" coords="291,501,302,507,376,555,434,603,430,607,373,560,300,512,289,506"/>
+<area shape="rect" id="Node000003" href="$classapp_1_1handlers_1_1discord_1_1DiscordUserProfileChangeHandler.html" title=" " alt="" coords="614,5,804,48"/>
+<area shape="poly" id="edge3_Node000002_Node000003" title=" " alt="" coords="467,290,487,238,518,176,559,113,583,84,611,58,628,46,631,51,614,62,587,87,563,116,522,179,492,241,472,292"/>
+<area shape="rect" id="Node000004" href="$classapp_1_1handlers_1_1google_1_1GoogleDriveNewFileHandler.html" title=" " alt="" coords="618,72,800,115"/>
+<area shape="poly" id="edge4_Node000002_Node000004" title=" " alt="" coords="474,291,497,252,528,208,567,163,611,125,630,113,633,118,614,129,570,167,533,211,502,255,479,293"/>
+<area shape="rect" id="Node000005" href="$classapp_1_1handlers_1_1google_1_1GoogleGmailNewEmailHandler.html" title=" " alt="" coords="618,139,800,181"/>
+<area shape="poly" id="edge5_Node000002_Node000005" title=" " alt="" coords="487,292,542,241,575,214,611,191,634,180,637,184,614,196,578,219,545,245,490,296"/>
+<area shape="rect" id="Node000006" href="$classapp_1_1handlers_1_1google_1_1GoogleYoutubeNewUploadHandler.html" title=" " alt="" coords="618,205,800,248"/>
+<area shape="poly" id="edge6_Node000002_Node000006" title=" " alt="" coords="519,296,611,258,642,246,644,251,613,262,521,301"/>
+<area shape="rect" id="Node000007" href="$classapp_1_1handlers_1_1spotify_1_1SpotifyNewPlaylistCreatedHandler.html" title=" " alt="" coords="618,272,800,315"/>
+<area shape="poly" id="edge7_Node000002_Node000007" title=" " alt="" coords="572,309,617,303,618,308,573,314"/>
+<area shape="rect" id="Node000008" href="$classapp_1_1handlers_1_1spotify_1_1SpotifyTrackAddedToPlaylistHandler.html" title=" " alt="" coords="612,339,806,381"/>
+<area shape="poly" id="edge8_Node000002_Node000008" title=" " alt="" coords="573,339,612,345,612,350,572,345"/>
+<area shape="rect" id="Node000009" href="$classapp_1_1handlers_1_1timer_1_1TimerDailyHandler.html" title=" " alt="" coords="626,405,792,448"/>
+<area shape="poly" id="edge9_Node000002_Node000009" title=" " alt="" coords="521,352,613,391,644,402,642,407,611,396,519,357"/>
+<area shape="rect" id="Node000010" href="$classapp_1_1handlers_1_1timer_1_1TimerScheduleHandler.html" title=" " alt="" coords="626,472,792,515"/>
+<area shape="poly" id="edge10_Node000002_Node000010" title=" " alt="" coords="490,357,545,408,578,435,614,458,637,469,634,474,611,462,575,439,542,412,487,361"/>
+<area shape="rect" id="Node000011" href="$classapp_1_1handlers_1_1trello_1_1TrelloCardDueSoonHandler.html" title=" " alt="" coords="627,539,791,581"/>
+<area shape="poly" id="edge11_Node000002_Node000011" title=" " alt="" coords="479,360,502,398,533,442,570,486,614,525,633,536,630,540,611,529,567,490,528,445,497,401,474,363"/>
+<area shape="rect" id="Node000013" href="$classapp_1_1handlers_1_1github_1_1GitHubWebhookHandler.html" title=" " alt="" coords="619,605,799,648"/>
+<area shape="poly" id="edge13_Node000012_Node000013" title=" " alt="" coords="580,624,619,624,619,629,580,629"/>
+<area shape="rect" id="Node000020" href="$classapp_1_1handlers_1_1trello_1_1TrelloWebhookHandler.html" title=" " alt="" coords="627,805,791,848"/>
+<area shape="poly" id="edge20_Node000012_Node000020" title=" " alt="" coords="498,656,682,803,679,807,495,660"/>
+<area shape="rect" id="Node000014" href="$classapp_1_1handlers_1_1github_1_1GitHubIssueCommentHandler.html" title=" " alt="" coords="855,405,1034,448"/>
+<area shape="poly" id="edge14_Node000013_Node000014" title=" " alt="" coords="801,594,804,592,816,575,823,559,827,527,831,493,838,475,852,458,867,446,870,451,856,462,843,478,836,494,832,527,828,561,821,578,808,595,805,598"/>
+<area shape="rect" id="Node000015" href="$classapp_1_1handlers_1_1github_1_1GitHubNewIssueHandler.html" title=" " alt="" coords="855,472,1034,515"/>
+<area shape="poly" id="edge15_Node000013_Node000015" title=" " alt="" coords="799,595,804,591,819,575,827,559,836,542,852,525,871,513,874,517,855,529,840,545,832,561,824,578,807,595,802,599"/>
+<area shape="rect" id="Node000016" href="$classapp_1_1handlers_1_1github_1_1GitHubNewPullRequestHandler.html" title=" " alt="" coords="855,539,1034,581"/>
+<area shape="poly" id="edge16_Node000013_Node000016" title=" " alt="" coords="800,598,866,579,867,585,802,603"/>
+<area shape="rect" id="Node000017" href="$classapp_1_1handlers_1_1github_1_1GitHubNewStarHandler.html" title=" " alt="" coords="855,605,1034,648"/>
+<area shape="poly" id="edge17_Node000013_Node000017" title=" " alt="" coords="814,624,854,624,854,629,814,629"/>
+<area shape="rect" id="Node000018" href="$classapp_1_1handlers_1_1github_1_1GitHubPullRequestReviewHandler.html" title=" " alt="" coords="854,672,1035,715"/>
+<area shape="poly" id="edge18_Node000013_Node000018" title=" " alt="" coords="802,650,867,669,866,674,800,655"/>
+<area shape="rect" id="Node000019" href="$classapp_1_1handlers_1_1github_1_1GitHubPushHandler.html" title=" " alt="" coords="855,739,1034,781"/>
+<area shape="poly" id="edge19_Node000013_Node000019" title=" " alt="" coords="751,656,799,691,855,724,879,736,877,740,852,729,796,695,747,660"/>
+<area shape="rect" id="Node000021" href="$classapp_1_1handlers_1_1trello_1_1TrelloCardMovedHandler.html" title=" " alt="" coords="863,805,1026,848"/>
+<area shape="poly" id="edge21_Node000020_Node000021" title=" " alt="" coords="806,824,862,824,862,829,806,829"/>
+<area shape="rect" id="Node000022" href="$classapp_1_1handlers_1_1trello_1_1TrelloNewCardHandler.html" title=" " alt="" coords="863,872,1026,915"/>
+<area shape="poly" id="edge22_Node000020_Node000022" title=" " alt="" coords="802,850,867,869,866,874,800,855"/>
 </map>

@@ -99,7 +99,8 @@ $(function(){initNavTree('oauth__handler_8py.html',''); initResizable(true); });
 <div class="header">
   <div class="summary">
 <a href="#namespaces">Namespaces</a> &#124;
-<a href="#func-members">Functions</a>  </div>
+<a href="#func-members">Functions</a> &#124;
+<a href="#var-members">Variables</a>  </div>
   <div class="headertitle"><div class="title">oauth_handler.py File Reference</div></div>
 </div><!--header-->
 <div class="contents">
@@ -115,6 +116,14 @@ Namespaces</h2></td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="func-members" name="func-members"></a>
 Functions</h2></td></tr>
+<tr class="memitem:a66316cb934023d31075a919b48d8fd5d" id="r_a66316cb934023d31075a919b48d8fd5d"><td class="memItemLeft" align="right" valign="top">Optional[str]&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceapp_1_1oauth__handler.html#a66316cb934023d31075a919b48d8fd5d">app.oauth_handler.normalize_client_redirect_uri</a> (Optional[str] uri)</td></tr>
+<tr class="separator:a66316cb934023d31075a919b48d8fd5d"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ac46502331eee4f898bbfddb4b4b058fe" id="r_ac46502331eee4f898bbfddb4b4b058fe"><td class="memItemLeft" align="right" valign="top">str&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceapp_1_1oauth__handler.html#ac46502331eee4f898bbfddb4b4b058fe">app.oauth_handler.encode_oauth_state</a> (Optional[str] raw_state, Optional[str] client_redirect_uri, Optional[str] platform=None)</td></tr>
+<tr class="separator:ac46502331eee4f898bbfddb4b4b058fe"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ac99045ef8c6101396dc1d27cd6a20a9e" id="r_ac99045ef8c6101396dc1d27cd6a20a9e"><td class="memItemLeft" align="right" valign="top">Tuple[str, Optional[str], Optional[str]]&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceapp_1_1oauth__handler.html#ac99045ef8c6101396dc1d27cd6a20a9e">app.oauth_handler.decode_oauth_state</a> (Optional[str] state)</td></tr>
+<tr class="separator:ac99045ef8c6101396dc1d27cd6a20a9e"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a1a6f66af0be55db664ae1faab0859329" id="r_a1a6f66af0be55db664ae1faab0859329"><td class="memItemLeft" align="right" valign="top">str&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceapp_1_1oauth__handler.html#a1a6f66af0be55db664ae1faab0859329">app.oauth_handler.append_query_params</a> (str url, Dict[str, Optional[str]] params)</td></tr>
+<tr class="separator:a1a6f66af0be55db664ae1faab0859329"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a12ff2c078ce3674732086f84a4121fb2" id="r_a12ff2c078ce3674732086f84a4121fb2"><td class="memItemLeft" align="right" valign="top">str&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceapp_1_1oauth__handler.html#a12ff2c078ce3674732086f84a4121fb2">app.oauth_handler.generate_oauth_state</a> (str provider, str flow, Optional[str] redirect_uri=None)</td></tr>
 <tr class="separator:a12ff2c078ce3674732086f84a4121fb2"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ad200491ca5b4584178b2cd0fefd5fd72" id="r_ad200491ca5b4584178b2cd0fefd5fd72"><td class="memItemLeft" align="right" valign="top">Dict[str, Any]&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceapp_1_1oauth__handler.html#ad200491ca5b4584178b2cd0fefd5fd72">app.oauth_handler.exchange_code_for_token</a> (str provider, str flow, str code)</td></tr>
@@ -123,6 +132,11 @@ Functions</h2></td></tr>
 <tr class="separator:a6a10426c57a38388cb0690b87b5850b3"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:abae7da772a6aeaa549a8a59da3b9b891" id="r_abae7da772a6aeaa549a8a59da3b9b891"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classapp_1_1user_1_1User.html">User</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceapp_1_1oauth__handler.html#abae7da772a6aeaa549a8a59da3b9b891">app.oauth_handler.find_or_create_user_from_oauth</a> (Session session, str provider, str provider_user_id, Dict[str, Any] user_info, Dict[str, Any] token_data)</td></tr>
 <tr class="separator:abae7da772a6aeaa549a8a59da3b9b891"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="var-members" name="var-members"></a>
+Variables</h2></td></tr>
+<tr class="memitem:a8fd67daca44754a6493aae0abb02409b" id="r_a8fd67daca44754a6493aae0abb02409b"><td class="memItemLeft" align="right" valign="top">str&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceapp_1_1oauth__handler.html#a8fd67daca44754a6493aae0abb02409b">app.oauth_handler.STATE_PREFIX</a> = &quot;area::v1::&quot;</td></tr>
+<tr class="separator:a8fd67daca44754a6493aae0abb02409b"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 </div><!-- contents -->
 </div><!-- doc-content -->

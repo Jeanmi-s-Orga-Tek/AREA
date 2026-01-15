@@ -1,0 +1,11 @@
+<map id="app.handlers.github.GitHubNewIssueHandler" name="app.handlers.github.GitHubNewIssueHandler">
+<area shape="rect" id="Node000001" title=" " alt="" coords="23,736,194,864"/>
+<area shape="rect" id="Node000002" href="$classapp_1_1handlers_1_1github_1_1GitHubWebhookHandler.html" title=" " alt="" coords="23,539,194,688"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="111,703,111,736,106,736,106,703"/>
+<area shape="rect" id="Node000003" href="$classapp_1_1handlers_1_1base_1_1BaseWebhookHandler.html" title=" " alt="" coords="5,363,212,491"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="111,505,111,539,106,539,106,505"/>
+<area shape="rect" id="Node000004" href="$classapp_1_1handlers_1_1base_1_1BaseActionHandler.html" title=" " alt="" coords="14,123,203,315"/>
+<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="111,329,111,363,106,363,106,329"/>
+<area shape="rect" id="Node000005" title=" " alt="" coords="88,5,129,75"/>
+<area shape="poly" id="edge4_Node000004_Node000005" title=" " alt="" coords="111,90,111,123,106,123,106,90"/>
+</map>

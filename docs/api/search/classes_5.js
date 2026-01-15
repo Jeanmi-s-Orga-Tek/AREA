@@ -1,6 +1,20 @@
 var searchData=
 [
-  ['oauth2passwordbearerwithcookie_0',['OAuth2PasswordBearerWithCookie',['../classapp_1_1oauth2_1_1OAuth2PasswordBearerWithCookie.html',1,'app::oauth2']]],
-  ['oauthconnection_1',['OAuthConnection',['../classapp_1_1oauth__models_1_1OAuthConnection.html',1,'app::oauth_models']]],
-  ['oauthstate_2',['OAuthState',['../classapp_1_1oauth__models_1_1OAuthState.html',1,'app::oauth_models']]]
+  ['githubaddcommentexecutor_0',['GitHubAddCommentExecutor',['../classgithub_1_1GitHubAddCommentExecutor.html',1,'github']]],
+  ['githubcreatebranchexecutor_1',['GitHubCreateBranchExecutor',['../classgithub_1_1GitHubCreateBranchExecutor.html',1,'github']]],
+  ['githubcreateissueexecutor_2',['GitHubCreateIssueExecutor',['../classgithub_1_1GitHubCreateIssueExecutor.html',1,'github']]],
+  ['githubissuecommenthandler_3',['GitHubIssueCommentHandler',['../classapp_1_1handlers_1_1github_1_1GitHubIssueCommentHandler.html',1,'app::handlers::github']]],
+  ['githubnewissuehandler_4',['GitHubNewIssueHandler',['../classapp_1_1handlers_1_1github_1_1GitHubNewIssueHandler.html',1,'app::handlers::github']]],
+  ['githubnewpullrequesthandler_5',['GitHubNewPullRequestHandler',['../classapp_1_1handlers_1_1github_1_1GitHubNewPullRequestHandler.html',1,'app::handlers::github']]],
+  ['githubnewstarhandler_6',['GitHubNewStarHandler',['../classapp_1_1handlers_1_1github_1_1GitHubNewStarHandler.html',1,'app::handlers::github']]],
+  ['githubpullrequestreviewhandler_7',['GitHubPullRequestReviewHandler',['../classapp_1_1handlers_1_1github_1_1GitHubPullRequestReviewHandler.html',1,'app::handlers::github']]],
+  ['githubpushhandler_8',['GitHubPushHandler',['../classapp_1_1handlers_1_1github_1_1GitHubPushHandler.html',1,'app::handlers::github']]],
+  ['githubwebhookhandler_9',['GitHubWebhookHandler',['../classapp_1_1handlers_1_1github_1_1GitHubWebhookHandler.html',1,'app::handlers::github']]],
+  ['googlecreateeventexecutor_10',['GoogleCreateEventExecutor',['../classgoogle_1_1GoogleCreateEventExecutor.html',1,'google']]],
+  ['googlecreatefolderexecutor_11',['GoogleCreateFolderExecutor',['../classgoogle_1_1GoogleCreateFolderExecutor.html',1,'google']]],
+  ['googledrivenewfilehandler_12',['GoogleDriveNewFileHandler',['../classapp_1_1handlers_1_1google_1_1GoogleDriveNewFileHandler.html',1,'app::handlers::google']]],
+  ['googlegmailnewemailhandler_13',['GoogleGmailNewEmailHandler',['../classapp_1_1handlers_1_1google_1_1GoogleGmailNewEmailHandler.html',1,'app::handlers::google']]],
+  ['googlesendemailexecutor_14',['GoogleSendEmailExecutor',['../classgoogle_1_1GoogleSendEmailExecutor.html',1,'google']]],
+  ['googleupdatecellexecutor_15',['GoogleUpdateCellExecutor',['../classgoogle_1_1GoogleUpdateCellExecutor.html',1,'google']]],
+  ['googleyoutubenewuploadhandler_16',['GoogleYoutubeNewUploadHandler',['../classapp_1_1handlers_1_1google_1_1GoogleYoutubeNewUploadHandler.html',1,'app::handlers::google']]]
 ];
