@@ -10,6 +10,7 @@ import { fetchMyAreas, toggleAreaStatus, deleteArea } from "../services/api";
 import type { AreaDetail } from "../services/api";
 import { logout } from "../services/auth";
 import NotificationContainer, { NotificationItem } from "../components/NotificationContainer";
+import ConfirmModal from "../components/ConfirmModal";
 import "./AreasScreen.css";
 
 interface Action {
@@ -40,6 +41,12 @@ const AreasScreen: React.FC = () => {
   const [loading, setLoading] = useState(true);
   const [notifications, setNotifications] = useState<NotificationItem[]>([]);
   const [stars, setStars] = useState<Array<{ id: number; style: React.CSSProperties }>>([]);
+  const [confirmModal, setConfirmModal] = useState<{
+    isOpen: boolean;
+    title: string;
+    message: string;
+    onConfirm: () => void;
+  }>({ isOpen: false, title: "", message: "", onConfirm: () => {} });
 
   const addNotification = (message: string, type: "success" | "error") => {
     const id = `notif-${Date.now()}-${Math.random().toString(16).slice(2)}`;
@@ -129,15 +136,25 @@ const AreasScreen: React.FC = () => {
     const area = areas.find((a) => a.id === id);
     if (!area) return;
     
-    if (window.confirm(`Voulez-vous vraiment supprimer "${area.name}" ?`)) {
-      try {
-        await deleteArea(id);
-        addNotification(`AREA "${area.name}" supprimée avec succès !`, "success");
-        await loadAreas();
-      } catch (err) {
-        addNotification(`Erreur: ${err instanceof Error ? err.message : "Erreur inconnue"}`, "error");
-      }
-    }
+    setConfirmModal({
+      isOpen: true,
+      title: "Confirmer la suppression",
+      message: `Voulez-vous vraiment supprimer "${area.name}" ?`,
+      onConfirm: async () => {
+        setConfirmModal({ isOpen: false, title: "", message: "", onConfirm: () => {} });
+        try {
+          await deleteArea(id);
+          addNotification(`AREA "${area.name}" supprimée avec succès !`, "success");
+          await loadAreas();
+        } catch (err) {
+          addNotification(`Erreur: ${err instanceof Error ? err.message : "Erreur inconnue"}`, "error");
+        }
+      },
+    });
+  };
+
+  const handleEdit = (id: number) => {
+    window.location.href = `/edit-area/${id}`;
   };
 
   const handleLogout = () => {
@@ -169,6 +186,16 @@ const AreasScreen: React.FC = () => {
       <NotificationContainer
         notifications={notifications}
         onRemove={removeNotification}
+      />
+      <ConfirmModal
+        isOpen={confirmModal.isOpen}
+        title={confirmModal.title}
+        message={confirmModal.message}
+        confirmText="Supprimer"
+        cancelText="Annuler"
+        type="danger"
+        onConfirm={confirmModal.onConfirm}
+        onCancel={() => setConfirmModal({ isOpen: false, title: "", message: "", onConfirm: () => {} })}
       />
       <div className="areas-background">
         {stars.map((star) => (
@@ -291,7 +318,10 @@ const AreasScreen: React.FC = () => {
                 >
                   {area.isActive ? "Désactiver" : "Activer"}
                 </button>
-                <button className="area-action-button area-action-button-edit">
+                <button 
+                  onClick={() => handleEdit(area.id)}
+                  className="area-action-button area-action-button-edit"
+                >
                   Modifier
                 </button>
                 <button

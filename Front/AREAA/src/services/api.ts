@@ -275,7 +275,7 @@ export async function createArea(data: CreateAreaRequest): Promise<AreaDetail> {
   return handleResponse<AreaDetail>(response);
 }
 
-export async function updateArea(areaId: number, data: Partial<CreateAreaRequest>): Promise<AreaDetail> {
+export async function updateArea(areaId: number, data: { name?: string; action_parameters?: Record<string, any>; reaction_parameters?: Record<string, any> }): Promise<AreaDetail> {
   const response = await fetch(`${API_BASE_URL}/areas/${areaId}`, {
     method: "PATCH",
     headers: getAuthHeaders(),
@@ -286,7 +286,7 @@ export async function updateArea(areaId: number, data: Partial<CreateAreaRequest
 
 export async function toggleAreaStatus(areaId: number, isActive: boolean): Promise<AreaDetail> {
   const response = await fetch(`${API_BASE_URL}/areas/${areaId}/toggle`, {
-    method: "POST",
+    method: "PATCH",
     headers: getAuthHeaders(),
     body: JSON.stringify({ is_active: isActive }),
   });
