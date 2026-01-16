@@ -98,11 +98,46 @@
     "title": "My AREAs",
     "createNew": "Create new AREA",
     "noAreas": "You don't have any AREAs yet",
-    "loading": "Loading areas...",
+    "loading": "Loading AREAs...",
     "delete": "Delete",
     "edit": "Edit",
     "active": "Active",
-    "inactive": "Inactive"
+    "inactive": "Inactive",
+    "subtitle": "Manage your automations across different services",
+    "total": "total",
+    "createdOn": "Created on",
+    "action": "ACTION",
+    "reaction": "REACTION",
+    "parameters": "Parameters",
+    "activate": "Activate",
+    "deactivate": "Deactivate",
+    "modify": "Edit",
+    "deleteConfirmTitle": "Confirm deletion",
+    "deleteConfirmMessage": "Do you really want to delete",
+    "deleteSuccess": "AREA deleted successfully!",
+    "activatedSuccess": "activated successfully!",
+    "deactivatedSuccess": "deactivated successfully!",
+    "emptyMessage": "You haven't created any AREAs yet.",
+    "createFirst": "Create my first AREA",
+    "backToHome": "Back to home",
+    "confirm": "Confirm",
+    "cancel": "Cancel"
+  },
+  "editArea": {
+    "title": "Edit AREA",
+    "loading": "Loading AREA...",
+    "nameLabel": "AREA name",
+    "namePlaceholder": "Ex: Discord notification for new email",
+    "nameRequired": "AREA name is required",
+    "invalidId": "Invalid AREA ID",
+    "confirmTitle": "Confirm changes",
+    "confirmMessage": "Do you want to save the changes to AREA",
+    "save": "Save",
+    "saving": "Saving...",
+    "cancel": "Cancel",
+    "saveSuccess": "AREA modified successfully!",
+    "backToList": "← Back to list",
+    "enterParameter": "Enter"
   },
   "createArea": {
     "title": "Create AREA",
@@ -115,6 +150,22 @@
     "loading": "Creating...",
     "success": "AREA created successfully!",
     "error": "Error creating AREA"
+  },
+  "editArea": {
+    "title": "Edit AREA",
+    "areaName": "AREA name",
+    "namePlaceholder": "Ex: Discord notification for new email",
+    "enterValue": "Enter {{key}}...",
+    "save": "Save",
+    "saving": "Saving...",
+    "loading": "Loading AREA...",
+    "invalidId": "Invalid AREA ID",
+    "loadError": "Error loading AREA",
+    "nameRequired": "AREA name is required",
+    "confirmTitle": "Confirm changes",
+    "confirmMessage": "Do you want to save changes to the AREA \"{{name}}\"?",
+    "updateSuccess": "AREA \"{{name}}\" updated successfully!",
+    "backToList": "← Back to list"
   },
   "about": {
     "title": "About AREA",
@@ -154,6 +205,7 @@
     "viewAll": "View all",
     "create": "Create",
     "manage": "Manage",
-    "open": "Open"
+    "open": "Open",
+    "unknownError": "Unknown error"
   }
 }

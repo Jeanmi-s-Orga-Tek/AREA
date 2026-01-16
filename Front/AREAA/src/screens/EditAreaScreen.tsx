@@ -6,14 +6,17 @@
 */
 
 import React, { useState, useEffect } from "react";
+import { useTranslation } from "react-i18next";
 import { fetchAreaById, updateArea } from "../services/api";
 import type { AreaDetail } from "../services/api";
 import { logout } from "../services/auth";
 import NotificationContainer, { NotificationItem } from "../components/NotificationContainer";
 import ConfirmModal from "../components/ConfirmModal";
+import LanguageSelector from "../components/LanguageSelector";
 import "./AreasScreen.css";
 
 const EditAreaScreen: React.FC = () => {
+  const { t } = useTranslation();
   const [stars, setStars] = useState<Array<{ id: number; style: React.CSSProperties }>>([]);
   const [notifications, setNotifications] = useState<NotificationItem[]>([]);
   const [loading, setLoading] = useState(true);
@@ -67,7 +70,7 @@ const EditAreaScreen: React.FC = () => {
     if (id && !isNaN(Number(id))) {
       setAreaId(Number(id));
     } else {
-      addNotification("ID d'AREA invalide", "error");
+      addNotification(t("editArea.invalidId"), "error");
       setTimeout(() => window.location.href = "/areas", 2000);
     }
   }, []);
@@ -89,7 +92,7 @@ const EditAreaScreen: React.FC = () => {
       setActionParameters(areaData.action_parameters || {});
       setReactionParameters(areaData.reaction_parameters || {});
     } catch (err) {
-      addNotification(err instanceof Error ? err.message : "Erreur lors du chargement de l'AREA", "error");
+      addNotification(err instanceof Error ? err.message : t("editArea.loadError"), "error");
       setTimeout(() => window.location.href = "/areas", 2000);
     } finally {
       setLoading(false);
@@ -98,14 +101,14 @@ const EditAreaScreen: React.FC = () => {
 
   const handleSubmit = async () => {
     if (!areaId || !areaName.trim()) {
-      addNotification("Le nom de l'AREA est requis", "error");
+      addNotification(t("editArea.nameRequired"), "error");
       return;
     }
 
     setConfirmModal({
       isOpen: true,
-      title: "Confirmer les modifications",
-      message: `Voulez-vous enregistrer les modifications de l'AREA "${areaName}" ?`,
+      title: t("editArea.confirmTitle"),
+      message: t("editArea.confirmMessage", { name: areaName }),
       onConfirm: async () => {
         setConfirmModal({ isOpen: false, title: "", message: "", onConfirm: () => {} });
         try {
@@ -116,10 +119,10 @@ const EditAreaScreen: React.FC = () => {
             reaction_parameters: reactionParameters,
           });
 
-          addNotification(`AREA "${areaName}" modifiée avec succès !`, "success");
+          addNotification(t("editArea.updateSuccess", { name: areaName }), "success");
           setTimeout(() => window.location.href = "/areas", 1500);
         } catch (err) {
-          addNotification(err instanceof Error ? err.message : "Erreur inconnue", "error");
+          addNotification(err instanceof Error ? err.message : t("common.unknownError"), "error");
         } finally {
           setSaving(false);
         }
@@ -135,6 +138,7 @@ const EditAreaScreen: React.FC = () => {
   if (loading) {
     return (
       <div className="areas-container">
+        <LanguageSelector />
         <div className="areas-background">
           {stars.map((star) => (
             <div key={star.id} className="star" style={star.style} />
@@ -142,7 +146,7 @@ const EditAreaScreen: React.FC = () => {
         </div>
         <div className="areas-content">
           <div className="loading-card">
-            <p>Chargement de l'AREA...</p>
+            <p>{t("editArea.loading")}</p>
           </div>
         </div>
       </div>
@@ -163,7 +167,7 @@ const EditAreaScreen: React.FC = () => {
           type="text"
           value={currentValues[key] || ""}
           onChange={(e) => onChange(key, e.target.value)}
-          placeholder={`Entrez ${key}...`}
+          placeholder={t("editArea.enterValue", { key })}
           style={{
             width: "100%",
             padding: "10px",
@@ -181,6 +185,7 @@ const EditAreaScreen: React.FC = () => {
 
   return (
     <div className="areas-container">
+      <LanguageSelector />
       <NotificationContainer
         notifications={notifications}
         onRemove={removeNotification}
@@ -189,8 +194,8 @@ const EditAreaScreen: React.FC = () => {
         isOpen={confirmModal.isOpen}
         title={confirmModal.title}
         message={confirmModal.message}
-        confirmText="Enregistrer"
-        cancelText="Annuler"
+        confirmText={t("editArea.save")}
+        cancelText={t("common.cancel")}
         type="info"
         onConfirm={confirmModal.onConfirm}
         onCancel={() => setConfirmModal({ isOpen: false, title: "", message: "", onConfirm: () => {} })}
@@ -202,9 +207,9 @@ const EditAreaScreen: React.FC = () => {
       </div>
       <div className="areas-content">
         <div className="areas-topbar">
-          <h1 className="topbar-title">Modifier l'AREA</h1>
+          <h1 className="topbar-title">{t("editArea.title")}</h1>
           <button onClick={handleLogout} className="logout-btn">
-            Déconnexion
+            {t("profile.logout")}
           </button>
         </div>
 
@@ -213,13 +218,13 @@ const EditAreaScreen: React.FC = () => {
             <div className="area-card-header">
               <div className="area-card-title-section" style={{ width: "100%" }}>
                 <label style={{ display: "block", marginBottom: "8px", fontSize: "14px", fontWeight: "500", color: "#9ca3af" }}>
-                  Nom de l'AREA
+                  {t("editArea.areaName")}
                 </label>
                 <input
                   type="text"
                   value={areaName}
                   onChange={(e) => setAreaName(e.target.value)}
-                  placeholder="Ex: Notification Discord pour nouvel email"
+                  placeholder={t("editArea.namePlaceholder")}
                   style={{
                     fontSize: "1.25rem",
                     fontWeight: "600",
@@ -239,7 +244,7 @@ const EditAreaScreen: React.FC = () => {
             <div className="area-card-body">
               <div className="area-flow">
                 <div className="area-flow-item area-flow-action">
-                  <div className="area-flow-label">ACTION</div>
+                  <div className="area-flow-label">{t("areas.action")}</div>
                   <div className="area-flow-service">{area.action.service.display_name}</div>
                   <div className="area-flow-type">{area.action.action.name}</div>
                   <div className="area-flow-description">
@@ -247,7 +252,7 @@ const EditAreaScreen: React.FC = () => {
                   </div>
                   {Object.keys(area.action_parameters || {}).length > 0 && (
                     <div className="area-flow-parameters" style={{ marginTop: "15px" }}>
-                      <strong style={{ marginBottom: "10px", display: "block", fontSize: "14px" }}>Paramètres:</strong>
+                      <strong style={{ marginBottom: "10px", display: "block", fontSize: "14px" }}>{t("areas.parameters")}:</strong>
                       {getParameterFields(
                         area.action_parameters,
                         actionParameters,
@@ -262,7 +267,7 @@ const EditAreaScreen: React.FC = () => {
 
               <div className="area-flow-item area-flow-reaction">
                 <div className="area-flow">
-                  <div className="area-flow-label">RÉACTION</div>
+                  <div className="area-flow-label">{t("areas.reaction")}</div>
                   <div className="area-flow-service">{area.reaction.service.display_name}</div>
                   <div className="area-flow-type">{area.reaction.reaction.name}</div>
                   <div className="area-flow-description">
@@ -270,7 +275,7 @@ const EditAreaScreen: React.FC = () => {
                   </div>
                   {Object.keys(area.reaction_parameters || {}).length > 0 && (
                     <div className="area-flow-parameters" style={{ marginTop: "15px" }}>
-                      <strong style={{ marginBottom: "10px", display: "block", fontSize: "14px" }}>Paramètres:</strong>
+                      <strong style={{ marginBottom: "10px", display: "block", fontSize: "14px" }}>{t("areas.parameters")}:</strong>
                       {getParameterFields(
                         area.reaction_parameters,
                         reactionParameters,
@@ -288,14 +293,14 @@ const EditAreaScreen: React.FC = () => {
                 disabled={saving || !areaName.trim()}
                 className="area-action-button area-action-button-activate"
               >
-                {saving ? "Enregistrement..." : "Enregistrer"}
+                {saving ? t("editArea.saving") : t("editArea.save")}
               </button>
               <button
                 onClick={() => window.location.href = "/areas"}
                 disabled={saving}
                 className="area-action-button area-action-button-edit"
               >
-                Annuler
+                {t("common.cancel")}
               </button>
             </div>
           </div>
@@ -303,7 +308,7 @@ const EditAreaScreen: React.FC = () => {
 
         <div className="areas-actions">
           <a href="/areas" className="areas-back-button">
-            ← Retour à la liste
+            {t("editArea.backToList")}
           </a>
         </div>
       </div>

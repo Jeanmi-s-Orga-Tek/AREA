@@ -98,11 +98,46 @@
     "title": "Mes AREAs",
     "createNew": "Créer une nouvelle AREA",
     "noAreas": "Vous n'avez pas encore d'AREAs",
-    "loading": "Chargement des areas...",
+    "loading": "Chargement des AREAs...",
     "delete": "Supprimer",
     "edit": "Modifier",
-    "active": "Actif",
-    "inactive": "Inactif"
+    "active": "Active",
+    "inactive": "Inactive",
+    "subtitle": "Gérez vos automatisations entre différents services",
+    "total": "totale",
+    "createdOn": "Créée le",
+    "action": "ACTION",
+    "reaction": "RÉACTION",
+    "parameters": "Paramètres",
+    "activate": "Activer",
+    "deactivate": "Désactiver",
+    "modify": "Modifier",
+    "deleteConfirmTitle": "Confirmer la suppression",
+    "deleteConfirmMessage": "Voulez-vous vraiment supprimer",
+    "deleteSuccess": "AREA supprimée avec succès !",
+    "activatedSuccess": "activée avec succès !",
+    "deactivatedSuccess": "désactivée avec succès !",
+    "emptyMessage": "Vous n'avez pas encore créé d'AREA.",
+    "createFirst": "Créer ma première AREA",
+    "backToHome": "Retour à l'accueil",
+    "confirm": "Confirmer",
+    "cancel": "Annuler"
+  },
+  "editArea": {
+    "title": "Modifier l'AREA",
+    "loading": "Chargement de l'AREA...",
+    "nameLabel": "Nom de l'AREA",
+    "namePlaceholder": "Ex: Notification Discord pour nouvel email",
+    "nameRequired": "Le nom de l'AREA est requis",
+    "invalidId": "ID d'AREA invalide",
+    "confirmTitle": "Confirmer les modifications",
+    "confirmMessage": "Voulez-vous enregistrer les modifications de l'AREA",
+    "save": "Enregistrer",
+    "saving": "Enregistrement...",
+    "cancel": "Annuler",
+    "saveSuccess": "AREA modifiée avec succès !",
+    "backToList": "← Retour à la liste",
+    "enterParameter": "Entrez"
   },
   "createArea": {
     "title": "Créer une AREA",
@@ -115,6 +150,22 @@
     "loading": "Création...",
     "success": "AREA créée avec succès !",
     "error": "Erreur lors de la création de l'AREA"
+  },
+  "editArea": {
+    "title": "Modifier l'AREA",
+    "areaName": "Nom de l'AREA",
+    "namePlaceholder": "Ex: Notification Discord pour nouvel email",
+    "enterValue": "Entrez {{key}}...",
+    "save": "Enregistrer",
+    "saving": "Enregistrement...",
+    "loading": "Chargement de l'AREA...",
+    "invalidId": "ID d'AREA invalide",
+    "loadError": "Erreur lors du chargement de l'AREA",
+    "nameRequired": "Le nom de l'AREA est requis",
+    "confirmTitle": "Confirmer les modifications",
+    "confirmMessage": "Voulez-vous enregistrer les modifications de l'AREA \"{{name}}\" ?",
+    "updateSuccess": "AREA \"{{name}}\" modifiée avec succès !",
+    "backToList": "← Retour à la liste"
   },
   "about": {
     "title": "À propos d'AREA",
@@ -154,6 +205,7 @@
     "viewAll": "Voir tout",
     "create": "Créer",
     "manage": "Gérer",
-    "open": "Ouvrir"
+    "open": "Ouvrir",
+    "unknownError": "Erreur inconnue"
   }
 }

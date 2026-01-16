@@ -6,11 +6,13 @@
 */
 
 import React, { useState, useEffect } from "react";
+import { useTranslation } from "react-i18next";
 import { fetchMyAreas, toggleAreaStatus, deleteArea } from "../services/api";
 import type { AreaDetail } from "../services/api";
 import { logout } from "../services/auth";
 import NotificationContainer, { NotificationItem } from "../components/NotificationContainer";
 import ConfirmModal from "../components/ConfirmModal";
+import LanguageSelector from "../components/LanguageSelector";
 import "./AreasScreen.css";
 
 interface Action {
@@ -37,6 +39,7 @@ interface Area {
 }
 
 const AreasScreen: React.FC = () => {
+  const { t, i18n } = useTranslation();
   const [areas, setAreas] = useState<Area[]>([]);
   const [loading, setLoading] = useState(true);
   const [notifications, setNotifications] = useState<NotificationItem[]>([]);
@@ -103,7 +106,7 @@ const AreasScreen: React.FC = () => {
           parameters: area.reaction_parameters || {},
         },
         isActive: area.is_active,
-        createdAt: new Date(area.created_at).toLocaleDateString("fr-FR", {
+        createdAt: new Date(area.created_at).toLocaleDateString(i18n.language === 'fr' ? "fr-FR" : "en-US", {
           day: "2-digit",
           month: "short",
           year: "numeric",
@@ -112,7 +115,7 @@ const AreasScreen: React.FC = () => {
 
       setAreas(mappedAreas);
     } catch (err) {
-      addNotification(err instanceof Error ? err.message : "Erreur lors du chargement des AREAs", "error");
+      addNotification(err instanceof Error ? err.message : t("services.error"), "error");
       console.error("Error loading areas:", err);
     } finally {
       setLoading(false);
@@ -125,10 +128,10 @@ const AreasScreen: React.FC = () => {
 
     try {
       await toggleAreaStatus(id, !area.isActive);
-      addNotification(`AREA "${area.name}" ${area.isActive ? "désactivée" : "activée"} avec succès !`, "success");
+      addNotification(`AREA "${area.name}" ${area.isActive ? t("areas.deactivatedSuccess") : t("areas.activatedSuccess")}`, "success");
       await loadAreas();
     } catch (err) {
-      addNotification(`Erreur: ${err instanceof Error ? err.message : "Erreur inconnue"}`, "error");
+      addNotification(`${t("common.error")}: ${err instanceof Error ? err.message : t("common.error")}`, "error");
     }
   };
 
@@ -138,16 +141,16 @@ const AreasScreen: React.FC = () => {
     
     setConfirmModal({
       isOpen: true,
-      title: "Confirmer la suppression",
-      message: `Voulez-vous vraiment supprimer "${area.name}" ?`,
+      title: t("areas.deleteConfirmTitle"),
+      message: `${t("areas.deleteConfirmMessage")} "${area.name}" ?`,
       onConfirm: async () => {
         setConfirmModal({ isOpen: false, title: "", message: "", onConfirm: () => {} });
         try {
           await deleteArea(id);
-          addNotification(`AREA "${area.name}" supprimée avec succès !`, "success");
+          addNotification(`AREA "${area.name}" ${t("areas.deleteSuccess")}`, "success");
           await loadAreas();
         } catch (err) {
-          addNotification(`Erreur: ${err instanceof Error ? err.message : "Erreur inconnue"}`, "error");
+          addNotification(`${t("common.error")}: ${err instanceof Error ? err.message : t("common.error")}`, "error");
         }
       },
     });
@@ -167,6 +170,7 @@ const AreasScreen: React.FC = () => {
   if (loading) {
     return (
       <div className="areas-container">
+        <LanguageSelector />
         <div className="areas-background">
           {stars.map((star) => (
             <div key={star.id} className="star" style={star.style} />
@@ -174,7 +178,7 @@ const AreasScreen: React.FC = () => {
         </div>
         <div className="areas-content">
           <div className="loading-card">
-            <p>Chargement des AREAs...</p>
+            <p>{t("areas.loading")}</p>
           </div>
         </div>
       </div>
@@ -183,6 +187,7 @@ const AreasScreen: React.FC = () => {
 
   return (
     <div className="areas-container">
+      <LanguageSelector />
       <NotificationContainer
         notifications={notifications}
         onRemove={removeNotification}
@@ -191,8 +196,8 @@ const AreasScreen: React.FC = () => {
         isOpen={confirmModal.isOpen}
         title={confirmModal.title}
         message={confirmModal.message}
-        confirmText="Supprimer"
-        cancelText="Annuler"
+        confirmText={t("areas.delete")}
+        cancelText={t("areas.cancel")}
         type="danger"
         onConfirm={confirmModal.onConfirm}
         onCancel={() => setConfirmModal({ isOpen: false, title: "", message: "", onConfirm: () => {} })}
@@ -204,25 +209,25 @@ const AreasScreen: React.FC = () => {
       </div>
       <div className="areas-content">
         <div className="areas-topbar">
-          <h1 className="topbar-title">Mes AREA</h1>
+          <h1 className="topbar-title">{t("areas.title")}</h1>
           <button onClick={handleLogout} className="logout-btn">
-            Déconnexion
+            {t("profile.logout")}
           </button>
         </div>
 
         <div className="areas-header">
           <p className="areas-subtitle">
-            Gérez vos automatisations entre différents services
+            {t("areas.subtitle")}
           </p>
           <div className="areas-stats">
             <span className="areas-stat-badge">
-              {areas.length} AREA{areas.length > 1 ? "s" : ""} totale{areas.length > 1 ? "s" : ""}
+              {areas.length} AREA{areas.length > 1 ? "s" : ""} {t("areas.total")}{areas.length > 1 ? "s" : ""}
             </span>
             <span className="areas-stat-badge areas-stat-badge-success">
-              {activeCount} active{activeCount > 1 ? "s" : ""}
+              {activeCount} {t("areas.active").toLowerCase()}{activeCount > 1 ? "s" : ""}
             </span>
             <span className="areas-stat-badge areas-stat-badge-inactive">
-              {areas.length - activeCount} inactive{areas.length - activeCount > 1 ? "s" : ""}
+              {areas.length - activeCount} {t("areas.inactive").toLowerCase()}{areas.length - activeCount > 1 ? "s" : ""}
             </span>
           </div>
         </div>
@@ -242,16 +247,16 @@ const AreasScreen: React.FC = () => {
                         : "area-status-badge-inactive"
                     }`}
                   >
-                    {area.isActive ? "✓ Active" : "○ Inactive"}
+                    {area.isActive ? `✓ ${t("areas.active")}` : `○ ${t("areas.inactive")}`}
                   </span>
                 </div>
-                <p className="area-card-date">Créée le {area.createdAt}</p>
+                <p className="area-card-date">{t("areas.createdOn")} {area.createdAt}</p>
               </div>
 
               <div className="area-card-body">
                 <div className="area-flow">
                   <div className="area-flow-item area-flow-action">
-                    <div className="area-flow-label">ACTION</div>
+                    <div className="area-flow-label">{t("areas.action")}</div>
                     <div className="area-flow-service">{area.action.service}</div>
                     <div className="area-flow-type">{area.action.type}</div>
                     <div className="area-flow-description">
@@ -259,7 +264,7 @@ const AreasScreen: React.FC = () => {
                     </div>
                     {Object.keys(area.action.parameters).length > 0 && (
                       <div className="area-flow-parameters">
-                        <strong>Paramètres:</strong>
+                        <strong>{t("areas.parameters")}:</strong>
                         <ul style={{ margin: "5px 0", paddingLeft: "20px" }}>
                           {Object.entries(area.action.parameters).map(([key, value]) => (
                             <li key={key}>
@@ -276,7 +281,7 @@ const AreasScreen: React.FC = () => {
 
                 <div className="area-flow-item area-flow-reaction">
                   <div className="area-flow">
-                    <div className="area-flow-label">RÉACTION</div>
+                    <div className="area-flow-label">{t("areas.reaction")}</div>
                     <div className="area-flow-service">{area.reaction.service}</div>
                     <div className="area-flow-type">{area.reaction.type}</div>
                     <div className="area-flow-description">
@@ -284,7 +289,7 @@ const AreasScreen: React.FC = () => {
                     </div>
                     {Object.keys(area.reaction.parameters).length > 0 && (
                       <div className="area-flow-parameters">
-                        <strong>Paramètres:</strong>
+                        <strong>{t("areas.parameters")}:</strong>
                         <ul style={{ margin: "5px 0", paddingLeft: "20px" }}>
                           {Object.entries(area.reaction.parameters).map(([key, value]) => (
                               <li key={key}>
@@ -316,19 +321,19 @@ const AreasScreen: React.FC = () => {
                       : "area-action-button-activate"
                   }`}
                 >
-                  {area.isActive ? "Désactiver" : "Activer"}
+                  {area.isActive ? t("areas.deactivate") : t("areas.activate")}
                 </button>
                 <button 
                   onClick={() => handleEdit(area.id)}
                   className="area-action-button area-action-button-edit"
                 >
-                  Modifier
+                  {t("areas.modify")}
                 </button>
                 <button
                   onClick={() => handleDelete(area.id)}
                   className="area-action-button area-action-button-delete"
                 >
-                  Supprimer
+                  {t("areas.delete")}
                 </button>
               </div>
             </div>
@@ -338,20 +343,20 @@ const AreasScreen: React.FC = () => {
         {areas.length === 0 && (
           <div className="areas-empty">
             <p className="areas-empty-text">
-              Vous n'avez pas encore créé d'AREA.
+              {t("areas.emptyMessage")}
             </p>
             <a href="/create-area" className="areas-create-button">
-              Créer ma première AREA
+              {t("areas.createFirst")}
             </a>
           </div>
         )}
 
         <div className="areas-actions">
           <a href="/create-area" className="areas-create-button">
-            + Créer une nouvelle AREA
+            + {t("areas.createNew")}
           </a>
           <a href="/" className="areas-back-button">
-            Retour à l'accueil
+            {t("areas.backToHome")}
           </a>
         </div>
       </div>
