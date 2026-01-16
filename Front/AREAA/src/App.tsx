@@ -14,6 +14,7 @@ import ProfileScreen from "./screens/ProfileScreen";
 import ServicesScreen from "./screens/ServicesScreen";
 import AreasScreen from "./screens/AreasScreen";
 import CreateAreaScreen from "./screens/CreateAreaScreen";
+import EditAreaScreen from "./screens/EditAreaScreen";
 import OAuthCallbackScreen from "./screens/OAuthCallbackScreen";
 import ServiceCallbackScreen from "./screens/ServiceCallbackScreen";
 import { isAuthenticated } from "./services/auth";
@@ -71,6 +72,10 @@ const App: React.FC = () => {
 
   if (path === "/create-area") {
     return <CreateAreaScreen />;
+  }
+
+  if (path.startsWith("/edit-area/")) {
+    return <EditAreaScreen />;
   }
 
   return <ServerScreen />;

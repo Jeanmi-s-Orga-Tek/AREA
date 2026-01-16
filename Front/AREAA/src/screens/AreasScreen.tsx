@@ -140,6 +140,10 @@ const AreasScreen: React.FC = () => {
     }
   };
 
+  const handleEdit = (id: number) => {
+    window.location.href = `/edit-area/${id}`;
+  };
+
   const handleLogout = () => {
     logout();
     window.location.href = "/login";
@@ -291,7 +295,10 @@ const AreasScreen: React.FC = () => {
                 >
                   {area.isActive ? "Désactiver" : "Activer"}
                 </button>
-                <button className="area-action-button area-action-button-edit">
+                <button 
+                  onClick={() => handleEdit(area.id)}
+                  className="area-action-button area-action-button-edit"
+                >
                   Modifier
                 </button>
                 <button
