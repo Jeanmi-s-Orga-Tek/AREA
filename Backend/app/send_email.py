@@ -5,7 +5,8 @@ import ssl
 SMTP_SERVER = str(os.environ.get("SMTP_SERVER"))
 smtp_port_str = os.environ.get("SMTP_PORT")
 if smtp_port_str is None:
-    raise ValueError("SMTP_PORT environment variable is not set")
+    # raise ValueError("SMTP_PORT environment variable is not set")
+    smtp_port_str = "1234"
 SMTP_PORT = int(smtp_port_str)
 EMAIL_USERNAME = str(os.environ.get("EMAIL_USERNAME"))
 EMAIL_PASSWORD = str(os.environ.get("EMAIL_PASSWORD"))
