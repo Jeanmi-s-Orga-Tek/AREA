@@ -286,7 +286,7 @@ export async function updateArea(areaId: number, data: Partial<CreateAreaRequest
 
 export async function toggleAreaStatus(areaId: number, isActive: boolean): Promise<AreaDetail> {
   const response = await fetch(`${API_BASE_URL}/areas/${areaId}/toggle`, {
-    method: "POST",
+    method: "PATCH",
     headers: getAuthHeaders(),
     body: JSON.stringify({ is_active: isActive }),
   });
