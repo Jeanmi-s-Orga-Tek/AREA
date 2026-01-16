@@ -6,8 +6,10 @@
 */
 
 import React, { useState, useEffect, useMemo } from "react";
+import { useTranslation } from "react-i18next";
 import { register, fetchOAuthProviders, initiateOAuthLogin, OAuthProvider } from "../services/auth";
 import NotificationContainer, { NotificationItem } from "../components/NotificationContainer";
+import LanguageSelector from "../components/LanguageSelector";
 import "./RegisterScreen.css";
 
 type Star = {
@@ -21,6 +23,7 @@ type Star = {
 };
 
 const RegisterScreen: React.FC = () => {
+  const { t } = useTranslation();
   const [email, setEmail] = useState("");
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
@@ -74,17 +77,17 @@ const RegisterScreen: React.FC = () => {
     e.preventDefault();
 
     if (!email || !username || !password || !confirmPassword) {
-      addNotification("Tous les champs sont requis", "error");
+      addNotification(t("register.allFieldsRequired"), "error");
       return;
     }
 
     if (password !== confirmPassword) {
-      addNotification("Les mots de passe ne correspondent pas", "error");
+      addNotification(t("register.passwordsDontMatch"), "error");
       return;
     }
 
     if (password.length < 6) {
-      addNotification("Le mot de passe doit contenir au moins 6 caractères", "error");
+      addNotification(t("register.passwordTooShort"), "error");
       return;
     }
 
@@ -92,7 +95,7 @@ const RegisterScreen: React.FC = () => {
 
     try {
       await register({ email, name: username, new_password: password });
-      addNotification("Inscription réussie ! Redirection vers la page de connexion...", "success");
+      addNotification(t("register.success"), "success");
       setEmail("");
       setUsername("");
       setPassword("");
@@ -101,7 +104,7 @@ const RegisterScreen: React.FC = () => {
         window.location.href = "/login";
       }, 2000);
     } catch (err) {
-      addNotification(err instanceof Error ? err.message : "Une erreur est survenue", "error");
+      addNotification(err instanceof Error ? err.message : t("register.error"), "error");
     } finally {
       setLoading(false);
     }
@@ -113,7 +116,7 @@ const RegisterScreen: React.FC = () => {
     try {
       await initiateOAuthLogin(providerId);
     } catch (err) {
-      addNotification(err instanceof Error ? err.message : `Erreur lors de l'inscription OAuth`, "error");
+      addNotification(err instanceof Error ? err.message : t("login.oauthError"), "error");
       setLoading(false);
     }
   };
@@ -158,6 +161,7 @@ const RegisterScreen: React.FC = () => {
 
   return (
     <div className="register-container">
+      <LanguageSelector />
       <NotificationContainer
         notifications={notifications}
         onRemove={removeNotification}
@@ -180,14 +184,14 @@ const RegisterScreen: React.FC = () => {
         ))}
       </div>
       <div className="register-form-card">
-        <h1 className="register-title">Inscription</h1>
-        <p className="register-subtitle">Créez votre compte AREA</p>
+        <h1 className="register-title">{t("register.title")}</h1>
+        <p className="register-subtitle">{t("register.subtitle")}</p>
 
 
         <form onSubmit={handleSubmit} className="register-form">
           <div className="register-form-group">
             <label htmlFor="email" className="register-label">
-              Email
+              {t("register.email")}
             </label>
             <input
               type="email"
@@ -195,14 +199,14 @@ const RegisterScreen: React.FC = () => {
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               className="register-input"
-              placeholder="votre@email.com"
+              placeholder={t("register.emailPlaceholder")}
               disabled={loading}
             />
           </div>
 
           <div className="register-form-group">
             <label htmlFor="username" className="register-label">
-              Nom d'utilisateur
+              {t("register.username")}
             </label>
             <input
               type="text"
@@ -210,14 +214,14 @@ const RegisterScreen: React.FC = () => {
               value={username}
               onChange={(e) => setUsername(e.target.value)}
               className="register-input"
-              placeholder="John Doe"
+              placeholder={t("register.usernamePlaceholder")}
               disabled={loading}
             />
           </div>
 
           <div className="register-form-group">
             <label htmlFor="password" className="register-label">
-              Mot de passe
+              {t("register.password")}
             </label>
             <input
               type="password"
@@ -225,14 +229,14 @@ const RegisterScreen: React.FC = () => {
               value={password}
               onChange={(e) => setPassword(e.target.value)}
               className="register-input"
-              placeholder="••••••••"
+              placeholder={t("register.passwordPlaceholder")}
               disabled={loading}
             />
           </div>
 
           <div className="register-form-group">
             <label htmlFor="confirmPassword" className="register-label">
-              Confirmer le mot de passe
+              {t("register.confirmPassword")}
             </label>
             <input
               type="password"
@@ -240,7 +244,7 @@ const RegisterScreen: React.FC = () => {
               value={confirmPassword}
               onChange={(e) => setConfirmPassword(e.target.value)}
               className="register-input"
-              placeholder="••••••••"
+              placeholder={t("register.confirmPasswordPlaceholder")}
               disabled={loading}
             />
           </div>
@@ -250,19 +254,19 @@ const RegisterScreen: React.FC = () => {
             className="register-button"
             disabled={loading}
           >
-            {loading ? "Inscription en cours..." : "S'inscrire"}
+            {loading ? t("register.buttonLoading") : t("register.button")}
           </button>
         </form>
 
         <div className="register-divider">
-          <span>OU</span>
+          <span>{t("login.or")}</span>
         </div>
 
         <div className="register-oauth-buttons">
           {loadingProviders ? (
-            <p style={{ textAlign: "center", color: "#999" }}>Chargement des providers...</p>
+            <p style={{ textAlign: "center", color: "#999" }}>{t("login.loadingProviders")}</p>
           ) : oauthProviders.length === 0 ? (
-            <p style={{ textAlign: "center", color: "#999" }}>Aucun provider OAuth2 disponible</p>
+            <p style={{ textAlign: "center", color: "#999" }}>{t("login.noProviders")}</p>
           ) : (
             oauthProviders.map((provider) => (
               <button
@@ -275,7 +279,7 @@ const RegisterScreen: React.FC = () => {
                 }}
               >
                 {renderProviderIcon(provider)}
-                S'inscrire avec {provider.name}
+                {t("login.loginWith")} {provider.name}
               </button>
             ))
           )}
@@ -283,9 +287,9 @@ const RegisterScreen: React.FC = () => {
 
         <div className="register-footer">
           <p className="register-footer-text">
-            Vous avez déjà un compte ?{" "}
+            {t("register.haveAccount")}{" "}
             <a href="/login" className="register-link">
-              Se connecter
+              {t("register.login")}
             </a>
           </p>
         </div>

@@ -58,6 +58,13 @@ body,
   -moz-osx-font-smoothing: grayscale;
 }
 
+.login-container > .language-selector {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  z-index: 10000;
+}
+
 .login-container button,
 .login-container input,
 .login-container label,

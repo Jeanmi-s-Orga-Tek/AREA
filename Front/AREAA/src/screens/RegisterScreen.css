@@ -58,21 +58,12 @@ body,
   -moz-osx-font-smoothing: grayscale;
 }
 
-.register-container button,
-.register-container input,
-.register-container label,
-.register-container textarea,
-.register-container select {
-  font: inherit;
+.register-container > .language-selector {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  z-index: 10000;
 }
-
-.register-background {
-  position: absolute;
-  inset: 0;
-  z-index: 0;
-  overflow: hidden;
-}
-
 .register-background > * {
   width: 100%;
   height: 100%;

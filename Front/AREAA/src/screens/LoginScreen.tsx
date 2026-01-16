@@ -6,8 +6,10 @@
 */
 
 import React, { useState, useMemo, useEffect } from "react";
+import { useTranslation } from "react-i18next";
 import { login, fetchOAuthProviders, initiateOAuthLogin, OAuthProvider } from "../services/auth";
 import NotificationContainer, { NotificationItem } from "../components/NotificationContainer";
+import LanguageSelector from "../components/LanguageSelector";
 import "./LoginScreen.css";
 
 
@@ -22,6 +24,7 @@ type Star = {
 };
 
 const LoginScreen: React.FC = () => {
+  const { t } = useTranslation();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [notifications, setNotifications] = useState<NotificationItem[]>([]);
@@ -72,7 +75,7 @@ const LoginScreen: React.FC = () => {
     e.preventDefault();
 
     if (!email || !password) {
-      addNotification("Tous les champs sont requis", "error");
+      addNotification(t("login.allFieldsRequired"), "error");
       return;
     }
 
@@ -80,10 +83,10 @@ const LoginScreen: React.FC = () => {
 
     try {
       await login({ email, password });
-      addNotification("Connexion réussie !", "success");
+      addNotification(t("login.success"), "success");
       setTimeout(() => window.location.href = "/", 1000);
     } catch (err) {
-      addNotification(err instanceof Error ? err.message : "Une erreur est survenue", "error");
+      addNotification(err instanceof Error ? err.message : t("login.error"), "error");
     } finally {
       setLoading(false);
     }
@@ -95,7 +98,7 @@ const LoginScreen: React.FC = () => {
     try {
       await initiateOAuthLogin(providerId);
     } catch (err) {
-      addNotification(err instanceof Error ? err.message : `Erreur lors de la connexion OAuth`, "error");
+      addNotification(err instanceof Error ? err.message : t("login.oauthError"), "error");
       setLoading(false);
     }
   };
@@ -140,6 +143,7 @@ const LoginScreen: React.FC = () => {
 
   return (
     <div className="login-container">
+      <LanguageSelector />
       <NotificationContainer
         notifications={notifications}
         onRemove={removeNotification}
@@ -162,14 +166,14 @@ const LoginScreen: React.FC = () => {
         ))}
       </div>
       <div className="login-form-card">
-        <h1 className="login-title">Connexion</h1>
-        <p className="login-subtitle">Connectez-vous à votre compte AREA</p>
+        <h1 className="login-title">{t("login.title")}</h1>
+        <p className="login-subtitle">{t("login.subtitle")}</p>
 
 
         <form onSubmit={handleSubmit} className="login-form">
           <div className="login-form-group">
             <label htmlFor="email" className="login-label">
-              Email
+              {t("login.email")}
             </label>
             <input
               type="email"
@@ -177,7 +181,7 @@ const LoginScreen: React.FC = () => {
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               className="login-input"
-              placeholder="votre@email.com"
+              placeholder={t("login.emailPlaceholder")}
               disabled={loading}
               autoComplete="email"
             />
@@ -185,7 +189,7 @@ const LoginScreen: React.FC = () => {
 
           <div className="login-form-group">
             <label htmlFor="password" className="login-label">
-              Mot de passe
+              {t("login.password")}
             </label>
             <input
               type="password"
@@ -193,7 +197,7 @@ const LoginScreen: React.FC = () => {
               value={password}
               onChange={(e) => setPassword(e.target.value)}
               className="login-input"
-              placeholder="••••••••"
+              placeholder={t("login.passwordPlaceholder")}
               disabled={loading}
               autoComplete="current-password"
             />
@@ -204,23 +208,22 @@ const LoginScreen: React.FC = () => {
             className="login-button"
             disabled={loading}
           >
-
-            {loading ? "Connexion en cours..." : "Se connecter"}
+            {loading ? t("login.buttonLoading") : t("login.button")}
           </button>
         </form>
 
         <div className="login-divider">
-          <span>OU</span>
+          <span>{t("login.or")}</span>
         </div>
 
         <div className="login-oauth-buttons">
           {loadingProviders ? (
               <p style={{ textAlign: "center", color: "#999" }}>
-                Chargement des providers...
+                {t("login.loadingProviders")}
               </p>
           ) : oauthProviders.length === 0 ? (
               <p style={{ textAlign: "center", color: "#999" }}>
-                Aucun provider OAuth2 disponible
+                {t("login.noProviders")}
               </p>
           ) : (
               oauthProviders.map((provider) => (
@@ -234,7 +237,7 @@ const LoginScreen: React.FC = () => {
                       }}
                   >
                     {renderProviderIcon(provider)}
-                    Se connecter avec {provider.name}
+                    {t("login.loginWith")} {provider.name}
                   </button>
               ))
           )}
@@ -242,9 +245,9 @@ const LoginScreen: React.FC = () => {
 
         <div className="login-footer">
           <p className="login-footer-text">
-            Vous n'avez pas de compte ?{" "}
+            {t("login.noAccount")}{" "}
             <a href="/register" className="login-link">
-              S'inscrire
+              {t("login.register")}
             </a>
           </p>
         </div>

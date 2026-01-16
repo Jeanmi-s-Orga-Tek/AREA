@@ -41,6 +41,13 @@
   overflow: hidden;
 }
 
+.dashboard-page > .language-selector {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  z-index: 10000;
+}
+
 .server-background {
   position: fixed;
   inset: 0;
