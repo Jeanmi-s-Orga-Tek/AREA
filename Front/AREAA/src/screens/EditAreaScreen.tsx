@@ -10,6 +10,7 @@ import { fetchAreaById, updateArea } from "../services/api";
 import type { AreaDetail } from "../services/api";
 import { logout } from "../services/auth";
 import NotificationContainer, { NotificationItem } from "../components/NotificationContainer";
+import ConfirmModal from "../components/ConfirmModal";
 import "./AreasScreen.css";
 
 const EditAreaScreen: React.FC = () => {
@@ -23,6 +24,12 @@ const EditAreaScreen: React.FC = () => {
   const [areaName, setAreaName] = useState("");
   const [actionParameters, setActionParameters] = useState<Record<string, string>>({});
   const [reactionParameters, setReactionParameters] = useState<Record<string, string>>({});
+  const [confirmModal, setConfirmModal] = useState<{
+    isOpen: boolean;
+    title: string;
+    message: string;
+    onConfirm: () => void;
+  }>({ isOpen: false, title: "", message: "", onConfirm: () => {} });
 
   const addNotification = (message: string, type: "success" | "error") => {
     const id = `notif-${Date.now()}-${Math.random().toString(16).slice(2)}`;
@@ -95,21 +102,29 @@ const EditAreaScreen: React.FC = () => {
       return;
     }
 
-    try {
-      setSaving(true);
-      await updateArea(areaId, {
-        name: areaName,
-        action_parameters: actionParameters,
-        reaction_parameters: reactionParameters,
-      });
+    setConfirmModal({
+      isOpen: true,
+      title: "Confirmer les modifications",
+      message: `Voulez-vous enregistrer les modifications de l'AREA "${areaName}" ?`,
+      onConfirm: async () => {
+        setConfirmModal({ isOpen: false, title: "", message: "", onConfirm: () => {} });
+        try {
+          setSaving(true);
+          await updateArea(areaId, {
+            name: areaName,
+            action_parameters: actionParameters,
+            reaction_parameters: reactionParameters,
+          });
 
-      addNotification(`AREA "${areaName}" modifiée avec succès !`, "success");
-      setTimeout(() => window.location.href = "/areas", 1500);
-    } catch (err) {
-      addNotification(err instanceof Error ? err.message : "Erreur inconnue", "error");
-    } finally {
-      setSaving(false);
-    }
+          addNotification(`AREA "${areaName}" modifiée avec succès !`, "success");
+          setTimeout(() => window.location.href = "/areas", 1500);
+        } catch (err) {
+          addNotification(err instanceof Error ? err.message : "Erreur inconnue", "error");
+        } finally {
+          setSaving(false);
+        }
+      },
+    });
   };
 
   const handleLogout = () => {
@@ -169,6 +184,16 @@ const EditAreaScreen: React.FC = () => {
       <NotificationContainer
         notifications={notifications}
         onRemove={removeNotification}
+      />
+      <ConfirmModal
+        isOpen={confirmModal.isOpen}
+        title={confirmModal.title}
+        message={confirmModal.message}
+        confirmText="Enregistrer"
+        cancelText="Annuler"
+        type="info"
+        onConfirm={confirmModal.onConfirm}
+        onCancel={() => setConfirmModal({ isOpen: false, title: "", message: "", onConfirm: () => {} })}
       />
       <div className="areas-background">
         {stars.map((star) => (

@@ -16,7 +16,7 @@ from app.oauth_models import Area, Service, UserServiceSubscription
 from app.action import Action
 from app.reaction import Reaction
 from app.oauth2 import oauth2_scheme
-from app.schemas.services import AreaCreate, AreaRead, AreaDetailRead, AreaActionDetail, AreaReactionDetail, ServiceBasicRead, ActionRead, ReactionRead
+from app.schemas.services import AreaCreate, AreaUpdate, AreaRead, AreaDetailRead, AreaActionDetail, AreaReactionDetail, ServiceBasicRead, ActionRead, ReactionRead
 from app.user import get_user_from_token
 
 areas_router = APIRouter(
@@ -176,6 +176,131 @@ def require_area(session: SessionDep, area_id: int, user_id: int) -> Area:
     if area is None or area.user_id != user_id:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Area not found")
     return area
+
+
+@areas_router.get("/{area_id}", response_model=AreaDetailRead)
+def get_area(area_id: int, session: SessionDep, token: TokenDep):
+    user = get_user_from_token(token, session)
+    area = require_area(session, area_id, user.id)
+    
+    action_service = session.get(Service, area.action_service_id)
+    action = session.get(Action, area.action_id)
+    reaction_service = session.get(Service, area.reaction_service_id)
+    reaction = session.get(Reaction, area.reaction_id)
+    
+    if not all([action_service, action, reaction_service, reaction]):
+        raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail="Area data incomplete")
+    
+    area_name = area.name or f"{action.name} → {reaction.name}"
+    
+    return AreaDetailRead(
+        id = area.id,
+        name = area_name,
+        action = AreaActionDetail(
+            service = ServiceBasicRead(
+                id = action_service.id,
+                name = action_service.name,
+                display_name = action_service.display_name,
+                description = action_service.description,
+                icon_url = action_service.icon_url,
+            ),
+            action = ActionRead(
+                id = action.id,
+                name = action.name,
+                description = action.description,
+                is_polling = action.is_polling,
+                service_id = action.service_id,
+            ),
+        ),
+        reaction = AreaReactionDetail(
+            service = ServiceBasicRead(
+                id = reaction_service.id,
+                name = reaction_service.name,
+                display_name = reaction_service.display_name,
+                description = reaction_service.description,
+                icon_url = reaction_service.icon_url,
+            ),
+            reaction = ReactionRead(
+                id = reaction.id,
+                name = reaction.name,
+                description = reaction.description,
+                url = reaction.url,
+                service_id = reaction.service_id,
+            ),
+        ),
+        action_parameters = area.params_action or {},
+        reaction_parameters = area.params_reaction or {},
+        is_active = area.is_active,
+        created_at = area.created_at,
+        updated_at = area.updated_at,
+    )
+
+
+@areas_router.patch("/{area_id}", response_model=AreaDetailRead)
+def update_area(area_id: int, area_data: AreaUpdate, session: SessionDep, token: TokenDep):
+    user = get_user_from_token(token, session)
+    area = require_area(session, area_id, user.id)
+    
+    if area_data.name is not None:
+        area.name = area_data.name
+    if area_data.action_parameters is not None:
+        area.params_action = area_data.action_parameters
+    if area_data.reaction_parameters is not None:
+        area.params_reaction = area_data.reaction_parameters
+    
+    area.updated_at = datetime.utcnow()
+    session.add(area)
+    session.commit()
+    session.refresh(area)
+    
+    action_service = session.get(Service, area.action_service_id)
+    action = session.get(Action, area.action_id)
+    reaction_service = session.get(Service, area.reaction_service_id)
+    reaction = session.get(Reaction, area.reaction_id)
+    
+    area_name = area.name or f"{action.name} → {reaction.name}"
+    
+    return AreaDetailRead(
+        id = area.id,
+        name = area_name,
+        action = AreaActionDetail(
+            service = ServiceBasicRead(
+                id = action_service.id,
+                name = action_service.name,
+                display_name = action_service.display_name,
+                description = action_service.description,
+                icon_url = action_service.icon_url,
+            ),
+            action = ActionRead(
+                id = action.id,
+                name = action.name,
+                description = action.description,
+                is_polling = action.is_polling,
+                service_id = action.service_id,
+            ),
+        ),
+        reaction = AreaReactionDetail(
+            service = ServiceBasicRead(
+                id = reaction_service.id,
+                name = reaction_service.name,
+                display_name = reaction_service.display_name,
+                description = reaction_service.description,
+                icon_url = reaction_service.icon_url,
+            ),
+            reaction = ReactionRead(
+                id = reaction.id,
+                name = reaction.name,
+                description = reaction.description,
+                url = reaction.url,
+                service_id = reaction.service_id,
+            ),
+        ),
+        action_parameters = area.params_action or {},
+        reaction_parameters = area.params_reaction or {},
+        is_active = area.is_active,
+        created_at = area.created_at,
+        updated_at = area.updated_at,
+    )
 
 
 @areas_router.patch("/{area_id}/toggle", response_model=AreaRead)

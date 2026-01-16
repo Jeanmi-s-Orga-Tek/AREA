@@ -67,6 +67,12 @@ class AreaCreate(SQLModel):
     is_active: bool = True
 
 
+class AreaUpdate(SQLModel):
+    name: Optional[str] = None
+    action_parameters: Optional[Dict[str, Any]] = None
+    reaction_parameters: Optional[Dict[str, Any]] = None
+
+
 class AreaRead(AreaBase):
     id: int
     user_id: int
