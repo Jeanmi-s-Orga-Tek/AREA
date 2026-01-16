@@ -6,12 +6,15 @@
 */
 
 import React, { useEffect, useState } from "react";
+import { useTranslation } from "react-i18next";
 import { logout } from "../services/auth";
 import { fetchCurrentUser } from "../services/api";
 import type { User } from "../services/api";
+import LanguageSelector from "../components/LanguageSelector";
 import "./ServerScreen.css";
 
 const ServerScreen: React.FC = () => {
+  const { t } = useTranslation();
   const [stars, setStars] = useState<Array<{ id: number; style: React.CSSProperties }>>([]);
   const [user, setUser] = useState<User | null>(null);
   const [loading, setLoading] = useState(true);
@@ -58,6 +61,7 @@ const ServerScreen: React.FC = () => {
 
   return (
     <div className="dashboard-page">
+      <LanguageSelector />
       <div className="server-background">
         <div>
           {stars.map((star) => (
@@ -72,86 +76,86 @@ const ServerScreen: React.FC = () => {
         </div>
         <nav className="sidebar-nav">
           <a href="/" className="nav-item active">
-            🏠 Dashboard
+            {t("navigation.dashboard")}
           </a>
           <a href="/areas" className="nav-item">
-            📋 Mes AREAs
+            {t("navigation.myAreas")}
           </a>
           <a href="/create-area" className="nav-item">
-            ➕ Créer une AREA
+            {t("navigation.createArea")}
           </a>
           <a href="/services" className="nav-item">
-            🔌 Services
+            {t("navigation.services")}
           </a>
           <a href="/profile" className="nav-item">
-            👤 Profil
+            {t("navigation.profile")}
           </a>
           <a href="/about" className="nav-item">
-            ℹ️ À propos
+            {t("navigation.about")}
           </a>
         </nav>
       </div>
 
       <div className="dashboard-content">
         <div className="dashboard-topbar">
-          <h1 className="topbar-title">Dashboard</h1>
+          <h1 className="topbar-title">{t("dashboard.title")}</h1>
           <div className="topbar-user">
-            <span className="user-name">👋 {loading ? "Chargement..." : (user?.name || "Utilisateur")}</span>
+            <span className="user-name">👋 {loading ? t("dashboard.loading") : (user?.name || t("dashboard.user"))}</span>
             <button onClick={handleLogout} className="logout-btn">
-              🚪 Déconnexion
+              {t("profile.logout")}
             </button>
           </div>
         </div>
 
         <div className="dashboard-main">
           <div className="welcome-card">
-            <h2 className="welcome-title">AREA Dashboard</h2>
+            <h2 className="welcome-title">AREA {t("dashboard.title")}</h2>
             <p className="welcome-text">
-              Welcome to the AREA web client. Your automation platform is up and running.
+              {t("dashboard.welcome")}
             </p>
           </div>
 
           <div className="grid-3">
             <div className="card">
               <div className="card-icon">📋</div>
-              <h3 className="card-title">Mes AREAs</h3>
-              <p className="card-description">Gérez vos automatisations</p>
-              <a href="/areas" className="card-link">Voir tout →</a>
+              <h3 className="card-title">{t("dashboard.myAreas")}</h3>
+              <p className="card-description">{t("dashboard.manageAutomations")}</p>
+              <a href="/areas" className="card-link">{t("common.viewAll")} →</a>
             </div>
 
             <div className="card">
               <div className="card-icon">➕</div>
-              <h3 className="card-title">Créer une AREA</h3>
-              <p className="card-description">Nouvelle automatisation</p>
-              <a href="/create-area" className="card-link">Créer →</a>
+              <h3 className="card-title">{t("dashboard.createArea")}</h3>
+              <p className="card-description">{t("dashboard.createNew")}</p>
+              <a href="/create-area" className="card-link">{t("common.create")} →</a>
             </div>
 
             <div className="card">
               <div className="card-icon">🔌</div>
-              <h3 className="card-title">Services</h3>
-              <p className="card-description">Connectez vos services</p>
-              <a href="/services" className="card-link">Gérer →</a>
+              <h3 className="card-title">{t("dashboard.servicesTitle")}</h3>
+              <p className="card-description">{t("dashboard.connectServices")}</p>
+              <a href="/services" className="card-link">{t("common.manage")} →</a>
             </div>
           </div>
 
           <div className="grid-2">
             <div className="card">
-              <h3 className="card-title">Statistiques</h3>
+              <h3 className="card-title">{t("profile.statistics")}</h3>
               <div className="stats">
                 <div className="stat-item">
-                  <span className="stat-label">AREAs actives</span>
+                  <span className="stat-label">{t("profile.activeAreas")}</span>
                   <span className="stat-value">0</span>
                 </div>
                 <div className="stat-item">
-                  <span className="stat-label">Services connectés</span>
+                  <span className="stat-label">{t("profile.connectedServices")}</span>
                   <span className="stat-value">0</span>
                 </div>
               </div>
             </div>
 
             <div className="card">
-              <h3 className="card-title">Activité récente</h3>
-              <p className="card-description text-muted">Aucune activité pour le moment</p>
+              <h3 className="card-title">{t("dashboard.recentActivity")}</h3>
+              <p className="card-description text-muted">{t("dashboard.noActivity")}</p>
             </div>
           </div>
         </div>

@@ -69,7 +69,7 @@ jobs:
     
     - name: Install dependencies
       working-directory: ./Front/AREAA
-      run: npm ci
+      run: npm install
     
     - name: Build
       working-directory: ./Front/AREAA

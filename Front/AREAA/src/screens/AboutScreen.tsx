@@ -6,11 +6,14 @@
 */
 
 import React, { useEffect, useState } from "react";
+import { useTranslation } from "react-i18next";
 import { fetchAbout, AboutResponse } from "../services/api";
 import NotificationContainer, { NotificationItem } from "../components/NotificationContainer";
+import LanguageSelector from "../components/LanguageSelector";
 import "./AboutScreen.css";
 
 const AboutScreen: React.FC = () => {
+  const { t, i18n } = useTranslation();
   const [loading, setLoading] = useState<boolean>(true);
   const [notifications, setNotifications] = useState<NotificationItem[]>([]);
   const [about, setAbout] = useState<AboutResponse | null>(null);
@@ -91,6 +94,7 @@ const AboutScreen: React.FC = () => {
   if (loading) {
     return (
       <div className="about-container">
+        <LanguageSelector />
         <div className="about-background">
           {stars.map((star) => (
             <div key={star.id} className="star" style={star.style} />
@@ -98,7 +102,7 @@ const AboutScreen: React.FC = () => {
         </div>
         <div className="about-content">
           <div className="loading-card">
-            <p>Chargement des informations...</p>
+            <p>{t("about.loading")}</p>
           </div>
         </div>
       </div>
@@ -108,6 +112,7 @@ const AboutScreen: React.FC = () => {
   if (!about || about.server.services.length === 0) {
     return (
       <div className="about-container">
+        <LanguageSelector />
         <div className="about-background">
           {stars.map((star) => (
             <div key={star.id} className="star" style={star.style} />
@@ -115,7 +120,7 @@ const AboutScreen: React.FC = () => {
         </div>
         <div className="about-content">
           <div className="error-card">
-            <p>Aucun service disponible.</p>
+            <p>{t("about.noServices")}</p>
           </div>
         </div>
       </div>
@@ -124,6 +129,7 @@ const AboutScreen: React.FC = () => {
 
   return (
     <div className="about-container">
+      <LanguageSelector />
       <NotificationContainer
         notifications={notifications}
         onRemove={removeNotification}
@@ -135,39 +141,39 @@ const AboutScreen: React.FC = () => {
       </div>
       <div className="about-content">
         <div className="about-topbar">
-          <h1 className="topbar-title">À propos</h1>
+          <h1 className="topbar-title">{t("about.title")}</h1>
           <a href="/" className="back-btn">
-            ← Retour
+            {t("navigation.back")}
           </a>
         </div>
 
         <div className="about-header">
-          <h1>⚡ AREA Platform</h1>
-          <p>Action REAction - Plateforme d'automatisation multi-services</p>
+          <h1>{t("about.platformTitle")}</h1>
+          <p>{t("about.platformSubtitle")}</p>
         </div>
 
         <div className="about-info-card">
-          <h2>📊 Informations du serveur</h2>
+          <h2>{t("about.serverInfo")}</h2>
           <div className="info-grid">
             <div className="info-item">
-              <div className="info-label">Adresse IP Client</div>
+              <div className="info-label">{t("about.clientIp")}</div>
               <div className="info-value">{about.client.host}</div>
             </div>
             <div className="info-item">
-              <div className="info-label">Heure actuelle</div>
+              <div className="info-label">{t("about.currentTime")}</div>
               <div className="info-value">
-                {currentTime.toLocaleString("fr-FR")}
+                {currentTime.toLocaleString(i18n.language === 'fr' ? "fr-FR" : "en-US")}
               </div>
             </div>
             <div className="info-item">
-              <div className="info-label">Services disponibles</div>
+              <div className="info-label">{t("about.availableServices")}</div>
               <div className="info-value">{about.server.services.length}</div>
             </div>
           </div>
         </div>
 
         <div className="about-info-card">
-          <h2>ℹ️ À propos de la plateforme</h2>
+          <h2>{t("about.aboutPlatform")}</h2>
           <div className="about-description">
             <p>
               <strong>AREA</strong> (Action REAction) est une plateforme d'automatisation qui vous permet de 
