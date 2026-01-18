@@ -1,3 +1,10 @@
+/*
+** EPITECH PROJECT, 2026
+** AREA
+** File description:
+** user
+*/
+
 import {apiClient} from './client';
 
 export interface CurrentUser {

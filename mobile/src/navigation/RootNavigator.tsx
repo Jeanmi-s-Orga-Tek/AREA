@@ -1,3 +1,10 @@
+/*
+** EPITECH PROJECT, 2026
+** AREA
+** File description:
+** RootNavigator
+*/
+
 import React from 'react';
 import {DefaultTheme, NavigationContainer} from '@react-navigation/native';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
@@ -19,6 +26,7 @@ import {
 } from 'react-native';
 import {colors, spacing, typography} from '../theme';
 import {RootStackParamList} from './types';
+import {useLanguage} from '../context/LanguageContext';
 
 const Stack = createNativeStackNavigator<RootStackParamList>();
 const navigationTheme = {
@@ -43,6 +51,7 @@ const sharedScreenOptions = {
 
 export const RootNavigator: React.FC = () => {
   const {isLoggedIn, isLoading} = useAuth();
+  const {t} = useLanguage();
 
   if (isLoading) {
     return (
@@ -60,12 +69,14 @@ export const RootNavigator: React.FC = () => {
             name="Areas"
             component={AreasScreen}
             options={({navigation}) => ({
-              headerTitle: 'Mes AREAs',
+              headerTitle: t('nav.areas_title'),
               headerRight: () => (
                 <TouchableOpacity
                   onPress={() => navigation.navigate('Settings')}
                   style={styles.headerButton}>
-                  <Text style={styles.headerButtonText}>Paramètres</Text>
+                  <Text style={styles.headerButtonText}>
+                    {t('nav.settings_button')}
+                  </Text>
                 </TouchableOpacity>
               ),
             })}
@@ -73,17 +84,17 @@ export const RootNavigator: React.FC = () => {
           <Stack.Screen
             name="CreateArea"
             component={CreateAreaScreen}
-            options={{title: 'Créer une AREA'}}
+            options={{title: t('nav.create_area')}}
           />
           <Stack.Screen
             name="Services"
             component={ServicesScreen}
-            options={{title: 'Services'}}
+            options={{title: t('nav.services')}}
           />
           <Stack.Screen
             name="Settings"
             component={SettingsScreen}
-            options={{title: 'Paramètres'}}
+            options={{title: t('nav.settings')}}
           />
         </Stack.Navigator>
       ) : (
@@ -101,7 +112,7 @@ export const RootNavigator: React.FC = () => {
           <Stack.Screen
             name="Settings"
             component={SettingsScreen}
-            options={{title: 'Paramètres serveur'}}
+            options={{title: t('nav.server_settings')}}
           />
         </Stack.Navigator>
       )}

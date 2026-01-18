@@ -1,3 +1,10 @@
+/*
+** EPITECH PROJECT, 2026
+** AREA
+** File description:
+** SettingsScreen
+*/
+
 import React, {useCallback, useEffect, useState} from 'react';
 import {
   View,
@@ -9,12 +16,13 @@ import {
   Alert,
 } from 'react-native';
 import {SafeAreaView} from 'react-native-safe-area-context';
-import {Button, Card, StarField} from '../components';
+import {Button, Card, LanguageToggle, StarField} from '../components';
 import {colors, spacing, typography} from '../theme';
 import {getApiBaseUrl, setApiBaseUrl, clearApiBaseUrl} from '../api/storage';
 import {fetchAbout, AboutResponse} from '../api/about';
 import {fetchCurrentUser, CurrentUser} from '../api/user';
 import {useAuth} from '../context/AuthContext';
+import {useLanguage} from '../context/LanguageContext';
 type ConnectionStatus = 'idle' | 'loading' | 'success' | 'error';
 
 export const SettingsScreen: React.FC = () => {
@@ -29,6 +37,7 @@ export const SettingsScreen: React.FC = () => {
   const [userLoading, setUserLoading] = useState(false);
   const [userError, setUserError] = useState('');
   const {isLoggedIn, logout} = useAuth();
+  const {t, language} = useLanguage();
 
   useEffect(() => {
     const loadUrl = async () => {
@@ -54,12 +63,12 @@ export const SettingsScreen: React.FC = () => {
       setUser(profile);
     } catch (error) {
       setUserError(
-        error instanceof Error ? error.message : 'Unable to load account information.',
+        error instanceof Error ? error.message : t('settings.account.error'),
       );
     } finally {
       setUserLoading(false);
     }
-  }, [isLoggedIn]);
+  }, [isLoggedIn, t]);
 
   useEffect(() => {
     loadUserProfile();
@@ -70,17 +79,17 @@ export const SettingsScreen: React.FC = () => {
     setSavedMessage('');
 
     if (!url.trim()) {
-      setErrorMessage('URL cannot be empty');
+      setErrorMessage(t('settings.server_config.url_empty'));
       return;
     }
 
     try {
       await setApiBaseUrl(url.trim());
       setCurrentUrl(url.trim());
-      setSavedMessage('Saved ✅');
+      setSavedMessage(t('settings.server_config.save_success'));
       setTimeout(() => setSavedMessage(''), 3000);
     } catch (error) {
-      setErrorMessage('Failed to save URL');
+      setErrorMessage(t('settings.server_config.save_error'));
     }
   };
 
@@ -95,7 +104,9 @@ export const SettingsScreen: React.FC = () => {
     } catch (error) {
       setConnectionStatus('error');
       setConnectionError(
-        error instanceof Error ? error.message : 'Unable to reach the server.',
+        error instanceof Error
+          ? error.message
+          : t('settings.server_info.error_fallback'),
       );
     }
   };
@@ -113,11 +124,16 @@ export const SettingsScreen: React.FC = () => {
       setSavedMessage('');
       setAboutData(null);
       setConnectionStatus('idle');
-      Alert.alert('Local data cleared', 'Server URL and session have been cleared.');
+      Alert.alert(
+        t('settings.alert.clear.title'),
+        t('settings.alert.clear.message'),
+      );
     } catch (error) {
       Alert.alert(
-        'Unable to clear data',
-        error instanceof Error ? error.message : 'Unknown error occurred.',
+        t('settings.alert.clear.error.title'),
+        error instanceof Error
+          ? error.message
+          : t('settings.alert.clear.error.message'),
       );
     }
   };
@@ -126,14 +142,24 @@ export const SettingsScreen: React.FC = () => {
     if (connectionStatus === 'success' && aboutData) {
       return (
         <View style={styles.successContainer}>
-          <Text style={styles.connectionSuccess}>Connecté ✅</Text>
-          <Text style={styles.infoText}>
-            Services disponibles : {aboutData.server.services.length}
+          <Text style={styles.connectionSuccess}>
+            {t('settings.server_info.connected')}
           </Text>
           <Text style={styles.infoText}>
-            Heure serveur : {new Date(aboutData.server.current_time * 1000).toLocaleString()}
+            {t('settings.server_info.available_services', {
+              count: aboutData.server.services.length,
+            })}
           </Text>
-          <Text style={styles.infoText}>Client : {aboutData.client.host}</Text>
+          <Text style={styles.infoText}>
+            {t('settings.server_info.server_time', {
+              time: new Date(
+                aboutData.server.current_time * 1000,
+              ).toLocaleString(language === 'fr' ? 'fr-FR' : 'en-US'),
+            })}
+          </Text>
+          <Text style={styles.infoText}>
+            {t('settings.server_info.client', {host: aboutData.client.host})}
+          </Text>
         </View>
       );
     }
@@ -141,7 +167,9 @@ export const SettingsScreen: React.FC = () => {
     if (connectionStatus === 'error') {
       return (
         <View style={styles.errorContainer}>
-          <Text style={styles.connectionError}>Serveur injoignable ❌</Text>
+          <Text style={styles.connectionError}>
+            {t('settings.server_info.unreachable')}
+          </Text>
           <Text style={styles.errorDetailText}>{connectionError}</Text>
         </View>
       );
@@ -152,33 +180,51 @@ export const SettingsScreen: React.FC = () => {
 
   const renderAccountSection = () => (
     <Card style={styles.card}>
-      <Text style={styles.cardTitle}>Compte</Text>
+      <Text style={styles.cardTitle}>{t('settings.account.title')}</Text>
       <Text style={styles.cardDescription}>
-        Gérez votre profil AREA et votre session
+        {t('settings.account.description')}
       </Text>
       {userLoading ? (
         <ActivityIndicator color={colors.primary} style={styles.sectionSpinner} />
       ) : (
         <View style={styles.accountDetails}>
           <Text style={styles.infoText}>
-            Nom : {user?.name || user?.email || 'Utilisateur inconnu'}
+            {t('settings.account.name_label', {
+              name:
+                user?.name ||
+                user?.email ||
+                t('settings.account.unknown_user'),
+            })}
           </Text>
-          <Text style={styles.infoText}>Email : {user?.email || 'N/A'}</Text>
+          <Text style={styles.infoText}>
+            {t('settings.account.email_label', {
+              email: user?.email || t('common.na'),
+            })}
+          </Text>
           {userError ? <Text style={styles.errorText}>{userError}</Text> : null}
         </View>
       )}
-      <Button title="Se déconnecter" variant="danger" onPress={handleLogout} style={styles.cardButton} />
+      <Button
+        title={t('settings.account.logout')}
+        variant="danger"
+        onPress={handleLogout}
+        style={styles.cardButton}
+      />
     </Card>
   );
 
   const renderAboutSection = () => (
     <Card style={styles.card}>
-      <Text style={styles.cardTitle}>À propos / Infos serveur</Text>
+      <Text style={styles.cardTitle}>{t('settings.server_info.title')}</Text>
       <Text style={styles.cardDescription}>
-        Consultez l&apos;instance backend reliée au client mobile
+        {t('settings.server_info.description')}
       </Text>
       <Button
-        title={connectionStatus === 'loading' ? 'Chargement...' : 'Voir les infos serveur'}
+        title={
+          connectionStatus === 'loading'
+            ? t('settings.server_info.button.loading')
+            : t('settings.server_info.button.view')
+        }
         onPress={handleFetchServerInfo}
         variant="outline"
         disabled={connectionStatus === 'loading'}
@@ -190,12 +236,12 @@ export const SettingsScreen: React.FC = () => {
 
   const renderAdvancedSection = () => (
     <Card style={styles.card}>
-      <Text style={styles.cardTitle}>Avancé</Text>
+      <Text style={styles.cardTitle}>{t('settings.advanced.title')}</Text>
       <Text style={styles.cardDescription}>
-        Nettoyez la configuration locale et la session si besoin
+        {t('settings.advanced.description')}
       </Text>
       <Button
-        title="Effacer les données locales"
+        title={t('settings.advanced.clear')}
         variant="outline"
         onPress={handleClearLocalData}
         style={styles.cardButton}
@@ -209,14 +255,28 @@ export const SettingsScreen: React.FC = () => {
     <StarField padding={0}>
       <SafeAreaView style={styles.safeArea}>
         <ScrollView style={styles.scrollView} contentContainerStyle={styles.content}>
-          <Text style={styles.title}>{isLoggedIn ? 'Paramètres' : 'Paramètres serveur'}</Text>
+          <Text style={styles.title}>
+            {isLoggedIn
+              ? t('settings.title.logged_in')
+              : t('settings.title.logged_out')}
+          </Text>
 
           <Card style={styles.card}>
-            <Text style={styles.cardTitle}>Configuration serveur</Text>
+            <Text style={styles.cardTitle}>{t('language.title')}</Text>
+            <Text style={styles.cardDescription}>
+              {t('language.description')}
+            </Text>
+            <LanguageToggle compact style={styles.languageToggle} />
+          </Card>
+
+          <Card style={styles.card}>
+            <Text style={styles.cardTitle}>
+              {t('settings.server_config.title')}
+            </Text>
             <Text style={styles.cardDescription}>
               {isLoggedIn
-                ? 'Modifier l’URL déconnectera votre session actuelle.'
-                : 'Définissez la base d’API avant de vous connecter.'}
+                ? t('settings.server_config.description.logged_in')
+                : t('settings.server_config.description.logged_out')}
             </Text>
 
             <TextInput
@@ -235,15 +295,27 @@ export const SettingsScreen: React.FC = () => {
 
             {errorMessage ? <Text style={styles.errorText}>{errorMessage}</Text> : null}
 
-            <Button title="Enregistrer" onPress={handleSave} style={styles.saveButton} />
+            <Button
+              title={t('settings.server_config.save')}
+              onPress={handleSave}
+              style={styles.saveButton}
+            />
 
             <Text style={styles.currentUrlText}>
-              Serveur actuel : {currentUrl ? currentUrl : 'Non défini'}
+              {t('settings.server_config.current_url', {
+                url: currentUrl
+                  ? currentUrl
+                  : t('settings.server_config.current_url.none'),
+              })}
             </Text>
 
             {!isLoggedIn && (
               <Button
-                title={connectionStatus === 'loading' ? 'Test en cours...' : 'Tester la connexion'}
+                title={
+                  connectionStatus === 'loading'
+                    ? t('settings.server_config.testing')
+                    : t('settings.server_config.test')
+                }
                 onPress={handleFetchServerInfo}
                 variant="outline"
                 disabled={connectionStatus === 'loading' || !currentUrl}
@@ -254,7 +326,9 @@ export const SettingsScreen: React.FC = () => {
             {!isLoggedIn && connectionStatus === 'loading' && (
               <View style={styles.testingContainer}>
                 <ActivityIndicator size="small" color={colors.primary} />
-                <Text style={styles.testingText}>Test de connexion...</Text>
+                <Text style={styles.testingText}>
+                  {t('settings.server_config.testing_inline')}
+                </Text>
               </View>
             )}
 
@@ -304,6 +378,10 @@ const styles = StyleSheet.create({
   },
   cardButton: {
     marginTop: spacing.md,
+  },
+  languageToggle: {
+    marginTop: spacing.md,
+    alignSelf: 'flex-start',
   },
   input: {
     backgroundColor: colors.surfaceMuted,

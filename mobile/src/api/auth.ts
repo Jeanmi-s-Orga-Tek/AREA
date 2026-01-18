@@ -1,3 +1,10 @@
+/*
+** EPITECH PROJECT, 2026
+** AREA
+** File description:
+** auth
+*/
+
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import {getApiBaseUrl} from './storage';
 import {apiClient} from './client';

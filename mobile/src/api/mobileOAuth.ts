@@ -1,3 +1,10 @@
+/*
+** EPITECH PROJECT, 2026
+** AREA
+** File description:
+** mobileOAuth
+*/
+
 import {Linking} from 'react-native';
 import {sha256} from 'js-sha256';
 import {AuthorizeUrlResponse, createOAuthState, recordPendingOAuthState} from './auth';

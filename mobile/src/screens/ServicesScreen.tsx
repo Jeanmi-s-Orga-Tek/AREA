@@ -1,3 +1,10 @@
+/*
+** EPITECH PROJECT, 2026
+** AREA
+** File description:
+** ServicesScreen
+*/
+
 import React, {useCallback, useEffect, useMemo, useState} from 'react';
 import {
   View,
@@ -32,6 +39,7 @@ import {
   recordPendingOAuthState,
 } from '../api/auth';
 import {RootStackParamList} from '../navigation/types';
+import {useLanguage} from '../context/LanguageContext';
 
 interface ServiceListItem {
   id: number;
@@ -48,6 +56,7 @@ interface ServiceListItem {
 export const ServicesScreen: React.FC = () => {
   const navigation =
     useNavigation<NativeStackNavigationProp<RootStackParamList>>();
+  const {t} = useLanguage();
   const [services, setServices] = useState<ServiceListItem[]>([]);
   const [loading, setLoading] = useState(true);
   const [refreshing, setRefreshing] = useState(false);
@@ -72,8 +81,7 @@ export const ServicesScreen: React.FC = () => {
           id: service.id,
           keyName: service.name,
           displayName: service.display_name || service.name,
-          description:
-            service.description || `Connect ${service.display_name} to AREA`,
+          description: service.description || '',
           icon: service.icon,
           color: service.color || colors.primary,
           oauthProvider: service.oauth_provider,
@@ -99,12 +107,12 @@ export const ServicesScreen: React.FC = () => {
       setServices(mapServices(available, connected));
     } catch (err) {
       const message =
-        err instanceof Error ? err.message : 'Failed to load services.';
+        err instanceof Error ? err.message : t('services.error.load');
       setError(message);
     } finally {
       setLoading(false);
     }
-  }, [mapServices]);
+  }, [mapServices, t]);
 
   useFocusEffect(
     useCallback(() => {
@@ -137,8 +145,8 @@ export const ServicesScreen: React.FC = () => {
     async (service: ServiceListItem) => {
       if (!service.oauthProvider) {
         Alert.alert(
-          'Unavailable',
-          'This service is not configured for OAuth connections yet.',
+          t('services.alert.unavailable.title'),
+          t('services.alert.unavailable.message'),
         );
         return;
       }
@@ -159,13 +167,13 @@ export const ServicesScreen: React.FC = () => {
         const message =
           err instanceof Error
             ? err.message
-            : 'Unable to start OAuth connection.';
-        Alert.alert('Service connection', message);
+            : t('services.error.oauth_start');
+        Alert.alert(t('services.alert.connection.title'), message);
       } finally {
         setActionLoading(prev => ({...prev, [service.id]: false}));
       }
     },
-    [],
+    [t],
   );
 
   const handleDisconnect = useCallback(async (service: ServiceListItem) => {
@@ -175,12 +183,12 @@ export const ServicesScreen: React.FC = () => {
       await loadData({showSpinner: false});
     } catch (err) {
       const message =
-        err instanceof Error ? err.message : 'Failed to disconnect service.';
-      Alert.alert('Service connection', message);
+        err instanceof Error ? err.message : t('services.error.disconnect');
+      Alert.alert(t('services.alert.connection.title'), message);
     } finally {
       setActionLoading(prev => ({...prev, [service.id]: false}));
     }
-  }, [loadData]);
+  }, [loadData, t]);
 
   const connectedCount = useMemo(
     () => services.filter(service => service.isConnected).length,
@@ -189,6 +197,9 @@ export const ServicesScreen: React.FC = () => {
 
   const renderItem = ({item}: {item: ServiceListItem}) => {
     const isProcessing = Boolean(actionLoading[item.id]);
+    const description =
+      item.description ||
+      t('services.description.fallback', {service: item.displayName});
     return (
       <View
         style={[styles.card, item.isConnected && styles.cardConnected]}
@@ -197,17 +208,25 @@ export const ServicesScreen: React.FC = () => {
           <Text style={styles.serviceIcon}>{item.icon || '🔗'}</Text>
           {item.isConnected && (
             <View style={styles.badge}> 
-              <Text style={styles.badgeText}>Connected</Text>
+              <Text style={styles.badgeText}>
+                {t('services.badge.connected')}
+              </Text>
             </View>
           )}
         </View>
         <Text style={styles.serviceName}>{item.displayName}</Text>
-        <Text style={styles.serviceDescription}>{item.description}</Text>
+        <Text style={styles.serviceDescription}>{description}</Text>
         {item.remoteEmail && (
-          <Text style={styles.serviceMeta}>Account: {item.remoteEmail}</Text>
+          <Text style={styles.serviceMeta}>
+            {t('services.account.label', {email: item.remoteEmail})}
+          </Text>
         )}
         <Button
-          title={item.isConnected ? 'Disconnect' : 'Connect'}
+          title={
+            item.isConnected
+              ? t('services.button.disconnect')
+              : t('services.button.connect')
+          }
           variant={item.isConnected ? 'outline' : 'primary'}
           loading={isProcessing}
           style={styles.cardAction}
@@ -224,7 +243,7 @@ export const ServicesScreen: React.FC = () => {
       <StarField padding={0}>
         <SafeAreaView style={styles.centeredContainer}>
           <ActivityIndicator size="large" color={colors.primary} />
-          <Text style={styles.loadingText}>Chargement des services...</Text>
+          <Text style={styles.loadingText}>{t('services.loading')}</Text>
         </SafeAreaView>
       </StarField>
     );
@@ -235,11 +254,14 @@ export const ServicesScreen: React.FC = () => {
       <SafeAreaView style={styles.container}>
         <View style={styles.headerCard}>
           <TouchableOpacity onPress={() => navigation.goBack()}>
-            <Text style={styles.backLink}>← Retour</Text>
+            <Text style={styles.backLink}>{t('services.back')}</Text>
           </TouchableOpacity>
-          <Text style={styles.title}>Services</Text>
+          <Text style={styles.title}>{t('services.title')}</Text>
           <Text style={styles.subtitle}>
-            {connectedCount} / {services.length} services connectés
+            {t('services.subtitle', {
+              connected: connectedCount,
+              total: services.length,
+            })}
           </Text>
           {error && <Text style={styles.error}>{error}</Text>}
         </View>
@@ -257,7 +279,7 @@ export const ServicesScreen: React.FC = () => {
             !loading ? (
               <View style={styles.emptyState}>
                 <Text style={styles.emptyText}>
-                  Aucun service disponible pour l’instant.
+                  {t('services.empty')}
                 </Text>
               </View>
             ) : null

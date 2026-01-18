@@ -1,3 +1,10 @@
+/*
+** EPITECH PROJECT, 2026
+** AREA
+** File description:
+** spacing
+*/
+
 export const spacing = {
   xs: 4,
   sm: 8,

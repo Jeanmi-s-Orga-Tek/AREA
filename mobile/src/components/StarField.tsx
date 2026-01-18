@@ -1,3 +1,10 @@
+/*
+** EPITECH PROJECT, 2026
+** AREA
+** File description:
+** StarField
+*/
+
 import React, {useEffect, useMemo, useRef} from 'react';
 import {
   Animated,

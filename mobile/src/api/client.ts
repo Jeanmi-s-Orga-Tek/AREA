@@ -1,3 +1,10 @@
+/*
+** EPITECH PROJECT, 2026
+** AREA
+** File description:
+** client
+*/
+
 import {getApiBaseUrl} from './storage';
 import {getAuthToken} from './auth';
 

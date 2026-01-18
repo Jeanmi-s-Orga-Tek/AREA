@@ -1,3 +1,10 @@
+/*
+** EPITECH PROJECT, 2026
+** AREA
+** File description:
+** App
+*/
+
 import React, {useCallback, useEffect, useRef} from 'react';
 import {
   Alert,
@@ -7,6 +14,7 @@ import {
 } from 'react-native';
 import {RootNavigator} from './src/navigation';
 import {AuthProvider, useAuth} from './src/context/AuthContext';
+import {LanguageProvider} from './src/context/LanguageContext';
 import {
   consumePendingOAuthState,
   finalizeOAuthLogin,
@@ -22,9 +30,11 @@ import {colors} from './src/theme';
 function App() {
   return (
     <AuthProvider>
-      <StatusBar barStyle="light-content" backgroundColor={colors.background} />
-      <OAuthRedirectHandler />
-      <RootNavigator />
+      <LanguageProvider>
+        <StatusBar barStyle="light-content" backgroundColor={colors.background} />
+        <OAuthRedirectHandler />
+        <RootNavigator />
+      </LanguageProvider>
     </AuthProvider>
   );
 }

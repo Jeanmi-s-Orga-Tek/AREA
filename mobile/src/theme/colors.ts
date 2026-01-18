@@ -1,3 +1,10 @@
+/*
+** EPITECH PROJECT, 2026
+** AREA
+** File description:
+** colors
+*/
+
 export const colors = {
   background: '#0a0e1a',
   backgroundAlt: '#0d1426',

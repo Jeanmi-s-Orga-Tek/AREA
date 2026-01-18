@@ -1,3 +1,10 @@
+/*
+** EPITECH PROJECT, 2026
+** AREA
+** File description:
+** AreasScreen
+*/
+
 import React, {useState, useCallback} from 'react';
 import {
   View,
@@ -17,6 +24,7 @@ import {colors, spacing, typography} from '../theme';
 import {useAuth} from '../context/AuthContext';
 import {fetchAreas, toggleArea, deleteArea, AreaDetail} from '../api/areas';
 import {RootStackParamList} from '../navigation/types';
+import {useLanguage} from '../context/LanguageContext';
 
 type AreasScreenProps = {
   navigation: NativeStackNavigationProp<RootStackParamList, 'Areas'>;
@@ -24,6 +32,7 @@ type AreasScreenProps = {
 
 export const AreasScreen: React.FC<AreasScreenProps> = ({navigation}) => {
   const {logout} = useAuth();
+  const {t} = useLanguage();
   const [areas, setAreas] = useState<AreaDetail[]>([]);
   const [loading, setLoading] = useState(true);
   const [refreshing, setRefreshing] = useState(false);
@@ -35,12 +44,12 @@ export const AreasScreen: React.FC<AreasScreenProps> = ({navigation}) => {
       const data = await fetchAreas();
       setAreas(data);
     } catch (err) {
-      setError(err instanceof Error ? err.message : 'Failed to load areas');
+      setError(err instanceof Error ? err.message : t('areas.error.load'));
     } finally {
       setLoading(false);
       setRefreshing(false);
     }
-  }, []);
+  }, [t]);
 
   useFocusEffect(
     useCallback(() => {
@@ -65,18 +74,18 @@ export const AreasScreen: React.FC<AreasScreenProps> = ({navigation}) => {
       setAreas(prev =>
         prev.map(a => (a.id === area.id ? {...a, is_active: previousState} : a)),
       );
-      setError(err instanceof Error ? err.message : 'Toggle failed');
+      setError(err instanceof Error ? err.message : t('areas.error.toggle'));
     }
   };
 
   const handleDelete = (area: AreaDetail) => {
     Alert.alert(
-      'Supprimer cette AREA ?',
-      `“${area.name || 'AREA'}” sera supprimée définitivement.`,
+      t('areas.delete.title'),
+      t('areas.delete.message', {name: area.name || t('areas.name.fallback')}),
       [
-        {text: 'Annuler', style: 'cancel'},
+        {text: t('common.cancel'), style: 'cancel'},
         {
-          text: 'Supprimer',
+          text: t('common.delete'),
           style: 'destructive',
           onPress: async () => {
             try {
@@ -84,7 +93,7 @@ export const AreasScreen: React.FC<AreasScreenProps> = ({navigation}) => {
               setAreas(prev => prev.filter(a => a.id !== area.id));
             } catch (err) {
               setError(
-                err instanceof Error ? err.message : 'Impossible de supprimer',
+                err instanceof Error ? err.message : t('areas.error.delete'),
               );
             }
           },
@@ -114,7 +123,9 @@ export const AreasScreen: React.FC<AreasScreenProps> = ({navigation}) => {
     <Card style={styles.card}>
       <View style={styles.cardHeader}>
         <View style={styles.cardContent}>
-          <Text style={styles.cardTitle}>{item.name || 'AREA sans nom'}</Text>
+          <Text style={styles.cardTitle}>
+            {item.name || t('areas.untitled')}
+          </Text>
           <View style={styles.cardTags}>
             <View
               style={[
@@ -124,7 +135,9 @@ export const AreasScreen: React.FC<AreasScreenProps> = ({navigation}) => {
                   : styles.statusBadgeInactive,
               ]}>
               <Text style={styles.statusBadgeText}>
-                {item.is_active ? 'Active' : 'Inactive'}
+                {item.is_active
+                  ? t('areas.status.active')
+                  : t('areas.status.inactive')}
               </Text>
             </View>
             <Text style={styles.cardMeta}>
@@ -145,7 +158,7 @@ export const AreasScreen: React.FC<AreasScreenProps> = ({navigation}) => {
       </View>
       <View style={styles.cardActions}>
         <Button
-          title="Supprimer"
+          title={t('areas.button.delete')}
           variant="danger"
           onPress={() => handleDelete(item)}
         />
@@ -157,23 +170,23 @@ export const AreasScreen: React.FC<AreasScreenProps> = ({navigation}) => {
     <StarField padding={0}>
       <SafeAreaView style={styles.safeArea}>
         <View style={styles.headerCard}>
-          <Text style={styles.title}>Mes AREAs</Text>
+          <Text style={styles.title}>{t('areas.title')}</Text>
           <View style={styles.statsRow}>
             <View style={styles.statPill}>
               <Text style={styles.statValue}>{areas.length || 0}</Text>
-              <Text style={styles.statLabel}>total</Text>
+              <Text style={styles.statLabel}>{t('areas.total')}</Text>
             </View>
             <View style={[styles.statPill, styles.statPillSuccess]}>
               <Text style={styles.statValue}>
                 {areas.filter(a => a.is_active).length}
               </Text>
-              <Text style={styles.statLabel}>actives</Text>
+              <Text style={styles.statLabel}>{t('areas.active')}</Text>
             </View>
             <View style={[styles.statPill, styles.statPillMuted]}>
               <Text style={styles.statValue}>
                 {areas.filter(a => !a.is_active).length}
               </Text>
-              <Text style={styles.statLabel}>inactives</Text>
+              <Text style={styles.statLabel}>{t('areas.inactive')}</Text>
             </View>
           </View>
         </View>
@@ -186,9 +199,9 @@ export const AreasScreen: React.FC<AreasScreenProps> = ({navigation}) => {
 
         {areas.length === 0 ? (
           <View style={styles.emptyContainer}>
-            <Text style={styles.emptyText}>Aucune AREA pour l’instant</Text>
+            <Text style={styles.emptyText}>{t('areas.empty.title')}</Text>
             <Text style={styles.emptySubtext}>
-              Créez votre première automatisation
+              {t('areas.empty.subtitle')}
             </Text>
           </View>
         ) : (
@@ -209,21 +222,21 @@ export const AreasScreen: React.FC<AreasScreenProps> = ({navigation}) => {
 
         <View style={styles.footer}>
           <Button
-            title="Créer une nouvelle AREA"
+            title={t('areas.button.create')}
             variant="primary"
             onPress={() => navigation.navigate('CreateArea')}
             style={styles.button}
           />
 
           <Button
-            title="Services"
+            title={t('areas.button.services')}
             variant="outline"
             onPress={() => navigation.navigate('Services')}
             style={styles.button}
           />
 
           <Button
-            title="Déconnexion"
+            title={t('areas.button.logout')}
             variant="danger"
             onPress={handleLogout}
             style={styles.button}

@@ -1,3 +1,10 @@
+/*
+** EPITECH PROJECT, 2026
+** AREA
+** File description:
+** AuthContext
+*/
+
 import React, {createContext, useContext, useState, useEffect} from 'react';
 import {getAuthToken, logout as logoutApi, storeAuthToken} from '../api/auth';
 

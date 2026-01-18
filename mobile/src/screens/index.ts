@@ -1,3 +1,10 @@
+/*
+** EPITECH PROJECT, 2026
+** AREA
+** File description:
+** index
+*/
+
 export {LoginScreen} from './LoginScreen';
 export {RegisterScreen} from './RegisterScreen';
 export {AreasScreen} from './AreasScreen';

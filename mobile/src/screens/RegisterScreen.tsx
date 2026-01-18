@@ -1,3 +1,10 @@
+/*
+** EPITECH PROJECT, 2026
+** AREA
+** File description:
+** RegisterScreen
+*/
+
 import React, {useState} from 'react';
 import {
   KeyboardAvoidingView,
@@ -12,17 +19,19 @@ import {
 } from 'react-native';
 import {SafeAreaView} from 'react-native-safe-area-context';
 import {NativeStackNavigationProp} from '@react-navigation/native-stack';
-import {Button, StarField} from '../components';
+import {Button, LanguageToggle, StarField} from '../components';
 import {colors, spacing, typography} from '../theme';
 import {register as registerUser} from '../api/auth';
 import {useAuth} from '../context/AuthContext';
 import {RootStackParamList} from '../navigation/types';
+import {useLanguage} from '../context/LanguageContext';
 
 interface RegisterScreenProps {
   navigation: NativeStackNavigationProp<RootStackParamList, 'Register'>;
 }
 
 export const RegisterScreen: React.FC<RegisterScreenProps> = ({navigation}) => {
+  const {t} = useLanguage();
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -34,12 +43,12 @@ export const RegisterScreen: React.FC<RegisterScreenProps> = ({navigation}) => {
 
   const handleRegister = async () => {
     if (!name || !email || !password || !confirmPassword) {
-      setError('Please fill in all fields');
+      setError(t('register.error.missing_fields'));
       return;
     }
 
     if (password !== confirmPassword) {
-      setError('Passwords do not match');
+      setError(t('register.error.password_mismatch'));
       return;
     }
 
@@ -57,12 +66,15 @@ export const RegisterScreen: React.FC<RegisterScreenProps> = ({navigation}) => {
       if (result.token) {
         authenticate(result.token);
       } else {
-        setSuccess('Account created. Please log in.');
-        Alert.alert('Account created', 'Please log in with your new credentials.');
+        setSuccess(t('register.success.message'));
+        Alert.alert(
+          t('register.alert.title'),
+          t('register.alert.message'),
+        );
         navigation.navigate('Login');
       }
     } else {
-      setError(result.error || 'Registration failed');
+      setError(result.error || t('register.error.failed'));
     }
 
     setLoading(false);
@@ -77,13 +89,14 @@ export const RegisterScreen: React.FC<RegisterScreenProps> = ({navigation}) => {
           <View style={styles.content}>
             <View style={styles.card}>
               <View style={styles.header}>
-                <Text style={styles.title}>Créer un compte</Text>
+                <Text style={styles.title}>{t('register.title')}</Text>
+                <LanguageToggle compact style={styles.languageToggle} />
               </View>
 
               <View style={styles.form}>
                 <TextInput
                   style={styles.input}
-                  placeholder="Nom complet"
+                  placeholder={t('register.name.placeholder')}
                   placeholderTextColor={colors.textSecondary}
                   value={name}
                   onChangeText={setName}
@@ -91,7 +104,7 @@ export const RegisterScreen: React.FC<RegisterScreenProps> = ({navigation}) => {
                 />
                 <TextInput
                   style={styles.input}
-                  placeholder="Email"
+                  placeholder={t('register.email.placeholder')}
                   placeholderTextColor={colors.textSecondary}
                   value={email}
                   onChangeText={setEmail}
@@ -101,7 +114,7 @@ export const RegisterScreen: React.FC<RegisterScreenProps> = ({navigation}) => {
                 />
                 <TextInput
                   style={styles.input}
-                  placeholder="Mot de passe"
+                  placeholder={t('register.password.placeholder')}
                   placeholderTextColor={colors.textSecondary}
                   value={password}
                   onChangeText={setPassword}
@@ -110,7 +123,7 @@ export const RegisterScreen: React.FC<RegisterScreenProps> = ({navigation}) => {
                 />
                 <TextInput
                   style={styles.input}
-                  placeholder="Confirmer le mot de passe"
+                  placeholder={t('register.confirm_password.placeholder')}
                   placeholderTextColor={colors.textSecondary}
                   value={confirmPassword}
                   onChangeText={setConfirmPassword}
@@ -120,7 +133,9 @@ export const RegisterScreen: React.FC<RegisterScreenProps> = ({navigation}) => {
                 {error ? <Text style={styles.errorBox}>{error}</Text> : null}
                 {success ? <Text style={styles.successBox}>{success}</Text> : null}
                 <Button
-                  title={loading ? 'Création en cours...' : 'Créer mon compte'}
+                  title={
+                    loading ? t('register.button.loading') : t('register.button')
+                  }
                   onPress={handleRegister}
                   style={styles.button}
                   disabled={loading}
@@ -132,13 +147,15 @@ export const RegisterScreen: React.FC<RegisterScreenProps> = ({navigation}) => {
                 style={styles.linkContainer}
                 disabled={loading}
                 onPress={() => navigation.navigate('Login')}>
-                <Text style={styles.linkText}>Déjà inscrit ? Se connecter</Text>
+                <Text style={styles.linkText}>{t('register.link.login')}</Text>
               </TouchableOpacity>
 
               <TouchableOpacity
                 style={styles.settingsLink}
                 onPress={() => navigation.navigate('Settings')}>
-                <Text style={styles.settingsLinkText}>Paramètres serveur</Text>
+                <Text style={styles.settingsLinkText}>
+                  {t('register.link.settings')}
+                </Text>
               </TouchableOpacity>
             </View>
           </View>
@@ -176,6 +193,10 @@ const styles = StyleSheet.create({
   },
   header: {
     marginBottom: spacing.lg,
+  },
+  languageToggle: {
+    marginTop: spacing.sm,
+    alignSelf: 'center',
   },
   title: {
     ...typography.h1,

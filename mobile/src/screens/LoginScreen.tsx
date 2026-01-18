@@ -1,3 +1,10 @@
+/*
+** EPITECH PROJECT, 2026
+** AREA
+** File description:
+** LoginScreen
+*/
+
 import React, {useEffect, useState} from 'react';
 import {
   View,
@@ -14,7 +21,7 @@ import {
 import {SafeAreaView} from 'react-native-safe-area-context';
 import {NativeStackNavigationProp} from '@react-navigation/native-stack';
 import {SvgUri, SvgXml} from 'react-native-svg';
-import {Button, StarField} from '../components';
+import {Button, LanguageToggle, StarField} from '../components';
 import {colors, spacing, typography} from '../theme';
 import {
   createOAuthState,
@@ -26,12 +33,14 @@ import {
 } from '../api/auth';
 import {useAuth} from '../context/AuthContext';
 import {RootStackParamList} from '../navigation/types';
+import {useLanguage} from '../context/LanguageContext';
 
 type LoginScreenProps = {
   navigation: NativeStackNavigationProp<RootStackParamList, 'Login'>;
 };
 
 export const LoginScreen: React.FC<LoginScreenProps> = ({navigation}) => {
+  const {t} = useLanguage();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [loading, setLoading] = useState(false);
@@ -75,7 +84,7 @@ export const LoginScreen: React.FC<LoginScreenProps> = ({navigation}) => {
 
   const handleLogin = async () => {
     if (!email || !password) {
-      setError('Please enter email and password');
+      setError(t('login.error.missing_fields'));
       return;
     }
 
@@ -87,7 +96,7 @@ export const LoginScreen: React.FC<LoginScreenProps> = ({navigation}) => {
     if (result.success) {
       setAuthLogin(result.token || email);
     } else {
-      setError(result.error || 'Login failed');
+      setError(result.error || t('login.error.failed'));
     }
 
     setLoading(false);
@@ -104,9 +113,7 @@ export const LoginScreen: React.FC<LoginScreenProps> = ({navigation}) => {
     } catch (err) {
       console.error(`OAuth start failed for ${providerId}`, err);
       const message =
-        err instanceof Error
-          ? err.message
-          : 'Unable to start OAuth authentication.';
+        err instanceof Error ? err.message : t('login.error.oauth_start');
       setError(message);
     } finally {
       setProviderLoading(false);
@@ -201,13 +208,14 @@ export const LoginScreen: React.FC<LoginScreenProps> = ({navigation}) => {
           <View style={styles.content}>
             <View style={styles.card}>
               <View style={styles.header}>
-                <Text style={styles.title}>Connexion</Text>
+                <Text style={styles.title}>{t('login.title')}</Text>
+                <LanguageToggle compact style={styles.languageToggle} />
               </View>
 
               <View style={styles.form}>
                 <TextInput
                   style={styles.input}
-                  placeholder="Email"
+                  placeholder={t('login.email.placeholder')}
                   placeholderTextColor={colors.textSecondary}
                   value={email}
                   onChangeText={setEmail}
@@ -217,7 +225,7 @@ export const LoginScreen: React.FC<LoginScreenProps> = ({navigation}) => {
                 />
                 <TextInput
                   style={styles.input}
-                  placeholder="Mot de passe"
+                  placeholder={t('login.password.placeholder')}
                   placeholderTextColor={colors.textSecondary}
                   value={password}
                   onChangeText={setPassword}
@@ -226,7 +234,9 @@ export const LoginScreen: React.FC<LoginScreenProps> = ({navigation}) => {
                 />
                 {error ? <Text style={styles.errorBox}>{error}</Text> : null}
                 <Button
-                  title={loading ? 'Connexion en cours...' : 'Se connecter'}
+                  title={
+                    loading ? t('login.button.loading') : t('login.button')
+                  }
                   onPress={handleLogin}
                   style={styles.button}
                   disabled={loading}
@@ -235,7 +245,9 @@ export const LoginScreen: React.FC<LoginScreenProps> = ({navigation}) => {
 
               <View style={styles.divider}>
                 <View style={styles.dividerLine} />
-                <Text style={styles.dividerLabel}>OU</Text>
+                <Text style={styles.dividerLabel}>
+                  {t('login.oauth.divider')}
+                </Text>
                 <View style={styles.dividerLine} />
               </View>
 
@@ -255,14 +267,16 @@ export const LoginScreen: React.FC<LoginScreenProps> = ({navigation}) => {
                       <View style={styles.oauthButtonContent}>
                         {renderProviderIcon(provider)}
                         <Text style={styles.oauthButtonText}>
-                          Se connecter avec {provider.name}
+                          {t('login.oauth.with_provider', {
+                            provider: provider.name || provider.id,
+                          })}
                         </Text>
                       </View>
                     </TouchableOpacity>
                   ))
                 ) : (
                   <Text style={styles.oauthFallback}>
-                    Aucun fournisseur OAuth disponible.
+                    {t('login.oauth.none')}
                   </Text>
                 )}
                 {providerLoading && (
@@ -278,14 +292,16 @@ export const LoginScreen: React.FC<LoginScreenProps> = ({navigation}) => {
                 disabled={loading}
                 onPress={() => navigation.navigate('Register')}>
                 <Text style={styles.linkText}>
-                  Pas encore de compte ? Créez-en un
+                  {t('login.link.register')}
                 </Text>
               </TouchableOpacity>
 
               <TouchableOpacity
                 style={styles.settingsLink}
                 onPress={() => navigation.navigate('Settings')}>
-                <Text style={styles.settingsLinkText}>Paramètres serveur</Text>
+                <Text style={styles.settingsLinkText}>
+                  {t('login.link.settings')}
+                </Text>
               </TouchableOpacity>
             </View>
           </View>
@@ -323,6 +339,10 @@ const styles = StyleSheet.create({
   },
   header: {
     marginBottom: spacing.lg,
+  },
+  languageToggle: {
+    marginTop: spacing.sm,
+    alignSelf: 'center',
   },
   title: {
     ...typography.h1,

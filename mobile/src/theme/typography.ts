@@ -1,3 +1,10 @@
+/*
+** EPITECH PROJECT, 2026
+** AREA
+** File description:
+** typography
+*/
+
 export const typography = {
   h1: {
     fontSize: 32,

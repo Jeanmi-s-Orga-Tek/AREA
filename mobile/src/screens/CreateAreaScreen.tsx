@@ -1,3 +1,10 @@
+/*
+** EPITECH PROJECT, 2026
+** AREA
+** File description:
+** CreateAreaScreen
+*/
+
 import React, {useEffect, useState} from 'react';
 import {
   ActivityIndicator,
@@ -24,6 +31,7 @@ import {
 } from '../api/services';
 import {createArea} from '../api/areas';
 import {RootStackParamList} from '../navigation/types';
+import {useLanguage} from '../context/LanguageContext';
 
 interface ParameterDefinition {
   id: string;
@@ -63,6 +71,7 @@ const parseParameters = (params?: Record<string, any>): ParameterDefinition[] =>
 };
 
 export const CreateAreaScreen: React.FC<CreateAreaScreenProps> = ({navigation}) => {
+  const {t} = useLanguage();
   const [currentStep, setCurrentStep] = useState(1);
   const [services, setServices] = useState<ServiceSummary[]>([]);
   const [serviceLoading, setServiceLoading] = useState(true);
@@ -100,7 +109,7 @@ export const CreateAreaScreen: React.FC<CreateAreaScreenProps> = ({navigation}) 
         }
       } catch (err) {
         const message =
-          err instanceof Error ? err.message : 'Unable to load services';
+          err instanceof Error ? err.message : t('create.error.load_services');
         setError(message);
       } finally {
         if (isMounted) {
@@ -143,7 +152,7 @@ export const CreateAreaScreen: React.FC<CreateAreaScreenProps> = ({navigation}) 
       const message =
         err instanceof Error
           ? err.message
-          : 'Unable to load service capabilities';
+          : t('create.error.load_capabilities');
       setError(message);
     } finally {
       setCapabilitiesLoadingId(null);
@@ -212,7 +221,7 @@ export const CreateAreaScreen: React.FC<CreateAreaScreenProps> = ({navigation}) 
       !selectedReactionService ||
       !selectedReaction
     ) {
-      setError('Please complete all steps before submitting.');
+      setError(t('create.error.incomplete'));
       return;
     }
 
@@ -230,15 +239,19 @@ export const CreateAreaScreen: React.FC<CreateAreaScreenProps> = ({navigation}) 
         reaction_parameters: reactionParameters,
       });
 
-      Alert.alert('AREA created', 'Your automation is now active.', [
-        {
-          text: 'OK',
-          onPress: () => navigation.navigate('Areas'),
-        },
-      ]);
+      Alert.alert(
+        t('create.alert.created.title'),
+        t('create.alert.created.message'),
+        [
+          {
+            text: t('create.alert.created.ok'),
+            onPress: () => navigation.navigate('Areas'),
+          },
+        ],
+      );
     } catch (err) {
       const message =
-        err instanceof Error ? err.message : 'Unable to create AREA.';
+        err instanceof Error ? err.message : t('create.error.create_failed');
       setError(message);
     } finally {
       setSubmitting(false);
@@ -387,7 +400,7 @@ export const CreateAreaScreen: React.FC<CreateAreaScreenProps> = ({navigation}) 
       <SafeAreaView style={styles.safeArea}>
         <ScrollView contentContainerStyle={styles.content}>
           <View style={styles.headerCard}>
-            <Text style={styles.title}>Créer une AREA</Text>
+            <Text style={styles.title}>{t('create.title')}</Text>
           </View>
 
           {error ? <Text style={styles.error}>{error}</Text> : null}
@@ -395,16 +408,18 @@ export const CreateAreaScreen: React.FC<CreateAreaScreenProps> = ({navigation}) 
           {serviceLoading ? (
             <View style={styles.loadingContainer}>
               <ActivityIndicator size="large" color={colors.primary} />
-              <Text style={styles.loadingText}>Chargement des services…</Text>
+              <Text style={styles.loadingText}>{t('create.loading')}</Text>
             </View>
           ) : (
             <View style={styles.stepContainer}>
-              <Text style={styles.stepLabel}>Étape {currentStep} / 5</Text>
+              <Text style={styles.stepLabel}>
+                {t('create.step.label', {step: currentStep})}
+              </Text>
 
               {currentStep === 1 && (
                 <>
                   <Text style={styles.stepTitle}>
-                    Choisissez le service déclencheur
+                    {t('create.step1.title')}
                   </Text>
                   <View style={styles.servicesGrid}>
                     {services.map(service =>
@@ -419,7 +434,12 @@ export const CreateAreaScreen: React.FC<CreateAreaScreenProps> = ({navigation}) 
               {currentStep === 2 && selectedActionService && (
                 <>
                   <Text style={styles.stepTitle}>
-                    Sélectionnez une action dans {selectedActionService.display_name || selectedActionService.name}
+                    {t('create.step2.title', {
+                      service:
+                        selectedActionService.display_name ||
+                        selectedActionService.name ||
+                        '',
+                    })}
                   </Text>
                   {loadingCapabilities(selectedActionService.id) && (
                     <ActivityIndicator color={colors.primary} />
@@ -444,19 +464,23 @@ export const CreateAreaScreen: React.FC<CreateAreaScreenProps> = ({navigation}) 
                       ))
                     ) : (
                       <Text style={styles.helperText}>
-                        Aucune action disponible pour ce service.
+                        {t('create.step2.none')}
                       </Text>
                     ))}
 
                   {selectedAction && selectedAction.parameterDefs.length > 0 && (
                     <View style={styles.parametersContainer}>
-                      <Text style={styles.parametersTitle}>Configurer l&apos;action</Text>
+                      <Text style={styles.parametersTitle}>
+                        {t('create.step2.configure')}
+                      </Text>
                       {selectedAction.parameterDefs.map(param => (
                         <View key={param.id} style={styles.parameterField}>
                           <Text style={styles.parameterLabel}>{param.label}</Text>
                           <TextInput
                             style={styles.parameterInput}
-                            placeholder={`Entrez ${param.label}`}
+                            placeholder={t('create.parameter.placeholder', {
+                              label: param.label,
+                            })}
                             value={actionParameters[param.id] || ''}
                             onChangeText={value =>
                               handleActionParameterChange(param.id, value)
@@ -473,7 +497,7 @@ export const CreateAreaScreen: React.FC<CreateAreaScreenProps> = ({navigation}) 
               {currentStep === 3 && (
                 <>
                   <Text style={styles.stepTitle}>
-                    Choisissez le service récepteur
+                    {t('create.step3.title')}
                   </Text>
                   <View style={styles.servicesGrid}>
                     {services.map(service =>
@@ -488,7 +512,12 @@ export const CreateAreaScreen: React.FC<CreateAreaScreenProps> = ({navigation}) 
               {currentStep === 4 && selectedReactionService && (
                 <>
                   <Text style={styles.stepTitle}>
-                    Sélectionnez une réaction dans {selectedReactionService.display_name || selectedReactionService.name}
+                    {t('create.step4.title', {
+                      service:
+                        selectedReactionService.display_name ||
+                        selectedReactionService.name ||
+                        '',
+                    })}
                   </Text>
                   {loadingCapabilities(selectedReactionService.id) && (
                     <ActivityIndicator color={colors.primary} />
@@ -513,19 +542,23 @@ export const CreateAreaScreen: React.FC<CreateAreaScreenProps> = ({navigation}) 
                       ))
                     ) : (
                       <Text style={styles.helperText}>
-                        Aucune réaction disponible pour ce service.
+                        {t('create.step4.none')}
                       </Text>
                     ))}
 
                   {selectedReaction && selectedReaction.parameterDefs.length > 0 && (
                     <View style={styles.parametersContainer}>
-                      <Text style={styles.parametersTitle}>Configurer la réaction</Text>
+                      <Text style={styles.parametersTitle}>
+                        {t('create.step4.configure')}
+                      </Text>
                       {selectedReaction.parameterDefs.map(param => (
                         <View key={param.id} style={styles.parameterField}>
                           <Text style={styles.parameterLabel}>{param.label}</Text>
                           <TextInput
                             style={styles.parameterInput}
-                            placeholder={`Entrez ${param.label}`}
+                            placeholder={t('create.parameter.placeholder', {
+                              label: param.label,
+                            })}
                             value={reactionParameters[param.id] || ''}
                             onChangeText={value =>
                               handleReactionParameterChange(param.id, value)
@@ -541,29 +574,38 @@ export const CreateAreaScreen: React.FC<CreateAreaScreenProps> = ({navigation}) 
 
               {currentStep === 5 && (
                 <>
-                  <Text style={styles.stepTitle}>Nommez votre AREA</Text>
+                  <Text style={styles.stepTitle}>
+                    {t('create.step5.title')}
+                  </Text>
                   <View style={styles.parameterField}>
-                    <Text style={styles.parameterLabel}>Nom de l&apos;AREA</Text>
+                    <Text style={styles.parameterLabel}>
+                      {t('create.step5.name_label')}
+                    </Text>
                     <TextInput
                       style={styles.parameterInput}
-                      placeholder="ex : Issue GitHub → Message Discord"
+                      placeholder={t('create.step5.name_placeholder')}
                       value={areaName}
                       onChangeText={setAreaName}
                     />
                   </View>
 
                   <View style={styles.summaryCard}>
-                    <Text style={styles.summaryTitle}>Récapitulatif</Text>
+                    <Text style={styles.summaryTitle}>
+                      {t('create.step5.summary_title')}
+                    </Text>
                     <View style={styles.summaryRow}>
                       <View style={styles.summaryColumn}>
-                        <Text style={styles.summaryLabel}>Action</Text>
+                        <Text style={styles.summaryLabel}>
+                          {t('create.summary.action')}
+                        </Text>
                         <Text style={styles.summaryValue}>
                           {selectedActionService?.display_name ||
                             selectedActionService?.name ||
-                            'Non défini'}
+                            t('create.summary.undefined')}
                         </Text>
                         <Text style={styles.summaryValueSecondary}>
-                          {selectedAction?.name || 'Non défini'}
+                          {selectedAction?.name ||
+                            t('create.summary.undefined')}
                         </Text>
                         {Object.keys(actionParameters).length > 0 && (
                           <View style={styles.summaryParams}>
@@ -577,14 +619,17 @@ export const CreateAreaScreen: React.FC<CreateAreaScreenProps> = ({navigation}) 
                       </View>
                       <Text style={styles.summaryArrow}>→</Text>
                       <View style={styles.summaryColumn}>
-                        <Text style={styles.summaryLabel}>Réaction</Text>
+                        <Text style={styles.summaryLabel}>
+                          {t('create.summary.reaction')}
+                        </Text>
                         <Text style={styles.summaryValue}>
                           {selectedReactionService?.display_name ||
                             selectedReactionService?.name ||
-                            'Non défini'}
+                            t('create.summary.undefined')}
                         </Text>
                         <Text style={styles.summaryValueSecondary}>
-                          {selectedReaction?.name || 'Non défini'}
+                          {selectedReaction?.name ||
+                            t('create.summary.undefined')}
                         </Text>
                         {Object.keys(reactionParameters).length > 0 && (
                           <View style={styles.summaryParams}>
@@ -606,14 +651,14 @@ export const CreateAreaScreen: React.FC<CreateAreaScreenProps> = ({navigation}) 
 
         <View style={styles.footer}>
           <Button
-            title="Annuler"
+            title={t('create.button.cancel')}
             variant="outline"
             onPress={() => navigation.goBack()}
             style={styles.footerButton}
           />
           {currentStep > 1 && (
             <Button
-              title="Retour"
+              title={t('create.button.back')}
               variant="secondary"
               onPress={handlePreviousStep}
               style={styles.footerButton}
@@ -621,7 +666,7 @@ export const CreateAreaScreen: React.FC<CreateAreaScreenProps> = ({navigation}) 
           )}
           {currentStep < 5 && (
             <Button
-              title="Suivant"
+              title={t('create.button.next')}
               onPress={handleNextStep}
               disabled={!isStepValid(currentStep)}
               style={styles.footerButton}
@@ -629,7 +674,11 @@ export const CreateAreaScreen: React.FC<CreateAreaScreenProps> = ({navigation}) 
           )}
           {currentStep === 5 && (
             <Button
-              title={submitting ? 'Création…' : 'Créer l’AREA'}
+              title={
+                submitting
+                  ? t('create.button.submitting')
+                  : t('create.button.submit')
+              }
               onPress={handleSubmit}
               loading={submitting}
               disabled={!isStepValid(5) || submitting}

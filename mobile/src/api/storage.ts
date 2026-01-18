@@ -1,3 +1,10 @@
+/*
+** EPITECH PROJECT, 2026
+** AREA
+** File description:
+** storage
+*/
+
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import {Platform} from 'react-native';
 

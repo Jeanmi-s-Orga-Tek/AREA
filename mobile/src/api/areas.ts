@@ -1,3 +1,10 @@
+/*
+** EPITECH PROJECT, 2026
+** AREA
+** File description:
+** areas
+*/
+
 import {apiClient} from './client';
 
 export interface ServiceBasicInfo {

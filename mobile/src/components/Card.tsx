@@ -1,3 +1,10 @@
+/*
+** EPITECH PROJECT, 2026
+** AREA
+** File description:
+** Card
+*/
+
 import React from 'react';
 import {View, StyleSheet, ViewProps} from 'react-native';
 import {colors, spacing} from '../theme';

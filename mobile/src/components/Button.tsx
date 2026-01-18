@@ -1,3 +1,10 @@
+/*
+** EPITECH PROJECT, 2026
+** AREA
+** File description:
+** Button
+*/
+
 import React from 'react';
 import {
   TouchableOpacity,
