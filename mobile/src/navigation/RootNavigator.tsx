@@ -13,6 +13,7 @@ import {
   RegisterScreen,
   AreasScreen,
   CreateAreaScreen,
+  EditAreaScreen,
   SettingsScreen,
   ServicesScreen,
 } from '../screens';
@@ -85,6 +86,11 @@ export const RootNavigator: React.FC = () => {
             name="CreateArea"
             component={CreateAreaScreen}
             options={{title: t('nav.create_area')}}
+          />
+          <Stack.Screen
+            name="EditArea"
+            component={EditAreaScreen}
+            options={{title: "Modifier l'AREA"}}
           />
           <Stack.Screen
             name="Services"
