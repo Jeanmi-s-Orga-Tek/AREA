@@ -18,11 +18,13 @@ export class ApiClient {
   }
 
   async get<T>(endpoint: string): Promise<T> {
-    const baseUrl = await this.getBaseUrl();
-    const url = `${baseUrl}${endpoint}`;
-    const token = await getAuthToken();
-
     try {
+      const baseUrl = await this.getBaseUrl();
+      const url = `${baseUrl}${endpoint}`;
+      const token = await getAuthToken();
+
+      console.log('[API GET]', url);
+
       const response = await fetch(url, {
         method: 'GET',
         headers: {
@@ -31,16 +33,20 @@ export class ApiClient {
         },
       });
 
+      console.log('[API GET Response]', response.status, response.statusText);
+
       if (!response.ok) {
-        throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+        const message = await this.extractErrorMessage(response);
+        throw new Error(message);
       }
 
       return await response.json();
     } catch (error) {
+      console.error('[API GET Error]', error);
       if (error instanceof Error) {
         throw error;
       }
-      throw new Error('Network request failed');
+      throw new Error(`Network request failed: ${String(error)}`);
     }
   }
 
@@ -68,7 +74,8 @@ export class ApiClient {
       if (error instanceof Error) {
         throw error;
       }
-      throw new Error('Network request failed');
+      console.error('Unknown error type in PATCH request:', error);
+      throw new Error(`Network request failed: ${String(error)}`);
     }
   }
 
@@ -113,7 +120,8 @@ export class ApiClient {
       if (error instanceof Error) {
         throw error;
       }
-      throw new Error('Network request failed');
+      console.error('Unknown error type in POST request:', error);
+      throw new Error(`Network request failed: ${String(error)}`);
     }
   }
 
@@ -145,7 +153,8 @@ export class ApiClient {
       if (error instanceof Error) {
         throw error;
       }
-      throw new Error('Network request failed');
+      console.error('Unknown error type in DELETE request:', error);
+      throw new Error(`Network request failed: ${String(error)}`);
     }
   }
 

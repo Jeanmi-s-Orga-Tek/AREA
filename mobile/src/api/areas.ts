@@ -65,7 +65,7 @@ export interface CreateAreaRequest {
 }
 
 export const fetchAreas = async (): Promise<AreaDetail[]> => {
-  return await apiClient.get<AreaDetail[]>('/areas');
+  return await apiClient.get<AreaDetail[]>('/areas/');
 };
 
 export const createArea = async (
