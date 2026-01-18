@@ -158,13 +158,13 @@ export const AreasScreen: React.FC<AreasScreenProps> = ({navigation}) => {
       </View>
       <View style={styles.cardActions}>
         <Button
-          title={t('areas.button.delete')}
+          title={t('areas.button.edit')}
           variant="secondary"
           onPress={() => navigation.navigate('EditArea', {areaId: item.id})}
           style={styles.cardActionButton}
         />
         <Button
-          title={t('areas.button.edit')}
+          title={t('areas.button.delete')}
           variant="danger"
           onPress={() => handleDelete(item)}
           style={styles.cardActionButton}
