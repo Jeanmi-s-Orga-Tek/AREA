@@ -211,6 +211,14 @@ def oauth_callback(
     if is_mobile:
         flow = "mobile"
 
+    is_service_connection = raw_state and raw_state.startswith("service::")
+    
+    if is_service_connection and is_mobile:
+        mobile_redirect_url = f"areaapp://callback?code={auth_code}&provider={provider}"
+        if raw_state:
+            mobile_redirect_url += f"&state={raw_state}"
+        return RedirectResponse(url=mobile_redirect_url, status_code=302)
+
     try:
         token_data = exchange_code_for_token(provider, flow, auth_code)
         
