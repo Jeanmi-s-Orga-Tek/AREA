@@ -14,6 +14,7 @@ import {
   ScrollView,
   ActivityIndicator,
   Alert,
+  TouchableOpacity,
 } from 'react-native';
 import {SafeAreaView} from 'react-native-safe-area-context';
 import {Button, Card, LanguageToggle, StarField} from '../components';
@@ -23,6 +24,8 @@ import {fetchAbout, AboutResponse} from '../api/about';
 import {fetchCurrentUser, CurrentUser} from '../api/user';
 import {useAuth} from '../context/AuthContext';
 import {useLanguage} from '../context/LanguageContext';
+import {useAccessibility} from '../context/AccessibilityContext';
+import {AccessibilityMode} from '../theme/colors';
 type ConnectionStatus = 'idle' | 'loading' | 'success' | 'error';
 
 export const SettingsScreen: React.FC = () => {
@@ -38,6 +41,15 @@ export const SettingsScreen: React.FC = () => {
   const [userError, setUserError] = useState('');
   const {isLoggedIn, logout} = useAuth();
   const {t, language} = useLanguage();
+  const {mode: accessibilityMode, setMode: setAccessibilityMode, colors: themeColors} = useAccessibility();
+
+  const accessibilityModes: {value: AccessibilityMode; label: string; emoji: string; description: string}[] = [
+    {value: 'default', label: 'Par défaut', emoji: '🎨', description: 'Couleurs standard'},
+    {value: 'high-contrast', label: 'Contraste élevé', emoji: '🔲', description: 'Visibilité améliorée'},
+    {value: 'deuteranopia', label: 'Deutéranopie', emoji: '🟢', description: 'Daltonisme rouge-vert'},
+    {value: 'protanopia', label: 'Protanopie', emoji: '🔴', description: 'Daltonisme rouge'},
+    {value: 'tritanopia', label: 'Tritanopie', emoji: '🔵', description: 'Daltonisme bleu-jaune'},
+  ];
 
   useEffect(() => {
     const loadUrl = async () => {
@@ -249,6 +261,41 @@ export const SettingsScreen: React.FC = () => {
     </Card>
   );
 
+  const renderAccessibilitySection = () => (
+    <Card style={styles.card}>
+      <Text style={[styles.cardTitle, {color: themeColors.text}]}>Accessibilité</Text>
+      <Text style={[styles.cardDescription, {color: themeColors.textSecondary}]}>
+        Personnalisez l'affichage pour une meilleure visibilité
+      </Text>
+      <View style={styles.accessibilityGrid}>
+        {accessibilityModes.map((m) => (
+          <TouchableOpacity
+            key={m.value}
+            style={[
+              styles.accessibilityOption,
+              {backgroundColor: themeColors.surfaceMuted, borderColor: themeColors.border},
+              accessibilityMode === m.value && {borderColor: themeColors.primary, backgroundColor: `${themeColors.primary}1A`},
+            ]}
+            onPress={() => setAccessibilityMode(m.value)}
+            activeOpacity={0.7}
+          >
+            <Text style={styles.accessibilityEmoji}>{m.emoji}</Text>
+            <Text
+              style={[
+                styles.accessibilityLabel,
+                {color: themeColors.text},
+                accessibilityMode === m.value && {color: themeColors.primary},
+              ]}
+            >
+              {m.label}
+            </Text>
+            <Text style={[styles.accessibilityDescription, {color: themeColors.textSecondary}]}>{m.description}</Text>
+          </TouchableOpacity>
+        ))}
+      </View>
+    </Card>
+  );
+
   const showServerResultsInline = !isLoggedIn;
 
   return (
@@ -260,6 +307,7 @@ export const SettingsScreen: React.FC = () => {
               ? t('settings.title.logged_in')
               : t('settings.title.logged_out')}
           </Text>
+          <Text style={[styles.title, {color: themeColors.primary}]}>{isLoggedIn ? 'Paramètres' : 'Paramètres serveur'}</Text>
 
           <Card style={styles.card}>
             <Text style={styles.cardTitle}>{t('language.title')}</Text>
@@ -280,9 +328,13 @@ export const SettingsScreen: React.FC = () => {
             </Text>
 
             <TextInput
-              style={styles.input}
+              style={[styles.input, {
+                backgroundColor: themeColors.surfaceMuted,
+                color: themeColors.text,
+                borderColor: themeColors.border,
+              }]}
               placeholder="http://10.0.2.2:8080"
-              placeholderTextColor={colors.textSecondary}
+              placeholderTextColor={themeColors.textSecondary}
               value={url}
               onChangeText={setUrl}
               autoCapitalize="none"
@@ -300,6 +352,7 @@ export const SettingsScreen: React.FC = () => {
               onPress={handleSave}
               style={styles.saveButton}
             />
+            <Button title="Enregistrer" onPress={handleSave} style={styles.saveButton} />
 
             <Text style={styles.currentUrlText}>
               {t('settings.server_config.current_url', {
@@ -337,6 +390,7 @@ export const SettingsScreen: React.FC = () => {
 
           {isLoggedIn ? (
             <>
+              {renderAccessibilitySection()}
               {renderAccountSection()}
               {renderAboutSection()}
               {renderAdvancedSection()}
@@ -384,14 +438,11 @@ const styles = StyleSheet.create({
     alignSelf: 'flex-start',
   },
   input: {
-    backgroundColor: colors.surfaceMuted,
     borderRadius: 12,
     paddingVertical: spacing.md,
     paddingHorizontal: spacing.lg,
     ...typography.body,
-    color: colors.text,
     borderWidth: 1,
-    borderColor: colors.border,
     marginTop: spacing.md,
     marginBottom: spacing.sm,
   },
@@ -474,4 +525,29 @@ const styles = StyleSheet.create({
   accountDetails: {
     marginTop: spacing.md,
   },
+  accessibilityGrid: {
+    marginTop: spacing.md,
+    gap: spacing.sm,
+  },
+  accessibilityOption: {
+    padding: spacing.md,
+    borderRadius: 12,
+    borderWidth: 2,
+    alignItems: 'center',
+  },
+  accessibilityEmoji: {
+    fontSize: 32,
+    marginBottom: spacing.xs,
+  },
+  accessibilityLabel: {
+    ...typography.body,
+    fontWeight: '600',
+    marginBottom: spacing.xxs,
+  },
+  accessibilityDescription: {
+    ...typography.bodySmall,
+    textAlign: 'center',
+  },
 });
+
+export default SettingsScreen;

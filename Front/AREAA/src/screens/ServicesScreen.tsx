@@ -11,6 +11,7 @@ import type { User } from "../services/api";
 import { logout, fetchOAuthProviders } from "../services/auth";
 import type { OAuthProvider } from "../services/auth";
 import NotificationContainer, { NotificationItem } from "../components/NotificationContainer";
+import AccessibilityPanel from "../components/AccessibilityPanel";
 import "./ServicesScreen.css";
 
 const API_BASE_URL = "http://localhost:8080";
@@ -239,6 +240,7 @@ const ServicesScreen: React.FC = () => {
 
   return (
     <div className="dashboard-page">
+      <AccessibilityPanel />
       <NotificationContainer
         notifications={notifications}
         onRemove={removeNotification}

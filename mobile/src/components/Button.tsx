@@ -13,7 +13,8 @@ import {
   ActivityIndicator,
   TouchableOpacityProps,
 } from 'react-native';
-import {colors, spacing, typography} from '../theme';
+import {spacing, typography} from '../theme';
+import {useAccessibility} from '../context/AccessibilityContext';
 
 interface ButtonProps extends TouchableOpacityProps {
   title: string;
@@ -29,36 +30,72 @@ export const Button: React.FC<ButtonProps> = ({
   style,
   ...props
 }) => {
+  const {colors} = useAccessibility();
+
   const getButtonStyle = () => {
     switch (variant) {
       case 'danger':
-        return styles.dangerButton;
+        return {
+          backgroundColor: colors.error,
+          borderColor: '#f87171',
+          shadowColor: 'rgba(239, 68, 68, 0.45)',
+        };
       case 'secondary':
-        return styles.secondaryButton;
+        return {
+          backgroundColor: colors.accent,
+          borderColor: colors.primary,
+          shadowColor: colors.glow,
+        };
       case 'outline':
-        return styles.outlineButton;
+        return {
+          backgroundColor: 'transparent',
+          borderWidth: 2,
+          borderColor: colors.primary,
+          shadowColor: colors.glow,
+        };
       default:
-        return styles.primaryButton;
+        return {
+          backgroundColor: colors.primaryStrong,
+          borderColor: colors.accent,
+          shadowColor: colors.glow,
+        };
     }
   };
 
   const getTextStyle = () => {
     switch (variant) {
       case 'outline':
-        return styles.outlineText;
+        return {color: colors.primary};
       default:
-        return styles.buttonText;
+        return {color: colors.text};
     }
   };
 
   const spinnerColor = variant === 'outline' ? colors.primaryStrong : colors.text;
 
+  const baseButtonStyle = {
+    paddingVertical: spacing.md,
+    paddingHorizontal: spacing.lg,
+    borderRadius: 12,
+    alignItems: 'center' as const,
+    justifyContent: 'center' as const,
+    minHeight: 48,
+    borderWidth: 1,
+    shadowColor: colors.shadow,
+    shadowOffset: {width: 0, height: 8},
+    shadowOpacity: 0.35,
+    shadowRadius: 12,
+    elevation: 6,
+  };
+
+  const disabledStyle = disabled ? {opacity: 0.5} : {};
+
   return (
     <TouchableOpacity
       style={[
-        styles.button,
+        baseButtonStyle,
         getButtonStyle(),
-        disabled && styles.disabled,
+        disabledStyle,
         style,
       ]}
       disabled={disabled || loading}
@@ -73,51 +110,8 @@ export const Button: React.FC<ButtonProps> = ({
 };
 
 const styles = StyleSheet.create({
-  button: {
-    paddingVertical: spacing.md,
-    paddingHorizontal: spacing.lg,
-    borderRadius: 12,
-    alignItems: 'center',
-    justifyContent: 'center',
-    minHeight: 48,
-    borderWidth: 1,
-    shadowColor: colors.shadow,
-    shadowOffset: {width: 0, height: 8},
-    shadowOpacity: 0.35,
-    shadowRadius: 12,
-    elevation: 6,
-  },
-  primaryButton: {
-    backgroundColor: colors.primaryStrong,
-    borderColor: colors.accent,
-    shadowColor: colors.glow,
-  },
-  secondaryButton: {
-    backgroundColor: colors.accent,
-    borderColor: colors.primary,
-    shadowColor: colors.glow,
-  },
-  dangerButton: {
-    backgroundColor: colors.error,
-    borderColor: '#f87171',
-    shadowColor: 'rgba(239, 68, 68, 0.45)',
-  },
-  outlineButton: {
-    backgroundColor: 'transparent',
-    borderWidth: 2,
-    borderColor: colors.primary,
-    shadowOpacity: 0.15,
-  },
-  disabled: {
-    opacity: 0.5,
-  },
   text: {
     ...typography.button,
-  },
-  buttonText: {
-    color: colors.background,
-  },
-  outlineText: {
-    color: colors.primary,
+    fontWeight: '600',
   },
 });

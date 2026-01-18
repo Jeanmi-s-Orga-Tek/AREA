@@ -1,0 +1,147 @@
+:root {
+  --bg-primary: #0a0e1a;
+  --bg-secondary: #0d1426;
+  --surface-color: rgba(17, 24, 39, 0.9);
+  --surface-hover: rgba(31, 41, 55, 0.7);
+  --surface-muted: rgba(31, 41, 55, 0.5);
+  --card-bg: rgba(17, 24, 39, 0.92);
+  --primary-color: #60a5fa;
+  --primary-strong: #3b82f6;
+  --primary-bg: rgba(96, 165, 250, 0.1);
+  --accent-color: #8b5cf6;
+  --secondary-color: #a78bfa;
+  --text-primary: #e5e7eb;
+  --text-secondary: #9ca3af;
+  --border-color: rgba(55, 65, 81, 0.6);
+  --border-muted: rgba(55, 65, 81, 0.4);
+  --success-color: #10b981;
+  --error-color: #ef4444;
+  --warning-color: #f59e0b;
+  --info-color: #3b82f6;
+  --shadow-color: rgba(0, 0, 0, 0.45);
+  --glow-color: rgba(96, 165, 250, 0.25);
+}
+
+html {
+  transition: filter 0.3s ease;
+}
+
+[data-accessibility-mode='high-contrast'] {
+  --bg-primary: #000000;
+  --bg-secondary: #0a0a0a;
+  --surface-color: #1a1a1a;
+  --surface-hover: #2a2a2a;
+  --surface-muted: #1f1f1f;
+  --card-bg: #1a1a1a;
+  --primary-color: #00d4ff;
+  --primary-strong: #00b8e6;
+  --primary-bg: rgba(0, 212, 255, 0.15);
+  --accent-color: #ff00ff;
+  --secondary-color: #d400ff;
+  --text-primary: #ffffff;
+  --text-secondary: #e0e0e0;
+  --border-color: #ffffff;
+  --border-muted: #888888;
+  --success-color: #00ff00;
+  --error-color: #ff0000;
+  --warning-color: #ffff00;
+  --info-color: #00d4ff;
+  --shadow-color: rgba(0, 0, 0, 0.8);
+  --glow-color: rgba(0, 212, 255, 0.4);
+}
+
+[data-accessibility-mode='high-contrast'] body {
+  filter: contrast(1.5) brightness(1.2);
+}
+
+[data-accessibility-mode='deuteranopia'] {
+  --bg-primary: #0a0e1a;
+  --bg-secondary: #0d1426;
+  --surface-color: rgba(17, 24, 39, 0.9);
+  --surface-hover: rgba(31, 41, 55, 0.7);
+  --surface-muted: rgba(31, 41, 55, 0.5);
+  --card-bg: rgba(17, 24, 39, 0.92);
+  --primary-color: #3b9eff;
+  --primary-strong: #1e7fe6;
+  --primary-bg: rgba(59, 158, 255, 0.1);
+  --accent-color: #ffa800;
+  --secondary-color: #ffcc66;
+  --text-primary: #e5e7eb;
+  --text-secondary: #9ca3af;
+  --border-color: rgba(55, 65, 81, 0.6);
+  --border-muted: rgba(55, 65, 81, 0.4);
+  --success-color: #3b9eff;
+  --error-color: #cc7a00;
+  --warning-color: #ffa800;
+  --info-color: #3b9eff;
+  --shadow-color: rgba(0, 0, 0, 0.45);
+  --glow-color: rgba(59, 158, 255, 0.25);
+}
+
+[data-accessibility-mode='deuteranopia'] body {
+  filter: hue-rotate(20deg) saturate(1.2);
+}
+
+[data-accessibility-mode='protanopia'] {
+  --bg-primary: #0a0e1a;
+  --bg-secondary: #0d1426;
+  --surface-color: rgba(17, 24, 39, 0.9);
+  --surface-hover: rgba(31, 41, 55, 0.7);
+  --surface-muted: rgba(31, 41, 55, 0.5);
+  --card-bg: rgba(17, 24, 39, 0.92);
+  --primary-color: #4db8ff;
+  --primary-strong: #2da3e6;
+  --primary-bg: rgba(77, 184, 255, 0.1);
+  --accent-color: #b8860b;
+  --secondary-color: #daa520;
+  --text-primary: #e5e7eb;
+  --text-secondary: #9ca3af;
+  --border-color: rgba(55, 65, 81, 0.6);
+  --border-muted: rgba(55, 65, 81, 0.4);
+  --success-color: #4db8ff;
+  --error-color: #997300;
+  --warning-color: #b8860b;
+  --info-color: #4db8ff;
+  --shadow-color: rgba(0, 0, 0, 0.45);
+  --glow-color: rgba(77, 184, 255, 0.25);
+}
+
+[data-accessibility-mode='protanopia'] body {
+  filter: hue-rotate(15deg) saturate(1.1);
+}
+
+[data-accessibility-mode='tritanopia'] {
+  --bg-primary: #0a0e1a;
+  --bg-secondary: #0d1426;
+  --surface-color: rgba(17, 24, 39, 0.9);
+  --surface-hover: rgba(31, 41, 55, 0.7);
+  --surface-muted: rgba(31, 41, 55, 0.5);
+  --card-bg: rgba(17, 24, 39, 0.92);
+  --primary-color: #ff5c7a;
+  --primary-strong: #e6344f;
+  --primary-bg: rgba(255, 92, 122, 0.1);
+  --accent-color: #00d4aa;
+  --secondary-color: #00ffcc;
+  --text-primary: #e5e7eb;
+  --text-secondary: #9ca3af;
+  --border-color: rgba(55, 65, 81, 0.6);
+  --border-muted: rgba(55, 65, 81, 0.4);
+  --success-color: #00d4aa;
+  --error-color: #ff5c7a;
+  --warning-color: #ff88a0;
+  --info-color: #00d4aa;
+  --shadow-color: rgba(0, 0, 0, 0.45);
+  --glow-color: rgba(255, 92, 122, 0.25);
+}
+
+[data-accessibility-mode='tritanopia'] body {
+  filter: hue-rotate(-30deg) saturate(1.15);
+}
+
+[data-accessibility-mode='high-contrast'] .accessibility-selector,
+[data-accessibility-mode='deuteranopia'] .accessibility-selector,
+[data-accessibility-mode='protanopia'] .accessibility-selector,
+[data-accessibility-mode='tritanopia'] .accessibility-selector {
+  filter: none;
+}
+

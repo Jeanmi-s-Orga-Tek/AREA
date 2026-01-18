@@ -10,6 +10,7 @@ import { logout } from "../services/auth";
 import { fetchCurrentUser, fetchMyConnectedServices, fetchMyAreas, disconnectService } from "../services/api";
 import type { User } from "../services/api";
 import NotificationContainer, { NotificationItem } from "../components/NotificationContainer";
+import AccessibilityPanel from "../components/AccessibilityPanel";
 import "./ProfileScreen.css";
 
 interface ConnectedService {
@@ -184,6 +185,7 @@ const ProfileScreen: React.FC = () => {
 
   return (
     <div className="dashboard-page">
+      <AccessibilityPanel />
       <NotificationContainer
         notifications={notifications}
         onRemove={removeNotification}

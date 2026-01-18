@@ -9,7 +9,7 @@ import React, { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { fetchAbout, AboutResponse } from "../services/api";
 import NotificationContainer, { NotificationItem } from "../components/NotificationContainer";
-import LanguageSelector from "../components/LanguageSelector";
+import AccessibilityPanel from "../components/AccessibilityPanel";
 import "./AboutScreen.css";
 
 const AboutScreen: React.FC = () => {
@@ -94,7 +94,7 @@ const AboutScreen: React.FC = () => {
   if (loading) {
     return (
       <div className="about-container">
-        <LanguageSelector />
+        <AccessibilityPanel />
         <div className="about-background">
           {stars.map((star) => (
             <div key={star.id} className="star" style={star.style} />
@@ -112,7 +112,7 @@ const AboutScreen: React.FC = () => {
   if (!about || about.server.services.length === 0) {
     return (
       <div className="about-container">
-        <LanguageSelector />
+        <AccessibilityPanel />
         <div className="about-background">
           {stars.map((star) => (
             <div key={star.id} className="star" style={star.style} />
@@ -129,7 +129,7 @@ const AboutScreen: React.FC = () => {
 
   return (
     <div className="about-container">
-      <LanguageSelector />
+      <AccessibilityPanel />
       <NotificationContainer
         notifications={notifications}
         onRemove={removeNotification}

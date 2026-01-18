@@ -15,6 +15,7 @@ import {
 import {RootNavigator} from './src/navigation';
 import {AuthProvider, useAuth} from './src/context/AuthContext';
 import {LanguageProvider} from './src/context/LanguageContext';
+import {AccessibilityProvider} from './src/context/AccessibilityContext';
 import {
   consumePendingOAuthState,
   finalizeOAuthLogin,
@@ -29,13 +30,15 @@ import {colors} from './src/theme';
 
 function App() {
   return (
-    <AuthProvider>
-      <LanguageProvider>
-        <StatusBar barStyle="light-content" backgroundColor={colors.background} />
-        <OAuthRedirectHandler />
-        <RootNavigator />
-      </LanguageProvider>
-    </AuthProvider>
+    <AccessibilityProvider>
+      <AuthProvider>
+        <LanguageProvider>
+          <StatusBar barStyle="light-content" backgroundColor={colors.background} />
+          <OAuthRedirectHandler />
+          <RootNavigator />
+        </LanguageProvider>
+      </AuthProvider>
+    </AccessibilityProvider>
   );
 }
 
