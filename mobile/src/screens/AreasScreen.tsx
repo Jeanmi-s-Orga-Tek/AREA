@@ -145,9 +145,16 @@ export const AreasScreen: React.FC<AreasScreenProps> = ({navigation}) => {
       </View>
       <View style={styles.cardActions}>
         <Button
+          title="Modifier"
+          variant="secondary"
+          onPress={() => navigation.navigate('EditArea', {areaId: item.id})}
+          style={styles.cardActionButton}
+        />
+        <Button
           title="Supprimer"
           variant="danger"
           onPress={() => handleDelete(item)}
+          style={styles.cardActionButton}
         />
       </View>
     </Card>
@@ -390,5 +397,10 @@ const styles = StyleSheet.create({
   },
   cardActions: {
     marginTop: spacing.md,
+    flexDirection: 'row',
+    gap: spacing.sm,
+  },
+  cardActionButton: {
+    flex: 1,
   },
 });
