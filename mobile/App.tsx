@@ -7,6 +7,7 @@ import {
 } from 'react-native';
 import {RootNavigator} from './src/navigation';
 import {AuthProvider, useAuth} from './src/context/AuthContext';
+import {AccessibilityProvider} from './src/context/AccessibilityContext';
 import {
   consumePendingOAuthState,
   finalizeOAuthLogin,
@@ -21,11 +22,13 @@ import {colors} from './src/theme';
 
 function App() {
   return (
-    <AuthProvider>
-      <StatusBar barStyle="light-content" backgroundColor={colors.background} />
-      <OAuthRedirectHandler />
-      <RootNavigator />
-    </AuthProvider>
+    <AccessibilityProvider>
+      <AuthProvider>
+        <StatusBar barStyle="light-content" backgroundColor={colors.background} />
+        <OAuthRedirectHandler />
+        <RootNavigator />
+      </AuthProvider>
+    </AccessibilityProvider>
   );
 }
 

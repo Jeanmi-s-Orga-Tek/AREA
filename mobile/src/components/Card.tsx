@@ -1,21 +1,16 @@
 import React from 'react';
 import {View, StyleSheet, ViewProps} from 'react-native';
-import {colors, spacing} from '../theme';
+import {spacing} from '../theme';
+import {useAccessibility} from '../context/AccessibilityContext';
 
 interface CardProps extends ViewProps {
   children: React.ReactNode;
 }
 
 export const Card: React.FC<CardProps> = ({children, style, ...props}) => {
-  return (
-    <View style={[styles.card, style]} {...props}>
-      {children}
-    </View>
-  );
-};
+  const {colors} = useAccessibility();
 
-const styles = StyleSheet.create({
-  card: {
+  const cardStyle = {
     backgroundColor: colors.card,
     borderRadius: 16,
     padding: spacing.lg,
@@ -29,5 +24,13 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.35,
     shadowRadius: 18,
     elevation: 8,
-  },
-});
+  };
+
+  return (
+    <View style={[cardStyle, style]} {...props}>
+      {children}
+    </View>
+  );
+};
+
+const styles = StyleSheet.create({});
