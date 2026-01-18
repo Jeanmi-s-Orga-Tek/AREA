@@ -19,10 +19,12 @@ import {
   DeviceEventEmitter,
   Platform,
   StatusBar,
+  Image,
 } from 'react-native';
 import {SafeAreaView} from 'react-native-safe-area-context';
 import {useFocusEffect, useNavigation} from '@react-navigation/native';
 import {NativeStackNavigationProp} from '@react-navigation/native-stack';
+import {SvgUri, SvgXml} from 'react-native-svg';
 import {Button, StarField} from '../components';
 import {colors, spacing, typography} from '../theme';
 import {
@@ -64,7 +66,22 @@ export const ServicesScreen: React.FC = () => {
   const [actionLoading, setActionLoading] = useState<Record<number, boolean>>(
     {},
   );
+  const [svgFailures, setSvgFailures] = useState<Record<string, boolean>>({});
   const hiddenServices = useMemo(() => new Set(['timer']), []);
+  const fallbackSvgs: Record<string, string> = useMemo(
+    () => ({
+      google: 'https://cdn.jsdelivr.net/npm/simple-icons@v11/icons/google.svg',
+      microsoft:
+        'https://cdn.jsdelivr.net/npm/simple-icons@v11/icons/microsoft.svg',
+      github: 'https://cdn.jsdelivr.net/npm/simple-icons@v11/icons/github.svg',
+      spotify:
+        'https://cdn.jsdelivr.net/npm/simple-icons@v11/icons/spotify.svg',
+      trello: 'https://cdn.jsdelivr.net/npm/simple-icons@v11/icons/trello.svg',
+      discord:
+        'https://cdn.jsdelivr.net/npm/simple-icons@v11/icons/discord.svg',
+    }),
+    [],
+  );
 
   const mapServices = useCallback(
     (
@@ -77,21 +94,23 @@ export const ServicesScreen: React.FC = () => {
         .forEach(sa => connectedMap.set(sa.service.id, sa));
 
       return available
-        .filter(service => !hiddenServices.has(service.name?.toLowerCase() || ''))
+        .filter(
+          service => !hiddenServices.has(service.name?.toLowerCase() || ''),
+        )
         .map(service => {
-        const connection = connectedMap.get(service.id);
-        return {
-          id: service.id,
-          keyName: service.name,
-          displayName: service.display_name || service.name,
-          description: service.description || '',
-          icon: service.icon,
-          color: service.color || colors.primary,
-          oauthProvider: service.oauth_provider,
-          isConnected: Boolean(connection),
-          remoteEmail: connection?.remote_email,
-        };
-      });
+          const connection = connectedMap.get(service.id);
+          return {
+            id: service.id,
+            keyName: service.name,
+            displayName: service.display_name || service.name,
+            description: service.description || '',
+            icon: service.icon,
+            color: service.color || colors.primary,
+            oauthProvider: service.oauth_provider,
+            isConnected: Boolean(connection),
+            remoteEmail: connection?.remote_email,
+          };
+        });
     },
     [hiddenServices],
   );
@@ -203,12 +222,102 @@ export const ServicesScreen: React.FC = () => {
     const description =
       item.description ||
       t('services.description.fallback', {service: item.displayName});
+    const icon = item.icon;
+    const key = (item.keyName || item.displayName || '').toLowerCase();
+    const fallbackUri = fallbackSvgs[key];
+    const markFailed = (id: string) =>
+      setSvgFailures(prev => ({
+        ...prev,
+        [id]: true,
+      }));
+
+    const renderIconFallback = () => {
+      if (fallbackUri) {
+        if (svgFailures[fallbackUri]) {
+          return (
+            <Text style={styles.serviceIconFallback}>
+              {(item.displayName?.[0] || '•').toUpperCase()}
+            </Text>
+          );
+        }
+        return (
+          <View style={styles.serviceIconWrapper}>
+            <SvgUri
+              width={32}
+              height={32}
+              uri={fallbackUri}
+              onError={() => markFailed(fallbackUri)}
+            />
+          </View>
+        );
+      }
+
+      if (icon && !/^https?:\/\//i.test(icon) && !/^\s*<svg/i.test(icon)) {
+        return <Text style={styles.serviceIconEmoji}>{icon}</Text>;
+      }
+
+      return (
+        <Text style={styles.serviceIconFallback}>
+          {(item.displayName?.[0] || '•').toUpperCase()}
+        </Text>
+      );
+    };
+
+    const renderServiceIcon = () => {
+      if (!icon) {
+        return renderIconFallback();
+      }
+
+      if (/^\s*<svg/i.test(icon)) {
+        if (svgFailures[icon]) {
+          return renderIconFallback();
+        }
+        return (
+          <View style={styles.serviceIconWrapper}>
+            <SvgXml
+              xml={icon}
+              width={32}
+              height={32}
+              onError={() => markFailed(icon)}
+            />
+          </View>
+        );
+      }
+
+      if (/^https?:\/\//i.test(icon)) {
+        if (/\.svg(\?|$)/i.test(icon)) {
+          if (svgFailures[icon]) {
+            return renderIconFallback();
+          }
+          return (
+            <View style={styles.serviceIconWrapper}>
+              <SvgUri
+                width={32}
+                height={32}
+                uri={icon}
+                onError={() => markFailed(icon)}
+              />
+            </View>
+          );
+        }
+        return (
+          <Image
+            source={{uri: icon}}
+            style={styles.serviceIconImage}
+            resizeMode="contain"
+            onError={() => markFailed(icon)}
+          />
+        );
+      }
+
+      return renderIconFallback();
+    };
     return (
       <View
         style={[styles.card, item.isConnected && styles.cardConnected]}
         key={item.id}>
         <View style={styles.cardHeader}>
-          <Text style={styles.serviceIcon}>{item.icon || '🔗'}</Text>
+          {renderServiceIcon()}
           {item.isConnected && (
             <View style={styles.badge}> 
               <Text style={styles.badgeText}>
@@ -391,7 +500,26 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
     alignItems: 'center',
   },
-  serviceIcon: {
+  serviceIconWrapper: {
+    width: 36,
+    height: 36,
+    borderRadius: 10,
+    backgroundColor: colors.surfaceMuted,
+    alignItems: 'center',
+    justifyContent: 'center',
+    borderWidth: 1,
+    borderColor: colors.border,
+  },
+  serviceIconImage: {
+    width: 32,
+    height: 32,
+    borderRadius: 8,
+  },
+  serviceIconFallback: {
+    ...typography.h4,
+    color: colors.textSecondary,
+  },
+  serviceIconEmoji: {
     fontSize: 28,
   },
   badge: {
