@@ -12,7 +12,7 @@ import type { AreaDetail } from "../services/api";
 import { logout } from "../services/auth";
 import NotificationContainer, { NotificationItem } from "../components/NotificationContainer";
 import ConfirmModal from "../components/ConfirmModal";
-import LanguageSelector from "../components/LanguageSelector";
+import AccessibilityPanel from "../components/AccessibilityPanel";
 import "./AreasScreen.css";
 
 interface Action {
@@ -170,7 +170,7 @@ const AreasScreen: React.FC = () => {
   if (loading) {
     return (
       <div className="areas-container">
-        <LanguageSelector />
+        <AccessibilityPanel />
         <div className="areas-background">
           {stars.map((star) => (
             <div key={star.id} className="star" style={star.style} />
@@ -187,7 +187,7 @@ const AreasScreen: React.FC = () => {
 
   return (
     <div className="areas-container">
-      <LanguageSelector />
+      <AccessibilityPanel />
       <NotificationContainer
         notifications={notifications}
         onRemove={removeNotification}

@@ -9,7 +9,7 @@ import React, { useState, useMemo, useEffect } from "react";
 import { useTranslation } from "react-i18next";
 import { login, fetchOAuthProviders, initiateOAuthLogin, OAuthProvider } from "../services/auth";
 import NotificationContainer, { NotificationItem } from "../components/NotificationContainer";
-import LanguageSelector from "../components/LanguageSelector";
+import AccessibilityPanel from "../components/AccessibilityPanel";
 import "./LoginScreen.css";
 
 
@@ -143,7 +143,7 @@ const LoginScreen: React.FC = () => {
 
   return (
     <div className="login-container">
-      <LanguageSelector />
+      <AccessibilityPanel />
       <NotificationContainer
         notifications={notifications}
         onRemove={removeNotification}

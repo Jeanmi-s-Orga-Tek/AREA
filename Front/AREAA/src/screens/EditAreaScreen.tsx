@@ -12,7 +12,7 @@ import type { AreaDetail } from "../services/api";
 import { logout } from "../services/auth";
 import NotificationContainer, { NotificationItem } from "../components/NotificationContainer";
 import ConfirmModal from "../components/ConfirmModal";
-import LanguageSelector from "../components/LanguageSelector";
+import AccessibilityPanel from "../components/AccessibilityPanel";
 import "./AreasScreen.css";
 
 const EditAreaScreen: React.FC = () => {
@@ -138,7 +138,7 @@ const EditAreaScreen: React.FC = () => {
   if (loading) {
     return (
       <div className="areas-container">
-        <LanguageSelector />
+        <AccessibilityPanel />
         <div className="areas-background">
           {stars.map((star) => (
             <div key={star.id} className="star" style={star.style} />
@@ -185,7 +185,7 @@ const EditAreaScreen: React.FC = () => {
 
   return (
     <div className="areas-container">
-      <LanguageSelector />
+      <AccessibilityPanel />
       <NotificationContainer
         notifications={notifications}
         onRemove={removeNotification}

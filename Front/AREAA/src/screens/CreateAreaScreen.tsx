@@ -11,6 +11,7 @@ import type { Service as APIService, User } from "../services/api";
 import { fetchOAuthProviders, logout } from "../services/auth";
 import type { OAuthProvider } from "../services/auth";
 import NotificationContainer, { NotificationItem } from "../components/NotificationContainer";
+import AccessibilityPanel from "../components/AccessibilityPanel";
 import "./CreateAreaScreen.css";
 
 interface Service {
@@ -535,6 +536,7 @@ const CreateAreaScreen: React.FC = () => {
 
   return (
     <div className="dashboard-page">
+      <AccessibilityPanel />
       <NotificationContainer
         notifications={notifications}
         onRemove={removeNotification}

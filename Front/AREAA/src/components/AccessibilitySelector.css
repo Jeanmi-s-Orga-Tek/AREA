@@ -1,0 +1,93 @@
+.accessibility-selector {
+  background: var(--surface-color);
+  backdrop-filter: blur(10px);
+  padding: 12px;
+  border-radius: 12px;
+  border: 1px solid var(--border-color);
+  box-shadow: 0 4px 12px var(--shadow-color);
+  max-width: 200px;
+}
+
+.accessibility-label {
+  display: block;
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: var(--text-primary);
+  margin-bottom: 8px;
+  text-align: center;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.accessibility-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 6px;
+}
+
+.accessibility-option {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2px;
+  padding: 8px 4px;
+  border-radius: 8px;
+  border: 2px solid var(--border-color);
+  background: var(--surface-hover);
+  cursor: pointer;
+  transition: all 0.2s;
+  font-size: 0.7rem;
+  color: var(--text-secondary);
+}
+
+.accessibility-option:hover {
+  border-color: var(--primary-color);
+  transform: translateY(-2px);
+}
+
+.accessibility-option.active {
+  border-color: var(--primary-color);
+  background: var(--primary-bg);
+  color: var(--primary-color);
+  font-weight: 600;
+  box-shadow: 0 0 12px var(--glow-color);
+}
+
+.accessibility-icon {
+  font-size: 1.25rem;
+}
+
+.accessibility-text {
+  text-align: center;
+  line-height: 1.1;
+  font-size: 0.65rem;
+}
+
+@media (max-width: 768px) {
+  .accessibility-selector {
+    max-width: 160px;
+    padding: 8px;
+  }
+  
+  .accessibility-label {
+    font-size: 0.7rem;
+    margin-bottom: 6px;
+  }
+  
+  .accessibility-grid {
+    gap: 4px;
+  }
+  
+  .accessibility-option {
+    padding: 6px 2px;
+  }
+  
+  .accessibility-icon {
+    font-size: 1rem;
+  }
+  
+  .accessibility-text {
+    font-size: 0.6rem;
+  }
+}
+

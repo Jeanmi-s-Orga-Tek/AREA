@@ -10,7 +10,7 @@ import { useTranslation } from "react-i18next";
 import { logout } from "../services/auth";
 import { fetchCurrentUser } from "../services/api";
 import type { User } from "../services/api";
-import LanguageSelector from "../components/LanguageSelector";
+import AccessibilityPanel from "../components/AccessibilityPanel";
 import "./ServerScreen.css";
 
 const ServerScreen: React.FC = () => {
@@ -61,7 +61,7 @@ const ServerScreen: React.FC = () => {
 
   return (
     <div className="dashboard-page">
-      <LanguageSelector />
+      <AccessibilityPanel />
       <div className="server-background">
         <div>
           {stars.map((star) => (

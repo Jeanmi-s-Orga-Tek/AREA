@@ -9,7 +9,7 @@ import React, { useState, useEffect, useMemo } from "react";
 import { useTranslation } from "react-i18next";
 import { register, fetchOAuthProviders, initiateOAuthLogin, OAuthProvider } from "../services/auth";
 import NotificationContainer, { NotificationItem } from "../components/NotificationContainer";
-import LanguageSelector from "../components/LanguageSelector";
+import AccessibilityPanel from "../components/AccessibilityPanel";
 import "./RegisterScreen.css";
 
 type Star = {
@@ -161,7 +161,7 @@ const RegisterScreen: React.FC = () => {
 
   return (
     <div className="register-container">
-      <LanguageSelector />
+      <AccessibilityPanel />
       <NotificationContainer
         notifications={notifications}
         onRemove={removeNotification}
