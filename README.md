@@ -1,134 +1,117 @@
 # ACTION-REACTION (AREA)
 
-Automation platform inspired by **IFTTT/Zapier**.  
-This repository currently contains only the **backend server** (FastAPI + PostgreSQL).  
-Web client, mobile client and docker‑compose root setup are **not implemented yet**.
+Automation platform inspired by **IFTTT/Zapier** allowing users to create custom workflows by connecting actions and reactions across multiple services.
 
 ---
 
-## What we have now
+## Project Structure
 
-### Tech stack
-
-- Backend: **FastAPI** (Python 3.9)
-- DB: **PostgreSQL** via **SQLModel**
-- Auth: **JWT** (email + password)
-- Email helper: SMTP (env‑based config)
-- Container: Docker image for the backend only
-
-### Implemented features
-
-- **Health check**
-  - `GET /health` → `{"status": "ok"}`
-- **about.json** (subject requirement)
-  - `GET /about.json` returns:
-    - `client.host`: caller IP
-    - `server.current_time`: Unix timestamp
-    - `server.services`: example `timer` service with actions/reactions
-- **User management (minimal)**
-  - Model: `User` (id, email, name, hashed_password, image?)
-  - Endpoints under `/user`:
-    - `POST /user/register`  
-      - Body: `{ "email", "name", "new_password" }`  
-      - Creates user, returns `{"status": "login success"}` and sets JWT cookie
-    - `POST /user/login`  
-      - Form: `username` (email), `password`  
-      - Returns `{ "access_token", "token_type": "Bearer" }` and sets JWT cookie
-    - `GET /user/` → list users (for now, no auth guard)
-    - `GET /user/{user_id}` → get one user
-    - `PATCH /user/{user_id}` → update user (name/email)
-    - `DELETE /user/{user_id}` → delete user
-
-> Note: There is **no** service/AREA/hook logic yet.  
-> Only a stub `timer` service is exposed through `/about.json`.
+- **Backend**: FastAPI server with AREA engine, OAuth2, webhooks, and polling workers
+- **Front**: React web client (AREAA)
+- **Mobile**: React Native mobile app (Android/iOS)
+- **Database**: PostgreSQL with SQLModel ORM
+- **Deployment**: Docker Compose orchestration
 
 ---
 
-## How to launch the project
+## Features
 
-### 1. Requirements
+### Core Functionality
+- **AREA Engine**: Action-Reaction automation system with polling and webhook support
+- **7 Integrated Services**: Discord, GitHub, Google (Gmail/YouTube), Microsoft (Outlook/OneDrive), Spotify, Timer, Trello
+- **User Management**: Registration, login, JWT authentication
+- **OAuth2 Flow**: Complete OAuth integration for external services
+- **Token Refresh**: Automatic token renewal for connected services
+- **Service Manager**: Dynamic service configuration from YAML files
 
-- Python **3.9**
-- PostgreSQL running locally or reachable (create an empty DB, e.g. `area`)
-- Optionally Docker (to run the backend in a container)
+### API Endpoints
+- **Health & Info**: `/health`, `/about.json` (client IP, timestamp, services)
+- **User**: Registration, login, CRUD operations
+- **Services**: List services, actions, reactions
+- **OAuth**: `/oauth/{service}/authorize`, `/oauth/{service}/callback`, `/oauth/{service}/token/refresh`
+- **AREA Management**: Create, list, update, delete user workflows
+- **Webhooks**: Service-specific webhook receivers
+- **Docs**: Interactive API documentation at `/docs`
 
-### 2. Environment variables
+### Architecture Highlights
+- **Handlers**: Process incoming events from services
+- **Executors**: Execute reactions based on triggers
+- **Polling Worker**: Background task for polling-based actions
+- **Webhook Manager**: Dynamic webhook registration/cleanup
 
-Backend needs at least:
+---
+
+## Quick Start
+
+> **Fast Launch**: Run `./launch_docker.sh` from project root to start all services with Docker Compose.
+
+### Requirements
+- Docker & Docker Compose
+- (Optional) Python 3.9+ for local backend development
+
+### Environment Setup
+
+Create a `.env` file at project root with:
 
 ```bash
-POSTGRESQL_URI=postgresql+psycopg://<user>:<password>@<host>:<port>/<dbname>
-SMTP_SERVER=smtp.example.com       # can be dummy for now
-SMTP_PORT=465                      # must be set (int)
-EMAIL_USERNAME=area@example.com    # can be dummy for now
-EMAIL_PASSWORD=supersecret         # can be dummy for now
+# Database
+POSTGRES_USER=postgres
+POSTGRES_PASSWORD=postgres
+POSTGRES_DB=area
+POSTGRESQL_URI=postgresql+psycopg://postgres:postgres@db:5432/area
+
+# Email (can be dummy for basic testing)
+SMTP_SERVER=smtp.example.com
+SMTP_PORT=465
+EMAIL_USERNAME=area@example.com
+EMAIL_PASSWORD=supersecret
+
+# OAuth credentials (required for service integrations)
+DISCORD_CLIENT_ID=your_discord_client_id
+DISCORD_CLIENT_SECRET=your_discord_client_secret
+GITHUB_CLIENT_ID=your_github_client_id
+GITHUB_CLIENT_SECRET=your_github_client_secret
+GOOGLE_CLIENT_ID=your_google_client_id
+GOOGLE_CLIENT_SECRET=your_google_client_secret
+MICROSOFT_CLIENT_ID=your_microsoft_client_id
+MICROSOFT_CLIENT_SECRET=your_microsoft_client_secret
+SPOTIFY_CLIENT_ID=your_spotify_client_id
+SPOTIFY_CLIENT_SECRET=your_spotify_client_secret
+TRELLO_API_KEY=your_trello_api_key
+TRELLO_API_SECRET=your_trello_api_secret
 ```
 
-Example for local dev:
+### Launch with Docker Compose
 
 ```bash
-export POSTGRESQL_URI="postgresql+psycopg://area:area@localhost:5432/area"
-export SMTP_SERVER="smtp.example.com"
-export SMTP_PORT="465"
-export EMAIL_USERNAME="area@example.com"
-export EMAIL_PASSWORD="supersecret"
+# Build backend image
+cd Backend && ./build_fastapi_docker_image.sh && cd ..
+
+# Start all services
+./launch_docker.sh
 ```
 
-### 3. Install dependencies (local)
+**Services will be available at:**
+- Backend API: `http://localhost:8080` (see `/docs` for API documentation)
+- Web Client: `http://localhost:8081`
+- Database Admin: `http://localhost:8123` (Adminer)
+- Mobile APK: Download from web client
 
-From project root:
+### Manual Backend Development
 
 ```bash
 cd Backend
 python3.9 -m venv .venv
 source .venv/bin/activate
-
-pip install --upgrade pip
 pip install -r requirements.txt
+
+# Set environment variables (use localhost for local PostgreSQL)
+export POSTGRESQL_URI="postgresql+psycopg://postgres:postgres@localhost:5432/area"
+# ... other variables
+
+# Run server
+fastapi dev app/main.py --port 8080
 ```
-
-### 4. Run the backend without Docker
-
-Still in `Backend/`:
-
-```bash
-export POSTGRESQL_URI="postgresql+psycopg://area:area@localhost:5432/area"
-# export SMTP_* and EMAIL_* as shown above
-
-fastapi run app/main.py --port 8080
-```
-
-Server will be reachable at:
-
-- `http://localhost:8080/health`
-- `http://localhost:8080/about.json`
-- `http://localhost:8080/docs`
-
-### 5. Build and run the backend with Docker
-
-From `Backend/`:
-
-```bash
-./build_fastapi_docker_image.sh
-```
-
-Then run:
-
-```bash
-docker run --rm \
-  -e POSTGRESQL_URI="postgresql+psycopg://area:area@host.docker.internal:5432/area" \
-  -e SMTP_SERVER="smtp.example.com" \
-  -e SMTP_PORT="465" \
-  -e EMAIL_USERNAME="area@example.com" \
-  -e EMAIL_PASSWORD="supersecret" \
-  -p 8080:80 \
-  area-fastapi
-```
-
-Check:
-
-- `http://localhost:8080/health`
-- `http://localhost:8080/about.json`
 
 ---
 
@@ -139,3 +122,28 @@ Check:
 - No web client, no mobile client, no root `docker-compose.yml`.
 
 This README reflects only **what exists now** and **how to run it**.
+Development
+
+### Available Services
+
+Each service is configured via YAML files in `Backend/services/`:
+- **Discord**: Webhooks for channel messages
+- **GitHub**: Repository events (push, issues, PRs)
+- **Google**: Gmail and YouTube integrations
+- **Microsoft**: Outlook and OneDrive
+- **Spotify**: Playlist and playback management
+- **Timer**: Time-based triggers (cron-like)
+- **Trello**: Board and card automations
+
+### Testing
+
+```bash
+cd Backend
+pytest tests/
+```
+
+---
+
+## Project Status
+
+Fully functional AREA automation platform with web/mobile clients, OAuth integrations, and multi-service support. Ready for deployment and customization
