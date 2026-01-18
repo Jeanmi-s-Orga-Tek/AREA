@@ -64,6 +64,7 @@ export const ServicesScreen: React.FC = () => {
   const [actionLoading, setActionLoading] = useState<Record<number, boolean>>(
     {},
   );
+  const hiddenServices = useMemo(() => new Set(['timer']), []);
 
   const mapServices = useCallback(
     (
@@ -75,7 +76,9 @@ export const ServicesScreen: React.FC = () => {
         .filter(sa => sa.is_active && sa.service)
         .forEach(sa => connectedMap.set(sa.service.id, sa));
 
-      return available.map(service => {
+      return available
+        .filter(service => !hiddenServices.has(service.name?.toLowerCase() || ''))
+        .map(service => {
         const connection = connectedMap.get(service.id);
         return {
           id: service.id,
@@ -90,7 +93,7 @@ export const ServicesScreen: React.FC = () => {
         };
       });
     },
-    [],
+    [hiddenServices],
   );
 
   const loadData = useCallback(async (options?: {showSpinner?: boolean}) => {
