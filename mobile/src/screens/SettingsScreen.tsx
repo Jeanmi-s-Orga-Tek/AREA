@@ -44,11 +44,11 @@ export const SettingsScreen: React.FC = () => {
   const {mode: accessibilityMode, setMode: setAccessibilityMode, colors: themeColors} = useAccessibility();
 
   const accessibilityModes: {value: AccessibilityMode; label: string; emoji: string; description: string}[] = [
-    {value: 'default', label: 'Par défaut', emoji: '🎨', description: 'Couleurs standard'},
-    {value: 'high-contrast', label: 'Contraste élevé', emoji: '🔲', description: 'Visibilité améliorée'},
-    {value: 'deuteranopia', label: 'Deutéranopie', emoji: '🟢', description: 'Daltonisme rouge-vert'},
-    {value: 'protanopia', label: 'Protanopie', emoji: '🔴', description: 'Daltonisme rouge'},
-    {value: 'tritanopia', label: 'Tritanopie', emoji: '🔵', description: 'Daltonisme bleu-jaune'},
+    {value: 'default', label: t('settings.accessibility.mode.default'), emoji: '🎨', description: t('settings.accessibility.description.default')},
+    {value: 'high-contrast', label: t('settings.accessibility.mode.high_contrast'), emoji: '🔲', description: t('settings.accessibility.description.high_contrast')},
+    {value: 'deuteranopia', label: t('settings.accessibility.mode.deuteranopia'), emoji: '🟢', description: t('settings.accessibility.description.deuteranopia')},
+    {value: 'protanopia', label: t('settings.accessibility.mode.protanopia'), emoji: '🔴', description: t('settings.accessibility.description.protanopia')},
+    {value: 'tritanopia', label: t('settings.accessibility.mode.tritanopia'), emoji: '🔵', description: t('settings.accessibility.description.tritanopia')},
   ];
 
   useEffect(() => {
@@ -263,9 +263,9 @@ export const SettingsScreen: React.FC = () => {
 
   const renderAccessibilitySection = () => (
     <Card style={styles.card}>
-      <Text style={[styles.cardTitle, {color: themeColors.text}]}>Accessibilité</Text>
+      <Text style={[styles.cardTitle, {color: themeColors.text}]}>{t('settings.accessibility.title')}</Text>
       <Text style={[styles.cardDescription, {color: themeColors.textSecondary}]}>
-        Personnalisez l'affichage pour une meilleure visibilité
+        {t('settings.accessibility.description')}
       </Text>
       <View style={styles.accessibilityGrid}>
         {accessibilityModes.map((m) => (
@@ -307,7 +307,7 @@ export const SettingsScreen: React.FC = () => {
               ? t('settings.title.logged_in')
               : t('settings.title.logged_out')}
           </Text>
-          <Text style={[styles.title, {color: themeColors.primary}]}>{isLoggedIn ? 'Paramètres' : 'Paramètres serveur'}</Text>
+          {/* <Text style={[styles.title, {color: themeColors.primary}]}>{isLoggedIn ? 'Paramètres' : 'Paramètres serveur'}</Text> */}
 
           <Card style={styles.card}>
             <Text style={styles.cardTitle}>{t('language.title')}</Text>
@@ -352,7 +352,7 @@ export const SettingsScreen: React.FC = () => {
               onPress={handleSave}
               style={styles.saveButton}
             />
-            <Button title="Enregistrer" onPress={handleSave} style={styles.saveButton} />
+            {/* <Button title="Enregistrer" onPress={handleSave} style={styles.saveButton} /> */}
 
             <Text style={styles.currentUrlText}>
               {t('settings.server_config.current_url', {
